@@ -1,0 +1,106 @@
+---
+title: "Introduction to the cellKey-Package"
+author: "Bernhard Meindl"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+  toc: true
+toc_depth: 5
+number_sections: false
+vignette: >
+  %\VignetteIndexEntry{Introduction to the cellKey-Package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+  ```{r, echo=FALSE}
+library(rmarkdown)
+```
+
+# Introduction
+
+TBW
+
+Implementation based on paper *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar).
+
+## Main Features
+
+TBW
+
+- using sha1-sums on input objects to set seed for record-key generation if not possible
+- record-keys can be pre-generated
+
+## Todo
+- ~~allow hierarchical input in  `perturbTable()`~~
+- ~~check parametrisation of perturbation tables~~
+- performance optimisations
+
+## An Example
+
+### Load the Package
+```{r}
+library(cellKey)
+packageVersion("cellKey")
+```
+
+### Use Testdata
+```{r}
+dat <- ck_create_testdata()
+dat$age <- as.integer(cut(dat$age, 6))
+head(dat)
+```
+
+### create required input
+```{r}
+pert_params <- ck_create_pert_params(
+  bigN=17312941, 
+  smallN=12,
+  pTable=ck_create_pTable(pTableSize=70),
+  sTable=ck_generate_sTable(smallC=12), 
+  mTable=c(0.6,0.4,0.2))
+inp <- ck_create_input(dat=dat, def_rkey=15*nrow(dat), pert_params=pert_params)
+```
+
+### create dimensions
+```{r}
+dim.sex <- data.table(levels=c("@","@@","@@"), codes=c("Total", 1, 2))
+dim.age <- data.table(levels=c("@",rep("@@", 6)), codes=c("Total", 1:6))
+dimList <- list(sex=dim.sex, age=dim.age)
+```
+
+These dimensions must be specified the same way is in **sdcTable**. 
+
+```{r}
+print(dimList)
+```
+
+
+### Compute perturbed tables
+
+- unweighted and only counts
+
+```{r}
+tab1 <- perturbTable(inp, dimList=dimList, weightVar=NULL, numVars=NULL)
+results(tab1)
+```
+
+- weighted and also numerical variables
+
+```{r}
+tab2 <- perturbTable(inp, dimList=dimList, weightVar="sampling_weight", numVars=c("savings","income"))
+results(tab2, meanBeforeSum=TRUE)
+```
+
+### extract information from results
+
+```{r}
+slotNames(tab2)
+
+# information on perturbations for counts
+mod_counts(tab2) 
+
+# information on perturbations for numerical variables
+mod_numvars(tab2) 
+```
+
+
