@@ -4,6 +4,5 @@
 .Ruserdata
 *.Rproj
 *.html
-man
 inst/doc
 debug/
