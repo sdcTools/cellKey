@@ -4,6 +4,6 @@
 .Ruserdata
 *.Rproj
 *.html
-ckm_20170517
 man
 inst/doc
+debug/
