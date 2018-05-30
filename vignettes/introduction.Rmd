@@ -19,9 +19,7 @@ library(rmarkdown)
 
 # Introduction
 
-TBW
-
-Implementation based on paper *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar).
+This package implements methods to provide perturbation for statistical tables. The method is based on the paper *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar).
 
 ## Main Features
 
@@ -43,14 +41,18 @@ library(cellKey)
 packageVersion("cellKey")
 ```
 
-### Use Testdata
+### Loading testdata
+The testdata set we are using in this example contains information on person-level along with sampling weights as well as some categorical and continously scaled variables.
 ```{r}
 dat <- ck_create_testdata()
-dat$age <- as.integer(cut(dat$age, 6))
 head(dat)
 ```
 
-### create required input
+The goal of this introduction is to create a perturbed table of counts of variables `sex` by `age` as well as perturbation for continous variables `savings` and `income` also using groups defined by `sex` by `age` and corresponding (sub)totals.
+
+### Create required input
+The first step in this approach is to generate or rather set some parameters, that are using in the perturbation approach. These inputs are put together using function `ck_create_pert_params()`. 
+
 ```{r}
 pert_params <- ck_create_pert_params(
   bigN=17312941, 
@@ -58,17 +60,40 @@ pert_params <- ck_create_pert_params(
   pTable=ck_create_pTable(pTableSize=70),
   sTable=ck_generate_sTable(smallC=12), 
   mTable=c(0.6,0.4,0.2))
-inp <- ck_create_input(dat=dat, def_rkey=15*nrow(dat), pert_params=pert_params)
 ```
 
-### create dimensions
+The parameters that have to be specified are:
+
+- `bigN`: a large prime number used to derive cell keys from record keys
+- `smallN`: a number that controlls how the columns of a perturbation table are scrolled
+- `pTable`: a perturbation table containing perturbation values. Such tables must have 256 rows and a free number of columns. Example pTables may be generated using function `ck_create_pTable()`
+- `sTable`:  a table containing the noise component for numerical variables that must contain 32+`smallC` columns. An example table may be generated using function `ck_generate_sTable()`
+- `mTable`: a numeric vector containing parameters for the magnitude of perturbation for numerical variables
+
+This function returns an object of class `pert_params` that is required in the next function that must be called. In `ck_create_input()` we finally create the required input to be able to compute some perturbed tables as follows.
+
+```{r}
+inp <- ck_create_input(
+  dat=dat, 
+  def_rkey=15*nrow(dat), 
+  pert_params=pert_params)
+print(class(inp))
+```
+
+We needed to specify parameter `def_rkey`. In this argument, users may either specify an (existing) variable name in the input microdata set `data` that already contains record keys or specify a number. In the second case, record keys between 1 and the specified number are randomly computed. To ensure, that the same record keys are computed, a seed based on the sha1-hash of the input dataset is computed and used before drawing the record keys.
+
+### Specifying dimensions
+The next step is to define hierarchies for each of the classifying variables. The way the hierarchies of these variables (including sub-totals) are specified is the same as in Package **sdcTable**. We give an example for the categorical variables `age` and `sex` below:
+
 ```{r}
 dim.sex <- data.table(levels=c("@","@@","@@"), codes=c("Total", 1, 2))
 dim.age <- data.table(levels=c("@",rep("@@", 6)), codes=c("Total", 1:6))
 dimList <- list(sex=dim.sex, age=dim.age)
 ```
 
-These dimensions must be specified the same way is in **sdcTable**. 
+Each hierarchy is represented with a `data.frame` or `data.table` holding two variables. The first variables (`levels`) shows the level of a given characteristic that is shown in the second column (`codes`). The levels can be interpreted as `@` being the upmost level (overall total) while all codes with value `@@` contribute to this total. In the (very simple) case of variable `sex` we have one overall total in level 1 (called `Total`) that is computed from two characteristics (`1` and `2`) in level 2. This approach allows to specify quite complex hierarchies in many levels.
+
+All hierarchy specifications must then be combined into a named list where the names of the list elements contain variable names of the input data set and the elements the data objects that hold the hierarchy specification. This is why the list elements of `dimList` have to be named `sex` and `age`.
 
 ```{r}
 print(dimList)
@@ -76,20 +101,54 @@ print(dimList)
 
 
 ### Compute perturbed tables
+It is now possible to finally compute perturbed tables using function `perturbTable()`. This function takes the following parameters:
 
-- unweighted and only counts
+- `inp`: required, an object of class `pert_input` created with `ck_create_input()`
+- `dimList`: required, a `list` containing definitions of hierarchies of all variables that will define the table
+- `weightVar`: optional, a variable name existing in `slot(inp, "microdat)` holding sampling weights for each unit in the micro data or or `NULL` if no weights are available. In this case, each unit is assigned sampling weight 1 in the data
+- `numVars`: optional, a vector of variable names existing in `slot(inp, "microdat)` that should be tabulated (and perturbed). If this parameter is not set, a count table is returned.
+
+Below it is shown, how a count table using existing sampling weights (available in variable `sampling_weight` in the input data) can be computed:
 
 ```{r}
-tab1 <- perturbTable(inp, dimList=dimList, weightVar=NULL, numVars=NULL)
+tab1 <- perturbTable(
+  inp=inp, 
+  dimList=dimList, 
+  weightVar="sampling_weight", 
+  numVars=NULL)
+```
+
+Applying method `results()` to an output object of `perturbTable()`, a `data.table` with all combinations of the dimensional variables `sex` and `age` as well as original and perturbed values are returned.
+
+```{r}
 results(tab1)
 ```
 
-- weighted and also numerical variables
+The variables on this data set (additional to the dimensional variables) are:
+
+- `UWC`: unweighted counts
+- `pUWC`: perturbed unweighted counts
+- `WC`: weighted counts
+- `pWC`: perturbed weighted counts
+- `WCavg`: cell average weight
+
+The example shows how to create a perturbed table of continous data using sampling weights. For this case, we need to specify parameter `numVars` in `perturbTable()`. Note that it is possible, to specify multiple variables at once.
 
 ```{r}
-tab2 <- perturbTable(inp, dimList=dimList, weightVar="sampling_weight", numVars=c("savings","income"))
+tab2 <- perturbTable(
+  inp=inp, 
+  dimList=dimList, 
+  weightVar="sampling_weight", 
+  numVars=c("savings","income"))
+```
+
+Again, we can use method `results()` on the output of `perturbTable()`. In this case, we can set an additional argument `meanBeforeSum` that is either `TRUE` or `FALSE` and specifies, how the perturbed cell values are computed. Details on this method can be found in *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar) in Section *6.3*.
+
+
+```{r}
 results(tab2, meanBeforeSum=TRUE)
 ```
+
 
 ### extract information from results
 
