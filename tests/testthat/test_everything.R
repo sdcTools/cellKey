@@ -1,5 +1,6 @@
 context("Testing Frequency Tables")
 
+set.seed(120)
 #bigN <- sample(primes::generate_primes(min = 2^24, max=2^25), 1)
 bigN <- 17312941
 pTableSize <- 70
@@ -7,12 +8,27 @@ smallN <- 12
 dat <- ck_create_testdata()
 dat$age <- as.integer(cut(dat$age, 6))
 
+seed <- ck_create_seed_from_hash(dat)
+test_that("check seed from hash generation", {
+  expect_equal(seed, 906066756)
+})
+
 dim.sex <- data.table(levels=c("@","@@","@@"), codes=c("Total", 1, 2))
 dim.age <- data.table(levels=c("@",rep("@@", 6)), codes=c("Total", 1:6))
 dimList <- list(sex=dim.sex, age=dim.age)
 
+## test generation of destatis rkeys
+rr <- ck_generate_rkeys(dat=dat, max_digits=5, type="destatis")
+test_that("check rkey generation for destatis (and also seed)", {
+  expect_equal(rr[1], 0.5832)
+  expect_equal(rr[3], 0.5943)
+  expect_equal(rr[5], 0.99705)
+  expect_equal(min(rr), 3e-05)
+  expect_equal(max(rr), 0.9995)
+})
+
 maxV <- 10*nrow(dat)
-dat$rec_key <- ck_generate_rkeys(dat=dat, max_val=maxV)
+dat$rec_key <- ck_generate_rkeys(dat=dat, max_val=maxV, type="abs")
 
 test_that("checking dimension and structure of generated testdata", {
   expect_equal(nrow(dat), 4580)
