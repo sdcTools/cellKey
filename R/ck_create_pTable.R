@@ -14,7 +14,7 @@
 #'
 #' @examples
 #' ck_create_pTable(pTableSize=10, type="abs")
-ck_create_pTable <- function(pTableSize=75, type="ABS", ...) {
+ck_create_pTable <- function(pTableSize=75, type="abs", ...) {
   gen_test_ptable_abs <- function(pTableSize, ...) {
     V1 <- V2 <- V3 <- NULL
 

@@ -7,14 +7,19 @@
 perturbTable(inp, dimList, numVars = NULL, weightVar = NULL)
 }
 \arguments{
-\item{inp}{an object of class \code{\link{pert_inputdat-class}} generated with \code{\link{ck_create_input}}}
+\item{inp}{an object of class \code{\link{pert_inputdat-class}}
+generated with \code{\link{ck_create_input}}}
 
-\item{dimList}{a list containing slots for each variable that should be tabulated. Each slot consists of a \code{data.frame} or \code{data.table}
-with columns \code{levels} and \code{codes} specifiying the hierarchies of the variables.}
+\item{dimList}{a list containing slots for each variable that should be
+tabulated. Each slot consists of a \code{data.frame} or \code{data.table}
+with columns \code{levels} and \code{codes} specifiying the
+hierarchies of the variables.}
 
-\item{numVars}{(character) vector of numerical variables that should be tabulated or \code{NULL}}
+\item{numVars}{(character) vector of numerical variables that
+should be tabulated or \code{NULL}}
 
-\item{weightVar}{(character) vector of variable holding sampling weights or \code{NULL}}
+\item{weightVar}{(character) vector of variable holding sampling
+weights or \code{NULL}}
 }
 \value{
 an object of class \code{\link{pert_table-class}}.
@@ -23,31 +28,72 @@ an object of class \code{\link{pert_table-class}}.
 compute perturbed tables containing counts and continous variables.
 }
 \examples{
+## loading testdata and adding record keys (for abs-algorithm)
 dat <- ck_create_testdata()
-dat$age <- as.integer(cut(dat$age, 6))
-maxV <- 15*nrow(dat)
-dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=maxV)
-pert_params <- ck_create_pert_params(
+dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=2*nrow(dat), type="abs")
+
+## loading test perturbation in abs- and destatis format
+pTable_abs <- ck_create_pTable(pTableSize=70, type="abs")
+pTable_destatis <- ck_create_pTable(type="destatis")
+
+## perturbation tables and parameters for numerical variables
+sTable <- ck_generate_sTable(smallC=12)
+mTable <- c(0.6,0.4,0.2)
+
+## creating perturbation objects that are later used
+## as inputs in perturbTable()
+pert_params_abs <- ck_create_pert_params(
   bigN=17312941, smallN=12,
-  pTable=ck_create_pTable(pTableSize=70),
-  sTable=ck_generate_sTable(smallC=12),
-  mTable=c(0.6,0.4,0.2))
+  pTable=pTable_abs,
+  sTable=sTable,
+  mTable=mTable)
 
-inp <- ck_create_input(dat=dat, def_rkey="rkeys", pert_params=pert_params)
+pert_params_destatis <- ck_create_pert_params(
+  smallN=12,
+  pTable=pTable_destatis,
+  sTable=sTable,
+  mTable=mTable)
 
+## create suitable input data using existing record keys
+## and a perturbation table in "abs-format"
+inp_abs <- ck_create_input(
+  dat=dat,
+  def_rkey="rkeys",
+  pert_params=pert_params_abs)
+
+## create input using a perturbation table in "destatis-format"
+## and no existing record keys. In this case, def_rkey=9 means
+## that the generated record keys are rounded to 9 digits
+inp_destatis <- ck_create_input(
+  dat=dat,
+  def_rkey=9,
+  pert_params=pert_params_destatis)
+
+## definining table hierarchies and important variables
 dim.sex <- data.table(levels=c("@","@@","@@"), codes=c("Total", 1, 2))
 dim.age <- data.table(levels=c("@",rep("@@", 6)), codes=c("Total", 1:6))
 dimList <- list(sex=dim.sex, age=dim.age)
-res <- perturbTable(inp=inp, dimList=dimList,
-  weightVar="sampling_weight",
-  numVars=c("savings", "income"))
-results(res, meanBeforeSum=TRUE)
+weightVar <- "sampling_weight"
+numVars <- c("savings", "income")
+
+## perturbing the table
+res_abs <- perturbTable(
+  inp=inp_abs,
+  dimList=dimList,
+  weightVar=weightVar, numVars=numVars)
+results(res_abs, meanBeforeSum=TRUE)
+
+res_destatis <- perturbTable(
+  inp=inp_destatis,
+  dimList=dimList,
+  weightVar=weightVar, numVars=numVars)
+results(res_destatis, meanBeforeSum=TRUE)
 
 ## information on modifications for count variables
-mod_counts(res)
+mod_counts(res_abs)
 
 ## information on modifications for numerical variables
-mod_numvars(res)
+mod_numvars(res_abs)
 }
 \seealso{
 \url{https://www.unece.org/fileadmin/DAM/stats/documents/ece/ces/ge.46/2013/Topic_1_ABS.pdf}

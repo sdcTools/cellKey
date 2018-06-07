@@ -4,7 +4,7 @@
 \alias{ck_create_pTable}
 \title{ck_create_pTable}
 \usage{
-ck_create_pTable(pTableSize = 75, type = "ABS", ...)
+ck_create_pTable(pTableSize = 75, type = "abs", ...)
 }
 \arguments{
 \item{pTableSize}{(number) defining the number of required columns}
