@@ -229,8 +229,8 @@ check_rkeys <- function(rkeys, type) {
   }
   check_rkeys_destatis <- function(rkeys) {
     stopifnot(is_double(rkeys))
-    stopifnot(all(rkeys)>=0)
-    stopifnot(all(rkeys)<=1)
+    stopifnot(all(rkeys>=0))
+    stopifnot(all(rkeys<=1))
     return(TRUE)
   }
 
