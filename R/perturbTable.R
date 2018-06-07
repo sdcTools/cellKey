@@ -48,7 +48,9 @@ perturbTable <- function(inp, dimList, numVars=NULL, weightVar=NULL) {
 
   pert_params <- slot(inp, "pert_params")
 
-  dat  <- inp@microdat
+  type <- slot(pert_params, "type")
+
+  dat  <- slot(inp, "microdat")
   dat[,tmprkeysfortabulation:=slot(inp, "rkeys")]
   dat[,tmpidforsorting:=.I]
 
@@ -100,38 +102,22 @@ perturbTable <- function(inp, dimList, numVars=NULL, weightVar=NULL) {
   setnames(tab, "tmprkeysfortabulation", "sumRec")
 
   tab <- tab[,WCavg:=sumW/N]
-  tab[,CKey:=sumRec %% pert_params@bigN]
-  # lookup
-  set(tab, j="row_indices", value=sapply(tab[,CKey], get_rowIndex))
-  set(tab, j="col_indices", value=sapply(tab[,N], function(z) {
-    get_colIndex(z, pert_params@pTableSize, pert_params@smallN)
-  }))
 
-  df <- tab[,.(row_indices, col_indices)]
+  # compute cell-keys
+  if (type=="abs") {
+    tab[,CKey:=sumRec %% slot(pert_params, "bigN")]
+    tab <- lookup_abs(tab=tab, pert_params=pert_params)
 
-  pert_vals <- lapply(1:nrow(df), function(z) {
-    pert_params@pTable[df[z, row_indices], df[z, col_indices], with=F]
-  })
-  ii <- which(sapply(pert_vals, function(x) nrow(x)!=1))
-  if (length(ii)>0) {
-    pert_vals[ii] <- NA
+  } else if (type=="destatis") {
+    tab[,CKey:=sumRec %% 1]
+    tab <- lookup_destatis(tab=tab, pert_params=pert_params, symmetry=8)
   }
-  pert_vals <- unlist(pert_vals)
 
-  # negative counts are not allowed
-  # FIXME: should this be implemented in lookup table?
-  tab[,pert:=pert_vals]
-  tab[,neg_counts:=FALSE]
-  tab[pert+N<0, neg_counts:=TRUE]
-  if (sum(tab[,neg_counts]) >0 ) {
-    warning("after perturbations we got negative counts! -> using absolute values!\n")
-    tab[neg_counts==TRUE, pert:=-1*pert]
-  }
-  tab[,neg_counts:=NULL]
+  tab <- fix_negative_counts(tab)
 
   # compute unweighted counts
   tab[,pUWC:=N+pert]
-  tab[is.na(pUWC),pUWC:=0]
+  tab[is.na(pUWC), pUWC:=0]
 
   # compute weighted counts
   tab[,pWC:=round(pUWC*WCavg)]
@@ -180,6 +166,8 @@ perturbTable <- function(inp, dimList, numVars=NULL, weightVar=NULL) {
     numvars_modifications=pert_info_cont,
     cellKeys=as.integer(ck),
     numVars=numVars,
-    is_weighted=is_weighted)
-  res
+    is_weighted=is_weighted,
+    type=type)
+  validObject(res)
+  return(res)
 }

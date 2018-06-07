@@ -42,7 +42,6 @@ get_col_index_cont <- function(cKey, n, smallC) {
   bintodec(as.integer(intToBits(cKey))[1:5])+1
 }
 
-
 # row index for perturbation - see page 11
 # used for counts
 get_rowIndex <- function(cKey) {
@@ -65,6 +64,67 @@ get_colIndex <- function(N, pTableSize, smallN) {
   }
 }
 
+# lookup perturbation values using the abs-method
+# lookup_abs() is used in perturbTable()
+lookup_abs <- function(tab, pert_params) {
+  . <- CKey <- N <- row_indices <- col_indices <- pert <- NULL
+
+  set(tab, j="row_indices", value=sapply(tab[,CKey], get_rowIndex))
+  set(tab, j="col_indices", value=sapply(tab[,N], function(z) {
+    get_colIndex(z, slot(pert_params, "pTableSize"), slot(pert_params, "smallN"))
+  }))
+
+  df <- tab[,.(row_indices, col_indices)]
+
+  pert_vals <- lapply(1:nrow(df), function(z) {
+    pert_params@pTable[df[z, row_indices], df[z, col_indices], with=F]
+  })
+  ii <- which(sapply(pert_vals, function(x) nrow(x)!=1))
+  if (length(ii)>0) {
+    pert_vals[ii] <- NA
+  }
+  pert_vals <- unlist(pert_vals)
+  tab[,pert:=pert_vals]
+  return(tab)
+}
+
+# lookup perturbation values if the perturbation table is in destatis
+# format. This function is based on the fifo()-function provided
+# by Tobias Enderle
+# lookup_destatis() is used in perturbTable()
+lookup_destatis <- function(tab, pert_params, symmetry=8) {
+  sumW <- i <- kum_p_o <- CKey <- col_indices <- pert <- tmpfreqforcalc <- NULL
+  pTable <- slot(pert_params, "pTable")
+  tab[,tmpfreqforcalc:=sumW]
+  row_indices <- rep(-1, nrow(tab))
+  pert_vals <- rep(0L, nrow(tab))
+
+  for (d in 1:(symmetry)) {
+    if (d==symmetry) {
+      rkind <- tab[,tmpfreqforcalc>=d]
+    } else {
+      rkind <- tab[,tmpfreqforcalc==d]
+    }
+    if (sum(rkind)>0) {
+      v <- pTable[i==d,kum_p_o]
+      ck <- tab[rkind, CKey]
+      diffs <- pTable[i==d,diff]
+
+      # row_ind
+      rI <- sapply(1:sum(rkind), function(x) {
+        which.max(ck[x] <= v)
+      })
+      pert_vals[rkind] <- as.integer(diffs[rI])
+      row_indices[rkind] <- rI
+    }
+  }
+
+  tab[,tmpfreqforcalc:=NULL]
+  tab[,row_indices:=row_indices]
+  tab[,col_indices:=NA]
+  tab[,pert:=pert_vals]
+  return(tab)
+}
 
 check_weight <- function(dat, w) {
   tmpweight_for_tabulation <- NULL
@@ -158,4 +218,42 @@ sum_before_mean <- function(x, pWC) {
   pWMean <- x / pWC
   pWMean[is.na(pWMean)] <- 0
   data.table(pWMean=pWMean, pWSum=pWSum)
+}
+
+# simple check functions for record keys
+check_rkeys <- function(rkeys, type) {
+  check_rkeys_abs <- function(rkeys) {
+    stopifnot(is_integerish(rkeys))
+    stopifnot(all(rkeys>0))
+    return(TRUE)
+  }
+  check_rkeys_destatis <- function(rkeys) {
+    stopifnot(is_double(rkeys))
+    stopifnot(all(rkeys)>=0)
+    stopifnot(all(rkeys)<=1)
+    return(TRUE)
+  }
+
+  if (type=="abs") {
+    check_rkeys_abs(rkeys)
+  }
+  if (type=="destatis") {
+    check_rkeys_destatis(rkeys)
+  }
+  return(TRUE)
+}
+
+# fixes tables with negative counts after perturbation
+# by computing perturbation value times -1
+fix_negative_counts <- function(tab) {
+  neg_counts <- pert <- N <- NULL
+  tab[,neg_counts:=FALSE]
+  tab[pert+N<0, neg_counts:=TRUE]
+  if (sum(tab[,neg_counts]) >0) {
+    warning("after perturbations we got negative counts!\n")
+    warning("for now, we compute pert_val=-1*pert_val for such cases, but this should be fixed in pTables\n")
+    tab[neg_counts==TRUE, pert:=-1*pert]
+  }
+  tab[,neg_counts:=NULL]
+  tab
 }

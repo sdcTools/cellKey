@@ -58,7 +58,14 @@ setGeneric("mod_counts", function(x, ...) {
 #' @aliases mod_counts,pert_table-method
 setMethod(f="mod_counts", signature="pert_table",
 definition=function(x) {
-  slot(x, "count_modifications")
+  type <- slot(x, "type")
+  message("The perturbation was based on the ", shQuote(type), " method.")
+
+  cc <- slot(x, "count_modifications")
+  if (type=="destatis") {
+    cc$col_indices <- NULL
+  }
+  print(cc)
 })
 
 #' Method to extract information about modifications for counts
