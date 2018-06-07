@@ -26,14 +26,15 @@ ck_create_pert_params <- function(bigN, smallN, pTable, sTable, mTable) {
   slot(out, "type") <- attr(pTable, "type")
 
   if (slot(out, "type")=="destatis") {
-    message("Note: the pTable is of type 'destatis'. Thus, argument 'bigN' will be ignored:")
+    message("Note: the supplied pTable is of type 'destatis'. Thus, arguments 'bigN' and 'smallN' will be ignored:")
     slot(out, "bigN") <- as.integer(3)
+    slot(out, "smallN") <- 0L
   } else {
     stopifnot(is_bare_integerish(bigN))
     stopifnot(is_bare_integerish(smallN))
     slot(out, "bigN") <- as.integer(bigN)
+    slot(out, "smallN") <- as.integer(smallN)
   }
-  slot(out, "smallN") <- as.integer(smallN)
   slot(out, "pTable") <- pTable
   slot(out, "pTableSize") <- as.integer(ncol(pTable))
   slot(out, "mTable") <- mTable
