@@ -47,3 +47,23 @@ NULL
 #' data(testdata)
 #' head(testdata)
 NULL
+
+#' A perturbation table based on DESTATIS format
+#'
+#' 66 rows in 6 Variables
+#'
+#' @name ptable_destatis
+#' @docType data
+#' @format ptable_destatis: a data frame with 88 rows on the following 6 variables.
+#' \describe{
+#' \item{i}{a numeric vector}
+#' \item{j}{a numeric vector}
+#' \item{p}{a numeric vector}
+#' \item{kum_p_u}{a numeric vector}
+#' \item{kum_p_o}{a numeric vector}
+#' \item{diff}{a numeric vector}}
+#' @keywords datasets
+#' @examples
+#' data(ptable_destatis)
+#' head(ptable_destatis)
+NULL
