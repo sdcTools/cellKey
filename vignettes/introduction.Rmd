@@ -19,19 +19,24 @@ library(rmarkdown)
 
 # Introduction
 
-This package implements methods to provide perturbation for statistical tables. The method is based on the paper *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar).
+This package implements methods to provide perturbation for statistical tables. The method is based on the paper *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar). Furthermore it is possible to perturb tables using a different approach developed by DESTATIS. The two approaches differ in the way record keys have to be specified, the format of the perturbation tables and the way, the actual lookup is done.
 
 ## Main Features
 
 TBW
 
 - using sha1-sums on input objects to set seed for record-key generation if not possible
-- record-keys can be pre-generated
+- different formats/algorithms for perturbation tables (`"abs"` and `"destatis"`) possible
+- record-keys can be pre-generated for both variants
+- computation of weighted and unweighted count tables
+- computation of weighted and unweighted magnitude tables
+- multidimensional tables with complex hierarchies in all dimensions are possible
 
 ## Todo
 - ~~allow hierarchical input in  `perturbTable()`~~
 - ~~check parametrisation of perturbation tables~~
-- performance optimisations
+- ~~usage of destatis input format for perturbation tables~~
+- performance optimizations
 
 ## An Example
 
@@ -57,7 +62,7 @@ The first step in this approach is to generate or rather set some parameters, th
 pert_params <- ck_create_pert_params(
   bigN=17312941, 
   smallN=12,
-  pTable=ck_create_pTable(pTableSize=70),
+  pTable=ck_create_pTable(pTableSize=70, type="abs"),
   sTable=ck_generate_sTable(smallC=12), 
   mTable=c(0.6,0.4,0.2))
 ```
@@ -66,7 +71,7 @@ The parameters that have to be specified are:
 
 - `bigN`: a large prime number used to derive cell keys from record keys
 - `smallN`: a number that controlls how the columns of a perturbation table are scrolled
-- `pTable`: a perturbation table containing perturbation values. Such tables must have 256 rows and a free number of columns. Example pTables may be generated using function `ck_create_pTable()`
+- `pTable`: a perturbation table containing perturbation values. Function `ck_create_pTable()` allows to create tables in the `abs` format given a flexible number of column (specified using parameter `pTableSize`). Such tables must have exactly 256 rows. An alternative way to specify perturbation tables was proposed by DESTATIS. An example perturbation in this format can be used by specifying `ck_create_pTable(type="destatis")`. In this case, parameters `bigN` and `smallN` are ignored because they are not needed in the algorithm to lookup perturbation values.
 - `sTable`:  a table containing the noise component for numerical variables that must contain 32+`smallC` columns. An example table may be generated using function `ck_generate_sTable()`
 - `mTable`: a numeric vector containing parameters for the magnitude of perturbation for numerical variables
 
@@ -80,7 +85,9 @@ inp <- ck_create_input(
 print(class(inp))
 ```
 
-We needed to specify parameter `def_rkey`. In this argument, users may either specify an (existing) variable name in the input microdata set `data` that already contains record keys or specify a number. In the second case, record keys between 1 and the specified number are randomly computed. To ensure, that the same record keys are computed, a seed based on the sha1-hash of the input dataset is computed and used before drawing the record keys.
+We needed to specify parameter `def_rkey`. In this argument, users may either specify an (existing) variable name in the input microdata set `data` that already contains record keys or specify a number. In the second case, the functions computes record keys based on the format of the perturbation table (slot `pTable` in argument `pert_params`). If the perturbation table is in abs-format, record keys between 1 and `def_key` are randomly computed. In case the perturbation table is in destatis-format, the record keys are sampled from a uniform distribution between 0 and 1 and rounded to the number of digits specified in parameter `def_rkey`. 
+
+To ensure, that the same record keys are computed each and every time for the same data set, a seed based on the sha1-hash of the input dataset is computed and used before drawing the record keys.
 
 ### Specifying dimensions
 The next step is to define hierarchies for each of the classifying variables. The way the hierarchies of these variables (including sub-totals) are specified is the same as in Package **sdcTable**. We give an example for the categorical variables `age` and `sex` below:
@@ -99,7 +106,6 @@ All hierarchy specifications must then be combined into a named list where the n
 print(dimList)
 ```
 
-
 ### Compute perturbed tables
 It is now possible to finally compute perturbed tables using function `perturbTable()`. This function takes the following parameters:
 
@@ -111,11 +117,7 @@ It is now possible to finally compute perturbed tables using function `perturbTa
 Below it is shown, how a count table using existing sampling weights (available in variable `sampling_weight` in the input data) can be computed:
 
 ```{r}
-tab1 <- perturbTable(
-  inp=inp, 
-  dimList=dimList, 
-  weightVar="sampling_weight", 
-  numVars=NULL)
+tab1 <- perturbTable(inp=inp, dimList=dimList, weightVar="sampling_weight", numVars=NULL)
 ```
 
 Applying method `results()` to an output object of `perturbTable()`, a `data.table` with all combinations of the dimensional variables `sex` and `age` as well as original and perturbed values are returned.
@@ -135,11 +137,8 @@ The variables on this data set (additional to the dimensional variables) are:
 The example shows how to create a perturbed table of continous data using sampling weights. For this case, we need to specify parameter `numVars` in `perturbTable()`. Note that it is possible, to specify multiple variables at once.
 
 ```{r}
-tab2 <- perturbTable(
-  inp=inp, 
-  dimList=dimList, 
-  weightVar="sampling_weight", 
-  numVars=c("savings","income"))
+tab2 <- perturbTable(inp=inp, dimList=dimList, 
+  weightVar="sampling_weight", numVars=c("savings","income"))
 ```
 
 Again, we can use method `results()` on the output of `perturbTable()`. In this case, we can set an additional argument `meanBeforeSum` that is either `TRUE` or `FALSE` and specifies, how the perturbed cell values are computed. Details on this method can be found in *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar) in Section *6.3*.
@@ -150,16 +149,22 @@ results(tab2, meanBeforeSum=TRUE)
 ```
 
 
-### extract information from results
+### Extract information from results
+Some auxiliary methods may be applied to output object of function `perturbTable()`. The structure of such objects is shown below:
 
 ```{r}
 slotNames(tab2)
+```
 
-# information on perturbations for counts
+Information on perturbations for counts can be extracted using `mod_counts()`. The method returns a `data.table` showing for each cell the row and the colum of the perturbation table that was used to find the perturbation value actually used. This value is also shown in the output.
+```{r}
 mod_counts(tab2) 
+```
 
-# information on perturbations for numerical variables
+Information on perturbations for numerical variables can be extracted using `mod_numvars()`. For each variable that was perturbed, a `data.table` is returned showing the observations of the input variables that have been modified. For each observation, the parameters used in modifying (direction, magnitude and noise) are shown as well as the original values, the perturbation and the final modified value. These values were finally used to compute the tables itself.
+```{r}
 mod_numvars(tab2) 
 ```
 
-
+## Summary
+In case you have any suggestions or improvements, please feel free to file an issue at [**our issue tracker**](https://github.com/sdcTools/cellKey/issues) or contribute to the package by filing a pull request.
