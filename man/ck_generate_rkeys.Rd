@@ -4,20 +4,29 @@
 \alias{ck_generate_rkeys}
 \title{ck_generate_rkeys}
 \usage{
-ck_generate_rkeys(dat, max_val = (2^6) - 1)
+ck_generate_rkeys(dat, max_val = nrow(dat), max_digits = 10, type = "abs")
 }
 \arguments{
 \item{dat}{microdata used to generated hash for random seed}
 
 \item{max_val}{maximum number for record-key}
+
+\item{max_digits}{maximum number of digits in the record keys.
+This parameter is only used if \code{type} equals \code{abs}.
+This parameter is only used if \code{type} equals \code{destatis}.}
+
+\item{type}{(character) choice how to compute record keys. Valid choices
+are \code{abs} and \code{destatis}.}
 }
 \value{
-a numeric vector with \code{N} record keys
+a numeric vector with \code{N} record keys given a seed depending on \code{dat}
 }
 \description{
 creates random record keys by sampling between 1:max_val
 }
 \examples{
 dat <- ck_create_testdata()
-dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=(2^6)-1)
+dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=2*nrow(dat), type="abs")
+## rkeys for destatis method
+# ck_generate_rkeys(dat=dat, max_digits=6, type="destatis")
 }

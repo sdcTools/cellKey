@@ -52,6 +52,9 @@ values have been modified prior to tabulation.}
 \item{\code{cellKeys}}{(integer) vector containing the cell keys}
 
 \item{\code{is_weighted}}{(logical) TRUE if sampling weights have been used}
+
+\item{\code{type}}{(character) either \code{"abs"} or \code{"destatis"} depending on the format
+of the perturbation table that was used.}
 }}
 
 \seealso{

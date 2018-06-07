@@ -9,10 +9,23 @@ ck_create_input(dat, def_rkey, pert_params)
 \arguments{
 \item{dat}{a \code{data.table} containing micro data}
 
-\item{def_rkey}{either a column name within \code{dat} specifying a variable containing record
-keys or a single number used as upper bound to compute record keys between 1 and def_rkey}
+\item{def_rkey}{either a column name within \code{dat} specifying a variable
+containing record keys or a single (integer) number.
 
-\item{pert_params}{information on perturbation parameters created with \code{\link{ck_create_pert_params}}}
+If it is a number, we have to distinguish two cases:
+
+\itemize{
+\item The perturbation table is provided in "abs"-format:
+
+\code{def_rkey} is used as upper bound to compute record keys between 1 and \code{def_rkey}
+\item The perturbation table is provided in "destatis"-format:
+
+\code{def_rkey} is used to specify the maximum number of digits for record keys
+that are generated from a uniform distribution between 0 and 1.
+}}
+
+\item{pert_params}{information on perturbation parameters created
+using \code{\link{ck_create_pert_params}}}
 }
 \value{
 an object of class \code{\link{pert_inputdat-class}}
@@ -29,7 +42,7 @@ dat <- ck_create_testdata()
 dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=maxV)
 mTable <- c(0.6,0.4,0.2)
 sTable <- ck_generate_sTable(smallC=12)
-pTable <- ck_create_pTable(pTableSize=70)
+pTable <- ck_create_pTable(pTableSize=70, type="abs")
 
 pert_params <- ck_create_pert_params(
   bigN=bigN, smallN=smallN, pTable=pTable, sTable=sTable, mTable=mTable)

@@ -27,5 +27,7 @@ the row in the lookup-table that was used to get the perturbation value}
 
 \item{\code{topK}}{(integer) specifiying the number of units in each cell whose values
 will be perturbed differently}
+
+\item{\code{type}}{(character) specifying the type of pTable (either 'abs' or 'destatis')}
 }}
 

@@ -4,21 +4,24 @@
 \alias{ck_create_pTable}
 \title{ck_create_pTable}
 \usage{
-ck_create_pTable(pTableSize = 75, ...)
+ck_create_pTable(pTableSize = 75, type = "ABS", ...)
 }
 \arguments{
 \item{pTableSize}{(number) defining the number of required columns}
+
+\item{type}{character specifying the format of the input table. Valid choices are \code{"abs"} and \code{"destatis"}.}
 
 \item{...}{additional parameters (currently ignored)}
 }
 \value{
 a \code{data.table} with 256 rows and the specified number of
-columns given by parameter \code{pTableSize} holding perturbation values.
+columns given by parameter \code{pTableSize} holding perturbation values in case argument \code{type} was set to \code{"abs"}.
+\code{data.table} with three columns and 66 rows in case \code{type} was set to \code{"destatis"}.
 }
 \description{
 generates a simple perturbation table for developing/testing purposes.
 Real-world lookup tables will be likely created in another package/software.
 }
 \examples{
-ck_create_pTable(pTableSize=10)
+ck_create_pTable(pTableSize=10, type="abs")
 }

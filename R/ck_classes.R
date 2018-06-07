@@ -9,6 +9,7 @@
 #' @slot sTable numeric vector specifying parameter sTable for continous perturbation
 #' @slot topK (integer) specifiying the number of units in each cell whose values
 #' will be perturbed differently
+#' @slot type (character) specifying the type of pTable (either 'abs' or 'destatis')
 #' @name pert_params-class
 #' @rdname pert_params-class
 #' @export
@@ -21,7 +22,8 @@ representation=list(
   sTable="data.table",
   mTable="numeric",
   smallC="integer",
-  topK="integer"
+  topK="integer",
+  type="character"
 ),
 prototype=list(
   bigN=integer(),
@@ -31,7 +33,8 @@ prototype=list(
   mTable=c(),
   smallC=integer(),
   sTable=data.table(),
-  topK=integer()
+  topK=integer(),
+  type=character()
 ),
 validity=function(object) {
   stopifnot(is_scalar_integerish(object@smallC))
@@ -39,6 +42,9 @@ validity=function(object) {
 
   if(!is_prime(object@bigN)) {
     stop("bigN must be a prime number!\n")
+  }
+  if(!object@type %in% c("abs", "destatis")) {
+    stop("type must be either 'abs' or 'destatis'\n")
   }
   return(TRUE)
 })
@@ -55,12 +61,12 @@ NULL
 setClass("pert_inputdat",
 representation=list(
   microdat="data.table",
-  rkeys="integer",
+  rkeys="numeric",
   pert_params="pert_params"
 ),
 prototype=list(
   microdat=data.table(),
-  rkeys=integer(),
+  rkeys=numeric(),
   pert_params=NULL
 ),
 validity=function(object) {
@@ -92,6 +98,8 @@ NULL
 #' @slot numVars (character) variable names of numeric variables that have been tabulated
 #' @slot cellKeys (integer) vector containing the cell keys
 #' @slot is_weighted (logical) TRUE if sampling weights have been used
+#' @slot type (character) either \code{"abs"} or \code{"destatis"} depending on the format
+#' of the perturbation table that was used.
 #' @name pert_table-class
 #' @rdname pert_table-class
 #' @export
@@ -102,7 +110,8 @@ representation=list(
   numvars_modifications="list",
   cellKeys="integer",
   numVars="character",
-  is_weighted="logical"
+  is_weighted="logical",
+  type="character"
 ),
 prototype=list(
   tab=data.table(),
@@ -110,8 +119,9 @@ prototype=list(
   numvars_modifications=list(),
   cellKeys=integer(),
   numVars=character(),
-  is_weighted=c()),
+  is_weighted=c(),
+  type=character()),
 validity=function(object) {
-  return(TRUE)
+  stopifnot(object@type %in% c("abs","destatis"))
 })
 NULL
