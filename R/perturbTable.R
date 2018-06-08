@@ -155,7 +155,7 @@ perturbTable <- function(inp, dimList, numVars=NULL, weightVar=NULL) {
 
   } else if (type=="destatis") {
     tab[,CKey:=sumRec %% 1]
-    tab <- lookup_destatis(tab=tab, pert_params=pert_params, symmetry=8)
+    tab <- lookup_destatis(tab=tab, pert_params=pert_params)
   }
 
   tab <- fix_negative_counts(tab)

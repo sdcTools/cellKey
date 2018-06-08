@@ -92,9 +92,11 @@ lookup_abs <- function(tab, pert_params) {
 # format. This function is based on the fifo()-function provided
 # by Tobias Enderle
 # lookup_destatis() is used in perturbTable()
-lookup_destatis <- function(tab, pert_params, symmetry=8) {
+lookup_destatis <- function(tab, pert_params) {
   sumW <- i <- kum_p_o <- CKey <- col_indices <- pert <- tmpfreqforcalc <- NULL
   pTable <- slot(pert_params, "pTable")
+  symmetry <- max(pTable$i)
+
   tab[,tmpfreqforcalc:=sumW]
   row_indices <- rep(-1, nrow(tab))
   pert_vals <- rep(0L, nrow(tab))
