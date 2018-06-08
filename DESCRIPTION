@@ -1,9 +1,9 @@
 Package: cellKey
 Type: Package
-Date: 2018-06-07
+Date: 2018-06-08
 Title: Implementing ABS cell-key method for adding noise to frequency
         and continous tables
-Version: 0.8.0
+Version: 0.8.1
 Authors@R: c(
   person(given="Bernhard", family="Meindl", email="bernhard.meindl@statistik.gv.at", role=c("aut", "cre")))
 Description: This packages provides functionality to add noise to or rather perturb statistical tables.
