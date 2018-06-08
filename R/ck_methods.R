@@ -1,16 +1,14 @@
 #' Method to extract results
 #' @name results
+#' @rdname results-methods
 #' @param x input object
 #' @param ... additional parameters passed to methods
-#' @rdname results-methods
 #' @exportMethod results
 setGeneric("results", function(x, ...) {
   standardGeneric("results")
 })
 
-#' @rdname pert_table-class
-#' @aliases results,pert_table-method
-#' @param x an object of class \code{\link{pert_table-class}}
+#' @rdname results-methods
 #' @param meanBeforeSum (logical) defines if for (continuous) variables the weighted means should be computed
 #' before weighted sums or the other way round.
 #' @seealso \url{https://www.unece.org/fileadmin/DAM/stats/documents/ece/ces/ge.46/2013/Topic_1_ABS.pdf}
@@ -38,29 +36,36 @@ definition=function(x, meanBeforeSum=TRUE) {
   tab[]
 })
 
-#' @rdname pert_table-class
-#' @aliases print,pert_table-method
+#' Method to extract results
+#' @exportMethod print
+#' @rdname print-methods
+#' @param x input object
 setMethod(f="print", signature="pert_table",
 definition=function(x) {
   cat("please use method results()\n")
 })
 
-#' Method to extract information about modifications for counts
+#' Method to extract information about modifications for count tables
 #' @name mod_counts
-#' @param x input object
-#' @param ... additional parameters passed to methods
 #' @rdname mod_counts-methods
+#' @param x input object
+#' @param ... additional parameters passed to specific methods
 #' @exportMethod mod_counts
+#' @examples
+#' ## see example in ?perturbTable
 setGeneric("mod_counts", function(x, ...) {
   standardGeneric("mod_counts")
 })
-#' @rdname pert_table-class
-#' @aliases mod_counts,pert_table-method
-setMethod(f="mod_counts", signature="pert_table",
-definition=function(x) {
-  type <- slot(x, "type")
-  message("The perturbation was based on the ", shQuote(type), " method.")
 
+#' @rdname mod_counts-methods
+#' @param verbose (logical) if \code{TRUE}, additional information is printed
+setMethod(f="mod_counts", signature="pert_table",
+definition=function(x, verbose=TRUE) {
+  type <- slot(x, "type")
+  stopifnot(is_scalar_logical(verbose))
+  if (verbose) {
+    message("The perturbation was based on the ", shQuote(type), " method.")
+  }
   cc <- slot(x, "count_modifications")
   if (type=="destatis") {
     cc$col_indices <- NULL
@@ -70,15 +75,14 @@ definition=function(x) {
 
 #' Method to extract information about modifications for counts
 #' @name mod_numvars
+#' @rdname mod_numvars-methods
 #' @param x input object
 #' @param ... additional parameters passed to methods
-#' @rdname mod_numvars-methods
 #' @exportMethod mod_numvars
 setGeneric("mod_numvars", function(x, ...) {
   standardGeneric("mod_numvars")
 })
-#' @rdname pert_table-class
-#' @aliases mod_numvars,pert_table-method
+#' @rdname mod_numvars-methods
 setMethod(f="mod_numvars", signature="pert_table",
 definition=function(x) {
   slot(x, "numvars_modifications")

@@ -4,7 +4,8 @@
 \alias{ck_generate_rkeys}
 \title{ck_generate_rkeys}
 \usage{
-ck_generate_rkeys(dat, max_val = nrow(dat), max_digits = 10, type = "abs")
+ck_generate_rkeys(dat, max_val = nrow(dat), max_digits = 10, type = "abs",
+  verbose = TRUE)
 }
 \arguments{
 \item{dat}{microdata used to generated hash for random seed}
@@ -17,6 +18,8 @@ This parameter is only used if \code{type} equals \code{destatis}.}
 
 \item{type}{(character) choice how to compute record keys. Valid choices
 are \code{abs} and \code{destatis}.}
+
+\item{verbose}{(logical) if \code{TRUE}, print additional information}
 }
 \value{
 a numeric vector with \code{N} record keys given a seed depending on \code{dat}

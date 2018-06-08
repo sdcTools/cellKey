@@ -19,7 +19,7 @@
 #' @examples
 #' ## loading testdata and adding record keys (for abs-algorithm)
 #' dat <- ck_create_testdata()
-#' dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=2*nrow(dat), type="abs")
+#' dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=2*nrow(dat), type="abs", verbose=TRUE)
 #'
 #' ## loading test perturbation in abs- and destatis format
 #' pTable_abs <- ck_create_pTable(pTableSize=70, type="abs")
@@ -79,7 +79,7 @@
 #' results(res_destatis, meanBeforeSum=TRUE)
 #'
 #' ## information on modifications for count variables
-#' mod_counts(res_abs)
+#' mod_counts(res_abs, verbose=TRUE)
 #'
 #' ## information on modifications for numerical variables
 #' mod_numvars(res_abs)
@@ -187,7 +187,6 @@ perturbTable <- function(inp, dimList, numVars=NULL, weightVar=NULL) {
     applied_perturbation=tab[,pert])
   count_modifications <- cbind(t1, count_modifications)
   is_weighted <- ifelse(is.null(weightVar), FALSE, TRUE)
-
 
   tab <- tab[,c("CKey","row_indices","col_indices","pert", "sumRec"):=NULL]
   setnames(tab, "N", "UWC")

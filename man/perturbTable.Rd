@@ -30,7 +30,7 @@ compute perturbed tables containing counts and continous variables.
 \examples{
 ## loading testdata and adding record keys (for abs-algorithm)
 dat <- ck_create_testdata()
-dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=2*nrow(dat), type="abs")
+dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=2*nrow(dat), type="abs", verbose=TRUE)
 
 ## loading test perturbation in abs- and destatis format
 pTable_abs <- ck_create_pTable(pTableSize=70, type="abs")
@@ -90,7 +90,7 @@ res_destatis <- perturbTable(
 results(res_destatis, meanBeforeSum=TRUE)
 
 ## information on modifications for count variables
-mod_counts(res_abs)
+mod_counts(res_abs, verbose=TRUE)
 
 ## information on modifications for numerical variables
 mod_numvars(res_abs)

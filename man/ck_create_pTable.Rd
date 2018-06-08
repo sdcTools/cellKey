@@ -4,14 +4,14 @@
 \alias{ck_create_pTable}
 \title{ck_create_pTable}
 \usage{
-ck_create_pTable(pTableSize = 75, type = "abs", ...)
+ck_create_pTable(pTableSize = 75, type = "abs", verbose = TRUE)
 }
 \arguments{
 \item{pTableSize}{(number) defining the number of required columns}
 
 \item{type}{character specifying the format of the input table. Valid choices are \code{"abs"} and \code{"destatis"}.}
 
-\item{...}{additional parameters (currently ignored)}
+\item{verbose}{(logical) if \code{TRUE}, print additional information}
 }
 \value{
 a \code{data.table} with 256 rows and the specified number of

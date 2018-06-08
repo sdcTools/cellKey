@@ -5,7 +5,7 @@
 #'
 #' @param pTableSize (number) defining the number of required columns
 #' @param type character specifying the format of the input table. Valid choices are \code{"abs"} and \code{"destatis"}.
-#' @param ... additional parameters (currently ignored)
+#' @param verbose (logical) if \code{TRUE}, print additional information
 #'
 #' @return a \code{data.table} with 256 rows and the specified number of
 #' columns given by parameter \code{pTableSize} holding perturbation values in case argument \code{type} was set to \code{"abs"}.
@@ -14,8 +14,8 @@
 #'
 #' @examples
 #' ck_create_pTable(pTableSize=10, type="abs")
-ck_create_pTable <- function(pTableSize=75, type="abs", ...) {
-  gen_test_ptable_abs <- function(pTableSize, ...) {
+ck_create_pTable <- function(pTableSize=75, type="abs", verbose=TRUE) {
+  gen_test_ptable_abs <- function(pTableSize) {
     V1 <- V2 <- V3 <- NULL
 
     nrows <- 256
@@ -36,16 +36,18 @@ ck_create_pTable <- function(pTableSize=75, type="abs", ...) {
     dt[]
   }
 
-  stopifnot(is.character(type))
+  stopifnot(is_scalar_logical(verbose))
+  stopifnot(is_scalar_character(type))
   type <- tolower(type)
-  stopifnot(length(type)==1)
   stopifnot(type %in% c("abs","destatis"))
 
   if (type=="abs") {
-    return(gen_test_ptable_abs(pTableSize=pTableSize, ...))
+    return(gen_test_ptable_abs(pTableSize=pTableSize))
   }
   if (type=="destatis") {
-    message(paste("Note: argument",shQuote("pTableSize"),"is ignored!"))
+    if (verbose) {
+      message(paste("Note: argument",shQuote("pTableSize"),"is ignored!"))
+    }
     return(gen_test_ptable_destatis())
   }
 }

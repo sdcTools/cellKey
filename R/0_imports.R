@@ -5,6 +5,7 @@
 #' @import data.table
 #' @importFrom rlang is_double is_integerish is_na is_scalar_integerish
 #' @importFrom rlang is_scalar_character is_bare_integerish is_scalar_atomic
+#' @importFrom rlang is_scalar_logical
 #' @importFrom primes is_prime
 #' @importFrom methods new validObject is slot slot<-
 #' @importFrom stats addmargins formula weights xtabs runif
