@@ -208,7 +208,7 @@ perturbTable <- function(inp, dimList, numVars=NULL, weightVar=NULL) {
     tab=tab,
     count_modifications=count_modifications,
     numvars_modifications=pert_info_cont,
-    cellKeys=as.integer(ck),
+    cellKeys=ck,
     numVars=numVars,
     is_weighted=is_weighted,
     type=type)

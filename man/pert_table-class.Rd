@@ -30,7 +30,7 @@ values have been modified prior to tabulation.}
 
 \item{\code{numVars}}{(character) variable names of numeric variables that have been tabulated}
 
-\item{\code{cellKeys}}{(integer) vector containing the cell keys}
+\item{\code{cellKeys}}{(numeric) vector containing the cell keys}
 
 \item{\code{is_weighted}}{(logical) TRUE if sampling weights have been used}
 

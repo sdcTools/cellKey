@@ -96,7 +96,7 @@ NULL
 #' that was tabulated a list element with a \code{data.table} showing which
 #' values have been modified prior to tabulation.
 #' @slot numVars (character) variable names of numeric variables that have been tabulated
-#' @slot cellKeys (integer) vector containing the cell keys
+#' @slot cellKeys (numeric) vector containing the cell keys
 #' @slot is_weighted (logical) TRUE if sampling weights have been used
 #' @slot type (character) either \code{"abs"} or \code{"destatis"} depending on the format
 #' of the perturbation table that was used.
@@ -108,7 +108,7 @@ representation=list(
   tab="data.table",
   count_modifications="data.table",
   numvars_modifications="list",
-  cellKeys="integer",
+  cellKeys="numeric",
   numVars="character",
   is_weighted="logical",
   type="character"
@@ -117,11 +117,14 @@ prototype=list(
   tab=data.table(),
   count_modifications=data.table(),
   numvars_modifications=list(),
-  cellKeys=integer(),
+  cellKeys=numeric(),
   numVars=character(),
   is_weighted=c(),
   type=character()),
 validity=function(object) {
   stopifnot(object@type %in% c("abs","destatis"))
+  if (slot(object, "type")=="abs") {
+    stopifnot(is_integerish(slot(object, "cellKeys")))
+  }
 })
 NULL
