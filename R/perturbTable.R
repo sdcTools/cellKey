@@ -58,9 +58,20 @@
 #'   def_rkey=9,
 #'   pert_params=pert_params_destatis)
 #'
-#' ## definining table hierarchies and important variables
-#' dim.sex <- data.table(levels=c("@","@@@@","@@@@"), codes=c("Total", 1, 2))
-#' dim.age <- data.table(levels=c("@",rep("@@@@", 6)), codes=c("Total", 1:6))
+#' ## definining table hierarchies
+#' ## variable 'sex'
+#' dim.sex <- ck_create_node(total_lab="Total")
+#' dim.sex <- ck_add_nodes(dim.sex, reference_node="Total", node_labs=c("male","female"))
+#' print(dim.sex)
+#'
+#' ## variable 'sex'
+#' dim.age <- ck_create_node(total_lab="Total")
+#' dim.age <- ck_add_nodes(dim.age,
+#'   reference_node="Total",
+#'   node_labs=paste0("age_group",1:6))
+#' print(dim.age)
+#'
+#' ## define required inputs
 #' dimList <- list(sex=dim.sex, age=dim.age)
 #' weightVar <- "sampling_weight"
 #' numVars <- c("savings", "income")
@@ -98,6 +109,12 @@ perturbTable <- function(inp, dimList, numVars=NULL, weightVar=NULL) {
   dat  <- slot(inp, "microdat")
   dat[,tmprkeysfortabulation:=slot(inp, "rkeys")]
   dat[,tmpidforsorting:=.I]
+
+  for (i in 1:length(dimList)) {
+    if ("nodedim" %in% class(dimList[[i]])) {
+      dimList[[i]] <- node_to_sdcinput(dimList[[i]], addNumLevels=FALSE)
+    }
+  }
 
   dV <- match(names(dimList), names(dat))
   if (any(is.na(dV))) {
