@@ -15,31 +15,87 @@ calc_cKey <- function(rec_keys, bigN) {
 
 # +1 if 9th bit of record_key is 1, -1 else
 # used for perturbation of numerical variables
-get_direction <- function(rec_keys) {
-  out <- rep(-1, length(rec_keys))
-  rr <- sapply(1:length(rec_keys), function(x) {
-    as.integer(intToBits(rec_keys[x]))[9]==1
-  })
-  out[rr] <- 1
-  out
-}
-
-# in which row should we look in the perturbation table
-# used for perturbation of numerical variables
-get_row_index_cont <- function(rec_keys) {
-  out <- rep(-1, length(rec_keys))
-  sapply(1:length(rec_keys), function(x) {
-    bintodec(as.integer(intToBits(rec_keys[x]))[1:8])+1
-  })
-}
-
-# in which row should we look in the perturbation table
-# used for perturbation of numerical variables
-get_col_index_cont <- function(cKey, n, smallC) {
-  if (n<=smallC) {
-    return(n+32)
+get_direction <- function(rec_keys, type) {
+  get_direction_abs <- function(rec_keys) {
+    out <- rep(-1, length(rec_keys))
+    rr <- sapply(1:length(rec_keys), function(x) {
+      as.integer(intToBits(rec_keys[x]))[9]==1
+    })
+    out[rr] <- 1
+    out
   }
-  bintodec(as.integer(intToBits(cKey))[1:5])+1
+  get_direction_destatis <- function(rec_keys) {
+    out <- rep(-1, length(rec_keys))
+    out[as.numeric(substr(as.character(rec_keys),3,3)) >=5] <- 1
+    out
+  }
+  stopifnot(is_scalar_character(type))
+  stopifnot(type %in% c("abs","destatis"))
+
+  if (type=="abs") {
+    return(get_direction_abs(rec_keys))
+  }
+  if (type=="destatis") {
+    return(get_direction_destatis(rec_keys))
+  }
+  stop("error in get_direction()\n")
+}
+
+
+
+# in which row should we look in the perturbation table
+# used for perturbation of numerical variables
+
+get_row_index_cont <- function(rec_keys, type) {
+  get_row_index_cont_abs <- function(rec_keys) {
+    out <- rep(-1, length(rec_keys))
+    sapply(1:length(rec_keys), function(x) {
+      bintodec(as.integer(intToBits(rec_keys[x]))[1:8])+1
+    })
+  }
+  get_row_index_cont_destatis <- function(rec_keys) {
+    out <- rep(-1, length(rec_keys))
+    as.numeric((cut(rec_keys, seq(0, 1, length=257))))
+  }
+
+  stopifnot(is_scalar_character(type))
+  stopifnot(type %in% c("abs","destatis"))
+
+  if (type=="abs") {
+    return(get_row_index_cont_abs(rec_keys))
+  }
+  if (type=="destatis") {
+    return(get_row_index_cont_destatis(rec_keys))
+  }
+  stop("error in get_row_index_cont()\n")
+}
+
+# in which row should we look in the perturbation table
+# used for perturbation of numerical variables
+get_col_index_cont <- function(cKey, n, smallC, type) {
+  get_col_index_cont_abs <- function(cKey, n, smallC) {
+    if (n<=smallC) {
+      return(n+32)
+    }
+    bintodec(as.integer(intToBits(cKey))[1:5])+1
+  }
+  get_col_index_cont_destatis <- function(cKey, n, smallC) {
+    if (n<=smallC) {
+      return(n+32)
+    }
+    as.numeric((cut(cKey, seq(0, 1, length=smallC+1))))
+  }
+
+  stopifnot(is_scalar_character(type))
+  stopifnot(type %in% c("abs","destatis"))
+
+  if (type=="abs") {
+    return(get_col_index_cont_abs(cKey, n, smallC))
+  }
+  if (type=="destatis") {
+    return(get_col_index_cont_destatis(cKey, n, smallC))
+  }
+  stop("error in get_col_index_cont_destatis()\n")
 }
 
 # row index for perturbation - see page 11
@@ -144,8 +200,7 @@ check_weight <- function(dat, w) {
   return(list(dat=dat, is_weighted=is_weighted, w_new=w_new))
 }
 
-identify_topK_cells <- function(dat, rkeys, dimList, pert_params, v=v) {
-
+identify_topK_cells <- function(dat, rkeys, dimList, pert_params, v=v, type) {
   tmprkeyfortabulation <- is_topK <- magnitude <- noise <- NULL
   tmpidforsorting <- NULL
 
@@ -157,11 +212,11 @@ identify_topK_cells <- function(dat, rkeys, dimList, pert_params, v=v) {
   bigN <- slot(pert_params, "bigN")
   smallC <- slot(pert_params, "smallC")
 
-  # groups defined by key-variables
-  setkeyv(tmp, keys)
-
   tmp <- tmp[,c(v, keys, "tmpidforsorting"), with=F]
   tmp[,tmprkeyfortabulation:=rkeys]
+
+  # groups defined by key-variables
+  setkeyv(tmp, keys)
 
   tmp[,is_topK:=FALSE]
   tmp[,magnitude:=NA_real_]
@@ -184,9 +239,10 @@ identify_topK_cells <- function(dat, rkeys, dimList, pert_params, v=v) {
 
     z[1:topK, is_topK:=TRUE]
     z[1:topK, magnitude:=mTab]
-    z[1:topK, dir:=get_direction(z[1:topK,tmprkeyfortabulation])]
-    rind <- get_row_index_cont(rec_keys=z[1:topK,tmprkeyfortabulation])
-    cind <- get_col_index_cont(cKey=calc_cKey(z[,tmprkeyfortabulation], bigN), n=nrow(z), smallC=smallC)
+    z[1:topK, dir:=get_direction(z[1:topK,tmprkeyfortabulation], type=type)]
+    rind <- get_row_index_cont(rec_keys=z[1:topK,tmprkeyfortabulation], type=type)
+    cind <- get_col_index_cont(cKey=calc_cKey(z[,tmprkeyfortabulation], bigN), n=nrow(z), smallC=smallC, type=type)
+
     z[1:topK, noise:=unlist(sTable[rind, cind, with=F])]
 
     # .pert die tatsaechliche verschmutzung

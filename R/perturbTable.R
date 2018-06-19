@@ -133,7 +133,7 @@ perturbTable <- function(inp, dimList, numVars=NULL, weightVar=NULL) {
   nV <- c("tmprkeysfortabulation","tmpweightvarfortabulation")
   pert_info_cont <- list()
   if (!is.null(numVars)) {
-    nV2 <- match(names(numVars), names(dat))
+    nV2 <- match(numVars, names(dat))
     if (any(is.na(nV2))) {
       stop("check numVars!\n")
     }
@@ -143,7 +143,7 @@ perturbTable <- function(inp, dimList, numVars=NULL, weightVar=NULL) {
     for (i in 1:length(numVars)) {
       v <- numVars[i]
       rr <- identify_topK_cells(dat=dat, rkeys=slot(inp, "rkeys"),
-        dimList=dimList, pert_params=pert_params, v=v)
+        dimList=dimList, pert_params=pert_params, v=v, type=type)
       dat[rr[,tmpidforsorting],c(v):= rr[,get(paste0(v,".mod"))]]
       setnames(rr, "tmpidforsorting", "id")
       setnames(rr, v, paste0(v,".orig"))
@@ -169,7 +169,6 @@ perturbTable <- function(inp, dimList, numVars=NULL, weightVar=NULL) {
   if (type=="abs") {
     tab[,CKey:=sumRec %% slot(pert_params, "bigN")]
     tab <- lookup_abs(tab=tab, pert_params=pert_params)
-
   } else if (type=="destatis") {
     tab[,CKey:=sumRec %% 1]
     tab <- lookup_destatis(tab=tab, pert_params=pert_params)

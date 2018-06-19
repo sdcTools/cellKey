@@ -39,12 +39,17 @@ prototype=list(
 validity=function(object) {
   stopifnot(is_scalar_integerish(object@smallC))
   stopifnot(all(object@mTable>0))
-
-  if(!is_prime(object@bigN)) {
-    stop("bigN must be a prime number!\n")
-  }
   if(!object@type %in% c("abs", "destatis")) {
     stop("type must be either 'abs' or 'destatis'\n")
+  }
+  if (object@type=="abs") {
+    if(!is_prime(object@bigN)) {
+      stop("bigN must be a prime number!\n")
+    }
+  } else if (object@type=="abs") {
+    if(object@bigN!=1) {
+      stop("bigN must be a prime number!\n")
+    }
   }
   return(TRUE)
 })
