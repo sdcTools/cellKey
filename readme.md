@@ -8,6 +8,8 @@ This package is developed within the SGA `Open source tools for perturbative con
 We have a first rough version with which interested users may play around. Feedback (via issues) with regards to bugs or features requests are very welcome as well as pull-requests.
 
 ### News:
+#### Version 0.9.1
+- bugfix for continous tables using pre-specified record keys
 
 #### Version 0.9.0
 - feature: new dynamic way to specify hierarchies for tables, for an example see `?ck_manage_hierarchies`. This functionality will eventually also find its way to **sdcTable**
