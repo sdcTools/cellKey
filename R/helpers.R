@@ -25,9 +25,7 @@ get_direction <- function(rec_keys, type) {
     out
   }
   get_direction_destatis <- function(rec_keys) {
-    out <- rep(-1, length(rec_keys))
-    out[as.numeric(substr(as.character(rec_keys),3,3)) >=5] <- 1
-    out
+    ifelse(rec_keys<=0.5, -1, 1)
   }
   stopifnot(is_scalar_character(type))
   stopifnot(type %in% c("abs","destatis"))
