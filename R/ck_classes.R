@@ -37,18 +37,23 @@ prototype=list(
   type=character()
 ),
 validity=function(object) {
-  stopifnot(is_scalar_integerish(object@smallC))
   stopifnot(all(object@mTable>0))
-  if(!object@type %in% c("abs", "destatis")) {
+  stopifnot(is_scalar_character(slot(object, "type")))
+  if(!slot(object, "type") %in% c("abs", "destatis")) {
     stop("type must be either 'abs' or 'destatis'\n")
   }
+  stopifnot(is_scalar_integer(slot(object, "bigN")))
+  stopifnot(is_scalar_integer(slot(object, "smallN")))
+  stopifnot(is_scalar_integer(slot(object, "smallC")))
+  stopifnot(is_scalar_integer(slot(object, "topK")))
+
   if (object@type=="abs") {
     if(!is_prime(object@bigN)) {
       stop("bigN must be a prime number!\n")
     }
   } else if (object@type=="abs") {
     if(object@bigN!=1) {
-      stop("bigN must be a prime number!\n")
+      stop("bigN must equal 1 for the destatis-method!\n")
     }
   }
   return(TRUE)
