@@ -4,7 +4,8 @@
 \alias{perturbTable}
 \title{perturbTable}
 \usage{
-perturbTable(inp, dimList, numVars = NULL, weightVar = NULL)
+perturbTable(inp, dimList, countVars = NULL, numVars = NULL,
+  weightVar = NULL)
 }
 \arguments{
 \item{inp}{an object of class \code{\link{pert_inputdat-class}}
@@ -14,6 +15,9 @@ generated with \code{\link{ck_create_input}}}
 tabulated. Each slot consists of a \code{data.frame} or \code{data.table}
 with columns \code{levels} and \code{codes} specifiying the
 hierarchies of the variables.}
+
+\item{countVars}{(character) vector of numerical variables that should be
+counted and perturbed; must be 0/1 coded.}
 
 \item{numVars}{(character) vector of numerical variables that
 should be tabulated or \code{NULL}}
@@ -30,6 +34,13 @@ compute perturbed tables containing counts and continous variables.
 \examples{
 ## loading testdata and adding record keys (for abs-algorithm)
 dat <- ck_create_testdata()
+
+## create some 0/1 variables that should be perturbed later
+dat$cnt_females <- ifelse(dat$sex=="male", 0, 1)
+dat$cnt_males <- ifelse(dat$sex=="female", 0, 1)
+dat$cnt_highincome <- ifelse(dat$income>=9000, 1, 0)
+
+## create record keys
 dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=2*nrow(dat), type="abs", verbose=TRUE)
 
 ## loading test perturbation in abs- and destatis format
@@ -91,20 +102,38 @@ numVars <- c("savings", "income")
 res_abs <- perturbTable(
   inp=inp_abs,
   dimList=dimList,
-  weightVar=weightVar, numVars=numVars)
-results(res_abs, meanBeforeSum=TRUE)
+  weightVar=weightVar, countVars=NULL, numVars=numVars)
+ck_freq_table(res_abs, vname="Total")
+ck_cont_table(res_abs, vname="income", meanBeforeSum=TRUE)
+ck_cont_table(res_abs, vname="savings", meanBeforeSum=TRUE)
 
 res_destatis <- perturbTable(
   inp=inp_destatis,
   dimList=dimList,
-  weightVar=weightVar, numVars=numVars)
-results(res_destatis, meanBeforeSum=TRUE)
+  weightVar=weightVar, countVars=NULL, numVars=numVars)
+ck_freq_table(res_abs, vname="Total")
+ck_cont_table(res_abs, vname="income", meanBeforeSum=TRUE)
+ck_cont_table(res_abs, vname="savings", meanBeforeSum=TRUE)
 
 ## information on modifications for count variables
 mod_counts(res_abs, verbose=TRUE)
 
 ## information on modifications for numerical variables
 mod_numvars(res_abs)
+
+## an example using additional countVars
+res <- perturbTable(
+  inp=inp_destatis,
+  dimList=dimList,
+  weightVar=weightVar,
+  countVars=c("cnt_females", "cnt_males","cnt_highincome"),
+  numVars=numVars)
+ck_freq_table(res, vname=NULL)
+ck_freq_table(res, vname="Total")
+ck_freq_table(res, vname="cnt_females")
+ck_freq_table(res, vname="cnt_males")
+ck_freq_table(res, vname="cnt_highincome")
+ck_cont_table(res, vname="income")
 }
 \seealso{
 \url{https://www.unece.org/fileadmin/DAM/stats/documents/ece/ces/ge.46/2013/Topic_1_ABS.pdf}

@@ -118,68 +118,87 @@ get_colIndex <- function(N, pTableSize, smallN) {
   }
 }
 
-# lookup perturbation values using the abs-method
-# lookup_abs() is used in perturbTable()
-lookup_abs <- function(tab, pert_params) {
-  . <- CKey <- N <- row_indices <- col_indices <- pert <- NULL
 
-  set(tab, j="row_indices", value=sapply(tab[,CKey], get_rowIndex))
-  set(tab, j="col_indices", value=sapply(tab[,N], function(z) {
-    get_colIndex(z, slot(pert_params, "pTableSize"), slot(pert_params, "smallN"))
-  }))
+# perform actual lookup to get perturbation values;
+# used in perturbTable()
+lookup <- function(tab, pert_params, ckeyname, freqvarname, type) {
+  # lookup perturbation values using the abs-method
+  # lookup_abs() is used in perturbTable()
+  lookup_abs <- function(tab, pert_params, freqs, cellkeys) {
+    . <- cK <- N <- row_indices <- col_indices <- pert <- NULL
 
-  df <- tab[,.(row_indices, col_indices)]
+    row_indices <- sapply(freqs, get_rowIndex)
+    col_indices <- sapply(freqs, function(z) {
+      get_colIndex(z, slot(pert_params, "pTableSize"), slot(pert_params, "smallN"))
+    })
 
-  pert_vals <- lapply(1:nrow(df), function(z) {
-    pert_params@pTable[df[z, row_indices], df[z, col_indices], with=F]
-  })
-  ii <- which(sapply(pert_vals, function(x) nrow(x)!=1))
-  if (length(ii)>0) {
-    pert_vals[ii] <- NA
-  }
-  pert_vals <- unlist(pert_vals)
-  tab[,pert:=pert_vals]
-  return(tab)
-}
+    dt <- data.table(row_indices=row_indices, col_indices=col_indices)
 
-# lookup perturbation values if the perturbation table is in destatis
-# format. This function is based on the fifo()-function provided
-# by Tobias Enderle
-# lookup_destatis() is used in perturbTable()
-lookup_destatis <- function(tab, pert_params) {
-  sumW <- i <- kum_p_o <- CKey <- col_indices <- pert <- tmpfreqforcalc <- NULL
-  pTable <- slot(pert_params, "pTable")
-  symmetry <- max(pTable$i)
-
-  tab[,tmpfreqforcalc:=sumW]
-  row_indices <- rep(-1, nrow(tab))
-  pert_vals <- rep(0L, nrow(tab))
-
-  for (d in 1:(symmetry)) {
-    if (d==symmetry) {
-      rkind <- tab[,tmpfreqforcalc>=d]
-    } else {
-      rkind <- tab[,tmpfreqforcalc==d]
+    pert_vals <- lapply(1:nrow(dt), function(z) {
+      pert_params@pTable[dt[z, row_indices], dt[z, col_indices], with=F]
+    })
+    ii <- which(sapply(pert_vals, function(x) nrow(x)!=1))
+    if (length(ii)>0) {
+      pert_vals[ii] <- NA
     }
-    if (sum(rkind)>0) {
-      v <- pTable[i==d,kum_p_o]
-      ck <- tab[rkind, CKey]
-      diffs <- pTable[i==d,diff]
-
-      # row_ind
-      rI <- sapply(1:sum(rkind), function(x) {
-        which.max(ck[x] <= v)
-      })
-      pert_vals[rkind] <- as.integer(diffs[rI])
-      row_indices[rkind] <- rI
-    }
+    dt[,pert:=unlist(pert_vals)]
+    dt[,cK:=cellkeys]
+    dt
   }
 
-  tab[,tmpfreqforcalc:=NULL]
-  tab[,row_indices:=row_indices]
-  tab[,col_indices:=NA]
-  tab[,pert:=pert_vals]
-  return(tab)
+  # lookup perturbation values if the perturbation table is in destatis
+  # format. This function is based on the fifo()-function provided
+  # by Tobias Enderle
+  # lookup_destatis() is used in perturbTable()
+  lookup_destatis <- function(tab, pert_params, freqs, cellkeys) {
+    sumW <- i <- kum_p_o <- tmpcellkey <- col_indices <- pert  <- NULL
+    pTable <- slot(pert_params, "pTable")
+    symmetry <- max(pTable$i)
+
+    row_indices <- rep(-1, nrow(tab))
+    pert_vals <- rep(0L, nrow(tab))
+
+    for (d in 1:(symmetry)) {
+      if (d==symmetry) {
+        rkind <- freqs>=d
+      } else {
+        rkind <- freqs==d
+      }
+      if (sum(rkind)>0) {
+        v <- pTable[i==d,kum_p_o]
+        ck <- cellkeys[rkind]
+        diffs <- pTable[i==d, diff]
+
+        # row_ind
+        rI <- sapply(1:sum(rkind), function(x) {
+          which.max(ck[x] <= v)
+        })
+        pert_vals[rkind] <- as.integer(diffs[rI])
+        row_indices[rkind] <- rI
+      }
+    }
+    data.table(row_indices=row_indices, col_indices=NA, pert=pert_vals, cK=cellkeys)
+  }
+
+  stopifnot(is_scalar_character(type))
+  stopifnot(is_scalar_character(ckeyname))
+  stopifnot(ckeyname %in% names(tab))
+
+  stopifnot(is_scalar_character(freqvarname))
+  stopifnot(freqvarname %in% names(tab))
+
+  stopifnot(type %in% c("abs","destatis"))
+
+  cellkeys <- tab[, get(ckeyname)]
+  freqs <- tab[,get(freqvarname)]
+
+  if (type=="abs") {
+    return(lookup_abs(tab=tab, pert_params=pert_params, freqs=freqs, cellkeys=cellkeys))
+  }
+  if (type=="destatis") {
+    return(lookup_destatis(tab=tab, pert_params=pert_params, freqs=freqs, cellkeys=cellkeys))
+  }
+  stop("error in lookup()\n")
 }
 
 check_weight <- function(dat, w) {

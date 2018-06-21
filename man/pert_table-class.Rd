@@ -28,9 +28,12 @@ was extracted from the perturbation table (useful for debugging)}
 that was tabulated a list element with a \code{data.table} showing which
 values have been modified prior to tabulation.}
 
+\item{\code{dimVars}}{(character) vector of variable names used to define the table structure}
+
 \item{\code{numVars}}{(character) variable names of numeric variables that have been tabulated}
 
-\item{\code{cellKeys}}{(numeric) vector containing the cell keys}
+\item{\code{countVars}}{(character) vector containing names of variables that have been tabulated
+using the frequency approach}
 
 \item{\code{is_weighted}}{(logical) TRUE if sampling weights have been used}
 
