@@ -8,7 +8,7 @@
 \usage{
 mod_counts(x, ...)
 
-\S4method{mod_counts}{pert_table}(x, verbose = TRUE)
+\S4method{mod_counts}{pert_table}(x, verbose = FALSE)
 }
 \arguments{
 \item{x}{input object}

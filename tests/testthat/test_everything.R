@@ -70,15 +70,15 @@ tab_freq <- perturbTable(inp, dimList=dimList, weightVar="sampling_weight", numV
 res_weighted <- slot(tab_freq, "tab")
 
 test_that("checking weighted version of perturbedFreqTable", {
-  expect_equal(head(res_weighted$UWC,1), 4580)
+  expect_equal(head(res_weighted$UWC_Total,1), 4580)
   #expect_equal(tail(res_weighted$WC,1), 275590)
 })
 
 tab_freq_noweights <- perturbTable(inp=inp, dimList=dimList, weightVar=NULL, numVars=NULL)
 res_unweighted <- slot(tab_freq_noweights, "tab")
 test_that("checking unweighted version of perturbedFreqTable", {
-  expect_equal(head(res_unweighted$UWC,1), 4580)
-  expect_equal(head(res_unweighted$WC,1), 4580)
+  expect_equal(head(res_unweighted$UWC_Total,1), 4580)
+  expect_equal(head(res_unweighted$WC_Total,1), 4580)
 })
 
 context("Testing Magnitude Tables")
@@ -87,7 +87,7 @@ tab_cont <- perturbTable(inp=inp, dimList=dimList, weightVar=NULL, numVars=c("sa
 test_that("checking unweighted version of perturbedContTable", {
   expect_s4_class(tab_cont, "pert_table")
   expect_equal(nrow(tab_cont@tab), 21)
-  expect_equal(ncol(tab_cont@tab), 8)
+  expect_equal(ncol(tab_cont@tab), 11)
 })
 context("Testing consistent record-key generation")
 # for the same input-dataset and the same setting of def_rkey, the
