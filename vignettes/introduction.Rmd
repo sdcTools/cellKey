@@ -40,13 +40,15 @@ packageVersion("cellKey")
 ```
 
 ### Loading testdata
-The testdata set we are using in this example contains information on person-level along with sampling weights as well as some categorical and continously scaled variables.
+The testdata set we are using in this example contains information on person-level along with sampling weights as well as some categorical and continously scaled variables. We also compute some binary variables for which we also want to create perturbed tables.
+
 ```{r}
 dat <- ck_create_testdata()[,c("sex","age","savings","income","sampling_weight")]
-head(dat)
+dat[,cnt_males:=ifelse(sex=="male", 1, 0)]
+dat[,cnt_highincome:=ifelse(income>=9000, 1, 0)]
 ```
 
-The goal of this introduction is to create a perturbed table of counts of variables `sex` by `age` as well as perturbation for continous variables `savings` and `income` also using groups defined by `sex` by `age` and corresponding (sub)totals.
+The goal of this introduction is to create a perturbed table of counts of variables `sex` by `age` for all observations as well as for the subgroups in `cnt_males` and `cnt_highincome` that are non-zero. We also want to create perturbed tables of continously scaled variables `savings` and `income` also giving the hierarchical structure defined by `sex` by `age`.
 
 ### Create required input
 The first step in this approach is to generate or rather set some parameters, that are using in the perturbation approach. These inputs are put together using function `ck_create_pert_params()`. 
@@ -89,7 +91,6 @@ The next step is to define hierarchies for each of the classifying variables. Th
 dim.sex <- data.table(levels=c("@","@@","@@"), codes=c("Total", "male", "female"))
 print(dim.sex)
 
-
 dim.age <- data.table(levels=c("@",rep("@@", 6)), codes=c("Total", paste0("age_group",1:6)))
 print(dim.age)
 ```
@@ -128,21 +129,24 @@ It is now possible to finally compute perturbed tables using function `perturbTa
 - `inp`: required, an object of class `pert_input` created with `ck_create_input()`
 - `dimList`: required, a `list` containing definitions of hierarchies of all variables that will define the table
 - `weightVar`: optional, a variable name existing in `slot(inp, "microdat)` holding sampling weights for each unit in the micro data or or `NULL` if no weights are available. In this case, each unit is assigned sampling weight 1 in the data
-- `numVars`: optional, a vector of variable names existing in `slot(inp, "microdat)` that should be tabulated (and perturbed). If this parameter is not set, a count table is returned.
+- `countVars`: optional, a vector of variable names existing in `slot(inp, "microdat)` that should be perturbed. The key is that these variables need to be binary (0/1 coded).
+- `numVars`: optional, a vector of variable names existing in the input microdata that should be tabulated (and perturbed). 
 
-Below it is shown, how a count table using existing sampling weights (available in variable `sampling_weight` in the input data) can be computed:
-
-```{r}
-tab1 <- perturbTable(inp=inp, dimList=dimList, weightVar="sampling_weight", numVars=NULL)
-```
-
-Applying method `results()` to an output object of `perturbTable()`, a `data.table` with all combinations of the dimensional variables `sex` and `age` as well as original and perturbed values are returned.
+If both `countVars` and `numVars` are not specified, the perturbed count table based on all units is computed. Below it is shown, how a count table using existing sampling weights (available in variable `sampling_weight` in the input data) can be computed:
 
 ```{r}
-results(tab1)
+tab1 <- perturbTable(inp=inp, dimList=dimList, countVars=c("cnt_males", "cnt_highincome"), 
+  weightVar="sampling_weight", numVars=NULL)
 ```
 
-The variables on this data set (additional to the dimensional variables) are:
+Applying method `ck_freq_table()` to an output object of `perturbTable()` returns a `data.table` with all combinations of the dimensional variables `sex` and `age` as well as original and perturbed (un)weighted values are returned. In any case, the tabulation of all observations can be extracted (`vnames="Total"`). If additional variables have been specified in argument `countVars`, these can be queried too as shown below:
+
+```{r}
+ck_freq_table(tab1) # whow which tables have been generated
+ck_freq_table(tab1, vname="cnt_males")
+```
+
+In the example above we see, that all cells containing `sex=="female" no perturbation has been applied. The variables on this data set (additional to the dimensional variables) are:
 
 - `UWC`: unweighted counts
 - `pUWC`: perturbed unweighted counts
@@ -153,17 +157,32 @@ The variables on this data set (additional to the dimensional variables) are:
 The example shows how to create a perturbed table of continous data using sampling weights. For this case, we need to specify parameter `numVars` in `perturbTable()`. Note that it is possible, to specify multiple variables at once.
 
 ```{r}
-tab2 <- perturbTable(inp=inp, dimList=dimList, 
-  weightVar="sampling_weight", numVars=c("savings","income"))
+tab2 <- perturbTable(inp=inp, dimList=dimList,  weightVar="sampling_weight", 
+  countVars=c("cnt_males", "cnt_highincome"), numVars=c("savings","income"))
 ```
 
-Again, we can use method `results()` on the output of `perturbTable()`. In this case, we can set an additional argument `meanBeforeSum` that is either `TRUE` or `FALSE` and specifies, how the perturbed cell values are computed. Details on this method can be found in *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar) in Section *6.3*.
-
+To get information about magnitute tables, function `ck_cont_table()` can be applied on the output of `perturbTable()`. In this case, we can set an additional argument `meanBeforeSum` that is either `TRUE` or `FALSE` and specifies, how the perturbed cell values are computed. Details on this method can be found in *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar) in Section *6.3*.
 
 ```{r}
-results(tab2, meanBeforeSum=TRUE)
+p_income <- ck_cont_table(tab2, vname="income", meanBeforeSum=TRUE)
+p_income
 ```
 
+The result obtained from `ck_cont_table` contains an attribute `modification` which holds a `data.table` containing all the perturbations for the variabe queried in `vname`. We can access this information as shown below:
+
+```{r}
+attr(p_income, "modifications")
+```
+
+We see that this `data.table` has the following variables:
+
+- `id`: the id of the observation in the input data set for which values were modified
+- `magnitude`: the amount of perturbation
+- `dir`: the direction of perturbation, -1 is negative, +1 is positive
+- `noise`: the noise term applied 
+- `vals.orig`: the original value of the variable
+- `vals.pert`: the amount of perturbation (`magnitude * dir * noise * vals.orig`)
+- `vals.mod`: the final perturbed value (`vals.orig`+`vals.pert`)
 
 ### Extract information from results
 Some auxiliary methods may be applied to output object of function `perturbTable()`. The structure of such objects is shown below:
@@ -172,14 +191,14 @@ Some auxiliary methods may be applied to output object of function `perturbTable
 slotNames(tab2)
 ```
 
-Information on perturbations for counts can be extracted using `mod_counts()`. The method returns a `data.table` showing for each cell the row and the colum of the perturbation table that was used to find the perturbation value actually used. This value is also shown in the output.
+Information on perturbations for counts can be extracted using `mod_counts()`. The method returns a `data.table` showing for each cell and tabulated variable the row and the colum of the perturbation table that was used to find the perturbation value actually used. This value is also shown in the output.
 ```{r}
-mod_counts(tab2) 
+head(mod_counts(tab2))
 ```
 
-Information on perturbations for numerical variables can be extracted using `mod_numvars()`. For each variable that was perturbed, a `data.table` is returned showing the observations of the input variables that have been modified. For each observation, the parameters used in modifying (direction, magnitude and noise) are shown as well as the original values, the perturbation and the final modified value. These values were finally used to compute the tables itself.
+Information on perturbations for numerical variables can be extracted using `mod_numvars()`. This \code{data.table} contains the ids of the observations of the input variables that have been modified. For each observation and tabulated numerical variable (given in `numVar`), the parameters used in modifying (direction, magnitude and noise) are shown as well as the original values, the perturbation and the final modified value. These values were finally used to compute the tables itself.
 ```{r}
-mod_numvars(tab2) 
+head(mod_numvars(tab2))
 ```
 
 ## Summary
