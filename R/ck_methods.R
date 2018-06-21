@@ -1,48 +1,10 @@
 #' Method to extract results
-#' @name results
-#' @rdname results-methods
-#' @param x input object
-#' @param ... additional parameters passed to methods
-#' @exportMethod results
-setGeneric("results", function(x, ...) {
-  standardGeneric("results")
-})
-
-#' @rdname results-methods
-#' @param meanBeforeSum (logical) defines if for (continuous) variables the weighted means should be computed
-#' before weighted sums or the other way round.
-#' @seealso \url{https://www.unece.org/fileadmin/DAM/stats/documents/ece/ces/ge.46/2013/Topic_1_ABS.pdf}
-setMethod(f="results", signature="pert_table",
-definition=function(x, meanBeforeSum=TRUE) {
-  numVars <- slot(x, "numVars")
-  tab <- slot(x, "tab")
-
-  if (length(numVars)>0) {
-    for (i in 1:length(numVars)) {
-      nV <- numVars[i]
-      nVPert <- paste0(nV,".pert")
-      if (meanBeforeSum==TRUE) {
-        tmp <- mean_before_sum(tab[,get(nVPert)], pWC=tab[, get("pWC")])
-        setnames(tmp, paste0(nV,".", names(tmp)))
-        tab <- cbind(tab, tmp)
-      } else {
-        tmp <- sum_before_mean(tab[,get(nVPert)], pWC=tab[, get("pWC")])
-        setnames(tmp, paste0(nV,".", names(tmp)))
-        tab <- cbind(tab, tmp)
-      }
-    }
-    tab[,c(paste0(numVars,".pert")):=NULL]
-  }
-  tab[]
-})
-
-#' Method to extract results
 #' @exportMethod print
 #' @rdname print-methods
 #' @param x input object
 setMethod(f="print", signature="pert_table",
 definition=function(x) {
-  cat("please use method results()\n")
+  cat("still to write!\n\n")
 })
 
 #' Method to extract information about modifications for count tables
@@ -60,7 +22,7 @@ setGeneric("mod_counts", function(x, ...) {
 #' @rdname mod_counts-methods
 #' @param verbose (logical) if \code{TRUE}, additional information is printed
 setMethod(f="mod_counts", signature="pert_table",
-definition=function(x, verbose=TRUE) {
+definition=function(x, verbose=FALSE) {
   type <- slot(x, "type")
   stopifnot(is_scalar_logical(verbose))
   if (verbose) {
@@ -70,7 +32,7 @@ definition=function(x, verbose=TRUE) {
   if (type=="destatis") {
     cc$col_indices <- NULL
   }
-  print(cc)
+  cc
 })
 
 #' Method to extract information about modifications for counts
