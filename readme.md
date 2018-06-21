@@ -8,6 +8,12 @@ This package is developed within the SGA `Open source tools for perturbative con
 We have a first rough version with which interested users may play around. Feedback (via issues) with regards to bugs or features requests are very welcome as well as pull-requests.
 
 ### News:
+#### Version 0.10
+- new argument `countVars` in `perturbTable()` which allows to additionally tabulate any number or 0/1 variables. For such variables. In such case, the record-keys of non-contribution units are set to 0 prior to the lookup in the perturbation table
+- removed method `results()` and replaced it with new methods `ck_freq_table()` and `ck_cont_table()` that should be used to query specific tables from the output of `perturbTable()`
+- updated examples showing new features in `perturbTable()`, `ck_freq_table()` and `ck_cont_table()`
+- updated introduction vignette
+
 #### Version 0.9.1
 - bugfix for continous tables using pre-specified record keys
 
@@ -30,7 +36,6 @@ devtools::install_github("sdcTools/cellKey", build_vignette=TRUE)
 ```
 
 ### Usage
-
 An example using both possible input formats for perturbation tables is given in the main-function of the packge `perturbTable()`
 
 ```
