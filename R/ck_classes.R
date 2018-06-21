@@ -105,8 +105,10 @@ NULL
 #' @slot numvars_modifications (list) containing for each numerical variable
 #' that was tabulated a list element with a \code{data.table} showing which
 #' values have been modified prior to tabulation.
+#' @slot dimVars (character) vector of variable names used to define the table structure
 #' @slot numVars (character) variable names of numeric variables that have been tabulated
-#' @slot cellKeys (numeric) vector containing the cell keys
+#' @slot countVars (character) vector containing names of variables that have been tabulated
+#' using the frequency approach
 #' @slot is_weighted (logical) TRUE if sampling weights have been used
 #' @slot type (character) either \code{"abs"} or \code{"destatis"} depending on the format
 #' of the perturbation table that was used.
@@ -117,8 +119,9 @@ setClass("pert_table",
 representation=list(
   tab="data.table",
   count_modifications="data.table",
-  numvars_modifications="list",
-  cellKeys="numeric",
+  numvars_modifications="data.table",
+  dimVars="character",
+  countVars="character",
   numVars="character",
   is_weighted="logical",
   type="character"
@@ -126,15 +129,13 @@ representation=list(
 prototype=list(
   tab=data.table(),
   count_modifications=data.table(),
-  numvars_modifications=list(),
-  cellKeys=numeric(),
+  numvars_modifications=data.table(),
+  dimVars=character(),
+  countVars=character(),
   numVars=character(),
   is_weighted=c(),
   type=character()),
 validity=function(object) {
   stopifnot(object@type %in% c("abs","destatis"))
-  if (slot(object, "type")=="abs") {
-    stopifnot(is_integerish(slot(object, "cellKeys")))
-  }
 })
 NULL
