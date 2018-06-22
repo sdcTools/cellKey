@@ -34,13 +34,13 @@
 #'
 #' @examples
 #' ## see examples in perturbTable()
-ck_cont_table <- function(inp, vname=NULL,meanBeforeSum=TRUE) {
+ck_cont_table <- function(inp, vname=NULL, meanBeforeSum=TRUE) {
   stopifnot(isS4(inp))
   stopifnot(class(inp)=="pert_table")
 
   . <- col_indices <- countVar <- row_indices <- pert <- cellKey <- NULL
   WC_Total <- id <- magnitude <- noise <- numVar <- pWC_Total <- NULL
-  vals.mod <- vals.orig <- vals.pert <- NULL
+  vals.mod <- vals.orig <- vals.pert <- pWMean <- pWSum <- NULL
 
   avail <- slot(inp, "numVars")
   if (is.null(vname)) {
@@ -55,20 +55,28 @@ ck_cont_table <- function(inp, vname=NULL,meanBeforeSum=TRUE) {
   stopifnot(is_scalar_character(vname))
   stopifnot(vname %in% avail)
 
+  byVar <- slot(inp, "by")
+  if (byVar !="Total") {
+    cat(paste0("Note: this table is restricted to groups defined by ",shQuote(byVar),"!"))
+  }
+
   data <- slot(inp, "tab")
   dt <- cbind(
     data[,slot(inp, "dimVars"), with=F],
     data[,grep(paste0("_", vname), names(data)), with=F])
 
   # perturbed weighted counts
-  pwc <- data[, pWC_Total]
-  wc <- data[, WC_Total]
+  pwc <- data[, get(paste0("pWC_", byVar))]
+  wc <- data[,get(paste0("WC_", byVar))]
 
   if (meanBeforeSum==TRUE) {
     out <- mean_before_sum(dt[,get(paste0("pWS_", vname))], pWC=pwc)
   } else {
     out <- sum_before_mean(dt[,get(paste0("pWS_", vname))], pWC=pwc)
   }
+  out[is.nan(pWSum), pWSum:=0]
+  out[is.nan(pWMean), pWMean:=0]
+
   set(dt, j=paste0("pWS_", vname), value=out$pWSum)
   set(dt, j=paste0("pWM_", vname), value=out$pWMean)
 

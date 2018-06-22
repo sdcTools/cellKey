@@ -4,7 +4,7 @@
 \alias{perturbTable}
 \title{perturbTable}
 \usage{
-perturbTable(inp, dimList, countVars = NULL, numVars = NULL,
+perturbTable(inp, dimList, countVars = NULL, numVars = NULL, by = NULL,
   weightVar = NULL)
 }
 \arguments{
@@ -22,6 +22,11 @@ counted and perturbed; must be 0/1 coded.}
 \item{numVars}{(character) vector of numerical variables that
 should be tabulated or \code{NULL}}
 
+\item{by}{\code{NULL} or a scalar character. If specified, it is possible to use a variable
+name (that must have also been specified in argument \code{countVars}) that will be used to
+create the perturbation of all variables specified in \code{numVars} only for subgroups defined
+by the specified count variable. Otherwise, the table will be based on all units in the sample.}
+
 \item{weightVar}{(character) vector of variable holding sampling
 weights or \code{NULL}}
 }
@@ -36,9 +41,9 @@ compute perturbed tables containing counts and continous variables.
 dat <- ck_create_testdata()
 
 ## create some 0/1 variables that should be perturbed later
-dat$cnt_females <- ifelse(dat$sex=="male", 0, 1)
-dat$cnt_males <- ifelse(dat$sex=="female", 0, 1)
-dat$cnt_highincome <- ifelse(dat$income>=9000, 1, 0)
+dat[,cnt_females:=ifelse(sex=="male", 0, 1)]
+dat[,cnt_males:=ifelse(sex=="male", 1, 0)]
+dat[,cnt_highincome:=ifelse(income>=9000, 1, 0)]
 
 ## create record keys
 dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=2*nrow(dat), type="abs", verbose=TRUE)
@@ -128,12 +133,30 @@ res <- perturbTable(
   weightVar=weightVar,
   countVars=c("cnt_females", "cnt_males","cnt_highincome"),
   numVars=numVars)
+
+## show count tables
 ck_freq_table(res, vname=NULL)
 ck_freq_table(res, vname="Total")
 ck_freq_table(res, vname="cnt_females")
 ck_freq_table(res, vname="cnt_males")
 ck_freq_table(res, vname="cnt_highincome")
-ck_cont_table(res, vname="income")
+
+## show magnitude tables alog with its modifications
+p_inc <- ck_cont_table(res, vname="income"); p_inc
+attr(p_inc, "modifications")
+
+## create perturbed magnitude table for subgroups of data
+res <- perturbTable(
+  inp=inp_destatis,
+  dimList=dimList,
+  weightVar=weightVar,
+  countVars=c("cnt_females", "cnt_males","cnt_highincome"),
+  numVars=numVars, by="cnt_males")
+
+## the perturbed tables of savings and income are computed only where
+## variable cnt_males is 1
+p_sav <- ck_cont_table(res, vname="savings"); p_sav
+attr(p_sav, "modifications") # no modifications in cells containing females!
 }
 \seealso{
 \url{https://www.unece.org/fileadmin/DAM/stats/documents/ece/ces/ge.46/2013/Topic_1_ABS.pdf}

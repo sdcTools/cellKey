@@ -12,6 +12,10 @@
 #' counted and perturbed; must be 0/1 coded.
 #' @param numVars (character) vector of numerical variables that
 #' should be tabulated or \code{NULL}
+#' @param by \code{NULL} or a scalar character. If specified, it is possible to use a variable
+#' name (that must have also been specified in argument \code{countVars}) that will be used to
+#' create the perturbation of all variables specified in \code{numVars} only for subgroups defined
+#' by the specified count variable. Otherwise, the table will be based on all units in the sample.
 #' @param weightVar (character) vector of variable holding sampling
 #' weights or \code{NULL}
 #' @return an object of class \code{\link{pert_table-class}}.
@@ -23,9 +27,9 @@
 #' dat <- ck_create_testdata()
 #'
 #' ## create some 0/1 variables that should be perturbed later
-#' dat$cnt_females <- ifelse(dat$sex=="male", 0, 1)
-#' dat$cnt_males <- ifelse(dat$sex=="female", 0, 1)
-#' dat$cnt_highincome <- ifelse(dat$income>=9000, 1, 0)
+#' dat[,cnt_females:=ifelse(sex=="male", 0, 1)]
+#' dat[,cnt_males:=ifelse(sex=="male", 1, 0)]
+#' dat[,cnt_highincome:=ifelse(income>=9000, 1, 0)]
 #'
 #' ## create record keys
 #' dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=2*nrow(dat), type="abs", verbose=TRUE)
@@ -115,13 +119,31 @@
 #'   weightVar=weightVar,
 #'   countVars=c("cnt_females", "cnt_males","cnt_highincome"),
 #'   numVars=numVars)
+#'
+#' ## show count tables
 #' ck_freq_table(res, vname=NULL)
 #' ck_freq_table(res, vname="Total")
 #' ck_freq_table(res, vname="cnt_females")
 #' ck_freq_table(res, vname="cnt_males")
 #' ck_freq_table(res, vname="cnt_highincome")
-#' ck_cont_table(res, vname="income")
-perturbTable <- function(inp, dimList, countVars=NULL, numVars=NULL, weightVar=NULL) {
+#'
+#' ## show magnitude tables alog with its modifications
+#' p_inc <- ck_cont_table(res, vname="income"); p_inc
+#' attr(p_inc, "modifications")
+#'
+#' ## create perturbed magnitude table for subgroups of data
+#' res <- perturbTable(
+#'   inp=inp_destatis,
+#'   dimList=dimList,
+#'   weightVar=weightVar,
+#'   countVars=c("cnt_females", "cnt_males","cnt_highincome"),
+#'   numVars=numVars, by="cnt_males")
+#'
+#' ## the perturbed tables of savings and income are computed only where
+#' ## variable cnt_males is 1
+#' p_sav <- ck_cont_table(res, vname="savings"); p_sav
+#' attr(p_sav, "modifications") # no modifications in cells containing females!
+perturbTable <- function(inp, dimList, countVars=NULL, numVars=NULL, by=NULL, weightVar=NULL) {
   # rename variables
   gen_vnames <- function(countVars, prefix="sumRK") {
     if (length(countVars)==0) {
@@ -164,6 +186,15 @@ perturbTable <- function(inp, dimList, countVars=NULL, numVars=NULL, weightVar=N
     dat[,tmpweightvarfortabulation:=get(weightVar)]
   }
 
+  ## check by-argument
+  if (!is.null(by)) {
+    stopifnot(is_scalar_character(by))
+    stopifnot(by %in% countVars)
+  } else {
+    by <- "Total"
+  }
+
+  # check and prepare countVars
   if (is.null(countVars)) {
     countVars <- countVars_w <- countVars_rec <- c()
   } else {
@@ -208,9 +239,16 @@ perturbTable <- function(inp, dimList, countVars=NULL, numVars=NULL, weightVar=N
       nV <- c(nV, vnum_orig)
 
       # copy numerical variable
-      vals_orig <- dat[,get(v)]
-      set(dat, j=vnum_orig, value=vals_orig)
-
+      if (by=="Total") {
+        vals_orig <- dat[,get(v)]
+        set(dat, j=vnum_orig, value=vals_orig)
+      } else {
+        # we need to set original numerical variable to 0
+        # where by variable is also 0!
+        dat[,(numVars[i]):=get(numVars[i])*get(by)]
+        vals_orig <- dat[,get(v)*get(by)]
+        set(dat, j=vnum_orig, value=vals_orig)
+      }
       rr <- identify_topK_cells(dat=dat, rkeys=slot(inp, "rkeys"),
         dimList=dimList, pert_params=pert_params, v=v, type=type)
       dat[rr[,tmpidforsorting],c(v):= rr[,get(paste0(v,".mod"))]]
@@ -222,6 +260,7 @@ perturbTable <- function(inp, dimList, countVars=NULL, numVars=NULL, weightVar=N
     }
     pert_info_cont <- rbindlist(pert_info_cont)
   } else {
+    by <- "Total"
     pert_info_cont <- data.table()
   }
   nV <- match(nV, names(dat))
@@ -303,12 +342,14 @@ perturbTable <- function(inp, dimList, countVars=NULL, numVars=NULL, weightVar=N
     cn1 <- paste0("WS_", numVars)
     cn2 <- paste0("pWS_", numVars)
 
+    by_wgt <- paste0("WCavg_", by)
+
     res1 <- tab[,lapply(.SD, function(x) {
-      x*WCavg_Total}), .SDcols=nvOrig]
+      x*get(by_wgt)}), .SDcols=nvOrig]
     tab[,c(cn1):=res1]
 
     res2 <- tab[,lapply(.SD, function(x) {
-      x*WCavg_Total}), .SDcols=nvPert]
+      x*get(by_wgt)}), .SDcols=nvPert]
     tab[,c(cn2):=res2]
 
     keepNV <- c(nvOrig, nvPert, cn1, cn2)
@@ -329,6 +370,7 @@ perturbTable <- function(inp, dimList, countVars=NULL, numVars=NULL, weightVar=N
     dimVars=names(dimList),
     countVars=countVar_names,
     numVars=numVars,
+    by=by,
     is_weighted=is_weighted,
     type=type)
   validObject(res)
