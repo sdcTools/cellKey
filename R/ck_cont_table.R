@@ -22,7 +22,7 @@
 #' The return argument has a attribute called "modifications" which contains a \code{data.table} holding all
 #' the specific perturbation on unit-level for reproducibility. This can be extracted using \code{attributes(ck_cont_table(...), "modifications")}.
 #' .
-#' @details  The computation of the perturbed weighted mean and the perturbed weighted sum depends
+#' @details The computation of the perturbed weighted mean and the perturbed weighted sum depends
 #' on argument \code{meanBeforeSum}. If \code{meanBeforeSum} is \code{TRUE}, the perturbed mean is computed first
 #' and the perturbed sum is derived from the perturbed mean an the perturbed weighted counts. If
 #' \code{meanBeforeSum} is \code{FALSE}, the computation is the other way round. Details are available in the ABS
@@ -57,7 +57,7 @@ ck_cont_table <- function(inp, vname=NULL, meanBeforeSum=TRUE) {
 
   byVar <- slot(inp, "by")
   if (byVar !="Total") {
-    cat(paste0("Note: this table is restricted to groups defined by ",shQuote(byVar),"!"))
+    cat(paste0("Note: this table is restricted to groups defined by ",shQuote(byVar),"!\n"))
   }
 
   data <- slot(inp, "tab")

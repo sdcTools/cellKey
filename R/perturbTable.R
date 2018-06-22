@@ -12,10 +12,11 @@
 #' counted and perturbed; must be 0/1 coded.
 #' @param numVars (character) vector of numerical variables that
 #' should be tabulated or \code{NULL}
-#' @param by \code{NULL} or a scalar character. If specified, it is possible to use a variable
-#' name (that must have also been specified in argument \code{countVars}) that will be used to
-#' create the perturbation of all variables specified in \code{numVars} only for subgroups defined
-#' by the specified count variable. Otherwise, the table will be based on all units in the sample.
+#' @param by \code{NULL} or a scalar character. If specified, it is possible to use a valid variable
+#' name being 0/1 coded that will be used to create the perturbation of all variables
+#' specified in \code{numVars} only for subgroups defined by the specified count variable. If the
+#' variable is not listed in argument \code{countVars} it will be automatically added. If not specified or
+#' \code{NULL}, the table will be based on all units in the microdata.
 #' @param weightVar (character) vector of variable holding sampling
 #' weights or \code{NULL}
 #' @return an object of class \code{\link{pert_table-class}}.
@@ -189,7 +190,9 @@ perturbTable <- function(inp, dimList, countVars=NULL, numVars=NULL, by=NULL, we
   ## check by-argument
   if (!is.null(by)) {
     stopifnot(is_scalar_character(by))
-    stopifnot(by %in% countVars)
+    if (!by %in% countVars) {
+      countVars <- c(countVars, by)
+    }
   } else {
     by <- "Total"
   }

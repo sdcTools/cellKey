@@ -189,17 +189,24 @@ An interesting feature is that one can optionally specify argument `by` in `pert
 ```{r}
 tab3 <- perturbTable(inp=inp, dimList=dimList,  
   weightVar="sampling_weight", 
-  countVars=c("cnt_highincome"), 
   numVars=c("savings"), by="cnt_highincome")
 ```
 
-We note that if the by_variable has been specified, it must also be listed in argument `countVars`. To show the table of variable `savings` we use again `ck_cont_table()`.
+We note that if the by_variable has been specified, it will be automatically added to `countVars` internally, so we can also use `ck_freq_table()` with the by-variable even it was not explicitely specified in `countVars`.
 
+```{r}
+# frequency table of the by-variable
+ck_freq_table(tab3, vname="cnt_highincome")
+```
+
+
+To show the table of variable `savings` we use again `ck_cont_table()`.
+ 
 ```{r}
 p_savings <- ck_cont_table(tab3, vname="savings", meanBeforeSum=TRUE)
 p_savings
 ```
-
+ 
 From the results we can observe that there are no high-income units in the highest age group (`age_group6`) and those cells are not perturbed at all.
 
 ### Extract information from results
