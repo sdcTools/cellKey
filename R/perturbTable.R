@@ -163,7 +163,7 @@ perturbTable <- function(inp, dimList, countVars=NULL, numVars=NULL, by=NULL, we
   pert_params <- slot(inp, "pert_params")
   type <- slot(pert_params, "type")
 
-  dat  <- slot(inp, "microdat")
+  dat  <- copy(slot(inp, "microdat"))
   dat[,tmprkeysfortabulation:=slot(inp, "rkeys")]
   dat[,tmpidforsorting:=.I]
 
