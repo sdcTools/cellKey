@@ -109,6 +109,9 @@ NULL
 #' @slot numVars (character) variable names of numeric variables that have been tabulated
 #' @slot countVars (character) vector containing names of variables that have been tabulated
 #' using the frequency approach
+#' @slot by (character) variable name (that must also be listed in \code{countVars}
+#' and that is used to create perturbed tables for \code{numVars} given the groups defined
+#' in \code{by}
 #' @slot is_weighted (logical) TRUE if sampling weights have been used
 #' @slot type (character) either \code{"abs"} or \code{"destatis"} depending on the format
 #' of the perturbation table that was used.
@@ -123,6 +126,7 @@ representation=list(
   dimVars="character",
   countVars="character",
   numVars="character",
+  by="character",
   is_weighted="logical",
   type="character"
 ),
@@ -133,9 +137,15 @@ prototype=list(
   dimVars=character(),
   countVars=character(),
   numVars=character(),
+  by=character(),
   is_weighted=c(),
   type=character()),
 validity=function(object) {
   stopifnot(object@type %in% c("abs","destatis"))
+  by <- slot(object,"by")
+  if (by!="") {
+    stopifnot(length(by)==1)
+    stopifnot(by %in% slot(object, "countVars"))
+  }
 })
 NULL

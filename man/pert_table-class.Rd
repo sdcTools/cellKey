@@ -35,6 +35,10 @@ values have been modified prior to tabulation.}
 \item{\code{countVars}}{(character) vector containing names of variables that have been tabulated
 using the frequency approach}
 
+\item{\code{by}}{(character) variable name (that must also be listed in \code{countVars}
+and that is used to create perturbed tables for \code{numVars} given the groups defined
+in \code{by}}
+
 \item{\code{is_weighted}}{(logical) TRUE if sampling weights have been used}
 
 \item{\code{type}}{(character) either \code{"abs"} or \code{"destatis"} depending on the format
