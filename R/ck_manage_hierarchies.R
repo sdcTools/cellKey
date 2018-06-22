@@ -29,19 +29,19 @@ check_node_inputs <- function(node, node_labs, reference_node) {
 ##'
 ##' @title Create and modify the structure of hierarchies
 ##'
-##' @description Functions \code{create_node()}, \code{add_nodes()}
-##' and \code{delete_nodes()} allow to define and modify hierarchical structures
+##' @description Functions \code{ck_create_nodes()}, \code{ck_add_nodes()}
+##' and \code{ck_delete_nodes()} allow to define and modify hierarchical structures
 ##' represented as trees. These objects can be used in \code{\link{perturbTable}} to
 ##' define the (hierarchical) structure of tables.
 ##'
 ##' @param total_lab the name of the overall total (summation over all contributing)
-##' @param node a \code{} object as created in \code{create_node()} or returned from
-##' \code{add_nodes()} or \code{delete_nodes()}.
+##' @param node an object as created in \code{ck_create_node()} or returned from
+##' \code{ck_add_nodes()} or \code{ck_delete_nodes()}.
 ##' @param node_labs character name(s) of new elements that should be inserted to or
 ##' deleted from a hierarchical structure
 ##' @param reference_node character name of an existing node in the hierarchical
-##' structure. When using \code{add_nodes()}, the new elements are created as children
-##' of the reference node. In \code{delete_nodes()}, all children of the reference node that
+##' structure. When using \code{ck_add_nodes()}, the new elements are created as children
+##' of the reference node. In \code{ck_delete_nodes()}, all children of the reference node that
 ##' match the names with argument \code{node_labs} are deleted from the hierarchy.
 ##' @examples
 ##' dim <- ck_create_node(total_lab="Total")

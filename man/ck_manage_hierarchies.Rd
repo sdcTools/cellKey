@@ -16,15 +16,15 @@ ck_delete_nodes(node, node_labs, reference_node)
 \arguments{
 \item{total_lab}{the name of the overall total (summation over all contributing)}
 
-\item{node}{a \code{} object as created in \code{create_node()} or returned from
-\code{add_nodes()} or \code{delete_nodes()}.}
+\item{node}{an object as created in \code{ck_create_node()} or returned from
+\code{ck_add_nodes()} or \code{ck_delete_nodes()}.}
 
 \item{node_labs}{character name(s) of new elements that should be inserted to or
 deleted from a hierarchical structure}
 
 \item{reference_node}{character name of an existing node in the hierarchical
-structure. When using \code{add_nodes()}, the new elements are created as children
-of the reference node. In \code{delete_nodes()}, all children of the reference node that
+structure. When using \code{ck_add_nodes()}, the new elements are created as children
+of the reference node. In \code{ck_delete_nodes()}, all children of the reference node that
 match the names with argument \code{node_labs} are deleted from the hierarchy.}
 }
 \value{
@@ -32,8 +32,8 @@ a \code{Node} object that can be used to specify a hierarchy used
 to define table inputs in \code{\link{perturbTable}}.
 }
 \description{
-Functions \code{create_node()}, \code{add_nodes()}
-and \code{delete_nodes()} allow to define and modify hierarchical structures
+Functions \code{ck_create_nodes()}, \code{ck_add_nodes()}
+and \code{ck_delete_nodes()} allow to define and modify hierarchical structures
 represented as trees. These objects can be used in \code{\link{perturbTable}} to
 define the (hierarchical) structure of tables.
 }
