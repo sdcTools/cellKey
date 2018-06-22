@@ -184,6 +184,24 @@ We see that this `data.table` has the following variables:
 - `vals.pert`: the amount of perturbation (`magnitude * dir * noise * vals.orig`)
 - `vals.mod`: the final perturbed value (`vals.orig`+`vals.pert`)
 
+An interesting feature is that one can optionally specify argument `by` in `perturbTable()` which is relevant for the computation of perturbed magnitude tables. The idea is that it allows to compute magnitude tables restricted to some units in the data set. In the following example we show how to create a perturbed table of `savings` for only those observations that have high income (variable `cnt_highincome`).
+
+```{r}
+tab3 <- perturbTable(inp=inp, dimList=dimList,  
+  weightVar="sampling_weight", 
+  countVars=c("cnt_highincome"), 
+  numVars=c("savings"), by="cnt_highincome")
+```
+
+We note that if the by_variable has been specified, it must also be listed in argument `countVars`. To show the table of variable `savings` we use again `ck_cont_table()`.
+
+```{r}
+p_savings <- ck_cont_table(tab3, vname="savings", meanBeforeSum=TRUE)
+p_savings
+```
+
+From the results we can observe that there are no high-income units in the highest age group (`age_group6`) and those cells are not perturbed at all.
+
 ### Extract information from results
 Some auxiliary methods may be applied to output object of function `perturbTable()`. The structure of such objects is shown below:
 
