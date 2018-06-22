@@ -105,27 +105,27 @@ weightVar <- "sampling_weight"
 numVars <- c("savings", "income")
 
 ## perturbing the table
-res_abs <- perturbTable(
+res <- perturbTable(
   inp=inp_abs,
   dimList=dimList,
   weightVar=weightVar, countVars=NULL, numVars=numVars)
-ck_freq_table(res_abs, vname="Total")
-ck_cont_table(res_abs, vname="income", meanBeforeSum=TRUE)
-ck_cont_table(res_abs, vname="savings", meanBeforeSum=TRUE)
+ck_freq_table(res, vname="Total")
+ck_cont_table(res, vname="income", meanBeforeSum=TRUE)
+ck_cont_table(res, vname="savings", meanBeforeSum=TRUE)
 
-res_destatis <- perturbTable(
+res <- perturbTable(
   inp=inp_destatis,
   dimList=dimList,
   weightVar=weightVar, countVars=NULL, numVars=numVars)
-ck_freq_table(res_abs, vname="Total")
-ck_cont_table(res_abs, vname="income", meanBeforeSum=TRUE)
-ck_cont_table(res_abs, vname="savings", meanBeforeSum=TRUE)
+ck_freq_table(res, vname="Total")
+ck_cont_table(res, vname="income", meanBeforeSum=TRUE)
+ck_cont_table(res, vname="savings", meanBeforeSum=TRUE)
 
 ## information on modifications for count variables
-mod_counts(res_abs, verbose=TRUE)
+mod_counts(res, verbose=TRUE)
 
 ## information on modifications for numerical variables
-mod_numvars(res_abs)
+mod_numvars(res)
 
 ## an example using additional countVars
 res <- perturbTable(
