@@ -29,8 +29,8 @@ check_node_inputs <- function(node, node_labs, reference_node) {
 ##'
 ##' @title Create and modify the structure of hierarchies
 ##'
-##' @description Functions \code{create_node()}, \code{add_nodes()}
-##' and \code{delete_nodes()} allow to define and modify hierarchical structures
+##' @description Functions \code{ck_create_node()}, \code{ck_add_nodes()}
+##' and \code{ck_delete_nodes()} allow to define and modify hierarchical structures
 ##' represented as trees. These objects can be used in \code{\link{perturbTable}} to
 ##' define the (hierarchical) structure of tables.
 ##'

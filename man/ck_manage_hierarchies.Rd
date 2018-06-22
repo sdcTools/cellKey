@@ -32,8 +32,8 @@ a \code{Node} object that can be used to specify a hierarchy used
 to define table inputs in \code{\link{perturbTable}}.
 }
 \description{
-Functions \code{create_node()}, \code{add_nodes()}
-and \code{delete_nodes()} allow to define and modify hierarchical structures
+Functions \code{ck_create_node()}, \code{ck_add_nodes()}
+and \code{ck_delete_nodes()} allow to define and modify hierarchical structures
 represented as trees. These objects can be used in \code{\link{perturbTable}} to
 define the (hierarchical) structure of tables.
 }
