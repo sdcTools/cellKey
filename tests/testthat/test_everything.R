@@ -99,3 +99,71 @@ test_that("check that identical record keys have been generated", {
   expect_s4_class(inp2, "pert_inputdat")
   expect_identical(slot(inp1, "rkeys"), slot(inp2, "rkeys"))
 })
+
+
+context("Testing countVars argument")
+dat[,cnt_males:=ifelse(sex=="male", 1, 0)]
+dat[,cnt_highincome:=ifelse(income>=9000, 1, 0)]
+inp <- ck_create_input(dat=dat, def_rkey=1e5, pert_params=pert_params)
+
+tab <- perturbTable(inp, dimList=dimList, weightVar="sampling_weight",
+  countVars=c("cnt_males","cnt_highincome"), numVars=NULL, by=NULL)
+tt <- ck_freq_table(tab, "cnt_males")
+test_that("check tabulation of cnt_males", {
+  expect_identical(tt[sex=="female", sum(UWC_cnt_males)], 0)
+  expect_identical(tt[sex=="female", sum(WC_cnt_males)], 0)
+  expect_identical(tt[sex=="female", sum(pUWC_cnt_males)], 0)
+  expect_identical(tt[sex=="female", sum(pWC_cnt_males)], 0)
+  expect_identical(tt[sex=="female", sum(WCavg_cnt_males)], 0)
+  expect_identical(tt[sex=="female", sum(cellKey)], 0)
+
+  expect_identical(max(tt[,UWC_cnt_males]), 2296)
+  expect_identical(max(tt[,WC_cnt_males]), 137489)
+  expect_identical(max(tt[,pUWC_cnt_males]), 2299)
+  expect_identical(max(tt[,pWC_cnt_males]), 137669)
+  expect_identical(tt[1,cellKey], 9580150)
+})
+
+tt <- ck_freq_table(tab, "cnt_highincome")
+test_that("check tabulation of cnt_males", {
+  expect_identical(tt[age=="age_group6", sum(UWC_cnt_highincome)], 0)
+  expect_identical(tt[age=="age_group6", sum(WC_cnt_highincome)], 0)
+  expect_identical(tt[age=="age_group6", sum(pUWC_cnt_highincome)], 0)
+  expect_identical(tt[age=="age_group6", sum(pWC_cnt_highincome)], 0)
+  expect_identical(tt[age=="age_group6", sum(WCavg_cnt_highincome)], 0)
+  expect_identical(tt[age=="age_group6", sum(cellKey)], 0)
+
+  expect_identical(max(tt[,UWC_cnt_highincome]), 445)
+  expect_identical(max(tt[,WC_cnt_highincome]), 26797)
+  expect_identical(max(tt[,pUWC_cnt_highincome]), 447)
+  expect_identical(max(tt[,pWC_cnt_highincome]), 26917)
+  expect_identical(tt[1,cellKey], 4477382)
+})
+
+context("Testing numVars with by")
+tab <- perturbTable(inp, dimList=dimList, weightVar="sampling_weight",
+  countVars=c("cnt_males"), numVars=c("income","savings"), by="cnt_males")
+tt <- ck_cont_table(tab, vname="savings", meanBeforeSum=TRUE)
+test_that("check tabulation of savings given cnt_males", {
+  expect_identical(tt[sex=="female", sum(UW_savings)], 0)
+  expect_identical(tt[sex=="female", sum(pUW_savings)], 0)
+  expect_identical(tt[sex=="female", sum(WS_savings)], 0)
+  expect_identical(tt[sex=="female", sum(pWS_savings)], 0)
+  expect_identical(tt[sex=="female", sum(pWM_savings)], 0)
+
+  expect_identical(tt[1, UW_savings], 1159816)
+  expect_equal(tt[1, pUW_savings], 1162403.53)
+  expect_equal(tt[1, WS_savings], 69452065)
+  expect_equal(tt[1, pWS_savings], 69607012)
+  expect_identical(round(tt[1, pWM_savings], digits=3), 505.611)
+})
+
+pp <- attr(tt, "modifications")
+test_that("check perturbation attributes of savings given cnt_males", {
+  expect_identical(pp[id=="3452", magnitude], 0.4)
+  expect_identical(pp[id=="3452", dir], 1)
+  expect_identical(pp[id=="3452", noise], 1.37)
+  expect_identical(pp[id=="3452", vals.orig], 998)
+  expect_equal(pp[id=="3452", vals.pert], 546.904)
+  expect_identical(pp[id=="3452", vals.mod], 1544.904)
+})
