@@ -11,6 +11,5 @@
 #' @importFrom stats addmargins formula weights xtabs runif
 #' @importFrom utils data
 #' @importFrom digest sha1
-#' @importFrom sdcTable makeProblem sdcProb2df
-#' @importFrom data.tree Node Prune Traverse FindNode
+#' @importFrom sdcTable makeProblem sdcProb2df create_node add_nodes delete_nodes
 NULL

@@ -167,12 +167,6 @@ perturbTable <- function(inp, dimList, countVars=NULL, numVars=NULL, by=NULL, we
   dat[,tmprkeysfortabulation:=slot(inp, "rkeys")]
   dat[,tmpidforsorting:=.I]
 
-  for (i in 1:length(dimList)) {
-    if ("nodedim" %in% class(dimList[[i]])) {
-      dimList[[i]] <- node_to_sdcinput(dimList[[i]], addNumLevels=FALSE)
-    }
-  }
-
   dV <- match(names(dimList), names(dat))
   if (any(is.na(dV))) {
     stop("check input 'dimList': --> at least one variable was not found in the input dataset\n")
