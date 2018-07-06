@@ -33,6 +33,11 @@ params <- ck_create_pert_params(
   sTable=ck_generate_sTable(smallC=12),
   mTable=c(0.6,0.4,0.2))
 print(class(params))
+
+## note:
+## if package "ptable" is installed, the input to argument "pTable" could also be from
+## ptable::pt_create_pTable(...)
+##
 }
 \seealso{
 \url{https://www.unece.org/fileadmin/DAM/stats/documents/ece/ces/ge.46/2013/Topic_1_ABS.pdf}

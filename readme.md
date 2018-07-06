@@ -8,6 +8,9 @@ This package is developed within the SGA `Open source tools for perturbative con
 We have a first rough version with which interested users may play around. Feedback (via issues) with regards to bugs or features requests are very welcome as well as pull-requests.
 
 ### News:
+#### Version 0.12.0
+- feature: use package [**ptable**](http://github.com/sdcTools/ptable) to generate pTables in destatis format
+
 #### Version 0.11.0
 - feature: use functions to create hierarchies directly from `sdcTable` and bump version requirement of this package to `>=0.23` 
 
