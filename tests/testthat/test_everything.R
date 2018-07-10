@@ -42,10 +42,12 @@ test_that("checking dimension and structure of generated testdata", {
 mTable <- c(0.6,0.4,0.2)
 smallC <- 12
 
+## ptable
+pTable <- ck_create_pTable(D=5, V=3, type="abs", pTableSize=pTableSize)
 pert_params <- ck_create_pert_params(
   bigN=bigN,
   smallN=smallN,
-  pTable=ck_create_pTable(pTableSize=pTableSize),
+  pTable=pTable,
   sTable=ck_generate_sTable(smallC=smallC),
   mTable=mTable)
 
@@ -119,8 +121,8 @@ test_that("check tabulation of cnt_males", {
 
   expect_identical(max(tt[,UWC_cnt_males]), 2296)
   expect_identical(max(tt[,WC_cnt_males]), 137489)
-  expect_identical(max(tt[,pUWC_cnt_males]), 2299)
-  expect_identical(max(tt[,pWC_cnt_males]), 137669)
+  expect_identical(max(tt[,pUWC_cnt_males]), 2294)
+  expect_identical(max(tt[,pWC_cnt_males]), 137369)
   expect_identical(tt[1,cellKey], 9580150)
 })
 
@@ -135,8 +137,8 @@ test_that("check tabulation of cnt_males", {
 
   expect_identical(max(tt[,UWC_cnt_highincome]), 445)
   expect_identical(max(tt[,WC_cnt_highincome]), 26797)
-  expect_identical(max(tt[,pUWC_cnt_highincome]), 447)
-  expect_identical(max(tt[,pWC_cnt_highincome]), 26917)
+  expect_identical(max(tt[,pUWC_cnt_highincome]), 446)
+  expect_identical(max(tt[,pWC_cnt_highincome]), 26857)
   expect_identical(tt[1,cellKey], 4477382)
 })
 
@@ -155,7 +157,7 @@ test_that("check tabulation of savings given cnt_males", {
   expect_equal(tt[1, pUW_savings], 1162403.53)
   expect_equal(tt[1, WS_savings], 69452065)
   expect_equal(tt[1, pWS_savings], 69607012)
-  expect_identical(round(tt[1, pWM_savings], digits=3), 505.611)
+  expect_identical(round(tt[1, pWM_savings], digits=3), 506.716)
 })
 
 pp <- attr(tt, "modifications")

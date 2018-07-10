@@ -1,7 +1,3 @@
-.onLoad <- function(libname, pkgname) {
-  data("ptable_destatis", "ptable_destatis", package=pkgname, envir=parent.env(environment()))
-}
-
 #' @import data.table
 #' @importFrom rlang is_double is_integerish is_na is_scalar_integerish is_scalar_integer
 #' @importFrom rlang is_scalar_character is_bare_integerish is_scalar_atomic
@@ -12,4 +8,5 @@
 #' @importFrom utils data
 #' @importFrom digest sha1
 #' @importFrom sdcTable makeProblem sdcProb2df create_node add_nodes delete_nodes
+#' @importFrom ptable pt_create_pParams pt_create_pTable
 NULL

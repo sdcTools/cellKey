@@ -36,8 +36,8 @@
 #' dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=2*nrow(dat), type="abs", verbose=TRUE)
 #'
 #' ## loading test perturbation in abs- and destatis format
-#' pTable_abs <- ck_create_pTable(pTableSize=70, type="abs")
-#' pTable_destatis <- ck_create_pTable(type="destatis")
+#' pTable_abs <- ck_create_pTable(D=5, V=3, pTableSize=70, type="abs")
+#' pTable_destatis <- ck_create_pTable(D=5, V=3, type="destatis")
 #'
 #' ## perturbation tables and parameters for numerical variables
 #' sTable <- ck_generate_sTable(smallC=12)

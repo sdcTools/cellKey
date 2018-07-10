@@ -1,53 +1,29 @@
 #' ck_create_pTable
 #'
-#' generates a simple perturbation table for developing/testing purposes.
-#' Real-world lookup tables will be likely created in another package/software.
+#' generates perturbation tables using functionality from package ptable
+#' @param D perturbation parameter for maximum perturbation (scalar or vector)
+#' @param V perturbation parameter for variance (scalar)
+#' @param js treshold value for blocking of small frequencies (i.e. there won't occur
+#' positive target frequencies below the treshold value)
+#' @param pstay optional parameter to set
+#' @param optim optimization parameter: \code{1} standard approach (default)
+#' @param mono (logical) vector specifying optimization parameter for monotony condition
+#' @param epsilon (double)
+#' @param pTableSize (number) defining the number of required columns in the "abs"-approach
+#' @param type character specifying the format of the input table. Valid choices
+#' are \code{"abs"} and \code{"destatis"}.
 #'
-#' @param pTableSize (number) defining the number of required columns
-#' @param type character specifying the format of the input table. Valid choices are \code{"abs"} and \code{"destatis"}.
-#' @param verbose (logical) if \code{TRUE}, print additional information
-#'
-#' @return a \code{data.table} with 256 rows and the specified number of
-#' columns given by parameter \code{pTableSize} holding perturbation values in case argument \code{type} was set to \code{"abs"}.
-#' \code{data.table} with three columns and 66 rows in case \code{type} was set to \code{"destatis"}.
+#' @return an object of class \code{ptable} defined in the ptable-package.
 #' @export
-#'
+#' @seealso https://github.com/sdcTools/ptable
 #' @examples
-#' ck_create_pTable(pTableSize=10, type="abs")
-ck_create_pTable <- function(pTableSize=75, type="abs", verbose=TRUE) {
-  gen_test_ptable_abs <- function(pTableSize) {
-    V1 <- V2 <- V3 <- NULL
-
-    nrows <- 256
-    dt <- as.data.table(matrix(sample(-10:10, 256*pTableSize, replace=TRUE), nrow=256, ncol=pTableSize))
-
-    # Cells <=3 will be perturbed to 0!
-    dt[,V1:=-1]
-    dt[,V2:=-2]
-    dt[,V3:=-3]
-
-    setattr(dt, "type", "abs")
-    dt[]
-  }
-  gen_test_ptable_destatis <- function() {
-    dt <- copy(ptable_destatis)
-    dt[,c("j","kum_p_u","p"):=NULL]
-    setattr(dt, "type", "destatis")
-    dt[]
-  }
-
-  stopifnot(is_scalar_logical(verbose))
+#' ck_create_pTable(D=5, V=3, js=2, pTableSize=70, type="abs")
+#' ck_create_pTable(D=5, V=3, js=2, pstay=0.5, optim=1, mono=TRUE, typ="destatis")
+ck_create_pTable <- function(D, V, type, js = 0, pstay=NULL, optim=1, mono=TRUE, epsilon=0.0000001, pTableSize=70) {
   stopifnot(is_scalar_character(type))
   type <- tolower(type)
   stopifnot(type %in% c("abs","destatis"))
 
-  if (type=="abs") {
-    return(gen_test_ptable_abs(pTableSize=pTableSize))
-  }
-  if (type=="destatis") {
-    if (verbose) {
-      message(paste("Note: argument",shQuote("pTableSize"),"is ignored!"))
-    }
-    return(gen_test_ptable_destatis())
-  }
+  pt_para <- pt_create_pParams(D=D, V=V, js=js, pstay=pstay, optim=optim, mono=mono, epsilon=epsilon, pTableSize=pTableSize)
+  return(pt_create_pTable(params=pt_para, type=type))
 }
