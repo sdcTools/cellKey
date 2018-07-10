@@ -26,18 +26,14 @@ creates an \code{\link{pert_params-class}} object containing information
 about perturbation parameters
 }
 \examples{
+pTable <- ck_create_pTable(type="destatis", D=5, V=3)
 params <- ck_create_pert_params(
   bigN=17312941,
   smallN=12,
-  pTable=ck_create_pTable(pTableSize=70),
+  pTable=pTable,
   sTable=ck_generate_sTable(smallC=12),
   mTable=c(0.6,0.4,0.2))
 print(class(params))
-
-## note:
-## if package "ptable" is installed, the input to argument "pTable" could also be from
-## ptable::pt_create_pTable(...)
-##
 }
 \seealso{
 \url{https://www.unece.org/fileadmin/DAM/stats/documents/ece/ces/ge.46/2013/Topic_1_ABS.pdf}

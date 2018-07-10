@@ -4,24 +4,40 @@
 \alias{ck_create_pTable}
 \title{ck_create_pTable}
 \usage{
-ck_create_pTable(pTableSize = 75, type = "abs", verbose = TRUE)
+ck_create_pTable(D, V, type, js = 0, pstay = NULL, optim = 1,
+  mono = TRUE, epsilon = 0.0000001, pTableSize = 70)
 }
 \arguments{
-\item{pTableSize}{(number) defining the number of required columns}
+\item{D}{perturbation parameter for maximum perturbation (scalar or vector)}
 
-\item{type}{character specifying the format of the input table. Valid choices are \code{"abs"} and \code{"destatis"}.}
+\item{V}{perturbation parameter for variance (scalar)}
 
-\item{verbose}{(logical) if \code{TRUE}, print additional information}
+\item{type}{character specifying the format of the input table. Valid choices
+are \code{"abs"} and \code{"destatis"}.}
+
+\item{js}{treshold value for blocking of small frequencies (i.e. there won't occur
+positive target frequencies below the treshold value)}
+
+\item{pstay}{optional parameter to set}
+
+\item{optim}{optimization parameter: \code{1} standard approach (default)}
+
+\item{mono}{(logical) vector specifying optimization parameter for monotony condition}
+
+\item{epsilon}{(double)}
+
+\item{pTableSize}{(number) defining the number of required columns in the "abs"-approach}
 }
 \value{
-a \code{data.table} with 256 rows and the specified number of
-columns given by parameter \code{pTableSize} holding perturbation values in case argument \code{type} was set to \code{"abs"}.
-\code{data.table} with three columns and 66 rows in case \code{type} was set to \code{"destatis"}.
+an object of class \code{ptable} defined in the ptable-package.
 }
 \description{
-generates a simple perturbation table for developing/testing purposes.
-Real-world lookup tables will be likely created in another package/software.
+generates perturbation tables using functionality from package ptable
 }
 \examples{
-ck_create_pTable(pTableSize=10, type="abs")
+ck_create_pTable(D=5, V=3, js=2, pTableSize=70, type="abs")
+ck_create_pTable(D=5, V=3, js=2, pstay=0.5, optim=1, mono=TRUE, typ="destatis")
+}
+\seealso{
+https://github.com/sdcTools/ptable
 }

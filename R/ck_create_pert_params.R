@@ -13,32 +13,34 @@
 #' @export
 #' @seealso \url{https://www.unece.org/fileadmin/DAM/stats/documents/ece/ces/ge.46/2013/Topic_1_ABS.pdf}
 #' @examples
+#' pTable <- ck_create_pTable(type="destatis", D=5, V=3)
 #' params <- ck_create_pert_params(
 #'   bigN=17312941,
 #'   smallN=12,
-#'   pTable=ck_create_pTable(pTableSize=70),
+#'   pTable=pTable,
 #'   sTable=ck_generate_sTable(smallC=12),
 #'   mTable=c(0.6,0.4,0.2))
 #' print(class(params))
-#'
-#' ## note:
-#' ## if package "ptable" is installed, the input to argument "pTable" could also be from
-#' ## ptable::pt_create_pTable(...)
-#' ##
 ck_create_pert_params <- function(bigN, smallN, pTable, sTable, mTable) {
   out <- new("pert_params")
 
   convert_from_ptable <- function(pTable) {
-    . <- i <- p <- v <- NULL
+    . <- i <- p_int_ub <- v <- NULL
     if (isS4(pTable) && class(pTable)=="ptable") {
-      pTable <- slot(pTable, "pTable")[,.(i,p,v)]
-      setnames(pTable, c("i", "kum_p_o", "diff"))
-      attr(pTable, "type") <- "destatis"
+      pType <- slot(pTable, "type")
+      if (pType == "destatis"){
+        pTable <- slot(pTable, "pTable")[, .(i, p_int_ub, v)]
+        setnames(pTable, c("i", "kum_p_o", "diff"))
+      }
+      if (pType == "abs"){
+        pTable <- slot(pTable, "pTable")
+      }
     }
     pTable
   }
+
+  slot(out, "type") <- slot(pTable, "type")
   pTable <- convert_from_ptable(pTable)
-  slot(out, "type") <- attr(pTable, "type")
 
   if (slot(out, "type")=="destatis") {
     message("Note: the supplied pTable is of type 'destatis'. Thus, arguments 'bigN' and 'smallN' will be ignored:")

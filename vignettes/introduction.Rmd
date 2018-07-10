@@ -19,7 +19,7 @@ library(rmarkdown)
 
 # Introduction
 
-This package implements methods to provide perturbation for statistical tables. The method is based on the paper *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar). Furthermore it is possible to perturb tables using a different approach developed by the Federal Statistical Office of Germany (Destatis). The two approaches differ in the way record keys have to be specified, the format of the perturbation tables and the way, the actual lookup is done.
+This package implements methods to provide perturbation for statistical tables. The method is based on the paper *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar). Furthermore it is possible to perturb tables using a different approach developed by the Federal Statistical Office of Germany (Destatis). The two approaches differ in the way record keys have to be specified, the format of the perturbation tables and the way, the actual lookup is done. Perturbation tables need to be specified using functionality from package [**ptable**](https://github.com/sdcTools/ptable).
 
 ## Main Features
 
@@ -58,7 +58,7 @@ The first step in this approach is to generate or rather set some parameters, th
 pert_params <- ck_create_pert_params(
   bigN=17312941, 
   smallN=12,
-  pTable=ck_create_pTable(pTableSize=70, type="abs"), # pt
+  pTable=ck_create_pTable(D=5, V=3, pTableSize=70, type="abs"),
   sTable=ck_generate_sTable(smallC=12), 
   mTable=c(0.6,0.4,0.2))
 ```

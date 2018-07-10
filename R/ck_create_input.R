@@ -32,7 +32,7 @@
 #' dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=maxV)
 #' mTable <- c(0.6,0.4,0.2)
 #' sTable <- ck_generate_sTable(smallC=12)
-#' pTable <- ck_create_pTable(pTableSize=70, type="abs")
+#' pTable <- ck_create_pTable(D=5, V=3, pTableSize=70, type="abs")
 #'
 #' pert_params <- ck_create_pert_params(
 #'   bigN=bigN, smallN=smallN, pTable=pTable, sTable=sTable, mTable=mTable)
