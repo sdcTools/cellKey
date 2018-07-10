@@ -20,9 +20,24 @@
 #'   sTable=ck_generate_sTable(smallC=12),
 #'   mTable=c(0.6,0.4,0.2))
 #' print(class(params))
+#'
+#' ## note:
+#' ## if package "ptable" is installed, the input to argument "pTable" could also be from
+#' ## ptable::pt_create_pTable(...)
+#' ##
 ck_create_pert_params <- function(bigN, smallN, pTable, sTable, mTable) {
   out <- new("pert_params")
 
+  convert_from_ptable <- function(pTable) {
+    . <- i <- p <- v <- NULL
+    if (isS4(pTable) && class(pTable)=="ptable") {
+      pTable <- slot(pTable, "pTable")[,.(i,p,v)]
+      setnames(pTable, c("i", "kum_p_o", "diff"))
+      attr(pTable, "type") <- "destatis"
+    }
+    pTable
+  }
+  pTable <- convert_from_ptable(pTable)
   slot(out, "type") <- attr(pTable, "type")
 
   if (slot(out, "type")=="destatis") {
