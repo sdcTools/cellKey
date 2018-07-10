@@ -29,11 +29,16 @@ ck_create_pert_params <- function(bigN, smallN, pTable, sTable, mTable) {
   out <- new("pert_params")
 
   convert_from_ptable <- function(pTable) {
-    . <- i <- p <- v <- NULL
+    . <- i <- p_int_ub <- v <- NULL
     if (isS4(pTable) && class(pTable)=="ptable") {
-      pTable <- slot(pTable, "pTable")[,.(i,p,v)]
-      setnames(pTable, c("i", "kum_p_o", "diff"))
-      attr(pTable, "type") <- "destatis"
+      pType <- slot(pTable, "type")
+      if (pType == "destatis"){
+        pTable <- slot(pTable, "pTable")[, .(i, p_int_ub, v)]
+        setnames(pTable, c("i", "kum_p_o", "diff"))
+      }
+      if (pType == "abs"){
+        pTable <- slot(pTable, "pTable")
+      }
     }
     pTable
   }
