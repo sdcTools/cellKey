@@ -8,6 +8,9 @@ This package is developed within the SGA `Open source tools for perturbative con
 We have a first rough version with which interested users may play around. Feedback (via issues) with regards to bugs or features requests are very welcome as well as pull-requests.
 
 ### News:
+#### Version 0.13.1
+- small updates to reflect changes in [**ptable**](http://github.com/tenderle/ptable)
+
 #### Version 0.13.0
 - depend on package [**ptable**](http://github.com/sdcTools/ptable) to generate the perturbation tables by rewriting `ck_create_pTable()`; thus the package must be installed, e.g using `devtools::install_github("sdcTools/ptable", build_vignette=FALSE)`
 
