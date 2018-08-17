@@ -3,7 +3,7 @@ Type: Package
 Date: 2018-08-16
 Title: Implementing ABS cell-key method for adding noise to frequency
         and continous tables
-Version: 0.13.1
+Version: 0.14.0
 Authors@R: c(
   person(
     given="Bernhard", 

@@ -1,3 +1,29 @@
+# check if input is a valid "custom" pTable
+valid_custom_ptable <- function(pTable) {
+  stopifnot(isS4(pTable))
+  stopifnot(isS4(pTable), class(pTable)=="ptable")
+  stopifnot(slot(pTable, "type")=="custom")
+  return(TRUE)
+}
+
+check_custom_pTable <- function(pTable) {
+  valid_custom_ptable(pTable)
+  tab <- slot(pTable, "pTable")
+
+  for (j in 1:ncol(tab)) {
+    fns <- unique(tab[[j]])
+    for (x in seq_along(fns)) {
+      r <- fns[[x]]()
+      if(!is_scalar_integerish(r)) {
+        stop("Function returning a non-scalar integer value found!", call. = FALSE)
+      }
+    }
+  }
+  return(invisible(TRUE))
+}
+
+
+
 # convert bin to decimal
 bintodec <- function(y) {
   # find the decimal number corresponding to binary sequence 'y'
@@ -28,9 +54,9 @@ get_direction <- function(rec_keys, type) {
     ifelse(rec_keys<=0.5, -1, 1)
   }
   stopifnot(is_scalar_character(type))
-  stopifnot(type %in% c("abs","destatis"))
+  stopifnot(type %in% c("abs","destatis","custom"))
 
-  if (type=="abs") {
+  if (type %in% c("abs","custom")) {
     return(get_direction_abs(rec_keys))
   }
   if (type=="destatis") {
@@ -39,11 +65,8 @@ get_direction <- function(rec_keys, type) {
   stop("error in get_direction()\n")
 }
 
-
-
 # in which row should we look in the perturbation table
 # used for perturbation of numerical variables
-
 get_row_index_cont <- function(rec_keys, type) {
   get_row_index_cont_abs <- function(rec_keys) {
     out <- rep(-1, length(rec_keys))
@@ -57,9 +80,9 @@ get_row_index_cont <- function(rec_keys, type) {
   }
 
   stopifnot(is_scalar_character(type))
-  stopifnot(type %in% c("abs","destatis"))
+  stopifnot(type %in% c("abs","destatis","custom"))
 
-  if (type=="abs") {
+  if (type %in% c("abs","custom")) {
     return(get_row_index_cont_abs(rec_keys))
   }
   if (type=="destatis") {
@@ -85,9 +108,9 @@ get_col_index_cont <- function(cKey, n, smallC, type) {
   }
 
   stopifnot(is_scalar_character(type))
-  stopifnot(type %in% c("abs","destatis"))
+  stopifnot(type %in% c("abs","destatis","custom"))
 
-  if (type=="abs") {
+  if (type %in% c("abs","custom")) {
     return(get_col_index_cont_abs(cKey, n, smallC))
   }
   if (type=="destatis") {
@@ -118,7 +141,6 @@ get_colIndex <- function(N, pTableSize, smallN) {
   }
 }
 
-
 # perform actual lookup to get perturbation values;
 # used in perturbTable()
 lookup <- function(tab, pert_params, ckeyname, freqvarname, type) {
@@ -141,6 +163,30 @@ lookup <- function(tab, pert_params, ckeyname, freqvarname, type) {
     if (length(ii)>0) {
       pert_vals[ii] <- NA
     }
+    dt[,pert:=unlist(pert_vals)]
+    dt[,cK:=cellkeys]
+    dt
+  }
+
+  # custom pTable with user-defined functions!
+  lookup_custom <- function(tab, pert_params, freqs, cellkeys) {
+    . <- cK <- N <- row_indices <- col_indices <- pert <- NULL
+
+    row_indices <- sapply(freqs, get_rowIndex)
+    col_indices <- sapply(freqs, function(z) {
+      get_colIndex(z, slot(pert_params, "pTableSize"), slot(pert_params, "smallN"))
+    })
+
+    if (any(col_indices<0)) {
+      stop("we computed negative column indices; please provide a pTable with more columns!\n")
+    }
+
+    dt <- data.table(row_indices=row_indices, col_indices=col_indices)
+    pTab <- slot(pert_params, "pTable")
+    pert_vals <- lapply(1:nrow(dt), function(z) {
+      set.seed(cellkeys[z]) # reproducibility
+      pTab[[dt$col_indices[z]]][[dt$row_indices[z]]]()
+    })
     dt[,pert:=unlist(pert_vals)]
     dt[,cK:=cellkeys]
     dt
@@ -187,13 +233,16 @@ lookup <- function(tab, pert_params, ckeyname, freqvarname, type) {
   stopifnot(is_scalar_character(freqvarname))
   stopifnot(freqvarname %in% names(tab))
 
-  stopifnot(type %in% c("abs","destatis"))
+  stopifnot(type %in% c("abs","destatis","custom"))
 
   cellkeys <- tab[, get(ckeyname)]
   freqs <- tab[,get(freqvarname)]
 
   if (type=="abs") {
     return(lookup_abs(tab=tab, pert_params=pert_params, freqs=freqs, cellkeys=cellkeys))
+  }
+  if (type=="custom") {
+    return(lookup_custom(tab=tab, pert_params=pert_params, freqs=freqs, cellkeys=cellkeys))
   }
   if (type=="destatis") {
     return(lookup_destatis(tab=tab, pert_params=pert_params, freqs=freqs, cellkeys=cellkeys))

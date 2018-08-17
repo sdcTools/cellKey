@@ -31,10 +31,10 @@ ck_generate_rkeys <- function(dat, max_val=nrow(dat), max_digits=10, type="abs",
 
   stopifnot(is_scalar_logical(verbose))
   stopifnot(is_scalar_character(type))
-  stopifnot(type %in% c("abs","destatis"))
+  stopifnot(type %in% c("abs","destatis", "custom"))
 
   seed <- ck_create_seed_from_hash(dat)
-  if (type=="abs") {
+  if (type %in% c("abs","custom")) {
     stopifnot(is_scalar_integerish(max_val))
     stopifnot(max_val >= nrow(dat))
     if (verbose) {

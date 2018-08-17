@@ -58,7 +58,7 @@ ck_create_input <- function(dat, def_rkey, pert_params) {
     }
   } else if (is_bare_integerish(def_rkey)) {
     stopifnot(is_scalar_atomic(def_rkey))
-    if (type=="abs") {
+    if (type %in% c("abs","custom")) {
       out@rkeys <- ck_generate_rkeys(dat=dat, max_val=def_rkey, type=type)
     } else {
       out@rkeys <- ck_generate_rkeys(dat=dat, max_digits=def_rkey, type=type)
@@ -67,8 +67,8 @@ ck_create_input <- function(dat, def_rkey, pert_params) {
     stop("Argument",shQuote("def_rkey"),"must either be character or numeric!\n")
   }
 
-  out@microdat <- dat
-  out@pert_params <- pert_params
+  slot(out, "microdat") <- dat
+  slot(out, "pert_params") <- pert_params
   validObject(out)
   out
 }

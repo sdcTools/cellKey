@@ -38,7 +38,7 @@ an object of class \code{\link{pert_table-class}}.
 compute perturbed tables containing counts and continous variables.
 }
 \examples{
-## loading testdata and adding record keys (for abs-algorithm)
+## loading testdata and adding record keys
 dat <- ck_create_testdata()
 
 ## create some 0/1 variables that should be perturbed later
@@ -49,9 +49,32 @@ dat[,cnt_highincome:=ifelse(income>=9000, 1, 0)]
 ## create record keys
 dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=2*nrow(dat), type="abs", verbose=TRUE)
 
-## loading test perturbation in abs- and destatis format
+## creating test perturbation in abs-,  destatis  and custom format
 pTable_abs <- ck_create_pTable(D=5, V=3, pTableSize=70, type="abs")
 pTable_destatis <- ck_create_pTable(D=5, V=3, type="destatis")
+
+## custom format is a bit more complicated
+pTable_custom <- ck_create_custom_pTable(pTableSize=70)
+
+## modify
+fn1 <- function() { round(rnorm(1, mean=5, sd=10)) }
+fn2 <- function() { rpois(1, lambda=2) }
+fn3 <- function() { rpois(1, lambda=5) }
+fn4 <- function() return(1)
+fn5 <- function() return(-1)
+
+## fn1 provides perturbation values from a normal distribution
+## with mean=5 and sd=10; we use this for all cells
+pTable_custom <- ck_update_custom_pTable(pTable_custom, fun=fn1)
+
+## perturbation values from poisson-distributions for some cells
+pTable_custom <- ck_update_custom_pTable(pTable_custom, fun=fn2, cols=c(1:20), rows=c(1:100))
+pTable_custom <- ck_update_custom_pTable(pTable_custom, fun=fn3, cols=c(1:20), rows=c(101:256))
+
+## we can of course write functions, that return scalars, such
+## als fn4() and fn5() always return 1 or -1
+pTable_custom <- ck_update_custom_pTable(pTable_custom, fun=fn4, cols=c(10:20))
+pTable_custom <- ck_update_custom_pTable(pTable_custom, fun=fn5, cols=c(21:30))
 
 ## perturbation tables and parameters for numerical variables
 sTable <- ck_generate_sTable(smallC=12)
@@ -71,6 +94,12 @@ pert_params_destatis <- ck_create_pert_params(
   sTable=sTable,
   mTable=mTable)
 
+pert_params_custom <- ck_create_pert_params(
+  bigN=17312941, smallN=12,
+  pTable=pTable_custom,
+  sTable=sTable,
+  mTable=mTable)
+
 ## create suitable input data using existing record keys
 ## and a perturbation table in "abs-format"
 inp_abs <- ck_create_input(
@@ -85,6 +114,13 @@ inp_destatis <- ck_create_input(
   dat=dat,
   def_rkey=9,
   pert_params=pert_params_destatis)
+
+## input using a "custom" perturbation table consisting of
+## user-defined functions
+inp_custom <- ck_create_input(
+  dat=dat,
+  def_rkey="rkeys",
+  pert_params=pert_params_custom)
 
 ## definining table hierarchies
 ## variable 'sex'
@@ -115,6 +151,14 @@ ck_cont_table(res, vname="savings", meanBeforeSum=TRUE)
 
 res <- perturbTable(
   inp=inp_destatis,
+  dimList=dimList,
+  weightVar=weightVar, countVars=NULL, numVars=numVars)
+ck_freq_table(res, vname="Total")
+ck_cont_table(res, vname="income", meanBeforeSum=TRUE)
+ck_cont_table(res, vname="savings", meanBeforeSum=TRUE)
+
+res <- perturbTable(
+  inp=inp_custom,
   dimList=dimList,
   weightVar=weightVar, countVars=NULL, numVars=numVars)
 ck_freq_table(res, vname="Total")

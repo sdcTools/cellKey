@@ -39,8 +39,8 @@ prototype=list(
 validity=function(object) {
   stopifnot(all(object@mTable>0))
   stopifnot(is_scalar_character(slot(object, "type")))
-  if(!slot(object, "type") %in% c("abs", "destatis")) {
-    stop("type must be either 'abs' or 'destatis'\n")
+  if(!slot(object, "type") %in% c("abs", "destatis", "custom")) {
+    stop("type must be either 'abs', 'destatis' or 'custom'\n")
   }
   stopifnot(is_scalar_integer(slot(object, "bigN")))
   stopifnot(is_scalar_integer(slot(object, "smallN")))
@@ -141,7 +141,7 @@ prototype=list(
   is_weighted=c(),
   type=character()),
 validity=function(object) {
-  stopifnot(object@type %in% c("abs","destatis"))
+  stopifnot(object@type %in% c("abs","destatis","custom"))
   by <- slot(object,"by")
   if (by!="") {
     stopifnot(length(by)==1)
