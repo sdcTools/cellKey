@@ -48,7 +48,7 @@ We have a first rough version with which interested users may play around. Feedb
 - feature: perturbation tables (`pTable`) can now be specified in two different formats. The (default) way is to specify it as described in the original ABS-paper *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar). An alternative way is to provide the perturbation tables for count tables in the *"destatis"*-format. `ck_create_pTable(type="destatis")` returns an exemplary pTable in this format. In the future, such pTables will likely be generated from another package. As the requirements regarding record keys are different in the following lookup-approach, we have already implemented some (basic) checks for validity of record keys when they are already available in the microdata used in `ck_create_input()`.
 
 ### Installation
-The package can directly be installed from `github` 
+The package can directly be installed from `github`. But take care that also the depending package `ptable` is installed as shown below.
 
 ```
 devtools::install_github("sdcTools/ptable", build_vignette=FALSE)
