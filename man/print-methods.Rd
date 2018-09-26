@@ -5,10 +5,14 @@
 \alias{print,pert_table-method}
 \title{Method to extract results}
 \usage{
-\S4method{print}{pert_table}(x)
+\S4method{print}{pert_table}(x, vname = NULL)
 }
 \arguments{
-\item{x}{input object}
+\item{x}{input object of class \code{\linkS4class{pert_table}}}
+
+\item{vname}{if not \code{NULL}, a character specifying a tabulated count
+or numeric variable for which for all combinations of dimensional variables the 
+(perturbed) unweighted and (perturbed) weighted counts are printed.}
 }
 \description{
 Method to extract results
