@@ -138,12 +138,14 @@ If both `countVars` and `numVars` are not specified, the perturbed count table b
 ```{r}
 tab1 <- perturbTable(inp=inp, dimList=dimList, countVars=c("cnt_males", "cnt_highincome"), 
   weightVar="sampling_weight", numVars=NULL)
+print(tab1) # custom print method
+# print(tab1, vname="Total")
 ```
 
 Applying method `ck_freq_table()` to an output object of `perturbTable()` returns a `data.table` with all combinations of the dimensional variables `sex` and `age` as well as original and perturbed (un)weighted values are returned. In any case, the tabulation of all observations can be extracted (`vnames="Total"`). If additional variables have been specified in argument `countVars`, these can be queried too as shown below:
 
 ```{r}
-ck_freq_table(tab1) # whow which tables have been generated
+ck_freq_table(tab1) # show which tables have been generated
 ck_freq_table(tab1, vname="cnt_males")
 ```
 
