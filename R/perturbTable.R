@@ -120,6 +120,7 @@
 #'   weightVar=weightVar,
 #'   countVars=c("cnt_females", "cnt_males","cnt_highincome"),
 #'   numVars=numVars)
+#' print(res) # custom print method
 #'
 #' ## show count tables
 #' ck_freq_table(res, vname=NULL)
