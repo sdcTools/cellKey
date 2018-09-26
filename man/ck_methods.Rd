@@ -3,9 +3,12 @@
 \docType{methods}
 \name{print,pert_table-method}
 \alias{print,pert_table-method}
+\alias{summary,pert_table-method}
 \title{Method to extract results}
 \usage{
 \S4method{print}{pert_table}(x, vname = NULL)
+
+\S4method{summary}{pert_table}(object)
 }
 \arguments{
 \item{x}{input object of class \code{\linkS4class{pert_table}}}
@@ -13,7 +16,11 @@
 \item{vname}{if not \code{NULL}, a character specifying a tabulated count
 or numeric variable for which for all combinations of dimensional variables the 
 (perturbed) unweighted and (perturbed) weighted counts are printed.}
+
+\item{object}{input object of class \code{\linkS4class{pert_table}}}
 }
 \description{
 Method to extract results
+
+Method to summarize perturbation results
 }

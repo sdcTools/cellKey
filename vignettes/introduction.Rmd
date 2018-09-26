@@ -202,7 +202,6 @@ We note that if the by_variable has been specified, it will be automatically add
 ck_freq_table(tab3, vname="cnt_highincome")
 ```
 
-
 To show the table of variable `savings` we use again `ck_cont_table()`.
  
 ```{r}
@@ -227,6 +226,14 @@ head(mod_counts(tab2))
 Information on perturbations for numerical variables can be extracted using `mod_numvars()`. This \code{data.table} contains the ids of the observations of the input variables that have been modified. For each observation and tabulated numerical variable (given in `numVar`), the parameters used in modifying (direction, magnitude and noise) are shown as well as the original values, the perturbation and the final modified value. These values were finally used to compute the tables itself.
 ```{r}
 head(mod_numvars(tab2))
+```
+
+Finally we note that there are `print` and `summary` methods implemented for objects returned from `perturbTable()` which can be used as shown below:
+
+```{r}
+print(tab1)
+print(tab1, vname="Total")
+summary(tab1)
 ```
 
 ## Summary

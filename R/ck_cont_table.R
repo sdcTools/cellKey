@@ -57,7 +57,7 @@ ck_cont_table <- function(inp, vname=NULL, meanBeforeSum=TRUE) {
 
   byVar <- slot(inp, "by")
   if (byVar !="Total") {
-    cat(paste0("Note: this table is restricted to groups defined by ",shQuote(byVar),"!\n"))
+    message(paste0("Note: this table is restricted to groups defined by ",shQuote(byVar),"!\n"))
   }
 
   data <- slot(inp, "tab")

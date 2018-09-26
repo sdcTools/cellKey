@@ -1,6 +1,6 @@
 #' Method to extract results
 #' @exportMethod print
-#' @rdname print-methods
+#' @rdname ck_methods
 #' @param x input object of class \code{\linkS4class{pert_table}}
 #' @param vname if not \code{NULL}, a character specifying a tabulated count
 #' or numeric variable for which for all combinations of dimensional variables the 
@@ -66,6 +66,64 @@ definition=function(x, vname=NULL) {
     print(dt)
   }
   return(invisible(NULL))
+})
+
+#' Method to summarize perturbation results
+#' @exportMethod summary
+#' @rdname ck_methods
+#' @param object input object of class \code{\linkS4class{pert_table}}
+setMethod(f="summary", signature="pert_table",
+definition=function(object) {
+  vals.pert <- pert <- NULL
+  cat("Perturbation statistics on count variables:\n")
+  info_cnts <- mod_counts(object)
+  out_cnts <- info_cnts[, list(
+    min=min(pert), 
+    max=max(pert), 
+    mean=mean(pert), 
+    median=median(pert)), by="countVar"]
+  print(out_cnts)
+
+  # overall ratios (weighted_sum / perturbed weighted sum)
+  cnt_ratios <- rbindlist(lapply(slot(object, "countVars"), function(x) {
+    tmp <- suppressMessages(ck_freq_table(object, x))
+    v1 <- paste0("WC_",x)
+    v2 <- paste0("pWC_",x)
+    res <- na.omit((tmp[[v1]]/tmp[[v2]]))
+    data.table(countVar=x, 
+      min=round(min(res), digits=2),
+      max=round(max(res), digits=2),
+      mean=round(mean(res), digits=2), 
+      median=round(median(res), digits=2))
+  }))
+  cat("\nRatios weighted counts / perturbed weighted counts:\n")
+  print(cnt_ratios)
+  
+  info_nums <- mod_numvars(object)
+  if (nrow(info_nums)>0) {
+    out_nums <- info_nums[,list(
+      min=min(vals.pert), 
+      max=max(vals.pert),
+      mean=mean(vals.pert),
+      median=median(vals.pert)), by="numVar"]
+    cat("\nPerturbation statistics on numerical variables:\n")
+    print(out_nums)
+    
+    # overall ratios (weighted_sum / perturbed weighted sum)
+    out_ratios <- rbindlist(lapply(slot(object, "numVars"), function(x) {
+      tmp <- suppressMessages(ck_cont_table(object, x))
+      v1 <- paste0("WS_",x)
+      v2 <- paste0("pWS_",x)
+      res <- na.omit((tmp[[v1]]/tmp[[v2]]))
+      data.table(numVar=x, 
+        min=round(min(res), digits=2),
+        max=round(max(res), digits=2),
+        mean=round(mean(res), digits=2), 
+        median=round(median(res), digits=2))
+    }))
+    cat("\nRatios weighted sum / perturbed weighted sum for numerical variables:\n")
+    print(out_ratios)
+  }
 })
 
 #' Method to extract information about modifications for count tables
