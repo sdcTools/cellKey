@@ -15,7 +15,7 @@ Depends: data.table
 Imports: rlang, methods, primes, digest, sdcTable (>= 0.23), ptable (>= 0.1.9)
 License: GPL-2
 Encoding: UTF-8
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Suggests: testthat, knitr, rmarkdown
 VignetteBuilder: knitr
 NeedsCompilation: no

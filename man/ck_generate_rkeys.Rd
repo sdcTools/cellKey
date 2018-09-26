@@ -4,8 +4,8 @@
 \alias{ck_generate_rkeys}
 \title{ck_generate_rkeys}
 \usage{
-ck_generate_rkeys(dat, max_val = nrow(dat), max_digits = 10, type = "abs",
-  verbose = TRUE)
+ck_generate_rkeys(dat, max_val = nrow(dat), max_digits = 10,
+  type = "abs", verbose = TRUE)
 }
 \arguments{
 \item{dat}{microdata used to generated hash for random seed}

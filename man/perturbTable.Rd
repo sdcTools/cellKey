@@ -4,8 +4,8 @@
 \alias{perturbTable}
 \title{perturbTable}
 \usage{
-perturbTable(inp, dimList, countVars = NULL, numVars = NULL, by = NULL,
-  weightVar = NULL)
+perturbTable(inp, dimList, countVars = NULL, numVars = NULL,
+  by = NULL, weightVar = NULL)
 }
 \arguments{
 \item{inp}{an object of class \code{\link{pert_inputdat-class}}
@@ -134,6 +134,7 @@ res <- perturbTable(
   weightVar=weightVar,
   countVars=c("cnt_females", "cnt_males","cnt_highincome"),
   numVars=numVars)
+print(res) # custom print method
 
 ## show count tables
 ck_freq_table(res, vname=NULL)
