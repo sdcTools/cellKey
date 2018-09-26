@@ -8,6 +8,10 @@ This package is developed within the SGA `Open source tools for perturbative con
 We have a first rough version with which interested users may play around. Feedback (via issues) with regards to bugs or features requests are very welcome as well as pull-requests.
 
 ### News:
+#### Version 0.13.2
+- feature: new method `print()` for objects returned from `perturbTable()`
+- feature: new method `summary()` for objects returned from `perturbTable()`
+
 #### Version 0.13.1
 - small updates to reflect changes in [**ptable**](http://github.com/tenderle/ptable)
 
