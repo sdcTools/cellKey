@@ -113,7 +113,7 @@
 #' mod_numvars(res)
 #'
 #' ## information-loss/utility statistics on tabulated count variables
-#' ck_cnt_measures(res, countvar="Total")
+#' ck_cnt_measures(res, vname="Total")
 #'
 #' ## an example using additional countVars
 #' res <- perturbTable(

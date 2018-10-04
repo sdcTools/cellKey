@@ -84,7 +84,7 @@ definition=function(object) {
 
   # unweighted only!
   cnt_measures <- lapply(slot(object, "countVars"), function(x) {
-    ck_cnt_measures(object, countvar=x)
+    ck_cnt_measures(object, vname=x)
   })
   names(cnt_measures) <- slot(object, "countVars")
 

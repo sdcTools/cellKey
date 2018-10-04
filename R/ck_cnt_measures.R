@@ -3,7 +3,7 @@
 #' compute utility/information loss measures for count variables of a perturbed table.
 
 #' @param x input object of class \code{\linkS4class{pert_table}}
-#' @param countvar a specific tabulated count variable
+#' @param vname a specific tabulated count variable
 #' @return a \code{list} containing the following elements:
 #' \itemize{
 #' \item \strong{measures}: a \code{data.table} containing measures of the distribution
@@ -44,10 +44,10 @@
 #' @export
 #' @examples
 #' ## see example in perturbTable
-ck_cnt_measures <- function(x, countvar="Total") {
+ck_cnt_measures <- function(x, vname="Total") {
   stopifnot(isS4(x), "pert_table" %in% class(x))
-  stopifnot(is_scalar_character(countvar))
-  stopifnot(countvar %in% slot(x, "countVars"))
+  stopifnot(is_scalar_character(vname))
+  stopifnot(vname %in% slot(x, "countVars"))
 
   # statistics for absolute/relative distances
   stats_pert <- function(orig, pert) {
@@ -98,7 +98,7 @@ ck_cnt_measures <- function(x, countvar="Total") {
   tab <- slot(x, "tab")
 
   # unweighted
-  v_orig <- paste0("UWC_", countvar)
-  v_pert <- paste0("pUWC_", countvar)
+  v_orig <- paste0("UWC_", vname)
+  v_pert <- paste0("pUWC_", vname)
   return(stats_pert(tab[[v_orig]], tab[[v_pert]]))
 }
