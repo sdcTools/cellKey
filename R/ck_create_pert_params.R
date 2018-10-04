@@ -21,7 +21,7 @@
 #'   sTable=ck_generate_sTable(smallC=12),
 #'   mTable=c(0.6,0.4,0.2))
 #' print(class(params))
-ck_create_pert_params <- function(bigN, smallN, pTable, sTable, mTable) {
+ck_create_pert_params <- function(bigN, smallN, pTable, sTable=NULL, mTable=NULL) {
   out <- new("pert_params")
 
   convert_from_ptable <- function(pTable) {
@@ -54,11 +54,14 @@ ck_create_pert_params <- function(bigN, smallN, pTable, sTable, mTable) {
   }
   slot(out, "pTable") <- pTable
   slot(out, "pTableSize") <- as.integer(ncol(pTable))
-  slot(out, "mTable") <- mTable
-  slot(out, "sTable") <- sTable
-  slot(out, "smallC") <- as.integer(ncol(sTable)-32)
-  slot(out, "topK") <- as.integer(length(mTable))
-
+  if (!is.null(mTable)) {
+    slot(out, "mTable") <- mTable
+    slot(out, "topK") <- as.integer(length(mTable))
+  }
+  if (!is.null(sTable)) {
+    slot(out, "sTable") <- sTable
+    slot(out, "smallC") <- as.integer(ncol(sTable)-32)
+  }
   validObject(out)
   out
 }

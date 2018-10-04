@@ -30,22 +30,26 @@ prototype=list(
   smallN=integer(),
   pTable=data.table(),
   pTableSize=integer(),
-  mTable=c(),
+  mTable=numeric(),
   smallC=integer(),
   sTable=data.table(),
   topK=integer(),
   type=character()
 ),
 validity=function(object) {
-  stopifnot(all(object@mTable>0))
+  if (length(slot(object, "mTable"))>0) {
+    stopifnot(all(slot(object, "mTable")>0))
+    stopifnot(is_scalar_integer(slot(object, "topK")))
+  }
+  if (nrow(slot(object, "sTable"))>0) {
+    stopifnot(is_scalar_integer(slot(object, "smallC")))
+  }
   stopifnot(is_scalar_character(slot(object, "type")))
   if(!slot(object, "type") %in% c("abs", "destatis")) {
     stop("type must be either 'abs' or 'destatis'\n")
   }
   stopifnot(is_scalar_integer(slot(object, "bigN")))
   stopifnot(is_scalar_integer(slot(object, "smallN")))
-  stopifnot(is_scalar_integer(slot(object, "smallC")))
-  stopifnot(is_scalar_integer(slot(object, "topK")))
 
   if (object@type=="abs") {
     if(!is_prime(object@bigN)) {
