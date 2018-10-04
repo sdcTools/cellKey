@@ -8,6 +8,11 @@ This package is developed within the SGA `Open source tools for perturbative con
 We have a first rough version with which interested users may play around. Feedback (via issues) with regards to bugs or features requests are very welcome as well as pull-requests.
 
 ### News:
+#### Version 0.13.3
+- feature: perturbation parameters for magnitude tables can be left empty
+- new function `ck_cnt_measures()` that computes some (distance-based) information loss measures for count variables
+- updated vignette and examples
+
 #### Version 0.13.2
 - feature: new method `print()` for objects returned from `perturbTable()`
 - feature: new method `summary()` for objects returned from `perturbTable()`
