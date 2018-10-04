@@ -127,6 +127,9 @@ mod_counts(res, verbose=TRUE)
 ## information on modifications for numerical variables
 mod_numvars(res)
 
+## information-loss/utility statistics on tabulated count variables
+ck_cnt_measures(res, countvar="Total")
+
 ## an example using additional countVars
 res <- perturbTable(
   inp=inp_destatis,
@@ -135,6 +138,7 @@ res <- perturbTable(
   countVars=c("cnt_females", "cnt_males","cnt_highincome"),
   numVars=numVars)
 print(res) # custom print method
+summary(res) # custom summary method
 
 ## show count tables
 ck_freq_table(res, vname=NULL)

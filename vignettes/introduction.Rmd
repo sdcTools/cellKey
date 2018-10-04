@@ -157,7 +157,27 @@ In the example above we see, that all cells containing `sex=="female" no perturb
 - `pWC`: perturbed weighted counts
 - `WCavg`: cell average weight
 
-The example shows how to create a perturbed table of continous data using sampling weights. For this case, we need to specify parameter `numVars` in `perturbTable()`. Note that it is possible, to specify multiple variables at once.
+Function `ck_cnt_measures()` applied to the resulting object of `perturbTable()` allows to compute information loss measures for perturbed count variables. Its application is as simple as:
+
+```{r}
+infoloss <- ck_cnt_measures(tab1, countvar="Total")
+```
+
+This function returns a list with the following elements:
+
+- **measures:** a data.table containing measures of the distribution of three different distances between original and perturbed values of the unweighted counts. The three distances are
+    - absolute distance (column vals_abs), *D1*
+    - relative distance (column vals_rel), *D2*
+    - absolute distance between square-roots of original and perturbed values (column vals_r), *D3*
+- **cumDistrA:** a data.table showing the cummulative sum and proportion for distance *D1*
+- **cumDistrB:** a data.table showing the cummulative distributions for distances *D2* and *D3* for a set of intervals.
+- **false_zero:** number of cells that were perturbed to zero
+- **false_positives:** number of cells that were initially zero but have been perturbed to a number different from zero
+
+
+
+
+The next example shows how to create a perturbed table of continous data using sampling weights. For this case, we need to specify parameter `numVars` in `perturbTable()`. Note that it is possible, to specify multiple variables at once.
 
 ```{r}
 tab2 <- perturbTable(inp=inp, dimList=dimList,  weightVar="sampling_weight", 

@@ -22,7 +22,6 @@
 #' @return an object of class \code{\link{pert_table-class}}.
 #' @seealso \url{https://www.unece.org/fileadmin/DAM/stats/documents/ece/ces/ge.46/2013/Topic_1_ABS.pdf}
 #' @export
-#'
 #' @examples
 #' ## loading testdata and adding record keys (for abs-algorithm)
 #' dat <- ck_create_testdata()
@@ -113,6 +112,9 @@
 #' ## information on modifications for numerical variables
 #' mod_numvars(res)
 #'
+#' ## information-loss/utility statistics on tabulated count variables
+#' ck_cnt_measures(res, countvar="Total")
+#'
 #' ## an example using additional countVars
 #' res <- perturbTable(
 #'   inp=inp_destatis,
@@ -121,6 +123,7 @@
 #'   countVars=c("cnt_females", "cnt_males","cnt_highincome"),
 #'   numVars=numVars)
 #' print(res) # custom print method
+#' summary(res) # custom summary method
 #'
 #' ## show count tables
 #' ck_freq_table(res, vname=NULL)
@@ -163,6 +166,12 @@ perturbTable <- function(inp, dimList, countVars=NULL, numVars=NULL, by=NULL, we
   stopifnot(class(inp)=="pert_inputdat")
   pert_params <- slot(inp, "pert_params")
   type <- slot(pert_params, "type")
+
+  if (!is.null(numVars)) {
+    if (nrow(slot(pert_params, "sTable"))==0 || is.null(slot(pert_params, "mTable"))) {
+      stop("perturbation of magnitude tables not possible; sTable or mTable were not specified.\n")
+    }
+  }
 
   dat  <- copy(slot(inp, "microdat"))
   dat[,tmprkeysfortabulation:=slot(inp, "rkeys")]
