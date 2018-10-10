@@ -2,6 +2,7 @@
 
 export(ck_add_nodes)
 export(ck_cnt_measures)
+export(ck_cnt_measures_basic)
 export(ck_cont_table)
 export(ck_create_input)
 export(ck_create_node)
