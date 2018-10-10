@@ -25,7 +25,12 @@ ck_generate_rkeys <- function(dat, max_val=nrow(dat), max_digits=10, type="abs",
   }
   gen_key_destatis <- function(N, max_digits, seed) {
     set.seed(seed)
-    rkeys <- round(runif(N), digits=max_digits)
+    rkeys <- round(runif(N, min=0, max=1), digits=max_digits)
+
+    ii <- which(rkeys==0)
+    if (length(ii) > 0) {
+      rkeys[ii] <- round(runif(length(ii), min=0.1, max=1), digits=max_digits)
+    }
     rkeys
   }
 
