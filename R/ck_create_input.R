@@ -67,8 +67,8 @@ ck_create_input <- function(dat, def_rkey, pert_params) {
     stop("Argument",shQuote("def_rkey"),"must either be character or numeric!\n")
   }
 
-  out@microdat <- dat
-  out@pert_params <- pert_params
+  slot(out, "microdat") <- dat
+  slot(out, "pert_params") <- pert_params
   validObject(out)
   out
 }
