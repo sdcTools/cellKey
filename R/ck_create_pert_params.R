@@ -21,7 +21,7 @@
 #'   sTable=ck_generate_sTable(smallC=12),
 #'   mTable=c(0.6,0.4,0.2))
 #' print(class(params))
-ck_create_pert_params <- function(bigN, smallN, pTable, sTable=NULL, mTable=NULL) {
+ck_create_pert_params <- function(bigN=NULL, smallN=NULL, pTable, sTable=NULL, mTable=NULL) {
   out <- new("pert_params")
 
   convert_from_ptable <- function(pTable) {
@@ -43,7 +43,10 @@ ck_create_pert_params <- function(bigN, smallN, pTable, sTable=NULL, mTable=NULL
   pTable <- convert_from_ptable(pTable)
 
   if (slot(out, "type")=="destatis") {
-    message("Note: the supplied pTable is of type 'destatis'. Thus, arguments 'bigN' and 'smallN' will be ignored:")
+    mf <- match.call(expand.dots=FALSE)
+    if (!is.null(mf$bigN) | !is.null(smallN)) {
+      message("Note: the supplied pTable is of type 'destatis'. Thus, arguments 'bigN' and 'smallN' will be ignored:")
+    }
     slot(out, "bigN") <- as.integer(1)
     slot(out, "smallN") <- 0L
   } else {
