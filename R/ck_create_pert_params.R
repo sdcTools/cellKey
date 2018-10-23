@@ -62,7 +62,7 @@ ck_create_pert_params <- function(bigN=NULL, smallN=NULL, pTable, sTable=NULL, m
   slot(out, "pTable") <- pTable
   slot(out, "pTableSize") <- as.integer(ncol(pTable))
 
-  if (smallN >= slot(out, "pTableSize")) {
+  if (slot(out, "smallN") >= slot(out, "pTableSize")) {
     stop(paste("Parameter 'smallN' must be smaller than the number of columns in 'pTable'"))
   }
 

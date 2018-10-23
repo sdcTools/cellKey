@@ -38,7 +38,10 @@ ck_generate_rkeys <- function(dat, max_val=nrow(dat), max_digits=10, type="abs",
     stopifnot(is_scalar_integerish(max_val))
     stopifnot(max_val >= nrow(dat))
     if (verbose) {
-      message("Note: Argument 'max_digits' is ignored!")
+      mf <- match.call(expand.dots=FALSE)
+      if (!is.null(mf$max_digits)) {
+        message("Note: Argument 'max_digits' is ignored!")
+      }
     }
     rkeys <- gen_key_abs(N=nrow(dat), max_val=max_val, seed=seed)
   }
@@ -46,7 +49,10 @@ ck_generate_rkeys <- function(dat, max_val=nrow(dat), max_digits=10, type="abs",
     stopifnot(is_scalar_integerish(max_digits))
     stopifnot(max_digits>=5 & max_digits<=20)
     if (verbose) {
-      message("Note: Argument 'max_val' is ignored!")
+      mf <- match.call(expand.dots=FALSE)
+      if (!is.null(mf$max_val)) {
+        message("Note: Argument 'max_val' is ignored!")
+      }
     }
     rkeys <- gen_key_destatis(N=nrow(dat), max_digits=max_digits, seed=seed)
   }
