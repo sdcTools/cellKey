@@ -50,8 +50,12 @@ ck_create_pert_params <- function(bigN=NULL, smallN=NULL, pTable, sTable=NULL, m
     slot(out, "bigN") <- as.integer(1)
     slot(out, "smallN") <- 0L
   } else {
+    stopifnot(is.numeric(bigN), length(bigN)==1, bigN>=1)
+    if (bigN > .Machine$integer.max) {
+      stop("The number provided for 'bigN' is > than the maximum possible value on your computer (",.Machine$integer.max,")")
+    }
     stopifnot(is_bare_integerish(bigN))
-    stopifnot(is_bare_integerish(smallN))
+    stopifnot(is_bare_integerish(smallN), smallN>=1)
     slot(out, "bigN") <- as.integer(bigN)
     slot(out, "smallN") <- as.integer(smallN)
   }
