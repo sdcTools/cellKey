@@ -4,8 +4,8 @@
 \alias{ck_create_pert_params}
 \title{ck_create_pert_params}
 \usage{
-ck_create_pert_params(bigN, smallN, pTable, sTable = NULL,
-  mTable = NULL)
+ck_create_pert_params(bigN = NULL, smallN = NULL, pTable,
+  sTable = NULL, mTable = NULL)
 }
 \arguments{
 \item{bigN}{(integer) large prime number used to derive cell keys from record keys}

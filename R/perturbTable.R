@@ -148,6 +148,12 @@
 #' ## variable cnt_males is 1
 #' p_sav <- ck_cont_table(res, vname="savings"); p_sav
 #' attr(p_sav, "modifications") # no modifications in cells containing females!
+#'
+#' ## export table to a simple data.table
+#' df_tot <- ck_export_table(res, vname="Total", type="both")
+#' head(df_tot)
+#' df_inc <- ck_export_table(res, vname="income", type="weighted")
+#' head(df_inc)
 perturbTable <- function(inp, dimList, countVars=NULL, numVars=NULL, by=NULL, weightVar=NULL) {
   # rename variables
   gen_vnames <- function(countVars, prefix="sumRK") {
@@ -212,7 +218,7 @@ perturbTable <- function(inp, dimList, countVars=NULL, numVars=NULL, by=NULL, we
     }
     # check if all count-vars are integerish 0/1
     chk <- sapply(countVars, function(x) {
-      identical(range(dat[[x]]), c(0,1))
+      all(unique(dat[[x]]) %in% c(0,1))
     })
     if (!all(chk)) {
       stop("check input 'countVars': --> at least one variable is not 0/1 coded!\n")

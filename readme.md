@@ -8,6 +8,13 @@ This package is developed within the SGA `Open source tools for perturbative con
 We have a first rough version with which interested users may play around. Feedback (via issues) with regards to bugs or features requests are very welcome as well as pull-requests.
 
 ### News:
+#### Version 0.13.5
+- feature: new method `ck_export_table()` that allows to save results in a simple format
+- improvement: better error-message if too large values for `bigN` are specified
+- improvement: better error-message if parameter `smallN` is too large in respect to the specified pTable
+- improvement: display message about ignored parameters in `ck_generate_rkeys()` only if non-required parameters have been actually specified
+- improvement: no warning messages that parameters are ignored in case they are irrelevant
+
 #### Version 0.13.4
 - feature: new function `ck_cnt_measures_basic()` that computes infoloss/utility measures based on two input vectors referring to original and perturbed values
 - bugfix: check that record-keys in destatis-format are >= 0

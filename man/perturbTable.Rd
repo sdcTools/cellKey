@@ -163,6 +163,12 @@ res <- perturbTable(
 ## variable cnt_males is 1
 p_sav <- ck_cont_table(res, vname="savings"); p_sav
 attr(p_sav, "modifications") # no modifications in cells containing females!
+
+## export table to a simple data.table
+df_tot <- ck_export_table(res, vname="Total", type="both")
+head(df_tot)
+df_inc <- ck_export_table(res, vname="income", type="weighted")
+head(df_inc)
 }
 \seealso{
 \url{https://www.unece.org/fileadmin/DAM/stats/documents/ece/ces/ge.46/2013/Topic_1_ABS.pdf}

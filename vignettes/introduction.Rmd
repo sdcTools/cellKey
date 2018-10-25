@@ -231,6 +231,15 @@ p_savings
  
 From the results we can observe that there are no high-income units in the highest age group (`age_group6`) and those cells are not perturbed at all.
 
+
+Using function `ck_export_table()` which can be applied to outputs of `perturbTable()`. This functions returns a simple `data.frames` containing all cells and perturbed (weighted) values for a given perturbed variables. We could apply it to the `Total`-variable as follows
+
+```{r}
+dt_tot <- ck_export_table(tab3, vname="Total", type="both")
+head(dt_tot)
+```
+
+
 ### Extract information from results
 Some auxiliary methods may be applied to output object of function `perturbTable()`. The structure of such objects is shown below:
 
