@@ -1,3 +1,5 @@
+^Meta$
+^doc$
 ckm_20170517/
 ^.*\.Rproj$
 ^\.Rproj\.user$
