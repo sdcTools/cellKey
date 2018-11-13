@@ -9,6 +9,8 @@
 #' This parameter is only used if \code{type} equals \code{destatis}.
 #' @param type (character) choice how to compute record keys. Valid choices
 #' are \code{abs} and \code{destatis}.
+#' @param seed if not \code{NULL} a number specifying the initial seed value
+#' for the random number generator
 #' @param verbose (logical) if \code{TRUE}, print additional information
 #' @return a numeric vector with \code{N} record keys given a seed depending on \code{dat}
 #' @export
@@ -17,7 +19,7 @@
 #' dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=2*nrow(dat), type="abs")
 #' ## rkeys for destatis method
 #' # ck_generate_rkeys(dat=dat, max_digits=6, type="destatis")
-ck_generate_rkeys <- function(dat, max_val=nrow(dat), max_digits=10, type="abs", verbose=TRUE) {
+ck_generate_rkeys <- function(dat, max_val=nrow(dat), max_digits=10, type="abs", seed=NULL, verbose=TRUE) {
   gen_key_abs <- function(N, max_val, seed) {
     set.seed(seed)
     rkeys <- sample(1:max_val, size=N, replace=TRUE)
@@ -33,7 +35,12 @@ ck_generate_rkeys <- function(dat, max_val=nrow(dat), max_digits=10, type="abs",
   stopifnot(is_scalar_character(type))
   stopifnot(type %in% c("abs","destatis"))
 
-  seed <- ck_create_seed_from_hash(dat)
+  if (!is.null(seed)) {
+    stopifnot(is_scalar_integerish(seed))
+  } else {
+    seed <- ck_create_seed_from_hash(dat)
+  }
+
   if (type=="abs") {
     stopifnot(is_scalar_integerish(max_val))
     stopifnot(max_val >= nrow(dat))

@@ -5,7 +5,7 @@
 \title{ck_generate_rkeys}
 \usage{
 ck_generate_rkeys(dat, max_val = nrow(dat), max_digits = 10,
-  type = "abs", verbose = TRUE)
+  type = "abs", seed = NULL, verbose = TRUE)
 }
 \arguments{
 \item{dat}{microdata used to generated hash for random seed}
@@ -18,6 +18,9 @@ This parameter is only used if \code{type} equals \code{destatis}.}
 
 \item{type}{(character) choice how to compute record keys. Valid choices
 are \code{abs} and \code{destatis}.}
+
+\item{seed}{if not \code{NULL} a number specifying the initial seed value
+for the random number generator}
 
 \item{verbose}{(logical) if \code{TRUE}, print additional information}
 }
