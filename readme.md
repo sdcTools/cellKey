@@ -33,10 +33,14 @@ library(cellKey)
 Once finished, the package will also contain a package vignette. The unfinished introduction vignette can be looked at using the following command:
 
 ```
-vignette("introduction", pa="cellKey")
+ck_vignette()
 ```
 
 ### News:
+#### Version 0.15.0
+- new convenience function `ck_vignette()` that displays the package vignette in a browser
+- `ck_generate_rkeys()` got a new argument `seed` that allows to overwrite the default seed computed from a hash of the input dataset.
+
 #### Version 0.14.0
 - feature: new method `ck_export_table()` that allows to save results in a simple format
 - improvement: better error-message if too large values for `bigN` are specified
