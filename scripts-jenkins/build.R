@@ -4,6 +4,5 @@
 # just to test if package is loaded from artifactory
 # install.packages("brew")
 
-library("devtools")
-
-devtools::build(path = ".",vignettes = FALSE)
+library(devtools)
+devtools::build(path=".", vignettes=TRUE, binary=TRUE)
