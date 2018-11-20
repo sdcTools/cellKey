@@ -6,3 +6,5 @@ ckm_20170517/
 readme.md
 debugzeugs
 debug
+^scripts-jenkins
+^Jenkinsfile
