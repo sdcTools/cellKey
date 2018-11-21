@@ -87,16 +87,16 @@ inp_destatis <- ck_create_input(
   pert_params=pert_params_destatis)
 
 ## definining table hierarchies
+## note that cou could also use functionality from sdcHierarchies-package directly
+## see: help(pa='sdcHierarchies') or an example:
+## dim.sex <- sdcHierarchies::sdcHier_create("Total", node_labs=c("male", "female"))
+## dim.sex <- sdcHier(dim.sex) # interactive shiny-app to modify the hierarchy
 ## variable 'sex'
-dim.sex <- ck_create_node(total_lab="Total")
-dim.sex <- ck_add_nodes(dim.sex, reference_node="Total", node_labs=c("male","female"))
+dim.sex <- ck_create_node(total_lab="Total", node_labs=c("male", "female"))
 print(dim.sex)
 
 ## variable 'sex'
-dim.age <- ck_create_node(total_lab="Total")
-dim.age <- ck_add_nodes(dim.age,
-  reference_node="Total",
-  node_labs=paste0("age_group",1:6))
+dim.age <- ck_create_node(total_lab="Total", node_labs=paste0("age_group",1:6))
 print(dim.age)
 
 ## define required inputs

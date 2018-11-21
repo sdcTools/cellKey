@@ -37,6 +37,10 @@ ck_vignette()
 ```
 
 ### News:
+#### Version 0.16.0
+- make use of new package `sdcHierarchies` to generate and update hierarchies
+- new function `ck_rename_nodes()`
+
 #### Version 0.15.0
 - new convenience function `ck_vignette()` that displays the package vignette in a browser
 - `ck_generate_rkeys()` got a new argument `seed` that allows to overwrite the default seed computed from a hash of the input dataset.

@@ -5,27 +5,33 @@
 \alias{ck_create_node}
 \alias{ck_add_nodes}
 \alias{ck_delete_nodes}
+\alias{ck_rename_nodes}
 \title{Create and modify the structure of hierarchies}
 \usage{
-ck_create_node(total_lab = "Total")
+ck_create_node(total_lab = "Total", node_labs = NULL)
 
 ck_add_nodes(node, node_labs, reference_node)
 
 ck_delete_nodes(node, node_labs, reference_node)
+
+ck_rename_nodes(node, node_labs, node_labs_new)
 }
 \arguments{
 \item{total_lab}{the name of the overall total (summation over all contributing)}
 
-\item{node}{an object as created in \code{ck_create_node()} or returned from
-\code{ck_add_nodes()} or \code{ck_delete_nodes()}.}
-
 \item{node_labs}{character name(s) of new elements that should be inserted to or
 deleted from a hierarchical structure}
+
+\item{node}{an object as created in \code{ck_create_node()} or returned from
+\code{ck_add_nodes()} or \code{ck_delete_nodes()}.}
 
 \item{reference_node}{character name of an existing node in the hierarchical
 structure. When using \code{ck_add_nodes()}, the new elements are created as children
 of the reference node. In \code{ck_delete_nodes()}, all children of the reference node that
 match the names with argument \code{node_labs} are deleted from the hierarchy.}
+
+\item{node_labs_new}{a character vector of new node names replacing the existing node names given in
+argument \code{node_labs} when using \code{ck_rename_nodes}.}
 }
 \value{
 a \code{Node} object that can be used to specify a hierarchy used

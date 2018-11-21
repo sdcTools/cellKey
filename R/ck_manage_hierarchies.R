@@ -13,6 +13,8 @@
 ##' \code{ck_add_nodes()} or \code{ck_delete_nodes()}.
 ##' @param node_labs character name(s) of new elements that should be inserted to or
 ##' deleted from a hierarchical structure
+##' @param node_labs_new a character vector of new node names replacing the existing node names given in
+##' argument \code{node_labs} when using \code{ck_rename_nodes}.
 ##' @param reference_node character name of an existing node in the hierarchical
 ##' structure. When using \code{ck_add_nodes()}, the new elements are created as children
 ##' of the reference node. In \code{ck_delete_nodes()}, all children of the reference node that
@@ -41,18 +43,25 @@ NULL
 
 ##' @rdname ck_manage_hierarchies
 ##' @export
-ck_create_node <- function(total_lab="Total") {
-  return(create_node(total_lab=total_lab))
+ck_create_node <- function(total_lab="Total", node_labs=NULL) {
+  return(sdcHier_create(tot_lab=total_lab, node_labs=node_labs))
 }
 
 ##' @rdname ck_manage_hierarchies
 ##' @export
 ck_add_nodes <- function(node, node_labs, reference_node) {
-  return(add_nodes(node=node, node_labs=node_labs, reference_node=reference_node))
+  return(sdcHier_add(h=node, node_labs=node_labs, refnode=reference_node))
 }
 
 ##' @rdname ck_manage_hierarchies
 ##' @export
 ck_delete_nodes <- function(node, node_labs, reference_node) {
-  return(delete_nodes(node=node, node_labs=node_labs, reference_node=reference_node))
+  return(sdcHier_delete(h=node, node_labs=node_labs))
 }
+
+##' @rdname ck_manage_hierarchies
+##' @export
+ck_rename_nodes <- function(node, node_labs, node_labs_new) {
+  return(sdcHier_rename(h=node, node_labs=node_labs, node_labs_new=node_labs_new))
+}
+
