@@ -13,6 +13,11 @@ The package can directly be installed from `github` using the `devtools` package
 ```
 if (!require("devtools")) install.packages("devtools")
 library(devtools)
+
+# update all packages
+update.packages(ask=FALSE)
+
+# finally install ptable and cellKey packages directly from github
 install_github("sdcTools/ptable", build_vignette=FALSE, dependencies=TRUE)
 install_github("sdcTools/cellKey", build_vignette=TRUE, dependencies=TRUE)
 ```
