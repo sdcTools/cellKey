@@ -18,8 +18,11 @@ library(devtools)
 update.packages(ask=FALSE)
 
 # finally install ptable and cellKey packages directly from github
-install_github("sdcTools/ptable", build_vignette=FALSE, dependencies=TRUE)
-install_github("sdcTools/cellKey", build_vignette=TRUE, dependencies=TRUE)
+install_github("sdcTools/ptable", dependencies=c("Depends","Imports"), force=TRUE, build_opts="--build-vignettes")
+install_github("sdcTools/cellKey", force=TRUE, build_opts="--build-vignettes")
+
+
+
 ```
 
 If you experience a timeout due to a proxy server while downloading, one can work around this issue by specifying the proxy-server using the `httr` package:
