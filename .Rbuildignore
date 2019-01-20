@@ -1,6 +1,11 @@
+^codecov\.yml$
+^\.lintr$
+^\.travis\.yml$
+^Meta$
+^doc$
 ckm_20170517/
 ^.*\.Rproj$
 ^\.Rproj\.user$
-readme.md
+README.Rmd
 debugzeugs
 debug

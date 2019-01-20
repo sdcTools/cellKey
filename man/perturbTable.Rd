@@ -4,8 +4,8 @@
 \alias{perturbTable}
 \title{perturbTable}
 \usage{
-perturbTable(inp, dimList, countVars = NULL, numVars = NULL, by = NULL,
-  weightVar = NULL)
+perturbTable(inp, dimList, countVars = NULL, numVars = NULL,
+  by = NULL, weightVar = NULL)
 }
 \arguments{
 \item{inp}{an object of class \code{\link{pert_inputdat-class}}
@@ -171,6 +171,9 @@ mod_counts(res, verbose=TRUE)
 ## information on modifications for numerical variables
 mod_numvars(res)
 
+## information-loss/utility statistics on tabulated count variables
+ck_cnt_measures(res, vname="Total")
+
 ## an example using additional countVars
 res <- perturbTable(
   inp=inp_destatis,
@@ -178,6 +181,8 @@ res <- perturbTable(
   weightVar=weightVar,
   countVars=c("cnt_females", "cnt_males","cnt_highincome"),
   numVars=numVars)
+print(res) # custom print method
+summary(res) # custom summary method
 
 ## show count tables
 ck_freq_table(res, vname=NULL)
@@ -202,6 +207,12 @@ res <- perturbTable(
 ## variable cnt_males is 1
 p_sav <- ck_cont_table(res, vname="savings"); p_sav
 attr(p_sav, "modifications") # no modifications in cells containing females!
+
+## export table to a simple data.table
+df_tot <- ck_export_table(res, vname="Total", type="both")
+head(df_tot)
+df_inc <- ck_export_table(res, vname="income", type="weighted")
+head(df_inc)
 }
 \seealso{
 \url{https://www.unece.org/fileadmin/DAM/stats/documents/ece/ces/ge.46/2013/Topic_1_ABS.pdf}

@@ -2,10 +2,11 @@
 #'
 #' 820000 obervations in 5 Variables without sampling weights.
 #'
-#' @name mdata
+#' @name ck_dat_hc92
 #' @docType data
-#' @format mdata: a data frame with 820000 observations on the following 5 variables.
+#' @format ck_dat_hc92: a data frame with 820000 observations on the following 6 variables.
 #' \describe{
+#' \item{id}{a numeric identifier}
 #' \item{geo_m}{a character vector defining regions}
 #' \item{sex}{a character vector defining gender}
 #' \item{age_m}{a character vector containing age groups}
@@ -14,8 +15,8 @@
 #' @references https://ec.europa.eu/eurostat/cros/content/3-random-noise-cell-key-method_en
 #' @keywords datasets
 #' @examples
-#' data(mdata)
-#' head(mdata)
+#' data(ck_dat_hc92)
+#' head(ck_dat_hc92)
 NULL
 
 #' A real-world data set on household income and expenditures

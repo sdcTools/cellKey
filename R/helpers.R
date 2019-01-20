@@ -381,3 +381,21 @@ fix_negative_counts <- function(tab) {
   tab[,neg_counts:=NULL]
   tab
 }
+
+# statistics of a distribution of a numeric vector
+get_distr_vals <- function(dd) {
+  stopifnot(is.numeric(dd))
+  dd <- na.omit(dd)
+  vals <- c(
+    min(dd), quantile(dd, seq(10,40, by=10)/100),
+    mean(dd), median(dd),
+    quantile(dd, seq(60,90, by=10)/100), max(dd))
+  vals <- round(vals, digits=3)
+  names(vals)[1] <- "Min"
+  names(vals)[2:5] <- paste0("Q", seq(10, 40, by=10))
+  names(vals)[6] <- "Mean"
+  names(vals)[7] <- "Median"
+  names(vals)[8:11] <- paste0("Q", seq(60, 90, by=10))
+  names(vals)[12] <- "Max"
+  vals
+}

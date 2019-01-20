@@ -22,7 +22,6 @@
 #' @return an object of class \code{\link{pert_table-class}}.
 #' @seealso \url{https://www.unece.org/fileadmin/DAM/stats/documents/ece/ces/ge.46/2013/Topic_1_ABS.pdf}
 #' @export
-#'
 #' @examples
 #' ## loading testdata and adding record keys
 #' dat <- ck_create_testdata()
@@ -157,6 +156,9 @@
 #' ## information on modifications for numerical variables
 #' mod_numvars(res)
 #'
+#' ## information-loss/utility statistics on tabulated count variables
+#' ck_cnt_measures(res, vname="Total")
+#'
 #' ## an example using additional countVars
 #' res <- perturbTable(
 #'   inp=inp_destatis,
@@ -164,6 +166,8 @@
 #'   weightVar=weightVar,
 #'   countVars=c("cnt_females", "cnt_males","cnt_highincome"),
 #'   numVars=numVars)
+#' print(res) # custom print method
+#' summary(res) # custom summary method
 #'
 #' ## show count tables
 #' ck_freq_table(res, vname=NULL)
@@ -188,6 +192,12 @@
 #' ## variable cnt_males is 1
 #' p_sav <- ck_cont_table(res, vname="savings"); p_sav
 #' attr(p_sav, "modifications") # no modifications in cells containing females!
+#'
+#' ## export table to a simple data.table
+#' df_tot <- ck_export_table(res, vname="Total", type="both")
+#' head(df_tot)
+#' df_inc <- ck_export_table(res, vname="income", type="weighted")
+#' head(df_inc)
 perturbTable <- function(inp, dimList, countVars=NULL, numVars=NULL, by=NULL, weightVar=NULL) {
   # rename variables
   gen_vnames <- function(countVars, prefix="sumRK") {
@@ -206,6 +216,12 @@ perturbTable <- function(inp, dimList, countVars=NULL, numVars=NULL, by=NULL, we
   stopifnot(class(inp)=="pert_inputdat")
   pert_params <- slot(inp, "pert_params")
   type <- slot(pert_params, "type")
+
+  if (!is.null(numVars)) {
+    if (nrow(slot(pert_params, "sTable"))==0 || is.null(slot(pert_params, "mTable"))) {
+      stop("perturbation of magnitude tables not possible; sTable or mTable were not specified.\n")
+    }
+  }
 
   dat  <- copy(slot(inp, "microdat"))
   dat[,tmprkeysfortabulation:=slot(inp, "rkeys")]
@@ -246,7 +262,7 @@ perturbTable <- function(inp, dimList, countVars=NULL, numVars=NULL, by=NULL, we
     }
     # check if all count-vars are integerish 0/1
     chk <- sapply(countVars, function(x) {
-      identical(range(dat[[x]]), c(0,1))
+      all(unique(dat[[x]]) %in% c(0,1))
     })
     if (!all(chk)) {
       stop("check input 'countVars': --> at least one variable is not 0/1 coded!\n")
