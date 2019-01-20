@@ -15,6 +15,8 @@ addons:
 r_github_packages:
   - jimhester/lintr
   - sdcTools/ptable
+  - r-lib/covr
+  - r-lib/pkgdown
 
 after_success:
   - R CMD INSTALL $PKG_TARBALL
