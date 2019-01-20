@@ -26,7 +26,7 @@ ck_create_pert_params <- function(bigN=NULL, smallN=NULL, pTable, sTable=NULL, m
 
   convert_from_ptable <- function(pTable) {
     . <- i <- p_int_ub <- v <- NULL
-    if (isS4(pTable) && class(pTable)=="ptable") {
+    if (isS4(pTable) && class(pTable) == "ptable") {
       pType <- slot(pTable, "type")
       if (pType == "destatis"){
         pTable <- slot(pTable, "pTable")[, .(i, p_int_ub, v)]
@@ -42,20 +42,21 @@ ck_create_pert_params <- function(bigN=NULL, smallN=NULL, pTable, sTable=NULL, m
   slot(out, "type") <- slot(pTable, "type")
   pTable <- convert_from_ptable(pTable)
 
-  if (slot(out, "type")=="destatis") {
-    mf <- match.call(expand.dots=FALSE)
+  if (slot(out, "type") == "destatis") {
+    mf <- match.call(expand.dots = FALSE)
     if (!is.null(mf$bigN) | !is.null(smallN)) {
       message("Note: the supplied pTable is of type 'destatis'. Thus, arguments 'bigN' and 'smallN' will be ignored:")
     }
     slot(out, "bigN") <- as.integer(1)
     slot(out, "smallN") <- 0L
   } else {
-    stopifnot(is.numeric(bigN), length(bigN)==1, bigN>=1)
+    stopifnot(is.numeric(bigN), length(bigN) == 1, bigN >= 1)
     if (bigN > .Machine$integer.max) {
-      stop("The number provided for 'bigN' is > than the maximum possible value on your computer (",.Machine$integer.max,")")
+      v <- .Machine$integer.max
+      stop("The number provided for 'bigN' is > than the maximum possible value on your computer (", v, ")")
     }
     stopifnot(is_bare_integerish(bigN))
-    stopifnot(is_bare_integerish(smallN), smallN>=1)
+    stopifnot(is_bare_integerish(smallN), smallN >= 1)
     slot(out, "bigN") <- as.integer(bigN)
     slot(out, "smallN") <- as.integer(smallN)
   }
@@ -72,7 +73,7 @@ ck_create_pert_params <- function(bigN=NULL, smallN=NULL, pTable, sTable=NULL, m
   }
   if (!is.null(sTable)) {
     slot(out, "sTable") <- sTable
-    slot(out, "smallC") <- as.integer(ncol(sTable)-32)
+    slot(out, "smallC") <- as.integer(ncol(sTable) - 32)
   }
   validObject(out)
   out

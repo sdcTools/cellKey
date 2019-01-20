@@ -107,22 +107,22 @@ ck_cnt_measures <- function(x, vname="Total") {
 #' ck_cnt_measures_basic(orig=orig, pert=pert)
 #'
 ck_cnt_measures_basic <- function(orig, pert) {
-  stopifnot(is.numeric(orig), is.numeric(pert), length(orig)==length(pert))
+  stopifnot(is.numeric(orig), is.numeric(pert), length(orig) == length(pert))
 
   val_abs <- vals_abs <- prop_abs <- val_rel <- vals_rel <- prop_rel <- NULL
   val_r <- vals_r <- prop_r <- NULL
-  quantvals <- c(seq(0, 0.1, by=0.01), seq(0.15, 1, by=0.05), Inf)
+  quantvals <- c(seq(from = 0, to = 0.1, by = 0.01), seq(from = 0.15, to = 1, by = 0.05), Inf)
 
-  dabs <- abs(pert-orig)
-  drel <- (abs(pert-orig))/orig
+  dabs <- abs(pert - orig)
+  drel <- (abs(pert - orig)) / orig
   drel[is.nan(drel)] <- 0
 
-  dr <- abs(sqrt(pert)-sqrt(orig))
+  dr <- abs(sqrt(pert) - sqrt(orig))
 
   # absolute
   cs_abs <- cumsum(table(dabs))
-  dtA <- data.table(kat=names(cs_abs), val_abs=cs_abs)
-  dtA[, prop_abs:=val_abs/length(dabs)]
+  dt_a <- data.table(kat = names(cs_abs), val_abs = cs_abs)
+  dt_a[, prop_abs := val_abs / length(dabs)]
 
   # relative and squared distances
   drelf <- cut(drel, quantvals, include.lowest = TRUE)
@@ -131,23 +131,30 @@ ck_cnt_measures_basic <- function(orig, pert) {
   cs_rel <- cumsum(table(drelf))
   cs_r <- cumsum(table(drf))
 
-  dtB <- data.table(kat=names(cs_rel), val_rel=cs_rel)
-  dtB[, prop_rel:=val_rel/length(drel)]
+  dt_b <- data.table(kat = names(cs_rel), val_rel = cs_rel)
+  dt_b[, prop_rel := val_rel / length(drel)]
 
-  dtB[, val_r:=cs_r]
-  dtB[, prop_r:=val_rel/length(dr)]
+  dt_b[, val_r := cs_r]
+  dt_b[, prop_r := val_rel / length(dr)]
 
   ## cumdistr
   vv <- get_distr_vals(dabs)
-  dt2 <- data.table(what=names(vv), vals_abs=vv)
-  dt2[,vals_rel:=get_distr_vals(drel)]
-  dt2[,vals_r:=get_distr_vals(dr)]
+  dt2 <- data.table(what = names(vv), vals_abs = vv)
+  dt2[, vals_rel := get_distr_vals(drel)]
+  dt2[, vals_r := get_distr_vals(dr)]
 
   # false zero cells: cells that were perturbed to zero
-  false_zero <- sum(pert==0 & orig!=0)
+  false_zero <- sum(pert == 0 & orig != 0)
   # false positive: zeros that were perturbed to a value !=0
-  false_positives <- sum(orig==0 & pert!=0)
+  false_positives <- sum(orig == 0 & pert != 0)
 
-  return(list(measures=dt2, cumdistrA=dtA, cumdistrB=dtB,
-    false_zero=false_zero, false_positives=false_positives))
+  return(
+    list(
+      measures = dt2,
+      cumdistrA = dt_a,
+      cumdistrB = dt_b,
+      false_zero = false_zero,
+      false_positives = false_positives
+    )
+  )
 }

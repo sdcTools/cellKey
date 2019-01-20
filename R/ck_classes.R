@@ -14,49 +14,49 @@
 #' @rdname pert_params-class
 #' @export
 setClass("pert_params",
-representation=list(
-  bigN="integer",
-  smallN="integer",
-  pTable="data.table",
-  pTableSize="integer",
-  sTable="data.table",
-  mTable="numeric",
-  smallC="integer",
-  topK="integer",
-  type="character"
+representation = list(
+  bigN = "integer",
+  smallN = "integer",
+  pTable = "data.table",
+  pTableSize = "integer",
+  sTable = "data.table",
+  mTable = "numeric",
+  smallC = "integer",
+  topK = "integer",
+  type = "character"
 ),
-prototype=list(
-  bigN=integer(),
-  smallN=integer(),
-  pTable=data.table(),
-  pTableSize=integer(),
-  mTable=numeric(),
-  smallC=integer(),
-  sTable=data.table(),
-  topK=integer(),
-  type=character()
+prototype = list(
+  bigN = integer(),
+  smallN = integer(),
+  pTable = data.table(),
+  pTableSize = integer(),
+  mTable = numeric(),
+  smallC = integer(),
+  sTable = data.table(),
+  topK = integer(),
+  type = character()
 ),
-validity=function(object) {
-  if (length(slot(object, "mTable"))>0) {
-    stopifnot(all(slot(object, "mTable")>0))
+validity = function(object) {
+  if (length(slot(object, "mTable")) > 0) {
+    stopifnot(all(slot(object, "mTable") > 0))
     stopifnot(is_scalar_integer(slot(object, "topK")))
   }
-  if (nrow(slot(object, "sTable"))>0) {
+  if (nrow(slot(object, "sTable")) > 0) {
     stopifnot(is_scalar_integer(slot(object, "smallC")))
   }
   stopifnot(is_scalar_character(slot(object, "type")))
-  if(!slot(object, "type") %in% c("abs", "destatis")) {
+  if (!slot(object, "type") %in% c("abs", "destatis")) {
     stop("type must be either 'abs' or 'destatis'\n")
   }
   stopifnot(is_scalar_integer(slot(object, "bigN")))
   stopifnot(is_scalar_integer(slot(object, "smallN")))
 
-  if (slot(object, "type")=="abs") {
-    if(!is_prime(slot(object, "bigN"))) {
+  if (slot(object, "type") == "abs") {
+    if (!is_prime(slot(object, "bigN"))) {
       stop("bigN must be a prime number!\n")
     }
-  } else if (slot(object, "type")=="abs") {
-    if(slot(object, "bigN")!=1) {
+  } else if (slot(object, "type") == "abs") {
+    if (slot(object, "bigN") != 1) {
       stop("bigN must equal 1 for the destatis-method!\n")
     }
   }
@@ -73,19 +73,19 @@ NULL
 #' @rdname pert_inputdat-class
 #' @export
 setClass("pert_inputdat",
-representation=list(
-  microdat="data.table",
-  rkeys="numeric",
-  pert_params="pert_params"
+representation = list(
+  microdat = "data.table",
+  rkeys = "numeric",
+  pert_params = "pert_params"
 ),
-prototype=list(
-  microdat=data.table(),
-  rkeys=numeric(),
-  pert_params=NULL
+prototype = list(
+  microdat = data.table(),
+  rkeys = numeric(),
+  pert_params = NULL
 ),
-validity=function(object) {
+validity = function(object) {
   if (!is.null(slot(object, "rkeys"))) {
-    stopifnot(length(slot(object, "rkeys"))==nrow(slot(object, "microdat")))
+    stopifnot(length(slot(object, "rkeys")) == nrow(slot(object, "microdat")))
     stopifnot(all(slot(object, "rkeys") >= 0))
   }
   return(TRUE)
@@ -123,32 +123,32 @@ NULL
 #' @rdname pert_table-class
 #' @export
 setClass("pert_table",
-representation=list(
-  tab="data.table",
-  count_modifications="data.table",
-  numvars_modifications="data.table",
-  dimVars="character",
-  countVars="character",
-  numVars="character",
-  by="character",
-  is_weighted="logical",
-  type="character"
+representation = list(
+  tab = "data.table",
+  count_modifications = "data.table",
+  numvars_modifications = "data.table",
+  dimVars = "character",
+  countVars = "character",
+  numVars = "character",
+  by = "character",
+  is_weighted = "logical",
+  type = "character"
 ),
-prototype=list(
-  tab=data.table(),
-  count_modifications=data.table(),
-  numvars_modifications=data.table(),
-  dimVars=character(),
-  countVars=character(),
-  numVars=character(),
-  by=character(),
-  is_weighted=c(),
-  type=character()),
-validity=function(object) {
-  stopifnot(slot(object, "type") %in% c("abs","destatis"))
+prototype = list(
+  tab = data.table(),
+  count_modifications = data.table(),
+  numvars_modifications = data.table(),
+  dimVars = character(),
+  countVars = character(),
+  numVars = character(),
+  by = character(),
+  is_weighted = c(),
+  type = character()),
+validity = function(object) {
+  stopifnot(slot(object, "type") %in% c("abs", "destatis"))
   by <- slot(object, "by")
-  if (by!="") {
-    stopifnot(length(by)==1)
+  if (by != "") {
+    stopifnot(length(by) == 1)
     stopifnot(by %in% slot(object, "countVars"))
   }
 })
