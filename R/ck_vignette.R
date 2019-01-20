@@ -9,5 +9,5 @@
 #' ck_vignette()
 #' }
 ck_vignette <- function() {
-  RShowDoc("introduction", package="cellKey")
+  RShowDoc("introduction", package = "cellKey")
 }

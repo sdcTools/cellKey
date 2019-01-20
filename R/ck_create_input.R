@@ -51,20 +51,29 @@ ck_create_input <- function(dat, def_rkey, pert_params) {
     stopifnot(def_rkey %in% names(dat))
 
     # check the record keys
-    if (check_rkeys(rkeys=dat[[def_rkey]], type=type)) {
+    if (check_rkeys(rkeys = dat[[def_rkey]], type = type)) {
       out@rkeys <- dat[[def_rkey]]
     } else {
       stop("invalid records detected in the dataset!\n")
     }
   } else if (is_bare_integerish(def_rkey)) {
     stopifnot(is_scalar_atomic(def_rkey))
-    if (type=="abs") {
-      out@rkeys <- ck_generate_rkeys(dat=dat, max_val=def_rkey, type=type)
+    if (type == "abs") {
+      slot(out, "rkeys") <- ck_generate_rkeys(
+        dat = dat,
+        max_val = def_rkey,
+        type = type)
     } else {
-      out@rkeys <- ck_generate_rkeys(dat=dat, max_digits=def_rkey, type=type)
+      slot(out, "rkeys") <- ck_generate_rkeys(
+        dat = dat,
+        max_digits = def_rkey,
+        type = type)
     }
   } else {
-    stop("Argument",shQuote("def_rkey"),"must either be character or numeric!\n")
+    stop(
+      sprintf("Argument %s must either be character or numeric!\n",
+        shQuote("def_rkey"))
+    )
   }
 
   slot(out, "microdat") <- dat

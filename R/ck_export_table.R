@@ -31,7 +31,7 @@
 #' ## see example in ?perturbTable
 ck_export_table <- function(x, vname=NULL, type="both") {
   stopifnot(is_scalar_character(type))
-  stopifnot(type %in% c("both","weighted","unweighted"))
+  stopifnot(type %in% c("both", "weighted", "unweighted"))
 
   allvars <- c(slot(x, "countVars"), slot(x, "numVars"))
   if (is.null(vname)) {
@@ -39,7 +39,8 @@ ck_export_table <- function(x, vname=NULL, type="both") {
   } else {
     stopifnot(is_scalar_character(vname))
     if (!vname %in% allvars) {
-      stop("The variable was not found in the perturbed dataset. Possible variables are: ",paste(shQuote(allvars), collapse=", "))
+      vv <- paste(shQuote(allvars), collapse = ", ")
+      stop("The variable was not found in the perturbed dataset. Possible variables are: ", vv, .call = FALSE)
     }
     vars <- vname
   }
@@ -47,42 +48,42 @@ ck_export_table <- function(x, vname=NULL, type="both") {
   tab <- slot(x, "tab")
 
   names_count <- function(v, type) {
-    if (type=="both") {
-      return(c(paste0(c("UWC","WC","pUWC","pWC"),"_",v)))
+    if (type == "both") {
+      return(c(paste0(c("UWC", "WC", "pUWC", "pWC"), "_", v)))
     }
-    if (type=="unweighted") {
-      return(c(paste0(c("UWC","pUWC"),"_",v)))
+    if (type == "unweighted") {
+      return(c(paste0(c("UWC", "pUWC"), "_", v)))
     }
-    if (type=="weighted") {
-      return(c(paste0(c("WC","pWC"),"_",v)))
+    if (type == "weighted") {
+      return(c(paste0(c("WC", "pWC"), "_", v)))
     }
     stop("non-allowed value in 'type'")
 
   }
   names_cont <- function(v, type) {
-    if (type=="both") {
-      return(c(paste0(c("UW","WS","pUW","pWS"),"_",v)))
+    if (type == "both") {
+      return(c(paste0(c("UW", "WS", "pUW", "pWS"), "_", v)))
     }
-    if (type=="unweighted") {
-      return(c(paste0(c("UW","pUW"),"_",v)))
+    if (type == "unweighted") {
+      return(c(paste0(c("UW", "pUW"), "_", v)))
     }
-    if (type=="weighted") {
-      return(c(paste0(c("WS","pWS"),"_",v)))
+    if (type == "weighted") {
+      return(c(paste0(c("WS", "pWS"), "_", v)))
     }
     stop("non-allowed value in 'type'")
   }
 
   if (vname %in% slot(x, "countVars")) {
-    get_vars <- names_count(vname, type=type)
+    get_vars <- names_count(vname, type = type)
   } else {
-    get_vars <- names_cont(vname, type=type)
+    get_vars <- names_cont(vname, type = type)
   }
 
   vdim <- slot(x, "dimVars")
-  tt <- tab[, vdim, with=F]
-  t2 <- tab[, get_vars, with=F]
-  names(t2) <- gsub(paste0("_",vname),"", names(t2))
-  tt[,vname:=vname]
+  tt <- tab[, vdim, with = FALSE]
+  t2 <- tab[, get_vars, with = FALSE]
+  names(t2) <- gsub(paste0("_", vname), "", names(t2))
+  tt[, vname := vname]
   tt <- cbind(tt, t2)
   return(tt)
 }
