@@ -2,7 +2,7 @@
 cellKey
 -------
 
-[![Travis build status](https://travis-ci.org/sdcTools/cellKey.svg?branch=master)](https://travis-ci.org/sdcTools/cellKey) [![Coverage status](https://codecov.io/gh/sdcTools/cellKey/branch/master/graph/badge.svg)](https://codecov.io/github/sdcTools/cellKey?branch=master) [![GitHub last commit](https://img.shields.io/github/last-commit/sdcTools/cellKey?logo=github)](https://github.com/sdcTools/cellKey/commits/master) [![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/sdcTools/cellKey.svg?logo=github)](https://github.com/sdcTools/cellKey)
+[![Travis build status](https://travis-ci.org/sdcTools/cellKey.svg?branch=master)](https://travis-ci.org/sdcTools/cellKey) [![Coverage status](https://codecov.io/gh/sdcTools/cellKey/branch/master/graph/badge.svg)](https://codecov.io/github/sdcTools/cellKey?branch=master) [![GitHub last commit](https://img.shields.io/github/last-commit/sdcTools/cellKey.svg?logo=github)](https://github.com/sdcTools/cellKey/commits/master) [![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/sdcTools/cellKey.svg?logo=github)](https://github.com/sdcTools/cellKey)
 
 an **R** package for applying noise to statistical tables.
 
