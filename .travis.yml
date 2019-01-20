@@ -5,15 +5,11 @@ sudo: false
 cache: packages
 
 r:
-- 3.1
-- 3.2
-- 3.3
-- oldrel
 - release
-- devel
 
 r_github_packages:
   - jimhester/lintr
+  - sdcTools/ptable
 
 after_success:
   - R CMD INSTALL $PKG_TARBALL
