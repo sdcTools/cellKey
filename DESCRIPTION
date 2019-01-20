@@ -21,7 +21,7 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-Remotes: sdcTools/sdcTable/sdcHier
+Remotes: sdcTools/sdcTable@sdcHier
 NeedsCompilation: no
 Author: Bernhard Meindl [aut, cre]
 Maintainer: Bernhard Meindl <bernhard.meindl@statistik.gv.at>
