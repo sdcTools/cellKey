@@ -23,7 +23,6 @@ after_success:
   - Rscript -e 'lintr::lint_package(linters=with_defaults(line_length_linter(120), object_name_linter = NULL))'
   - Rscript -e 'covr::codecov()'
 
-before_deploy: Rscript -e 'remotes::install_cran("pkgdown")'
 deploy:
   provider: script
   script: Rscript -e 'pkgdown::deploy_site_github()'
