@@ -17,6 +17,7 @@ r_github_packages:
   - sdcTools/ptable
   - r-lib/covr
   - r-lib/pkgdown
+  - bernhard-da/sdcHierarchies
 
 after_success:
   - R CMD INSTALL $PKG_TARBALL
