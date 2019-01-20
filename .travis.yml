@@ -7,6 +7,9 @@ cache: packages
 r:
 - release
 
+before_install:
+  - sudo apt-get install -y libglpk-dev
+
 r_github_packages:
   - jimhester/lintr
   - sdcTools/ptable
