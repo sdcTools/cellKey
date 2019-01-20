@@ -97,16 +97,25 @@
 library(devtools)
 
 # update all packages
-update.packages(ask=FALSE)
+update.packages(ask = FALSE)
 
-# finally install ptable and cellKey packages directly from github
-install_github("sdcTools/ptable", dependencies=c("Depends","Imports"), force=TRUE, build_opts="--build-vignettes")
-install_github("sdcTools/cellKey", force=TRUE, build_opts="--build-vignettes")
-
-
-</code></pre>
+# finally install directly from github.com
+# install ptable
+install_github(
+  repo = "sdcTools/ptable", 
+  dependencies = c("Depends","Imports"), 
+  force = TRUE, 
+  build_opts = "--build-vignettes"
+)
+  
+# install cellKey
+install_github(
+  repo = "sdcTools/cellKey", 
+  force = TRUE, 
+  build_opts = "--build-vignettes"
+)</code></pre>
 <p>If you experience a timeout due to a proxy server while downloading, one can work around this issue by specifying the proxy-server using the <code>httr</code> package:</p>
-<pre><code>httr::set_config(use_proxy(url="xxx.xxx.xxx.xxx, port=yy))</code></pre>
+<pre><code>httr::set_config(use_proxy(url = "xxx.xxx.xxx.xxx, port = yy))</code></pre>
 </div>
 <div id="usage" class="section level3">
 <h3 class="hasAnchor">
@@ -114,11 +123,11 @@ install_github("sdcTools/cellKey", force=TRUE, build_opts="--build-vignettes")
 <p>An example using both possible input formats for perturbation tables is given in the main-function of the packge <code><a href="reference/perturbTable.html">perturbTable()</a></code></p>
 <pre><code><a href="https://www.rdocumentation.org/packages/base/topics/library">library(cellKey)
 ?perturbTable</a></code></pre>
-<p>Once finished, the package will also contain a package vignette. The unfinished introduction vignette can be looked at using <code><a href="reference/ck_vignette.html">cellKey::ck_vignette()</a></code> or via the automatically deployed documentation by clicking <a href="https://sdctools.github.io/cellKey/articles/introduction.html"><strong>here</strong></a>. The complete <a href="https://bernhard-da.github.io/sdcHierarchies/"><strong>documentation</strong></a> is also updated automatically and can be browed online.</p>
+<p>Once finished, the package will also contain a package vignette. The unfinished introduction vignette can be looked at using <code><a href="reference/ck_vignette.html">cellKey::ck_vignette()</a></code> or via the automatically deployed documentation by clicking <a href="https://sdctools.github.io/cellKey/articles/introduction.html"><strong>here</strong></a>. The complete <a href="https://sdctools.github.io/cellKey/"><strong>documentation</strong></a> is also updated automatically and can be browes online.</p>
 </div>
-<div id="changes" class="section level3">
+<div id="updates" class="section level3">
 <h3 class="hasAnchor">
-<a href="#changes" class="anchor"></a>Changes</h3>
+<a href="#updates" class="anchor"></a>Updates</h3>
 <p>Updates/Changes are listed <a href="https://sdcTools.github.io/cellKey/news/index.html"><strong>here</strong></a>.</p>
 </div>
 </div>
