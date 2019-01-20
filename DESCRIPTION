@@ -16,7 +16,11 @@ Imports: rlang, methods, primes, digest, sdcTable (>= 0.23), ptable (>= 0.1.9)
 License: GPL-2
 Encoding: UTF-8
 RoxygenNote: 6.1.1
-Suggests: testthat, knitr, rmarkdown
+Suggests: 
+    testthat,
+    knitr,
+    rmarkdown,
+    covr
 VignetteBuilder: knitr
 NeedsCompilation: no
 Author: Bernhard Meindl [aut, cre]
