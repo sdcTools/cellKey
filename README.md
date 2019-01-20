@@ -20,16 +20,27 @@ The package can directly be installed from `github` using the `devtools` package
     library(devtools)
 
     # update all packages
-    update.packages(ask=FALSE)
+    update.packages(ask = FALSE)
 
-    # finally install ptable and cellKey packages directly from github
-    install_github("sdcTools/ptable", dependencies=c("Depends","Imports"), force=TRUE, build_opts="--build-vignettes")
-    install_github("sdcTools/cellKey", force=TRUE, build_opts="--build-vignettes")
-
+    # finally install directly from github.com
+    # install ptable
+    install_github(
+      repo = "sdcTools/ptable", 
+      dependencies = c("Depends","Imports"), 
+      force = TRUE, 
+      build_opts = "--build-vignettes"
+    )
+      
+    # install cellKey
+    install_github(
+      repo = "sdcTools/cellKey", 
+      force = TRUE, 
+      build_opts = "--build-vignettes"
+    )
 
 If you experience a timeout due to a proxy server while downloading, one can work around this issue by specifying the proxy-server using the `httr` package:
 
-    httr::set_config(use_proxy(url="xxx.xxx.xxx.xxx, port=yy))
+    httr::set_config(use_proxy(url = "xxx.xxx.xxx.xxx, port = yy))
 
 ### Usage
 
@@ -38,8 +49,8 @@ An example using both possible input formats for perturbation tables is given in
     library(cellKey)
     ?perturbTable
 
-Once finished, the package will also contain a package vignette. The unfinished introduction vignette can be looked at using `cellKey::ck_vignette()` or via the automatically deployed documentation by clicking [**here**](https://sdctools.github.io/cellKey/articles/introduction.html). The complete [**documentation**](https://bernhard-da.github.io/sdcHierarchies/) is also updated automatically and can be browed online.
+Once finished, the package will also contain a package vignette. The unfinished introduction vignette can be looked at using `cellKey::ck_vignette()` or via the automatically deployed documentation by clicking [**here**](https://sdctools.github.io/cellKey/articles/introduction.html). The complete [**documentation**](https://sdctools.github.io/cellKey/) is also updated automatically and can be browes online.
 
-### Changes
+### Updates
 
 Updates/Changes are listed [**here**](https://sdcTools.github.io/cellKey/news/index.html).
