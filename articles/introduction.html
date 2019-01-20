@@ -254,20 +254,20 @@
 ##   --&gt; cnt_highincome</code></pre>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw"><a href="../reference/ck_freq_table.html">ck_freq_table</a></span>(tab1, <span class="dt">vname=</span><span class="st">"cnt_males"</span>)</a></code></pre></div>
 <pre><code>##        sex        age UWC_cnt_males WC_cnt_males pUWC_cnt_males
-##  1:  Total      Total          2296       138014           2296
-##  2:  Total age_group1          1015        61596           1016
-##  3:  Total age_group2           571        33583            572
-##  4:  Total age_group3           424        25618            421
-##  5:  Total age_group4           195        11955            195
-##  6:  Total age_group5            84         4854             85
-##  7:  Total age_group6             7          408              2
-##  8:   male      Total          2296       138014           2296
-##  9:   male age_group1          1015        61596           1016
-## 10:   male age_group2           571        33583            572
-## 11:   male age_group3           424        25618            421
-## 12:   male age_group4           195        11955            195
-## 13:   male age_group5            84         4854             85
-## 14:   male age_group6             7          408              2
+##  1:  Total      Total          2296       136906           2296
+##  2:  Total age_group1          1015        61286           1015
+##  3:  Total age_group2           571        33567            568
+##  4:  Total age_group3           424        25629            426
+##  5:  Total age_group4           195        11277            192
+##  6:  Total age_group5            84         4788             86
+##  7:  Total age_group6             7          359              9
+##  8:   male      Total          2296       136906           2296
+##  9:   male age_group1          1015        61286           1015
+## 10:   male age_group2           571        33567            568
+## 11:   male age_group3           424        25629            426
+## 12:   male age_group4           195        11277            192
+## 13:   male age_group5            84         4788             86
+## 14:   male age_group6             7          359              9
 ## 15: female      Total             0            0              0
 ## 16: female age_group1             0            0              0
 ## 17: female age_group2             0            0              0
@@ -277,20 +277,20 @@
 ## 21: female age_group6             0            0              0
 ##        sex        age UWC_cnt_males WC_cnt_males pUWC_cnt_males
 ##     pWC_cnt_males WCavg_cnt_males row_indices col_indices pert  cellKey
-##  1:        138014        60.11063          16          63    0 10372381
-##  2:         61657        60.68571          48          66    1   548210
-##  3:         33642        58.81436         157          66    1  2187436
-##  4:         25437        60.41981         150          63   -3 14906920
-##  5:         11955        61.30769         196          62    0  6826374
-##  6:          4912        57.78571          43          59    1  2993041
-##  7:           117        58.28571         225           7   -5   223341
-##  8:        138014        60.11063          16          63    0 10372381
-##  9:         61657        60.68571          48          66    1   548210
-## 10:         33642        58.81436         157          66    1  2187436
-## 11:         25437        60.41981         150          63   -3 14906920
-## 12:         11955        61.30769         196          62    0  6826374
-## 13:          4912        57.78571          43          59    1  2993041
-## 14:           117        58.28571         225           7   -5   223341
+##  1:        136906        59.62805          16          63    0  9899236
+##  2:         61286        60.38030          48          66    0  1083632
+##  3:         33391        58.78634         157          66   -3  1674552
+##  4:         25750        60.44575         150          63    2 14670131
+##  5:         11104        57.83077         196          62   -3  6760870
+##  6:          4902        57.00000          43          59    2  2786917
+##  7:           462        51.28571         225           7    2   236075
+##  8:        136906        59.62805          16          63    0  9899236
+##  9:         61286        60.38030          48          66    0  1083632
+## 10:         33391        58.78634         157          66   -3  1674552
+## 11:         25750        60.44575         150          63    2 14670131
+## 12:         11104        57.83077         196          62   -3  6760870
+## 13:          4902        57.00000          43          59    2  2786917
+## 14:           462        51.28571         225           7    2   236075
 ## 15:             0         0.00000           1           0   NA        0
 ## 16:             0         0.00000           1           0   NA        0
 ## 17:             0         0.00000           1           0   NA        0
@@ -344,90 +344,90 @@
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">p_income &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_cont_table.html">ck_cont_table</a></span>(tab2, <span class="dt">vname=</span><span class="st">"income"</span>, <span class="dt">meanBeforeSum=</span><span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb28-2" data-line-number="2">p_income</a></code></pre></div>
 <pre><code>##        sex        age UW_income  pUW_income  WS_income pWS_income
-##  1:  Total      Total  22952978 22944187.78 1378321317 1377793467
-##  2:  Total age_group1   9810547  9812734.36  594083678  594216134
-##  3:  Total age_group2   5692119  5683932.88  337279216  336794158
-##  4:  Total age_group3   4406946  4428398.16  262636639  263915104
-##  5:  Total age_group4   2133543  2121265.00  130932962  130179475
-##  6:  Total age_group5    848151   837101.14   49510815   48865779
-##  7:  Total age_group6     61672    60756.24    3842640    3785581
-##  8:   male      Total  11262049 11252511.24  676968829  676395508
-##  9:   male age_group1   4877164  4867031.68  295974181  295359294
-## 10:   male age_group2   2811379  2806618.12  165349459  165069451
-## 11:   male age_group3   2168169  2179750.56  131000362  131700118
-## 12:   male age_group4    978510   968348.92   59990190   59367238
-## 13:   male age_group5    393134   397574.56   22717529   22974130
-## 14:   male age_group6     33693    33187.40    1963821    1934351
-## 15: female      Total  11690929 11691676.54  701322656  701367500
-## 16: female age_group1   4933383  4945702.68  298061142  298805462
-## 17: female age_group2   2880740  2877314.76  171958018  171753558
-## 18: female age_group3   2238777  2248647.60  131645176  132225589
-## 19: female age_group4   1155033  1152916.08   70943343   70813319
-## 20: female age_group5    455017   439526.58   26829752   25916371
-## 21: female age_group6     27979    27568.84    1874593    1847112
+##  1:  Total      Total  22952978 22921233.12 1374337121 1372436359
+##  2:  Total age_group1   9810547  9793470.04  588343835  587319720
+##  3:  Total age_group2   5692119  5678708.92  343145634  342337216
+##  4:  Total age_group3   4406946  4406421.56  264661590  264630095
+##  5:  Total age_group4   2133543  2135766.82  123271373  123399861
+##  6:  Total age_group5    848151   829349.50   51232359   50096659
+##  7:  Total age_group6     61672    77516.28    3652880    4591349
+##  8:   male      Total  11262049 11238967.10  671534007  670157678
+##  9:   male age_group1   4877164  4866373.28  294484604  293833057
+## 10:   male age_group2   2811379  2805562.36  165270681  164928742
+## 11:   male age_group3   2168169  2159604.50  131056612  130538924
+## 12:   male age_group4    978510   978919.90   56587986   56611691
+## 13:   male age_group5    393134   386262.72   22408638   22016975
+## 14:   male age_group6     33693    42244.34    1727970    2166531
+## 15: female      Total  11690929 11682266.02  702924784  702403917
+## 16: female age_group1   4933383  4927096.76  293706940  293332691
+## 17: female age_group2   2880740  2873146.56  177971311  177502191
+## 18: female age_group3   2238777  2246817.06  133609194  134089021
+## 19: female age_group4   1155033  1156846.92   66682892   66787614
+## 20: female age_group5    455017   443086.78   29034418   28273156
+## 21: female age_group6     27979    35271.94    1916562    2416128
 ##        sex        age UW_income  pUW_income  WS_income pWS_income
 ##     pWM_income
-##  1:   5006.371
-##  2:   4983.613
-##  3:   4964.097
-##  4:   5095.968
-##  5:   5003.054
-##  6:   5012.389
-##  7:   4341.263
-##  8:   4900.920
-##  9:   4790.361
-## 10:   4906.648
-## 11:   5177.502
-## 12:   4965.892
-## 13:   4677.144
-## 14:  16532.917
-## 15:   5118.948
-## 16:   5178.784
-## 17:   5047.864
-## 18:   5087.361
-## 19:   5056.649
-## 20:   5170.864
-## 21:   3938.406
+##  1:   5003.541
+##  2:   4971.303
+##  3:   4959.540
+##  4:   5105.929
+##  5:   5037.140
+##  6:   4936.604
+##  7:   6457.593
+##  8:   4895.021
+##  9:   4794.456
+## 10:   4939.317
+## 11:   5069.473
+## 12:   5098.315
+## 13:   4491.427
+## 14:   4689.461
+## 15:   5121.541
+## 16:   5175.515
+## 17:   5014.186
+## 18:   5118.097
+## 19:   5029.945
+## 20:   5151.814
+## 21:   8817.985
 ##     pWM_income</code></pre>
 <p>The result obtained from <code>ck_cont_table</code> contains an attribute <code>modification</code> which holds a <code>data.table</code> containing all the perturbations for the variable queried in <code>vname</code>. We can access this information as shown below:</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/attr">attr</a></span>(p_income, <span class="st">"modifications"</span>)</a></code></pre></div>
 <pre><code>##       id magnitude dir noise vals.orig vals.pert vals.mod
-##  1:   69       0.2  -1  0.75      9900  -1485.00  8415.00
-##  2:  201       0.6   1  0.80      7650   3672.00 11322.00
-##  3:  311       0.2   1  0.76      9830   1494.16 11324.16
-##  4:  662       0.6   1  1.59     10000   9540.00 19540.00
-##  5:  730       0.6   1  1.18      9960   7051.68 17011.68
-##  6:  753       0.4   1  1.31      9990   5234.76 15224.76
-##  7:  787       0.4   1  1.21      9980   4830.32 14810.32
-##  8:  817       0.6  -1  1.46      9970  -8733.72  1236.28
-##  9: 1009       0.4  -1  1.44      9980  -5748.48  4231.52
-## 10: 1024       0.6   1  0.57      9990   3416.58 13406.58
-## 11: 1036       0.4  -1  1.03      6330  -2607.96  3722.04
-## 12: 1072       0.6   1  0.64     10000   3840.00 13840.00
-## 13: 1076       0.6  -1  0.85     10000  -5100.00  4900.00
-## 14: 1089       0.6  -1  0.49      9960  -2928.24  7031.76
-## 15: 1939       0.2  -1  1.23      9980  -2455.08  7524.92
-## 16: 1950       0.2  -1  0.82      9910  -1625.24  8284.76
-## 17: 2300       0.4  -1  0.61      9930  -2422.92  7507.08
-## 18: 2363       0.6   1  0.85      9990   5094.90 15084.90
-## 19: 2487       0.2  -1  0.73      9650  -1408.90  8241.10
-## 20: 2684       0.2  -1  1.39      9970  -2771.66  7198.34
-## 21: 2879       0.2  -1  1.30      5670  -1474.20  4195.80
-## 22: 2887       0.2  -1  1.32      9980  -2634.72  7345.28
-## 23: 2932       0.4  -1  0.64      9960  -2549.76  7410.24
-## 24: 2988       0.4  -1  1.20      6760  -3244.80  3515.20
-## 25: 3027       0.2   1  1.46      9970   2911.24 12881.24
-## 26: 3247       0.4   1  1.12      9920   4444.16 14364.16
-## 27: 3298       0.6   1  0.30      9950   1791.00 11741.00
-## 28: 3503       0.6   1  0.80      7790   3739.20 11529.20
-## 29: 3514       0.2  -1  0.80      6250  -1000.00  5250.00
-## 30: 3891       0.2   1  0.36      9960    717.12 10677.12
-## 31: 3975       0.4  -1  1.45      9910  -5747.80  4162.20
-## 32: 4312       0.4  -1  0.74      9870  -2921.52  6948.48
-## 33: 4415       0.4  -1  0.60      9990  -2397.60  7592.40
-## 34: 4449       0.4   1  0.62      9810   2432.88 12242.88
-## 35: 4458       0.6  -1  1.09      9920  -6487.68  3432.32
-## 36: 4518       0.2  -1  1.69      9630  -3254.94  6375.06
+##  1:   69       0.2   1  0.52      9900   1029.60 10929.60
+##  2:  201       0.6   1  1.22      7650   5599.80 13249.80
+##  3:  311       0.2  -1  0.89      9830  -1749.74  8080.26
+##  4:  662       0.6  -1  1.68     10000 -10080.00   -80.00
+##  5:  730       0.6   1  0.93      9960   5557.68 15517.68
+##  6:  753       0.4   1  0.34      9990   1358.64 11348.64
+##  7:  787       0.4  -1  0.67      9980  -2674.64  7305.36
+##  8:  817       0.6   1  1.12      9970   6699.84 16669.84
+##  9: 1009       0.4   1  0.59      9980   2355.28 12335.28
+## 10: 1024       0.6  -1  1.42      9990  -8511.48  1478.52
+## 11: 1036       0.4   1  1.13      6330   2861.16  9191.16
+## 12: 1072       0.6  -1  0.42     10000  -2520.00  7480.00
+## 13: 1076       0.6  -1  0.59     10000  -3540.00  6460.00
+## 14: 1089       0.6  -1  0.98      9960  -5856.48  4103.52
+## 15: 1939       0.2   1  1.22      9980   2435.12 12415.12
+## 16: 1950       0.2  -1  1.19      9910  -2358.58  7551.42
+## 17: 2300       0.4   1  1.46      9930   5799.12 15729.12
+## 18: 2363       0.6  -1  1.55      9990  -9290.70   699.30
+## 19: 2487       0.2  -1  0.98      9650  -1891.40  7758.60
+## 20: 2684       0.2  -1  0.33      9970   -658.02  9311.98
+## 21: 2879       0.2  -1  1.03      5670  -1168.02  4501.98
+## 22: 2887       0.2  -1  1.01      9980  -2015.96  7964.04
+## 23: 2932       0.4   1  0.43      9960   1713.12 11673.12
+## 24: 2988       0.4   1  0.80      6760   2163.20  8923.20
+## 25: 3027       0.2  -1  1.69      9970  -3369.86  6600.14
+## 26: 3247       0.4   1  1.22      9920   4840.96 14760.96
+## 27: 3298       0.6  -1  0.84      9950  -5014.80  4935.20
+## 28: 3503       0.6   1  1.11      7790   5188.14 12978.14
+## 29: 3514       0.2   1  0.96      6250   1200.00  7450.00
+## 30: 3891       0.2  -1  0.84      9960  -1673.28  8286.72
+## 31: 3975       0.4  -1  1.65      9910  -6540.60  3369.40
+## 32: 4312       0.4  -1  1.15      9870  -4540.20  5329.80
+## 33: 4415       0.4  -1  1.31      9990  -5234.76  4755.24
+## 34: 4449       0.4   1  0.90      9810   3531.60 13341.60
+## 35: 4458       0.6  -1  1.31      9920  -7797.12  2122.88
+## 36: 4518       0.2   1  1.25      9630   2407.50 12037.50
 ##       id magnitude dir noise vals.orig vals.pert vals.mod</code></pre>
 <p>We see that this <code>data.table</code> has the following variables:</p>
 <ul>
@@ -454,72 +454,72 @@
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1"><span class="co"># frequency table of the by-variable</span></a>
 <a class="sourceLine" id="cb33-2" data-line-number="2"><span class="kw"><a href="../reference/ck_freq_table.html">ck_freq_table</a></span>(tab3, <span class="dt">vname=</span><span class="st">"cnt_highincome"</span>)</a></code></pre></div>
 <pre><code>##        sex        age UWC_cnt_highincome WC_cnt_highincome
-##  1:  Total      Total                445             27028
-##  2:  Total age_group1                192             11726
-##  3:  Total age_group2                123              7377
-##  4:  Total age_group3                 82              4894
-##  5:  Total age_group4                 34              2145
-##  6:  Total age_group5                 14               886
+##  1:  Total      Total                445             26685
+##  2:  Total age_group1                192             11246
+##  3:  Total age_group2                123              7596
+##  4:  Total age_group3                 82              4907
+##  5:  Total age_group4                 34              2035
+##  6:  Total age_group5                 14               901
 ##  7:  Total age_group6                  0                 0
-##  8:   male      Total                219             12969
-##  9:   male age_group1                 90              5417
-## 10:   male age_group2                 66              3768
-## 11:   male age_group3                 41              2416
-## 12:   male age_group4                 15               956
-## 13:   male age_group5                  7               412
+##  8:   male      Total                219             12971
+##  9:   male age_group1                 90              5228
+## 10:   male age_group2                 66              3992
+## 11:   male age_group3                 41              2437
+## 12:   male age_group4                 15               892
+## 13:   male age_group5                  7               422
 ## 14:   male age_group6                  0                 0
-## 15: female      Total                226             14059
-## 16: female age_group1                102              6309
-## 17: female age_group2                 57              3609
-## 18: female age_group3                 41              2478
-## 19: female age_group4                 19              1189
-## 20: female age_group5                  7               474
+## 15: female      Total                226             13714
+## 16: female age_group1                102              6018
+## 17: female age_group2                 57              3604
+## 18: female age_group3                 41              2470
+## 19: female age_group4                 19              1143
+## 20: female age_group5                  7               479
 ## 21: female age_group6                  0                 0
 ##        sex        age UWC_cnt_highincome WC_cnt_highincome
 ##     pUWC_cnt_highincome pWC_cnt_highincome WCavg_cnt_highincome
-##  1:                 443              26907             60.73708
-##  2:                 192              11726             61.07292
-##  3:                 122               7317             59.97561
-##  4:                  84               5013             59.68293
-##  5:                  37               2334             63.08824
-##  6:                  17               1076             63.28571
+##  1:                 446              26745             59.96629
+##  2:                 192              11246             58.57292
+##  3:                 121               7472             61.75610
+##  4:                  79               4727             59.84146
+##  5:                  35               2095             59.85294
+##  6:                  12                772             64.35714
 ##  7:                   0                  0              0.00000
-##  8:                 219              12969             59.21918
-##  9:                  90               5417             60.18889
-## 10:                  70               3996             57.09091
-## 11:                  39               2298             58.92683
-## 12:                  13                829             63.73333
-## 13:                   2                118             58.85714
+##  8:                 218              12912             59.22831
+##  9:                  88               5112             58.08889
+## 10:                  66               3992             60.48485
+## 11:                  43               2556             59.43902
+## 12:                  15                892             59.46667
+## 13:                   9                543             60.28571
 ## 14:                   0                  0              0.00000
-## 15:                 228              14183             62.20796
-## 16:                 102               6309             61.85294
-## 17:                  55               3482             63.31579
-## 18:                  39               2357             60.43902
-## 19:                  22               1377             62.57895
-## 20:                   2                135             67.71429
+## 15:                 225              13653             60.68142
+## 16:                 100               5900             59.00000
+## 17:                  58               3667             63.22807
+## 18:                  43               2590             60.24390
+## 19:                  16                963             60.15789
+## 20:                   9                616             68.42857
 ## 21:                   0                  0              0.00000
 ##     pUWC_cnt_highincome pWC_cnt_highincome WCavg_cnt_highincome
 ##     row_indices col_indices pert  cellKey
-##  1:          62          60   -2 14893955
-##  2:           4          59    0  6491686
-##  3:         223          62   -1  4284073
-##  4:          75          69    2  2504729
-##  5:          69          34    3  1175334
-##  6:         113          14    3   438133
+##  1:          62          60    1 14914791
+##  2:           4          59    0  6765137
+##  3:         223          62   -2  3780541
+##  4:          75          69   -3  2877245
+##  5:          69          34    1   976643
+##  6:         113          14   -2   515225
 ##  7:           1           0   NA        0
-##  8:         220          62    0  7250021
-##  9:          91          65    0  3172369
-## 10:          67          65    4  2195877
-## 11:         149          41   -2  1129429
-## 12:         241          15   -2   529647
-## 13:         225           7   -5   222699
+##  8:         220          62   -1  7148935
+##  9:          91          65   -2  3100455
+## 10:          67          65    0  1836010
+## 11:         149          41    2  1486674
+## 12:         241          15    0   454572
+## 13:         225           7    2   271224
 ## 14:           1           0   NA        0
-## 15:          72          69    2  7643934
-## 16:         103          65    0  3319317
-## 17:         157          57   -2  2088196
-## 18:         149          41   -2  1375300
-## 19:         201          19    3   645687
-## 20:         225           7   -5   215434
+## 15:          72          69   -1  7765856
+## 16:         103          65   -2  3664682
+## 17:         157          57    1  1944531
+## 18:         149          41    2  1390571
+## 19:         201          19   -3   522071
+## 20:         225           7    2   244001
 ## 21:           1           0   NA        0
 ##     row_indices col_indices pert  cellKey</code></pre>
 <p>To show the table of variable <code>savings</code> we use again <code><a href="../reference/ck_cont_table.html">ck_cont_table()</a></code>.</p>
@@ -527,49 +527,49 @@
 <pre><code>## Note: this table is restricted to groups defined by 'cnt_highincome'!</code></pre>
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1">p_savings</a></code></pre></div>
 <pre><code>##        sex        age UW_savings pUW_savings WS_savings pWS_savings
-##  1:  Total      Total     215973  214561.148 13117569.1  13031817.3
-##  2:  Total age_group1      95804   95752.738  5851029.7   5847899.0
-##  3:  Total age_group2      59503   59205.060  3568728.7   3550859.6
-##  4:  Total age_group3      37248   36097.892  2223069.7   2154427.8
-##  5:  Total age_group4      16457   17773.750  1038243.1   1121314.5
-##  6:  Total age_group5       6961    5731.708   440531.9    362735.2
+##  1:  Total      Total     215973  213238.418 12951100.0  12787117.3
+##  2:  Total age_group1      95804   93467.512  5611519.7   5474664.8
+##  3:  Total age_group2      59503   60021.456  3674673.1   3706690.9
+##  4:  Total age_group3      37248   38141.752  2228974.8   2282458.3
+##  5:  Total age_group4      16457   15599.942   984999.9    933702.4
+##  6:  Total age_group5       6961    6007.756   447990.1    386642.0
 ##  7:  Total age_group6          0       0.000        0.0         0.0
-##  8:   male      Total     105033  103043.096  6219967.9   6102127.5
-##  9:   male age_group1      46320   45063.416  2787949.3   2712316.9
-## 10:   male age_group2      33475   33811.660  1911118.2   1930338.4
-## 11:   male age_group3      16365   15465.900   964337.6    911356.4
-## 12:   male age_group4       5624    5416.706   358436.3    345224.7
-## 13:   male age_group5       3249    3285.414   191226.9    193370.1
+##  8:   male      Total     105033  103493.466  6220927.1   6129743.1
+##  9:   male age_group1      46320   45499.332  2690677.3   2643005.6
+## 10:   male age_group2      33475   33881.482  2024730.3   2049316.3
+## 11:   male age_group3      16365   16593.224   972719.6    986285.0
+## 12:   male age_group4       5624    5440.458   334440.5    323525.9
+## 13:   male age_group5       3249    2078.970   195868.3    125332.2
 ## 14:   male age_group6          0       0.000        0.0         0.0
-## 15: female      Total     110940  111518.052  6901351.6   6937311.0
-## 16: female age_group1      49484   50689.322  3060730.9   3135283.7
-## 17: female age_group2      26028   25393.400  1647983.4   1607803.2
-## 18: female age_group3      20883   20631.992  1262148.1   1246977.5
-## 19: female age_group4      10833   12357.044   677917.7    773290.8
-## 20: female age_group5       3712    2446.294   251355.4    165649.1
+## 15: female      Total     110940  109744.952  6731996.3   6659479.1
+## 16: female age_group1      49484   47968.180  2919556.0   2830122.6
+## 17: female age_group2      26028   26139.974  1645700.2   1652780.1
+## 18: female age_group3      20883   21548.528  1258073.4   1298167.4
+## 19: female age_group4      10833   10159.484   651690.5    611173.2
+## 20: female age_group5       3712    3928.786   254006.9    268841.2
 ## 21: female age_group6          0       0.000        0.0         0.0
 ##        sex        age UW_savings pUW_savings WS_savings pWS_savings
 ##     pWM_savings
-##  1:    484.3281
-##  2:    498.7122
-##  3:    485.2890
-##  4:    429.7682
-##  5:    480.4261
-##  6:    337.1145
+##  1:    478.1124
+##  2:    486.8100
+##  3:    496.0775
+##  4:    482.8556
+##  5:    445.6813
+##  6:    500.8316
 ##  7:      0.0000
-##  8:    470.5164
-##  9:    500.7046
-## 10:    483.0677
-## 11:    396.5868
-## 12:    416.4351
-## 13:   1638.7295
+##  8:    474.7323
+##  9:    517.0199
+## 10:    513.3558
+## 11:    385.8705
+## 12:    362.6972
+## 13:    230.8143
 ## 14:      0.0000
-## 15:    489.1286
-## 16:    496.9541
-## 17:    461.7470
-## 18:    529.0528
-## 19:    561.5765
-## 20:   1227.0300
+## 15:    487.7667
+## 16:    479.6818
+## 17:    450.7172
+## 18:    501.2229
+## 19:    634.6554
+## 20:    436.4305
 ## 21:      0.0000
 ##     pWM_savings</code></pre>
 <p>From the results we can observe that there are no high-income units in the highest age group (<code>age_group6</code>) and those cells are not perturbed at all.</p>
@@ -577,12 +577,12 @@
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1">dt_tot &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_export_table.html">ck_export_table</a></span>(tab3, <span class="dt">vname=</span><span class="st">"Total"</span>, <span class="dt">type=</span><span class="st">"both"</span>)</a>
 <a class="sourceLine" id="cb39-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(dt_tot)</a></code></pre></div>
 <pre><code>##      sex        age vname  UWC     WC pUWC    pWC
-## 1: Total      Total Total 4580 275028 4583 275208
-## 2: Total age_group1 Total 1969 119234 1969 119234
-## 3: Total age_group2 Total 1143  67727 1145  67846
-## 4: Total age_group3 Total  864  51491  869  51789
-## 5: Total age_group4 Total  423  25959  424  26020
-## 6: Total age_group5 Total  168   9807  167   9749</code></pre>
+## 1: Total      Total Total 4580 274233 4581 274293
+## 2: Total age_group1 Total 1969 118082 1970 118142
+## 3: Total age_group2 Total 1143  68905 1145  69026
+## 4: Total age_group3 Total  864  51888  863  51828
+## 5: Total age_group4 Total  423  24440  424  24498
+## 6: Total age_group5 Total  168  10148  168  10148</code></pre>
 </div>
 <div id="extract-information-from-results" class="section level3">
 <h3 class="hasAnchor">
@@ -595,21 +595,21 @@
 <p>Information on perturbations for counts can be extracted using <code><a href="../reference/mod_counts-methods.html">mod_counts()</a></code>. The method returns a <code>data.table</code> showing for each cell and tabulated variable the row and the column of the perturbation table that was used to find the perturbation value actually used. This value is also shown in the output.</p>
 <div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(<span class="kw"><a href="../reference/mod_counts-methods.html">mod_counts</a></span>(tab2))</a></code></pre></div>
 <pre><code>##      sex        age row_indices col_indices pert  cellKey countVar
-## 1: Total      Total         176          67    3   750787    Total
-## 2: Total age_group1         110          60    0 15234128    Total
-## 3: Total age_group2         207          62    2  4785069    Total
-## 4: Total age_group3         199          59    5 12087087    Total
-## 5: Total age_group4         102          62    1 14357429    Total
-## 6: Total age_group5          22          59   -1  5774003    Total</code></pre>
+## 1: Total      Total         176          67    1  1877762    Total
+## 2: Total age_group1         110          60    1 16748411    Total
+## 3: Total age_group2         207          62    2  4499706    Total
+## 4: Total age_group3         199          59   -1 11787028    Total
+## 5: Total age_group4         102          62    1 14716374    Total
+## 6: Total age_group5          22          59    0  5571268    Total</code></pre>
 <p>Information on perturbations for numerical variables can be extracted using <code><a href="../reference/mod_numvars-methods.html">mod_numvars()</a></code>. This  contains the ids of the observations of the input variables that have been modified. For each observation and tabulated numerical variable (given in <code>numVar</code>), the parameters used in modifying (direction, magnitude and noise) are shown as well as the original values, the perturbation and the final modified value. These values were finally used to compute the tables itself.</p>
 <div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(<span class="kw"><a href="../reference/mod_numvars-methods.html">mod_numvars</a></span>(tab2))</a></code></pre></div>
 <pre><code>##     id    sex        age magnitude dir noise vals.orig vals.pert vals.mod
-## 1:  98 female age_group1       0.6   1  0.92       998   550.896 1548.896
-## 2: 101 female age_group5       0.2   1  1.54       931   286.748 1217.748
-## 3: 201 female age_group6       0.6   1  0.80       893   428.640 1321.640
-## 4: 618 female age_group1       0.2  -1  0.37       995   -73.630  921.370
-## 5: 646 female age_group3       0.6  -1  0.32       996  -191.232  804.768
-## 6: 687   male age_group1       0.6  -1  0.84       999  -503.496  495.504
+## 1:  98 female age_group1       0.6   1  0.66       998   395.208 1393.208
+## 2: 101 female age_group5       0.2   1  1.03       931   191.786 1122.786
+## 3: 201 female age_group6       0.6   1  1.22       893   653.676 1546.676
+## 4: 618 female age_group1       0.2   1  0.43       995    85.570 1080.570
+## 5: 646 female age_group3       0.6   1  0.33       996   197.208 1193.208
+## 6: 687   male age_group1       0.6   1  0.93       999   557.442 1556.442
 ##     numVar
 ## 1: savings
 ## 2: savings
@@ -644,49 +644,49 @@
 ## No numeric variables have been tabulated/perturbed in this table 
 ## Total-Counts
 ##        sex        age UWC_Total WC_Total pUWC_Total pWC_Total
-##  1:  Total      Total      4580   275028       4583    275208
-##  2:  Total age_group1      1969   119234       1969    119234
-##  3:  Total age_group2      1143    67727       1145     67846
-##  4:  Total age_group3       864    51491        869     51789
-##  5:  Total age_group4       423    25959        424     26020
-##  6:  Total age_group5       168     9807        167      9749
-##  7:  Total age_group6        13      810         14       872
-##  8:   male      Total      2296   138014       2296    138014
-##  9:   male age_group1      1015    61596       1016     61657
-## 10:   male age_group2       571    33583        572     33642
-## 11:   male age_group3       424    25618        421     25437
-## 12:   male age_group4       195    11955        195     11955
-## 13:   male age_group5        84     4854         85      4912
-## 14:   male age_group6         7      408          2       117
-## 15: female      Total      2284   137014       2284    137014
-## 16: female age_group1       954    57638        955     57698
-## 17: female age_group2       572    34144        570     34025
-## 18: female age_group3       440    25873        442     25991
-## 19: female age_group4       228    14004        228     14004
-## 20: female age_group5        84     4953         85      5012
-## 21: female age_group6         6      402          7       469
+##  1:  Total      Total      4580   274233       4581    274293
+##  2:  Total age_group1      1969   118082       1970    118142
+##  3:  Total age_group2      1143    68905       1145     69026
+##  4:  Total age_group3       864    51888        863     51828
+##  5:  Total age_group4       423    24440        424     24498
+##  6:  Total age_group5       168    10148        168     10148
+##  7:  Total age_group6        13      770         12       711
+##  8:   male      Total      2296   136906       2296    136906
+##  9:   male age_group1      1015    61286       1015     61286
+## 10:   male age_group2       571    33567        568     33391
+## 11:   male age_group3       424    25629        426     25750
+## 12:   male age_group4       195    11277        192     11104
+## 13:   male age_group5        84     4788         86      4902
+## 14:   male age_group6         7      359          9       462
+## 15: female      Total      2284   137327       2281    137147
+## 16: female age_group1       954    56796        952     56677
+## 17: female age_group2       572    35338        573     35400
+## 18: female age_group3       440    26259        439     26199
+## 19: female age_group4       228    13163        230     13278
+## 20: female age_group5        84     5360         86      5488
+## 21: female age_group6         6      411          4       274
 ##        sex        age UWC_Total WC_Total pUWC_Total pWC_Total</code></pre>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(tab1)</a></code></pre></div>
 <pre><code>## Perturbation statistics count variables:
-##          countVar Min  Q10 Q20  Q30  Q40   Mean Median Q60 Q70 Q80 Q90 Max
-## 1:          Total  -5 -2.0   0  0.0  0.0  0.429      1 1.0 1.0 1.0   2   5
-## 2:      cnt_males  -5 -4.4  -3 -0.3  0.0 -0.714      0 0.8 1.0 1.0   1   1
-## 3: cnt_highincome  -5 -2.9  -2 -2.0 -1.2 -0.222      0 0.0 1.8 2.6   3   4
+##          countVar Min  Q10 Q20  Q30 Q40   Mean Median Q60 Q70 Q80 Q90 Max
+## 1:          Total  -3 -3.0  -2 -1.0   0  0.000      0 1.0   1 2.0   2   2
+## 2:      cnt_males  -3 -3.0  -3 -0.3   0  0.000      0 1.6   2 2.0   2   2
+## 3: cnt_highincome  -3 -2.3  -2 -1.9  -1 -0.278      0 0.2   1 1.6   2   2
 ## 
 ## Distance-Based measures for count-variable 'Total' 
 ##       what vals_abs vals_rel vals_r
 ##  1:    Min    0.000    0.000  0.000
 ##  2:    Q10    0.000    0.000  0.000
-##  3:    Q20    0.000    0.000  0.000
-##  4:    Q30    1.000    0.001  0.016
-##  5:    Q40    1.000    0.002  0.022
-##  6:   Mean    1.476    0.048  0.099
-##  7: Median    1.000    0.002  0.030
-##  8:    Q60    1.000    0.005  0.042
-##  9:    Q70    2.000    0.006  0.054
-## 10:    Q80    2.000    0.012  0.073
-## 11:    Q90    3.000    0.077  0.136
-## 12:    Max    5.000    0.714  1.232
+##  3:    Q20    1.000    0.001  0.011
+##  4:    Q30    1.000    0.001  0.021
+##  5:    Q40    1.000    0.002  0.024
+##  6:   Mean    1.524    0.038  0.078
+##  7: Median    2.000    0.002  0.031
+##  8:    Q60    2.000    0.005  0.049
+##  9:    Q70    2.000    0.009  0.066
+## 10:    Q80    2.000    0.024  0.108
+## 11:    Q90    3.000    0.077  0.141
+## 12:    Max    3.000    0.333  0.449
 ## 
 ## Distance-Based measures for count-variable 'cnt_males' 
 ##       what vals_abs vals_rel vals_r
@@ -695,28 +695,28 @@
 ##  3:    Q20    0.000    0.000  0.000
 ##  4:    Q30    0.000    0.000  0.000
 ##  5:    Q40    0.000    0.000  0.000
-##  6:   Mean    1.048    0.070  0.133
+##  6:   Mean    1.143    0.032  0.065
 ##  7: Median    0.000    0.000  0.000
-##  8:    Q60    1.000    0.001  0.016
-##  9:    Q70    1.000    0.002  0.021
-## 10:    Q80    1.000    0.007  0.054
-## 11:    Q90    3.000    0.012  0.073
-## 12:    Max    5.000    0.714  1.232
+##  8:    Q60    2.000    0.005  0.049
+##  9:    Q70    2.000    0.005  0.063
+## 10:    Q80    2.000    0.015  0.108
+## 11:    Q90    3.000    0.024  0.108
+## 12:    Max    3.000    0.286  0.354
 ## 
 ## Distance-Based measures for count-variable 'cnt_highincome' 
 ##       what vals_abs vals_rel vals_r
-##  1:    Min     0.00    0.000  0.000
-##  2:    Q10     0.00    0.000  0.000
-##  3:    Q20     0.00    0.000  0.000
-##  4:    Q30     0.00    0.000  0.000
-##  5:    Q40     2.00    0.008  0.047
-##  6:   Mean     1.81    0.108  0.222
-##  7: Median     2.00    0.024  0.110
-##  8:    Q60     2.00    0.049  0.158
-##  9:    Q70     2.00    0.061  0.243
-## 10:    Q80     3.00    0.133  0.267
-## 11:    Q90     4.00    0.214  0.381
-## 12:    Max     5.00    0.714  1.232</code></pre>
+##  1:    Min    0.000    0.000  0.000
+##  2:    Q10    0.000    0.000  0.000
+##  3:    Q20    0.000    0.000  0.000
+##  4:    Q30    1.000    0.002  0.024
+##  5:    Q40    1.000    0.005  0.034
+##  6:   Mean    1.286    0.053  0.112
+##  7: Median    1.000    0.018  0.085
+##  8:    Q60    2.000    0.022  0.100
+##  9:    Q70    2.000    0.037  0.154
+## 10:    Q80    2.000    0.049  0.167
+## 11:    Q90    2.000    0.158  0.354
+## 12:    Max    3.000    0.286  0.359</code></pre>
 </div>
 </div>
 <div id="summary" class="section level2">
