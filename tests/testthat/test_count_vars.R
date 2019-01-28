@@ -31,9 +31,10 @@ r2 <- ck_freq_table(res, vname = "cnt_onlyzero")
 
 test_that("only ones equals total", {
   expect_equal(dim(r0), dim(r1))
-  expect_true(all(sapply(1:ncol(r0), function(i) {
+  rr <- sapply(1:ncol(r0), function(i) {
     identical(r0[[i]], r1[[i]])
-  }) == TRUE))
+  })
+  expect_true(all(rr == TRUE))
 })
 
 test_that("onlyzero equals total", {

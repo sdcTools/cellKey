@@ -1,6 +1,7 @@
-# cellKey 0.15.0
+# cellKey 0.15.x
 - new convenience function `ck_vignette()` that displays the package vignette in a browser
 - `ck_generate_rkeys()` got a new argument `seed` that allows to overwrite the default seed computed from a hash of the input dataset.
+- improvements in code-styling and readability of examples
 
 # cellKey 0.14.0
 - feature: new method `ck_export_table()` that allows to save results in a simple format

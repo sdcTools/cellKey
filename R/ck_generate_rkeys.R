@@ -16,9 +16,20 @@
 #' @export
 #' @examples
 #' dat <- ck_create_testdata()
-#' dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=2*nrow(dat), type="abs")
-#' ## rkeys for destatis method
-#' # ck_generate_rkeys(dat=dat, max_digits=6, type="destatis")
+#' dat$rkeys <- ck_generate_rkeys(
+#'   dat = dat,
+#'   max_val = 2 * nrow(dat),
+#'   type = "abs"
+#' )
+#'
+#' # rkeys for destatis method
+#' \dontrun{
+#' ck_generate_rkeys(
+#'   dat = dat,
+#'   max_digits = 6,
+#'   type = "destatis"
+#' )
+#' }
 ck_generate_rkeys <- function(dat, max_val=nrow(dat), max_digits=10, type="abs", seed=NULL, verbose=TRUE) {
   gen_key_abs <- function(N, max_val, seed) {
     set.seed(seed)

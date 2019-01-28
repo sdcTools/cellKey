@@ -18,5 +18,5 @@ a \code{data.table} with 256 rows and 32+\code{smallC} columns
 a perturbation table (for large and small cells) for testing purposes
 }
 \examples{
-ck_generate_sTable(smallC=10)
+ck_generate_sTable(smallC = 10)
 }

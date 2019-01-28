@@ -103,9 +103,11 @@ ck_cnt_measures <- function(x, vname="Total") {
 #' @export
 #' @examples
 #' orig <- 1:10
-#' pert <- orig; pert[c(1,5,7)] <- c(0,6,9)
-#' ck_cnt_measures_basic(orig=orig, pert=pert)
-#'
+#' pert <- orig; pert[c(1, 5, 7)] <- c(0, 6, 9)
+#' ck_cnt_measures_basic(
+#'   orig = orig,
+#'   pert = pert
+#' )
 ck_cnt_measures_basic <- function(orig, pert) {
   stopifnot(is.numeric(orig), is.numeric(pert), length(orig) == length(pert))
 

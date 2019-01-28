@@ -9,7 +9,7 @@
 #' @export
 #'
 #' @examples
-#' ck_generate_sTable(smallC=10)
+#' ck_generate_sTable(smallC = 10)
 ck_generate_sTable <- function(smallC=12, ...) {
   nr <- 256
   nc1 <- 32

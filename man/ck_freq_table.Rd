@@ -35,7 +35,7 @@ this function allows to return perturbed count-tables from oututs of
 using \code{\link{perturbTable}}.
 }
 \examples{
-## see examples in perturbTable()
+# see examples in perturbTable()
 }
 \seealso{
 ck_cont_table perturbTable

@@ -33,7 +33,7 @@
 #' @export
 #'
 #' @examples
-#' ## see examples in perturbTable()
+#' # see examples in perturbTable()
 ck_cont_table <- function(inp, vname=NULL, meanBeforeSum=TRUE) {
   stopifnot(isS4(inp))
   stopifnot(class(inp) == "pert_table")

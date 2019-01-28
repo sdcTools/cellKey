@@ -38,21 +38,41 @@ represented as trees. These objects can be used in \code{\link{perturbTable}} to
 define the (hierarchical) structure of tables.
 }
 \examples{
-dim <- ck_create_node(total_lab="Total")
-dim <- ck_add_nodes(dim, reference_node="Total", node_labs=LETTERS[1:4])
+dim <- ck_create_node(total_lab = "Total")
+dim <- ck_add_nodes(
+  dim,
+  reference_node = "Total",
+  node_labs = LETTERS[1:4]
+)
 print(dim)
 
-## add some levels below "A" and "C"
-dim <- ck_add_nodes(dim, reference_node="A", node_labs=paste0("a", 1:5))
-dim <- ck_add_nodes(dim, reference_node="C", node_labs=paste0("c", 1:5))
+# add some levels below "A" and "C"
+dim <- ck_add_nodes(
+  dim,
+  reference_node = "A",
+  node_labs = paste0("a", 1:5)
+)
+dim <- ck_add_nodes(
+  dim,
+  reference_node = "C",
+  node_labs = paste0("c", 1:5)
+)
 print(dim)
 
-## delete some specific levels
-dim <- ck_delete_nodes(dim, reference_node="A", node_labs=c("a1", "a4"))
+# delete some specific levels
+dim <- ck_delete_nodes(
+  dim,
+  reference_node = "A",
+  node_labs = c("a1", "a4")
+)
 print(dim)
 
-## delete entire subtree
-dim <- ck_delete_nodes(dim, reference_node="Total", node_labs=c("C"))
+# delete entire subtree
+dim <- ck_delete_nodes(
+  dim,
+  reference_node = "Total",
+  node_labs = c("C")
+)
 print(dim)
-# plot(dim)
+plot(dim)
 }

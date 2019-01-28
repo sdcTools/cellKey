@@ -28,7 +28,7 @@
 #' @export
 #'
 #' @examples
-#' ## see examples in perturbTable()
+#' # see examples in perturbTable()
 ck_freq_table <- function(inp, vname=NULL) {
   stopifnot(isS4(inp))
   stopifnot(class(inp) == "pert_table")

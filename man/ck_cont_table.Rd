@@ -44,7 +44,7 @@ paper \emph{Methodology for the Automatic Confidentialisation of Statistical Out
 at the Australian Bureau of Statistics} (Thompson, Broadfoot, Elazar).
 }
 \examples{
-## see examples in perturbTable()
+# see examples in perturbTable()
 }
 \seealso{
 ck_freq_table perturbTable
