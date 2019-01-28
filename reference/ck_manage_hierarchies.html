@@ -165,17 +165,29 @@ to define table inputs in <code><a href='perturbTable.html'>perturbTable</a></co
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>dim</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_create_node</span>(<span class='kw'>total_lab</span><span class='kw'>=</span><span class='st'>"Total"</span>)
-<span class='no'>dim</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_add_nodes</span>(<span class='no'>dim</span>, <span class='kw'>reference_node</span><span class='kw'>=</span><span class='st'>"Total"</span>, <span class='kw'>node_labs</span><span class='kw'>=</span><span class='no'>LETTERS</span>[<span class='fl'>1</span>:<span class='fl'>4</span>])
+    <pre class="examples"><div class='input'><span class='no'>dim</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_create_node</span>(<span class='kw'>total_lab</span> <span class='kw'>=</span> <span class='st'>"Total"</span>)
+<span class='no'>dim</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_add_nodes</span>(
+  <span class='no'>dim</span>,
+  <span class='kw'>reference_node</span> <span class='kw'>=</span> <span class='st'>"Total"</span>,
+  <span class='kw'>node_labs</span> <span class='kw'>=</span> <span class='no'>LETTERS</span>[<span class='fl'>1</span>:<span class='fl'>4</span>]
+)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>dim</span>)</div><div class='output co'>#&gt;   levelName
 #&gt; 1     Total
 #&gt; 2      ¦--A
 #&gt; 3      ¦--B
 #&gt; 4      ¦--C
 #&gt; 5      °--D</div><div class='input'>
-<span class='co'>## add some levels below "A" and "C"</span>
-<span class='no'>dim</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_add_nodes</span>(<span class='no'>dim</span>, <span class='kw'>reference_node</span><span class='kw'>=</span><span class='st'>"A"</span>, <span class='kw'>node_labs</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste0</a></span>(<span class='st'>"a"</span>, <span class='fl'>1</span>:<span class='fl'>5</span>))
-<span class='no'>dim</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_add_nodes</span>(<span class='no'>dim</span>, <span class='kw'>reference_node</span><span class='kw'>=</span><span class='st'>"C"</span>, <span class='kw'>node_labs</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste0</a></span>(<span class='st'>"c"</span>, <span class='fl'>1</span>:<span class='fl'>5</span>))
+<span class='co'># add some levels below "A" and "C"</span>
+<span class='no'>dim</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_add_nodes</span>(
+  <span class='no'>dim</span>,
+  <span class='kw'>reference_node</span> <span class='kw'>=</span> <span class='st'>"A"</span>,
+  <span class='kw'>node_labs</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste0</a></span>(<span class='st'>"a"</span>, <span class='fl'>1</span>:<span class='fl'>5</span>)
+)
+<span class='no'>dim</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_add_nodes</span>(
+  <span class='no'>dim</span>,
+  <span class='kw'>reference_node</span> <span class='kw'>=</span> <span class='st'>"C"</span>,
+  <span class='kw'>node_labs</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste0</a></span>(<span class='st'>"c"</span>, <span class='fl'>1</span>:<span class='fl'>5</span>)
+)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>dim</span>)</div><div class='output co'>#&gt;     levelName
 #&gt; 1  Total     
 #&gt; 2   ¦--A     
@@ -192,8 +204,12 @@ to define table inputs in <code><a href='perturbTable.html'>perturbTable</a></co
 #&gt; 13  ¦   ¦--c4
 #&gt; 14  ¦   °--c5
 #&gt; 15  °--D     </div><div class='input'>
-<span class='co'>## delete some specific levels</span>
-<span class='no'>dim</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_delete_nodes</span>(<span class='no'>dim</span>, <span class='kw'>reference_node</span><span class='kw'>=</span><span class='st'>"A"</span>, <span class='kw'>node_labs</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"a1"</span>, <span class='st'>"a4"</span>))
+<span class='co'># delete some specific levels</span>
+<span class='no'>dim</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_delete_nodes</span>(
+  <span class='no'>dim</span>,
+  <span class='kw'>reference_node</span> <span class='kw'>=</span> <span class='st'>"A"</span>,
+  <span class='kw'>node_labs</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"a1"</span>, <span class='st'>"a4"</span>)
+)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>dim</span>)</div><div class='output co'>#&gt;     levelName
 #&gt; 1  Total     
 #&gt; 2   ¦--A     
@@ -208,8 +224,12 @@ to define table inputs in <code><a href='perturbTable.html'>perturbTable</a></co
 #&gt; 11  ¦   ¦--c4
 #&gt; 12  ¦   °--c5
 #&gt; 13  °--D     </div><div class='input'>
-<span class='co'>## delete entire subtree</span>
-<span class='no'>dim</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_delete_nodes</span>(<span class='no'>dim</span>, <span class='kw'>reference_node</span><span class='kw'>=</span><span class='st'>"Total"</span>, <span class='kw'>node_labs</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"C"</span>))
+<span class='co'># delete entire subtree</span>
+<span class='no'>dim</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_delete_nodes</span>(
+  <span class='no'>dim</span>,
+  <span class='kw'>reference_node</span> <span class='kw'>=</span> <span class='st'>"Total"</span>,
+  <span class='kw'>node_labs</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"C"</span>)
+)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>dim</span>)</div><div class='output co'>#&gt;    levelName
 #&gt; 1 Total     
 #&gt; 2  ¦--A     
@@ -217,8 +237,7 @@ to define table inputs in <code><a href='perturbTable.html'>perturbTable</a></co
 #&gt; 4  ¦   ¦--a3
 #&gt; 5  ¦   °--a5
 #&gt; 6  ¦--B     
-#&gt; 7  °--D     </div><div class='input'># plot(dim)
-</div></pre>
+#&gt; 7  °--D     </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>dim</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

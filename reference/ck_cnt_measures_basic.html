@@ -175,8 +175,11 @@ have been perturbed to a number different from zero</p></li>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>orig</span> <span class='kw'>&lt;-</span> <span class='fl'>1</span>:<span class='fl'>10</span>
-<span class='no'>pert</span> <span class='kw'>&lt;-</span> <span class='no'>orig</span>; <span class='no'>pert</span>[<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>5</span>,<span class='fl'>7</span>)] <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>6</span>,<span class='fl'>9</span>)
-<span class='fu'>ck_cnt_measures_basic</span>(<span class='kw'>orig</span><span class='kw'>=</span><span class='no'>orig</span>, <span class='kw'>pert</span><span class='kw'>=</span><span class='no'>pert</span>)</div><div class='output co'>#&gt; $measures
+<span class='no'>pert</span> <span class='kw'>&lt;-</span> <span class='no'>orig</span>; <span class='no'>pert</span>[<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>5</span>, <span class='fl'>7</span>)] <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>6</span>, <span class='fl'>9</span>)
+<span class='fu'>ck_cnt_measures_basic</span>(
+  <span class='kw'>orig</span> <span class='kw'>=</span> <span class='no'>orig</span>,
+  <span class='kw'>pert</span> <span class='kw'>=</span> <span class='no'>pert</span>
+)</div><div class='output co'>#&gt; $measures
 #&gt;       what vals_abs vals_rel vals_r
 #&gt;  1:    Min      0.0    0.000  0.000
 #&gt;  2:    Q10      0.0    0.000  0.000
@@ -235,8 +238,7 @@ have been perturbed to a number different from zero</p></li>
 #&gt; 
 #&gt; $false_positives
 #&gt; [1] 0
-#&gt; </div><div class='input'>
-</div></pre>
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
