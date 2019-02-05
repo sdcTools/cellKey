@@ -44,12 +44,11 @@ If you experience a timeout due to a proxy server while downloading, one can wor
 
 ### Usage
 
-An example using both possible input formats for perturbation tables is given in the main-function of the packge `perturbTable()`
+An example using both possible input formats for perturbation tables is given in the main-function of the package `perturbTable()`. See
 
-    library(cellKey)
-    ?perturbTable
+    ?cellKey::perturbTable
 
-Once finished, the package will also contain a package vignette. The unfinished introduction vignette can be looked at using `cellKey::ck_vignette()` or via the automatically deployed documentation by clicking [**here**](https://sdctools.github.io/cellKey/articles/introduction.html). The complete [**documentation**](https://sdctools.github.io/cellKey/) is also updated automatically and can be browes online.
+The package vignette is currently work-in-progress. It can be looked at using `cellKey::ck_vignette()` or via the automatically deployed documentation by clicking [**here**](https://sdctools.github.io/cellKey/articles/introduction.html). The complete [**documentation**](https://sdctools.github.io/cellKey/) is also updated automatically and can be browsed online.
 
 ### Updates
 

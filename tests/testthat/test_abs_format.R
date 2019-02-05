@@ -59,6 +59,36 @@ test_that("checking output of createInput() with non-existing record keys (abs)"
 # ## Frequency Tables
 # # weighted
 tab_freq <- perturbTable(inp, dimList = dimList, weightVar = "sampling_weight", numVars = NULL)
+
+
+test_that("print/summary of perturbed table (abs)", {
+  expect_equal(print(tab_freq), NULL)
+  expect_error(print(tab_freq, vname = "x"))
+
+  ss <- summary(tab_freq)
+  expect_is(ss, "list")
+  expect_equal(names(ss), c("cnt_info", "cnt_measures", "num_info"))
+  expect_identical(ss$cnt_info$Mean, -0.143)
+  expect_identical(ss$cnt_measures$Total$measures$vals_abs[6], 1.571)
+})
+
+test_that("export of perturbed table (abs)", {
+  expect_error(ck_export_table(x = tab_freq, vname="x", type = "both"))
+  expect_error(ck_export_table(x = tab_freq, vname="Total", type = "x"))
+  expect_equal(
+    dim(ck_export_table(x = tab_freq, vname="Total", type = "both")),
+    c(21, 7)
+  )
+  expect_equal(
+    dim(ck_export_table(x = tab_freq, vname="Total", type = "weighted")),
+    c(21, 5)
+  )
+  expect_equal(
+    dim(ck_export_table(x = tab_freq, vname="Total", type = "unweighted")),
+    c(21, 5)
+  )
+})
+
 res_weighted <- slot(tab_freq, "tab")
 
 test_that("checking weighted version of perturbedFreqTable (abs)", {

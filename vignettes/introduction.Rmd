@@ -22,8 +22,6 @@ library(rmarkdown)
 This package implements methods to provide perturbation for statistical tables. The method is based on the paper *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar). Furthermore it is possible to perturb tables using a different approach developed by the Federal Statistical Office of Germany (Destatis). The two approaches differ in the way record keys have to be specified, the format of the perturbation tables and the way, the actual lookup is done. Perturbation tables need to be specified using functionality from package [**ptable**](https://github.com/sdcTools/ptable).
 
 ## Main Features
-
-
 In the **cellKey** package it is possible to make use of two different ways on how to pertub multidimensional count tables - methods `abs` and `destatis`. For both of them methods are provided to generate suitable record keys using function `ck_generate_rkeys()`. For the perturbation of magnitude tables, for now only the method developed by the ABS is supported. Using sha1-checksums on the input datasets, we can make sure that the same record keys are generated whenever the same input data set is used for which record keys should be generated. However, it is also possible of course to use already pre-generated record keys available as variable in the microdata set.
 
 The package allows to make use of sampling weights. Thus, both weighted and unweighted count and magnitude tables can be perturbed. The hierarchical structure of the variables spanning the table can be arbitrarily complex. To generate these hierarchies, the **cellKey** packages allows not only to specify dimensions the same way as in package [**sdcTable**](https://cran.r-project.org/package=sdcTable) but also comes with a new and improved way using function `ck_create_node()`, `ck_add_nodes()` and `ck_delete_nodes()`. Finally, auxiliary methods are provided that allow to extract valueable information from objects created by the main function of this package `perturbTable()`. For example `mod_counts()` returns a data object showing for each cell the perturbation value and where it was found in the lookup table.
@@ -31,6 +29,7 @@ The package allows to make use of sampling weights. Thus, both weighted and unwe
 What is left is of course identifying bugs and issues and also to optimize performance of the package as well as to include some real world examples, eg. census tables.
 
 ## An Example
+We now show the capabilities of the **cellKey** package by running an example that 
 
 ### Load the Package
 ```{r}
@@ -39,7 +38,7 @@ packageVersion("cellKey")
 ```
 
 ### Loading testdata
-The testdata set we are using in this example contains information on person-level along with sampling weights as well as some categorical and continuously scaled variables. We also compute some binary variables for which we also want to create perturbed tables.
+The testdata set we are using in this example contains information on person-level along with sampling weights as well as some categorical and continuously scaled variables. We also compute some binary variables for which we also want to create perturbed tables. 
 
 ```{r}
 dat <- ck_create_testdata()
@@ -48,21 +47,24 @@ dat[, cnt_males := ifelse(sex == "male", 1, 0)]
 dat[, cnt_highincome := ifelse(income >= 9000, 1, 0)]
 ```
 
+We are now adding record keys to the data set that are going to be used later. In the following example we use the *"destatis"* input format for the perturbation table. For this reason, we also need to compute the record keys according to this format by specifying `type = "destatis"` in function `ck_generate_rkeys` as shown below:
+
+```{r}
+dat$rkeys <- ck_generate_rkeys(dat = dat, type = "destatis", verbose = FALSE)
+```
+
 The goal of this introduction is to create a perturbed table of counts of variables `sex` by `age` for all observations as well as for the subgroups in `cnt_males` and `cnt_highincome` that are non-zero. We also want to create perturbed tables of continously scaled variables `savings` and `income` also giving the hierarchical structure defined by `sex` by `age`.
 
 ### Create required input
-The first step in this approach is to generate or rather set some parameters that are using in the perturbation approach. These inputs are put together using function `ck_create_pert_params()`. 
+The first step in this approach is to generate or rather set some parameters that are using in the perturbation approach. These inputs are put together using function `ck_create_pert_params()`. In this example we are using the *"destatis"* way to specify the perturbation table. For an example on how to use the ABS-way, please refer to `?ck_create_pTable`.
 
 ```{r}
-# note:  ptable::pt_create_pTable(...) could also be used as input for argument "pTable"
 pert_params <- ck_create_pert_params(
-  bigN = 17312941, 
-  smallN = 12,
   pTable = ck_create_pTable(
     D = 5, 
     V = 3, 
     pTableSize = 70, 
-    type = "abs"
+    type = "destatis"
   ),
   sTable = ck_generate_sTable(smallC=12), 
   mTable = c(0.6, 0.4, 0.2)
@@ -71,24 +73,22 @@ pert_params <- ck_create_pert_params(
 
 The parameters that have to be specified are:
 
-- `bigN`: a large prime number used to derive cell keys from record keys
-- `smallN`: a number that controls how the columns of a perturbation table are scrolled
-- `pTable`: a perturbation table containing perturbation values. Function `ck_create_pTable(type="abs", ...)` returns an exemplary perturbation table in `abs` format given a flexible number of columns (specified using parameter `pTableSize`) and a fixed (256) number of rows. An alternative way to specify perturbation tables was proposed by DESTATIS. pTables in this format can be generated by using functionality from the [**ptable**](https://github.com/sdcTools/ptable) package using `ptable::pt_create_pTable()`. If such an input is used, parameters `bigN` and `smallN` are ignored because they are not needed in the algorithm to lookup perturbation values.
-- `sTable`:  a table containing the noise component for numerical variables that must contain 32+`smallC` columns. An example table may be generated using function `ck_generate_sTable()`
-- `mTable`: a numeric vector containing parameters for the magnitude of perturbation for numerical variables
+- `pTable`: a perturbation table containing perturbation values. Function `ck_create_pTable()` wraps functionality from the [**ptable**](https://github.com/sdcTools/ptable) package and returns a perturbation table in either *"abs"* or *"destatis"* format.
+- `sTable`:  (optional) a table containing the noise component for numerical variables. Function `ck_generate_sTable()` allows to generate suitable inputs.
+- `mTable`: (optional) a numeric vector containing parameters for the magnitude of perturbation for numerical variables
 
-This function returns an object of class `pert_params` that is required in the next function that must be called. In `ck_create_input()` we finally create the required input to be able to compute some perturbed tables as follows.
+The output of `ck_create_pert_params` is an object of class `pert_params` that is required in the next function that must be called. In `ck_create_input()` we finally create the required input to be able to compute some perturbed tables as follows.
 
 ```{r}
 inp <- ck_create_input(
   dat = dat, 
-  def_rkey = 15 * nrow(dat), 
+  def_rkey = "rkeys", 
   pert_params = pert_params
 )
 print(class(inp))
 ```
 
-We needed to specify parameter `def_rkey`. In this argument, users may either specify an (existing) variable name in the input microdata set `data` that already contains record keys or specify a number. In the second case, the functions computes record keys based on the format of the perturbation table (slot `pTable` in argument `pert_params`). If the perturbation table is in abs-format, record keys between 1 and `def_key` are randomly computed. In case the perturbation table is in destatis-format, the record keys are sampled from a uniform distribution between 0 and 1 and rounded to the number of digits specified in parameter `def_rkey`. 
+We were able to specify the (existing) variable name `rkeys` containing record keys in argument `def_rkey` of function `ck_create_input`. If record keys have not been generated yet, one can set this argument to a number . In this case, the function computes record keys based on the format of the perturbation table (slot `pTable` in argument `pert_params`). If the perturbation table is in abs-format, record keys between 1 and `def_key` are randomly computed. In case the perturbation table is in destatis-format, the record keys are sampled from a uniform distribution between 0 and 1 and rounded to the number of digits specified in parameter `def_rkey`.
 
 To ensure that the same record keys are computed each and every time for the same data set, a seed based on the sha1-hash of the input dataset is computed and used before drawing the record keys.
 
@@ -182,6 +182,8 @@ In the example above we see, that all cells containing `sex=="female" no perturb
 - `pWC`: perturbed weighted counts
 - `WCavg`: cell average weight
 
+Furthermore, additional columns are included in the output for debugging purposes. These columns may be removed in future versions of the package. These variables refer to the row- and column indices (variables `row_indices` and `col_indices` of the perturbation table used to extract a perturbation value (column `pert`) for any given cell. The computed cell keys are shown in column `cellKey`.
+
 Function `ck_cnt_measures()` applied to the resulting object of `perturbTable()` allows to compute information loss measures for perturbed count variables. Its application is as simple as:
 
 ```{r}
@@ -214,11 +216,7 @@ tab2 <- perturbTable(
 To get information about magnitute tables, function `ck_cont_table()` can be applied to the output of `perturbTable()`. In this case, we can set an additional argument `meanBeforeSum` that is either `TRUE` or `FALSE` and specifies, how the perturbed cell values are computed. Details on this method can be found in *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar) in Section *6.3*.
 
 ```{r}
-p_income <- ck_cont_table(
-  tab2, 
-  vname = "income", 
-  meanBeforeSum = TRUE
-)
+p_income <- ck_cont_table(inp = tab2, vname = "income", meanBeforeSum = TRUE)
 p_income
 ```
 
@@ -254,22 +252,16 @@ We note that if the by_variable has been specified, it will be automatically add
 
 ```{r}
 # frequency table of the by-variable
-ck_freq_table(tab3, vname = "cnt_highincome")
+ck_freq_table(inp = tab3, vname = "cnt_highincome")
 ```
 
 To show the table of variable `savings` we use again `ck_cont_table()`.
  
 ```{r}
-p_savings <- ck_cont_table(
-  tab3, 
-  vname = "savings", 
-  meanBeforeSum = TRUE
-)
-p_savings
+ck_cont_table(inp = tab3, vname = "savings", meanBeforeSum = TRUE)
 ```
  
 From the results we can observe that there are no high-income units in the highest age group (`age_group6`) and those cells are not perturbed at all.
-
 
 Using function `ck_export_table()` which can be applied to outputs of `perturbTable()`. This functions returns a simple `data.frames` containing all cells and perturbed (weighted) values for a given perturbed variables. We could apply it to the `Total`-variable as follows
 
