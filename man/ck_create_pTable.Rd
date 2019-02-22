@@ -5,7 +5,7 @@
 \title{ck_create_pTable}
 \usage{
 ck_create_pTable(D, V, type, js = 0, pstay = NULL, optim = 1,
-  mono = TRUE, epsilon = 0.0000001, pTableSize = 70)
+  mono = TRUE, epsilon = 1e-07, pTableSize = 70)
 }
 \arguments{
 \item{D}{perturbation parameter for maximum perturbation (scalar or vector)}
@@ -39,5 +39,7 @@ ck_create_pTable(D=5, V=3, js=2, pTableSize=70, type="abs")
 ck_create_pTable(D=5, V=3, js=2, pstay=0.5, optim=1, mono=TRUE, typ="destatis")
 }
 \seealso{
-https://github.com/sdcTools/ptable
+This function uses functionality from package ptable (https://github.com/sdcTools/ptable), expecially
+\code{pt_create_pParams} and \code{pt_create_pTable}. More detailed information on the parameters is available
+from the respective help-pages of these functions.
 }

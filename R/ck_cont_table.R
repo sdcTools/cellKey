@@ -36,7 +36,7 @@
 #' ## see examples in perturbTable()
 ck_cont_table <- function(inp, vname=NULL, meanBeforeSum=TRUE) {
   stopifnot(isS4(inp))
-  stopifnot(class(inp)=="pert_table")
+  stopifnot(class(inp) == "pert_table")
 
   . <- col_indices <- countVar <- row_indices <- pert <- cellKey <- NULL
   WC_Total <- id <- magnitude <- noise <- numVar <- pWC_Total <- NULL
@@ -44,11 +44,11 @@ ck_cont_table <- function(inp, vname=NULL, meanBeforeSum=TRUE) {
 
   avail <- slot(inp, "numVars")
   if (is.null(vname)) {
-    if (length(avail)==0) {
+    if (length(avail) == 0) {
       cat("No continous variables have been perturbed\n")
     } else {
       cat("The following continous variables have been perturbed:\n")
-      cat(paste("  -->", avail), sep="\n")
+      cat(paste("  -->", avail), sep = "\n")
     }
     return(invisible(NULL))
   }
@@ -56,34 +56,37 @@ ck_cont_table <- function(inp, vname=NULL, meanBeforeSum=TRUE) {
   stopifnot(vname %in% avail)
 
   byVar <- slot(inp, "by")
-  if (byVar !="Total") {
-    message(paste0("Note: this table is restricted to groups defined by ",shQuote(byVar),"!\n"))
+  if (byVar != "Total") {
+    message(sprintf(
+      "Note: this table is restricted to groups defined by %s!\n",
+      shQuote(byVar))
+    )
   }
 
   data <- slot(inp, "tab")
   dt <- cbind(
-    data[,slot(inp, "dimVars"), with=F],
-    data[,grep(paste0("_", vname), names(data)), with=F])
+    data[, slot(inp, "dimVars"), with = FALSE],
+    data[, grep(paste0("_", vname), names(data)), with = FALSE])
 
   # perturbed weighted counts
   pwc <- data[, get(paste0("pWC_", byVar))]
-  wc <- data[,get(paste0("WC_", byVar))]
+  wc <- data[, get(paste0("WC_", byVar))]
 
-  if (meanBeforeSum==TRUE) {
-    out <- mean_before_sum(dt[,get(paste0("pWS_", vname))], pWC=pwc)
+  if (meanBeforeSum == TRUE) {
+    out <- mean_before_sum(dt[, get(paste0("pWS_", vname))], pWC = pwc)
   } else {
-    out <- sum_before_mean(dt[,get(paste0("pWS_", vname))], pWC=pwc)
+    out <- sum_before_mean(dt[, get(paste0("pWS_", vname))], pWC = pwc)
   }
-  out[is.nan(pWSum), pWSum:=0]
-  out[is.nan(pWMean), pWMean:=0]
+  out[is.nan(pWSum), pWSum := 0]
+  out[is.nan(pWMean), pWMean := 0]
 
-  set(dt, j=paste0("pWS_", vname), value=out$pWSum)
-  set(dt, j=paste0("pWM_", vname), value=out$pWMean)
+  set(dt, j = paste0("pWS_", vname), value = out$pWSum)
+  set(dt, j = paste0("pWM_", vname), value = out$pWMean)
 
 
   mods <- mod_numvars(inp)
-  mods <- mods[numVar==vname, .(id, magnitude, dir, noise, vals.orig, vals.pert, vals.mod)]
-
+  mods <- mods[numVar == vname,
+    .(id, magnitude, dir, noise, vals.orig, vals.pert, vals.mod)]
   attr(dt, "modifications") <- mods
   dt
 }

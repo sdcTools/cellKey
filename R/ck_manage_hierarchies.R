@@ -42,17 +42,17 @@ NULL
 ##' @rdname ck_manage_hierarchies
 ##' @export
 ck_create_node <- function(total_lab="Total") {
-  return(create_node(total_lab=total_lab))
+  return(create_node(total_lab = total_lab))
 }
 
 ##' @rdname ck_manage_hierarchies
 ##' @export
 ck_add_nodes <- function(node, node_labs, reference_node) {
-  return(add_nodes(node=node, node_labs=node_labs, reference_node=reference_node))
+  return(add_nodes(node = node, node_labs = node_labs, reference_node = reference_node))
 }
 
 ##' @rdname ck_manage_hierarchies
 ##' @export
 ck_delete_nodes <- function(node, node_labs, reference_node) {
-  return(delete_nodes(node=node, node_labs=node_labs, reference_node=reference_node))
+  return(delete_nodes(node = node, node_labs = node_labs, reference_node = reference_node))
 }

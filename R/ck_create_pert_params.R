@@ -22,12 +22,12 @@
 #'   sTable=ck_generate_sTable(smallC=12),
 #'   mTable=c(0.6,0.4,0.2))
 #' print(class(params))
-ck_create_pert_params <- function(bigN, smallN, pTable, sTable, mTable) {
+ck_create_pert_params <- function(bigN=NULL, smallN=NULL, pTable, sTable=NULL, mTable=NULL) {
   out <- new("pert_params")
 
   convert_from_ptable <- function(pTable) {
     . <- i <- p_int_ub <- v <- NULL
-    if (isS4(pTable) && class(pTable)=="ptable") {
+    if (isS4(pTable) && class(pTable) == "ptable") {
       pType <- slot(pTable, "type")
       if (pType == "destatis"){
         pTable <- slot(pTable, "pTable")[, .(i, p_int_ub, v)]
@@ -44,14 +44,22 @@ ck_create_pert_params <- function(bigN, smallN, pTable, sTable, mTable) {
   pTable <- convert_from_ptable(pTable)
 
   cur_type <- slot(out, "type")
-
-  if (cur_type=="destatis") {
+  if (cur_type == "destatis") {
+    mf <- match.call(expand.dots = FALSE)
+    if (!is.null(mf$bigN) | !is.null(smallN)) {
+      message("Note: the supplied pTable is of type 'destatis'. Thus, arguments 'bigN' and 'smallN' will be ignored:")
+    }
     message("Note: the supplied pTable is of type 'destatis'. Thus, arguments 'bigN' and 'smallN' will be ignored:")
     slot(out, "bigN") <- as.integer(1)
     slot(out, "smallN") <- 0L
   } else if (cur_type %in% c("abs", "custom")) {
+    stopifnot(is.numeric(bigN), length(bigN) == 1, bigN >= 1)
+    if (bigN > .Machine$integer.max) {
+      v <- .Machine$integer.max
+      stop("The number provided for 'bigN' is > than the maximum possible value on your computer (", v, ")")
+    }
     stopifnot(is_bare_integerish(bigN))
-    stopifnot(is_bare_integerish(smallN))
+    stopifnot(is_bare_integerish(smallN), smallN >= 1)
     slot(out, "bigN") <- as.integer(bigN)
     slot(out, "smallN") <- as.integer(smallN)
   } else {
@@ -59,11 +67,19 @@ ck_create_pert_params <- function(bigN, smallN, pTable, sTable, mTable) {
   }
   slot(out, "pTable") <- pTable
   slot(out, "pTableSize") <- as.integer(ncol(pTable))
-  slot(out, "mTable") <- mTable
-  slot(out, "sTable") <- sTable
-  slot(out, "smallC") <- as.integer(ncol(sTable)-32)
-  slot(out, "topK") <- as.integer(length(mTable))
 
+  if (slot(out, "smallN") >= slot(out, "pTableSize")) {
+    stop(paste("Parameter 'smallN' must be smaller than the number of columns in 'pTable'"))
+  }
+
+  if (!is.null(mTable)) {
+    slot(out, "mTable") <- mTable
+    slot(out, "topK") <- as.integer(length(mTable))
+  }
+  if (!is.null(sTable)) {
+    slot(out, "sTable") <- sTable
+    slot(out, "smallC") <- as.integer(ncol(sTable) - 32)
+  }
   validObject(out)
   out
 }

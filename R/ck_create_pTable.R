@@ -15,15 +15,26 @@
 #'
 #' @return an object of class \code{ptable} defined in the ptable-package.
 #' @export
-#' @seealso https://github.com/sdcTools/ptable
+#' @seealso This function uses functionality from package ptable (https://github.com/sdcTools/ptable), expecially
+#' \code{pt_create_pParams} and \code{pt_create_pTable}. More detailed information on the parameters is available
+#' from the respective help-pages of these functions.
 #' @examples
 #' ck_create_pTable(D=5, V=3, js=2, pTableSize=70, type="abs")
 #' ck_create_pTable(D=5, V=3, js=2, pstay=0.5, optim=1, mono=TRUE, typ="destatis")
 ck_create_pTable <- function(D, V, type, js=0, pstay=NULL, optim=1, mono=TRUE, epsilon=1e-07, pTableSize=70) {
   stopifnot(is_scalar_character(type))
   type <- tolower(type)
-  stopifnot(type %in% c("abs","destatis"))
+  stopifnot(type %in% c("abs", "destatis"))
 
-  pt_para <- pt_create_pParams(D=D, V=V, js=js, pstay=pstay, optim=optim, mono=mono, epsilon=epsilon, pTableSize=pTableSize)
-  return(pt_create_pTable(params=pt_para, type=type, monitoring=FALSE, debugging=FALSE))
+  pt_para <- pt_create_pParams(
+    D = D,
+    V = V,
+    js = js,
+    pstay = pstay,
+    optim = optim,
+    mono = mono,
+    epsilon = epsilon,
+    pTableSize = pTableSize
+  )
+  return(pt_create_pTable(params = pt_para, type = type, monitoring = FALSE, debugging = FALSE))
 }
