@@ -11,9 +11,15 @@ definition = function(x, vname=NULL) {
     stopifnot(is_scalar_character(vname))
     validVars <- c(slot(x, "countVars"), slot(x, "numVars"))
     if (!vname %in% validVars) {
-      txt <- paste("specified variable name", shQuote(vname), "is invalid.\n")
-      txt <- paste0(txt, "It should be one of ", paste(shQuote(validVars), collapse = ", "), ".")
-      stop(txt)
+      vv <- shQuote(vname)
+      e <- c(
+        "The specified variable name",
+        shQuote(vname),
+        "is invalid.\n",
+        "It shoud be one of:",
+        paste(shQuote(validVars), collapse = ", ")
+      )
+      stop(paste(e, collapse = " "), call. = FALSE)
     }
   }
 
@@ -27,9 +33,15 @@ definition = function(x, vname=NULL) {
   txt <- paste0(txt, " consists of ", nrow(slot(x, "tab")), " cells.")
 
   if (slot(x, "by") == "Total") {
-    txt <- paste(txt, "The results are based on all units in the input data.")
+    txt <- paste(
+      txt,
+      "The results are based on all units in the input data."
+    )
   } else {
-    txt <- paste(txt, "The results are restricted to units for which by-variable")
+    txt <- paste(
+      txt,
+      "The results are restricted to units for which by-variable"
+    )
     txt <- paste(txt, shQuote(slot(x, "by")), "equals 1.")
   }
   cat(txt, "\n")
@@ -56,10 +68,11 @@ definition = function(x, vname=NULL) {
   if (!is.null(vname)) {
     dt <- slot(x, "tab")
 
+    dv <- slot(x, "dimVars")
     if (vname %in% slot(x, "countVars")) {
-      vnames <- c(slot(x, "dimVars"), paste0(c("UWC", "WC", "pUWC", "pWC"), "_", vname))
+      vnames <- c(dv, paste0(c("UWC", "WC", "pUWC", "pWC"), "_", vname))
     } else {
-      vnames <- c(slot(x, "dimVars"), paste0(c("UW", "WS", "pUW", "pWS"), "_", vname))
+      vnames <- c(dv, paste0(c("UW", "WS", "pUW", "pWS"), "_", vname))
     }
     dt <- dt[, vnames, with = FALSE]
     cat("Total-Counts\n")
