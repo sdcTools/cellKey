@@ -219,7 +219,7 @@
 #' mod_numvars(res)
 #'
 #' # measures of information loss and utility statistics
-#' on tabulated count variables
+#' # on tabulated count variables
 #' ck_cnt_measures(res, vname = "Total")
 #'
 #' # an example using additional countVars
@@ -278,10 +278,9 @@ perturbTable <-
     c(paste0(prefix, "_Total"), paste0(prefix, "_", countVars))
   }
 
-  . <- CKey <- N <- WCavg <- col_indices <- neg_counts <- pUWC <- pWC <-  NULL
-  row_indices <- sdcStatus <- strID <- sumRec <- sumW <- tmpfreqvarfortabulation <- NULL
+  sdcStatus <- strID <- NULL
   tmprkeysfortabulation <- tmpweightvarfortabulation <- tmpidforsorting <- NULL
-  WCavg_Total <- pert <- countVar <- numVar <- NULL
+  pert <- countVar <- numVar <- NULL
 
   stopifnot(isS4(inp))
   stopifnot(class(inp) == "pert_inputdat")
@@ -528,7 +527,7 @@ perturbTable <-
   vv <- c(names(dimList), cols_n, cols_wc, cols_puwc, cols_pwc, cols_wcavg, keepNV)
   tab <- tab[, vv, with = FALSE]
   res <- new(
-    object = "pert_table",
+    Class = "pert_table",
     tab = tab,
     count_modifications = count_modifications,
     numvars_modifications = pert_info_cont,

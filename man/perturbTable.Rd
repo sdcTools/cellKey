@@ -38,180 +38,245 @@ an object of class \code{\link{pert_table-class}}.
 compute perturbed tables containing counts and continous variables.
 }
 \examples{
-## loading testdata and adding record keys
+# loading testdata and adding record keys
 dat <- ck_create_testdata()
 
-## create some 0/1 variables that should be perturbed later
-dat[,cnt_females:=ifelse(sex=="male", 0, 1)]
-dat[,cnt_males:=ifelse(sex=="male", 1, 0)]
-dat[,cnt_highincome:=ifelse(income>=9000, 1, 0)]
+# create some binary (0,1) variables that should be perturbed later
+dat[, cnt_females := ifelse(sex=="male", 0, 1)]
+dat[, cnt_males := ifelse(sex=="male", 1, 0)]
+dat[, cnt_highincome := ifelse(income>=9000, 1, 0)]
 
 ## create record keys
-dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=2*nrow(dat), type="abs", verbose=TRUE)
+dat$rkeys <- ck_generate_rkeys(
+  dat = dat,
+  max_val = 2*nrow(dat),
+  type = "abs",
+  verbose = TRUE
+)
 
-## creating test perturbation in abs-,  destatis  and custom format
-pTable_abs <- ck_create_pTable(D=5, V=3, pTableSize=70, type="abs")
-pTable_destatis <- ck_create_pTable(D=5, V=3, type="destatis")
+# creating test perturbation in "abs", "destatis" and "custom" format
+pTable_abs <- ck_create_pTable(
+  D = 5,
+  V = 3,
+  pTableSize = 70,
+  type = "abs"
+)
+pTable_destatis <- ck_create_pTable(
+  D = 5,
+  V = 3,
+  type = "destatis"
+)
 
-## custom format is a bit more complicated
-pTable_custom <- ck_create_custom_pTable(pTableSize=70)
+# "free" format is a bit more complicated to set up
+pTable_custom <- ck_create_custom_pTable(
+  pTableSize = 70
+)
 
-## modify
+# create some functions first that return a single number
 fn1 <- function() { round(rnorm(1, mean=5, sd=10)) }
 fn2 <- function() { rpois(1, lambda=2) }
 fn3 <- function() { rpois(1, lambda=5) }
 fn4 <- function() return(1)
 fn5 <- function() return(-1)
 
-## fn1 provides perturbation values from a normal distribution
-## with mean=5 and sd=10; we use this for all cells
-pTable_custom <- ck_update_custom_pTable(pTable_custom, fun=fn1)
+# fn1 provides perturbation values from a normal distribution
+# with mean = 5 and sd = 10; we use this for all cells
+pTable_custom <- ck_update_custom_pTable(
+  pTable = pTable_custom,
+  fun = fn1
+)
 
-## perturbation values from poisson-distributions for some cells
-pTable_custom <- ck_update_custom_pTable(pTable_custom, fun=fn2, cols=c(1:20), rows=c(1:100))
-pTable_custom <- ck_update_custom_pTable(pTable_custom, fun=fn3, cols=c(1:20), rows=c(101:256))
+# perturbation values from poisson distributions for some cells
+pTable_custom <- ck_update_custom_pTable(
+  pTable = pTable_custom,
+  fun = fn2,
+  cols = 1:20,
+  rows = 1:100
+)
+pTable_custom <- ck_update_custom_pTable(
+  pTable = pTable_custom,
+  fun = fn3,
+  cols = 1:20,
+  rows = 101:256
+)
 
-## we can of course write functions, that return scalars, such
-## als fn4() and fn5() always return 1 or -1
-pTable_custom <- ck_update_custom_pTable(pTable_custom, fun=fn4, cols=c(10:20))
-pTable_custom <- ck_update_custom_pTable(pTable_custom, fun=fn5, cols=c(21:30))
+# we can of course write functions, that return scalars, such
+# as fn4() and fn5() always return 1 or -1
+pTable_custom <- ck_update_custom_pTable(
+  pTable = pTable_custom,
+  fun=fn4,
+  cols=10:20
+)
+pTable_custom <- ck_update_custom_pTable(
+  pTable = pTable_custom,
+  fun=fn5,
+  cols = 21:30
+)
 
-## perturbation tables and parameters for numerical variables
-sTable <- ck_generate_sTable(smallC=12)
-mTable <- c(0.6,0.4,0.2)
+# set up perturbation tables and parameters for numerical variables
+sTable <- ck_generate_sTable(smallC = 12)
+mTable <- c(0.6, 0.4, 0.2)
 
-## creating perturbation objects that are later used
-## as inputs in perturbTable()
+# creating perturbation objects that are later used
+# as inputs in perturbTable()
 pert_params_abs <- ck_create_pert_params(
-  bigN=17312941, smallN=12,
-  pTable=pTable_abs,
-  sTable=sTable,
-  mTable=mTable)
+  bigN = 17312941,
+  smallN = 12,
+  pTable = pTable_abs,
+  sTable = sTable,
+  mTable = mTable
+)
 
 pert_params_destatis <- ck_create_pert_params(
-  smallN=12,
-  pTable=pTable_destatis,
-  sTable=sTable,
-  mTable=mTable)
+  smallN = 12,
+  pTable = pTable_destatis,
+  sTable = sTable,
+  mTable = mTable
+)
 
 pert_params_custom <- ck_create_pert_params(
-  bigN=17312941, smallN=12,
-  pTable=pTable_custom,
-  sTable=sTable,
-  mTable=mTable)
+  bigN = 17312941,
+  smallN = 12,
+  pTable = pTable_custom,
+  sTable = sTable,
+  mTable = mTable
+)
 
-## create suitable input data using existing record keys
-## and a perturbation table in "abs-format"
+# create suitable input data using existing record keys
+# and a perturbation table in "abs" format"
 inp_abs <- ck_create_input(
-  dat=dat,
-  def_rkey="rkeys",
-  pert_params=pert_params_abs)
+  dat = dat,
+  def_rkey = "rkeys",
+  pert_params = pert_params_abs
+)
 
-## create input using a perturbation table in "destatis-format"
-## and no existing record keys. In this case, def_rkey=9 means
-## that the generated record keys are rounded to 9 digits
+# create input using a perturbation table in "destatis" format"
+# and no existing record keys. In this case, def_rkey = 9 means
+# that the generated record keys are rounded to 9 digits
 inp_destatis <- ck_create_input(
-  dat=dat,
-  def_rkey=9,
-  pert_params=pert_params_destatis)
+  dat = dat,
+  def_rkey = 9,
+  pert_params = pert_params_destatis
+)
 
-## input using a "custom" perturbation table consisting of
-## user-defined functions
+# input using a perturbation table in "free" format
+# consisting making use of custom functions
 inp_custom <- ck_create_input(
-  dat=dat,
-  def_rkey="rkeys",
-  pert_params=pert_params_custom)
+  dat = dat,
+  def_rkey = "rkeys",
+  pert_params = pert_params_custom
+)
 
-## definining table hierarchies
-## variable 'sex'
-dim.sex <- ck_create_node(total_lab="Total")
-dim.sex <- ck_add_nodes(dim.sex, reference_node="Total", node_labs=c("male","female"))
+# define table hierarchies
+# variable "sex"
+dim.sex <- ck_create_node(total_lab = "Total")
+dim.sex <- ck_add_nodes(
+  node = dim.sex,
+  reference_node = "Total",
+  node_labs = c("male", "female")
+)
 print(dim.sex)
 
-## variable 'sex'
-dim.age <- ck_create_node(total_lab="Total")
-dim.age <- ck_add_nodes(dim.age,
-  reference_node="Total",
-  node_labs=paste0("age_group",1:6))
+# variable "sex"
+dim.age <- ck_create_node(total_lab = "Total")
+dim.age <- ck_add_nodes(
+  node = dim.age,
+  reference_node = "Total",
+  node_labs = paste0("age_group", 1:6)
+)
 print(dim.age)
 
-## define required inputs
-dimList <- list(sex=dim.sex, age=dim.age)
+# define required inputs
+dimList <- list(sex = dim.sex, age = dim.age)
 weightVar <- "sampling_weight"
 numVars <- c("savings", "income")
 
-## perturbing the table
+# finally perturb the table
 res <- perturbTable(
-  inp=inp_abs,
-  dimList=dimList,
-  weightVar=weightVar, countVars=NULL, numVars=numVars)
-ck_freq_table(res, vname="Total")
-ck_cont_table(res, vname="income", meanBeforeSum=TRUE)
-ck_cont_table(res, vname="savings", meanBeforeSum=TRUE)
+  inp = inp_abs,
+  dimList = dimList,
+  weightVar = weightVar,
+  countVars = NULL,
+  numVars = numVars
+)
 
-res <- perturbTable(
-  inp=inp_destatis,
-  dimList=dimList,
-  weightVar=weightVar, countVars=NULL, numVars=numVars)
-ck_freq_table(res, vname="Total")
-ck_cont_table(res, vname="income", meanBeforeSum=TRUE)
-ck_cont_table(res, vname="savings", meanBeforeSum=TRUE)
+# access the results
+ck_freq_table(res, vname = "Total")
+ck_cont_table(res, vname = "income", meanBeforeSum = TRUE)
+ck_cont_table(res, vname = "savings", meanBeforeSum = TRUE)
 
 res <- perturbTable(
-  inp=inp_custom,
-  dimList=dimList,
-  weightVar=weightVar, countVars=NULL, numVars=numVars)
-ck_freq_table(res, vname="Total")
-ck_cont_table(res, vname="income", meanBeforeSum=TRUE)
-ck_cont_table(res, vname="savings", meanBeforeSum=TRUE)
+  inp = inp_destatis,
+  dimList = dimList,
+  weightVar = weightVar,
+  countVars = NULL,
+  numVars = numVars
+)
+ck_freq_table(res, vname = "Total")
+ck_cont_table(res, vname = "income", meanBeforeSum = TRUE)
+ck_cont_table(res, vname = "savings", meanBeforeSum = TRUE)
 
-## information on modifications for count variables
-mod_counts(res, verbose=TRUE)
+res <- perturbTable(
+  inp = inp_custom,
+  dimList = dimList,
+  weightVar = weightVar,
+  countVars = NULL,
+  numVars = numVars
+)
+ck_freq_table(res, vname = "Total")
+ck_cont_table(res, vname = "income", meanBeforeSum = TRUE)
+ck_cont_table(res, vname = "savings", meanBeforeSum = TRUE)
 
-## information on modifications for numerical variables
+# information on modifications for count variables
+mod_counts(res, verbose = TRUE)
+
+# information on modifications for numerical variables
 mod_numvars(res)
 
-## information-loss/utility statistics on tabulated count variables
-ck_cnt_measures(res, vname="Total")
+# measures of information loss and utility statistics
+# on tabulated count variables
+ck_cnt_measures(res, vname = "Total")
 
-## an example using additional countVars
+# an example using additional countVars
 res <- perturbTable(
-  inp=inp_destatis,
-  dimList=dimList,
-  weightVar=weightVar,
-  countVars=c("cnt_females", "cnt_males","cnt_highincome"),
-  numVars=numVars)
+  inp = inp_destatis,
+  dimList = dimList,
+  weightVar = weightVar,
+  countVars = c("cnt_females", "cnt_males", "cnt_highincome"),
+  numVars = numVars)
 print(res) # custom print method
 summary(res) # custom summary method
 
-## show count tables
-ck_freq_table(res, vname=NULL)
-ck_freq_table(res, vname="Total")
-ck_freq_table(res, vname="cnt_females")
-ck_freq_table(res, vname="cnt_males")
-ck_freq_table(res, vname="cnt_highincome")
+# show count tables
+ck_freq_table(res, vname = NULL)
+ck_freq_table(res, vname = "Total")
+ck_freq_table(res, vname = "cnt_females")
+ck_freq_table(res, vname = "cnt_males")
+ck_freq_table(res, vname = "cnt_highincome")
 
-## show magnitude tables alog with its modifications
-p_inc <- ck_cont_table(res, vname="income"); p_inc
+# show magnitude tables along with its modifications
+p_inc <- ck_cont_table(res, vname = "income"); p_inc
 attr(p_inc, "modifications")
 
-## create perturbed magnitude table for subgroups of data
+# create perturbed magnitude table for subgroups of data
 res <- perturbTable(
-  inp=inp_destatis,
-  dimList=dimList,
-  weightVar=weightVar,
-  countVars=c("cnt_females", "cnt_males","cnt_highincome"),
-  numVars=numVars, by="cnt_males")
+  inp = inp_destatis,
+  dimList = dimList,
+  weightVar = weightVar,
+  countVars = c("cnt_females", "cnt_males", "cnt_highincome"),
+  numVars = numVars,
+  by = "cnt_males"
+)
 
-## the perturbed tables of savings and income are computed only where
-## variable cnt_males is 1
-p_sav <- ck_cont_table(res, vname="savings"); p_sav
+# the perturbed tables of savings and income are computed only where
+# variable cnt_males is 1
+p_sav <- ck_cont_table(res, vname = "savings"); p_sav
 attr(p_sav, "modifications") # no modifications in cells containing females!
 
-## export table to a simple data.table
-df_tot <- ck_export_table(res, vname="Total", type="both")
+# export table to a simple data.table
+df_tot <- ck_export_table(res, vname = "Total", type = "both")
 head(df_tot)
-df_inc <- ck_export_table(res, vname="income", type="weighted")
+df_inc <- ck_export_table(res, vname = "income", type = "weighted")
 head(df_inc)
 }
 \seealso{
