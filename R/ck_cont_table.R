@@ -33,13 +33,12 @@
 #' @export
 #'
 #' @examples
-#' ## see examples in perturbTable()
+#' # see examples in perturbTable()
 ck_cont_table <- function(inp, vname=NULL, meanBeforeSum=TRUE) {
   stopifnot(isS4(inp))
   stopifnot(class(inp) == "pert_table")
 
-  . <- col_indices <- countVar <- row_indices <- pert <- cellKey <- NULL
-  WC_Total <- id <- magnitude <- noise <- numVar <- pWC_Total <- NULL
+  id <- magnitude <- noise <- numVar <- NULL
   vals.mod <- vals.orig <- vals.pert <- pWMean <- pWSum <- NULL
 
   avail <- slot(inp, "numVars")
@@ -70,8 +69,6 @@ ck_cont_table <- function(inp, vname=NULL, meanBeforeSum=TRUE) {
 
   # perturbed weighted counts
   pwc <- data[, get(paste0("pWC_", byVar))]
-  wc <- data[, get(paste0("WC_", byVar))]
-
   if (meanBeforeSum == TRUE) {
     out <- mean_before_sum(dt[, get(paste0("pWS_", vname))], pWC = pwc)
   } else {

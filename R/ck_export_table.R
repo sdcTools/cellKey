@@ -34,15 +34,16 @@ ck_export_table <- function(x, vname=NULL, type="both") {
   stopifnot(type %in% c("both", "weighted", "unweighted"))
 
   allvars <- c(slot(x, "countVars"), slot(x, "numVars"))
-  if (is.null(vname)) {
-    vars <- "Total"
-  } else {
+  if (!is.null(vname)) {
     stopifnot(is_scalar_character(vname))
     if (!vname %in% allvars) {
-      vv <- paste(shQuote(allvars), collapse = ", ")
-      stop("The variable was not found in the perturbed dataset. Possible variables are: ", vv, .call = FALSE)
+      e <- c(
+        "The variable was not found in the perturbed dataset.\n",
+        "Possible variables are: ",
+        paste(shQuote(allvars), collapse = ", ")
+      )
+      stop(paste(e, collapse = " "), call. = FALSE)
     }
-    vars <- vname
   }
 
   tab <- slot(x, "tab")

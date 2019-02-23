@@ -134,16 +134,17 @@ representation = list(
   is_weighted = "logical",
   type = "character"
 ),
-prototype=list(
-  tab=data.table(),
-  count_modifications=data.table(),
-  numvars_modifications=data.table(),
-  dimVars=character(),
-  countVars=character(),
-  numVars=character(),
-  by=character(),
-  is_weighted=c(),
-  type=character()),
+prototype = list(
+  tab = data.table(),
+  count_modifications = data.table(),
+  numvars_modifications = data.table(),
+  dimVars = character(),
+  countVars = character(),
+  numVars = character(),
+  by = character(),
+  is_weighted = c(),
+  type = character()
+),
 validity = function(object) {
   stopifnot(object@type %in% c("abs", "destatis", "custom"))
   by <- slot(object, "by")

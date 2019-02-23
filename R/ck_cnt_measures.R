@@ -109,9 +109,13 @@ ck_cnt_measures <- function(x, vname="Total") {
 ck_cnt_measures_basic <- function(orig, pert) {
   stopifnot(is.numeric(orig), is.numeric(pert), length(orig) == length(pert))
 
-  val_abs <- vals_abs <- prop_abs <- val_rel <- vals_rel <- prop_rel <- NULL
+  val_abs <- prop_abs <- val_rel <- vals_rel <- prop_rel <- NULL
   val_r <- vals_r <- prop_r <- NULL
-  quantvals <- c(seq(from = 0, to = 0.1, by = 0.01), seq(from = 0.15, to = 1, by = 0.05), Inf)
+  quantvals <- c(
+    seq(from = 0, to = 0.1, by = 0.01),
+    seq(from = 0.15, to = 1, by = 0.05),
+    Inf
+  )
 
   dabs <- abs(pert - orig)
   drel <- (abs(pert - orig)) / orig
