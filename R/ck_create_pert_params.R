@@ -22,41 +22,54 @@
 #'   sTable=ck_generate_sTable(smallC=12),
 #'   mTable=c(0.6,0.4,0.2))
 #' print(class(params))
-ck_create_pert_params <- function(bigN=NULL, smallN=NULL, pTable, sTable=NULL, mTable=NULL) {
-  out <- new("pert_params")
+ck_create_pert_params <-
+  function(bigN = NULL,
+           smallN = NULL,
+           pTable,
+           sTable = NULL,
+           mTable = NULL) {
 
   convert_from_ptable <- function(pTable) {
-    . <- i <- p_int_ub <- v <- NULL
-    if (isS4(pTable) && class(pTable) == "ptable") {
-      pType <- slot(pTable, "type")
-      if (pType == "destatis"){
-        pTable <- slot(pTable, "pTable")[, .(i, p_int_ub, v)]
-        setnames(pTable, c("i", "kum_p_o", "diff"))
+      . <- i <- p_int_ub <- v <- NULL
+      if (isS4(pTable) && class(pTable) == "ptable") {
+        pType <- slot(pTable, "type")
+        if (pType == "destatis"){
+          pTable <- slot(pTable, "pTable")[, .(i, p_int_ub, v)]
+          setnames(pTable, c("i", "kum_p_o", "diff"))
+        }
+        if (pType %in% c("abs", "custom")) {
+          pTable <- slot(pTable, "pTable")
+        }
       }
-      if (pType %in% c("abs", "custom")) {
-        pTable <- slot(pTable, "pTable")
-      }
+      pTable
     }
-    pTable
-  }
 
+  out <- new("pert_params")
   slot(out, "type") <- slot(pTable, "type")
   pTable <- convert_from_ptable(pTable)
 
   cur_type <- slot(out, "type")
   if (cur_type == "destatis") {
+    m <- c(
+      "The supplied pTable is of type `destatis`.",
+      "Arguments `smallN` and `bigN` are therefore ignored."
+    )
     mf <- match.call(expand.dots = FALSE)
     if (!is.null(mf$bigN) | !is.null(smallN)) {
-      message("Note: the supplied pTable is of type 'destatis'. Thus, arguments 'bigN' and 'smallN' will be ignored:")
+      message(paste(m, collapse = " "))
     }
-    message("Note: the supplied pTable is of type 'destatis'. Thus, arguments 'bigN' and 'smallN' will be ignored:")
+    message(paste(m, collapse = " "))
     slot(out, "bigN") <- as.integer(1)
     slot(out, "smallN") <- 0L
   } else if (cur_type %in% c("abs", "custom")) {
     stopifnot(is.numeric(bigN), length(bigN) == 1, bigN >= 1)
     if (bigN > .Machine$integer.max) {
-      v <- .Machine$integer.max
-      stop("The number provided for 'bigN' is > than the maximum possible value on your computer (", v, ")")
+      e <- c(
+        "The number provided for `bigN` is larger than the",
+        "maximum possible value on your computer",
+        paste0("(", .Machine$integer.max, ")")
+      )
+      stop(paste(e, collapse = " "), call. = FALSE)
     }
     stopifnot(is_bare_integerish(bigN))
     stopifnot(is_bare_integerish(smallN), smallN >= 1)
@@ -69,7 +82,11 @@ ck_create_pert_params <- function(bigN=NULL, smallN=NULL, pTable, sTable=NULL, m
   slot(out, "pTableSize") <- as.integer(ncol(pTable))
 
   if (slot(out, "smallN") >= slot(out, "pTableSize")) {
-    stop(paste("Parameter 'smallN' must be smaller than the number of columns in 'pTable'"))
+    e <- c(
+      "Parameter `smallN` must be smaller than the number",
+      "of columns in `pTable`"
+    )
+    stop(paste(e, collapse = " "), call. = FALSE)
   }
 
   if (!is.null(mTable)) {

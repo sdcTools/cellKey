@@ -169,22 +169,12 @@ inp_custom <- ck_create_input(
 
 # define table hierarchies
 # variable "sex"
-dim.sex <- ck_create_node(total_lab = "Total")
-dim.sex <- ck_add_nodes(
-  node = dim.sex,
-  reference_node = "Total",
-  node_labs = c("male", "female")
-)
-print(dim.sex)
+dim.sex <- hier_create(root = "Total", nodes = c("male", "female"))
+hier_display(dim.sex)
 
 # variable "sex"
-dim.age <- ck_create_node(total_lab = "Total")
-dim.age <- ck_add_nodes(
-  node = dim.age,
-  reference_node = "Total",
-  node_labs = paste0("age_group", 1:6)
-)
-print(dim.age)
+dim.age <- hier_create(root = "Total", nodes = paste0("age_group", 1:6))
+hier_display(dim.age)
 
 # define required inputs
 dimList <- list(sex = dim.sex, age = dim.age)

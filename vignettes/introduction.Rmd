@@ -26,7 +26,7 @@ This package implements methods to provide perturbation for statistical tables. 
 
 In the **cellKey** package it is possible to make use of two different ways on how to pertub multidimensional count tables - methods `abs` and `destatis`. For both of them methods are provided to generate suitable record keys using function `ck_generate_rkeys()`. For the perturbation of magnitude tables, for now only the method developed by the ABS is supported. Using sha1-checksums on the input datasets, we can make sure that the same record keys are generated whenever the same input data set is used for which record keys should be generated. However, it is also possible of course to use already pre-generated record keys available as variable in the microdata set.
 
-The package allows to make use of sampling weights. Thus, both weighted and unweighted count and magnitude tables can be perturbed. The hierarchical structure of the variables spanning the table can be arbitrarily complex. To generate these hierarchies, the **cellKey** packages allows not only to specify dimensions the same way as in package [**sdcTable**](https://cran.r-project.org/package=sdcTable) but also comes with a new and improved way using function `ck_create_node()`, `ck_add_nodes()` and `ck_delete_nodes()`. Finally, auxiliary methods are provided that allow to extract valueable information from objects created by the main function of this package `perturbTable()`. For example `mod_counts()` returns a data object showing for each cell the perturbation value and where it was found in the lookup table.
+The package allows to make use of sampling weights. Thus, both weighted and unweighted count and magnitude tables can be perturbed. The hierarchical structure of the variables spanning the table can be arbitrarily complex. To generate these hierarchies, the **cellKey** packages imports functionality from the [**sdcHierarchies**](https://cran.r-project.org/package=sdcHierarchies) package that allows to define these hierarchies in an intuitive way. The vignette can be [**accessed online**](https://bernhard-da.github.io/sdcHierarchies/articles/usage.html). The main functions required to define a hierarchy are `hier_create()`, `hier_add()` and `hier_delete()`. Finally, auxiliary methods are provided that allow to extract valueable information from objects created by the main function of this package `perturbTable()`. For example `mod_counts()` returns a data object showing for each cell the perturbation value and where it was found in the lookup table.
 
 What is left is of course identifying bugs and issues and also to optimize performance of the package as well as to include some real world examples, eg. census tables.
 
@@ -42,9 +42,9 @@ packageVersion("cellKey")
 The testdata set we are using in this example contains information on person-level along with sampling weights as well as some categorical and continuously scaled variables. We also compute some binary variables for which we also want to create perturbed tables.
 
 ```{r}
-dat <- ck_create_testdata()[,c("sex","age","savings","income","sampling_weight")]
-dat[,cnt_males:=ifelse(sex=="male", 1, 0)]
-dat[,cnt_highincome:=ifelse(income>=9000, 1, 0)]
+dat <- ck_create_testdata()[,c("sex", "age", "savings", "income", "sampling_weight")]
+dat[, cnt_males := ifelse(sex == "male", 1, 0)]
+dat[, cnt_highincome := ifelse(income >= 9000, 1, 0)]
 ```
 
 The goal of this introduction is to create a perturbed table of counts of variables `sex` by `age` for all observations as well as for the subgroups in `cnt_males` and `cnt_highincome` that are non-zero. We also want to create perturbed tables of continously scaled variables `savings` and `income` also giving the hierarchical structure defined by `sex` by `age`.
@@ -55,11 +55,17 @@ The first step in this approach is to generate or rather set some parameters tha
 ```{r}
 # note:  ptable::pt_create_pTable(...) could also be used as input for argument "pTable"
 pert_params <- ck_create_pert_params(
-  bigN=17312941, 
-  smallN=12,
-  pTable=ck_create_pTable(D=5, V=3, pTableSize=70, type="abs"),
-  sTable=ck_generate_sTable(smallC=12), 
-  mTable=c(0.6,0.4,0.2))
+  bigN = 17312941,
+  smallN = 12,
+  pTable = ck_create_pTable(
+    D = 5,
+    V = 3,
+    pTableSize = 70,
+    type = "abs"
+  ),
+  sTable = ck_generate_sTable(smallC = 12),
+  mTable = c(0.6, 0.4, 0.2)
+  )
 ```
 
 The parameters that have to be specified are:
@@ -74,9 +80,9 @@ This function returns an object of class `pert_params` that is required in the n
 
 ```{r}
 inp <- ck_create_input(
-  dat=dat, 
-  def_rkey=15*nrow(dat), 
-  pert_params=pert_params)
+  dat = dat, 
+  def_rkey = 15 * nrow(dat), 
+  pert_params = pert_params)
 print(class(inp))
 ```
 
@@ -88,28 +94,11 @@ To ensure that the same record keys are computed each and every time for the sam
 The next step is to define hierarchies for each of the classifying variables. There are two ways how the hierarchical structure of these variables (including sub-totals) can be specified. The first way is the same as dimensions have to be specified in package **sdcTable**. We give an example for the categorical variables `age` and `sex` below:
 
 ```{r}
-dim.sex <- data.table(levels=c("@","@@","@@"), codes=c("Total", "male", "female"))
-print(dim.sex)
+dim_sex <- hier_create(root = "Total", nodes = c("male", "female"))
+hier_display(dim_sex)
 
-dim.age <- data.table(levels=c("@",rep("@@", 6)), codes=c("Total", paste0("age_group",1:6)))
-print(dim.age)
-```
-
-Each hierarchy is represented with a `data.frame` or `data.table` holding two variables. The first variables (`levels`) shows the level of a given characteristic that is shown in the second column (`codes`). The levels can be interpreted as `@` being the upmost level (overall total) while all codes with value `@@` contribute to this total. In the (very simple) case of variable `sex` we have one overall total in level 1 (called `Total`) that is computed from two characteristics (`1` and `2`) in level 2. This approach allows to specify quite complex hierarchies in many levels.
-
-An alternative way (available from versions `>=0.9.0`) is to use functions `ck_create_node()`, `ck_add_nodes()` and `ck_delete_nodes()` to build the hierarchies. These functions make use of functionality available in the [**data.tree**](https://cran.r-project.org/package=data.tree) package and return a tree-like structure. **cellKey** will internally convert input provided in such format automatically into the format used in [**sdcTable**](https://cran.r-project.org/package=sdcTable). We now show the alternative way on how to specify the hierarchies for variables `sex`:
-
-```{r}
-dim.sex2 <- ck_create_node(total_lab="Total")
-dim.sex2 <- ck_add_nodes(dim.sex2, reference_node="Total", node_labs=c("male","female"))
-print(dim.sex2)
-```
-
-For variable `age` the process is quite similar:
-```{r}
-dim.age2 <- ck_create_node(total_lab="Total")
-dim.age2 <- ck_add_nodes(dim.age2, reference_node="Total", node_labs=paste0("age_group",1:6))
-print(dim.age2)
+dim_age <- hier_create(root = "Total", nodes = paste0("age_group", 1:6))
+hier_display(dim_age)
 ```
 
 The idea is to create a tree object using `ck_create_node()` and then add (using `ck_add_nodes()`) or delete (with `ck_delete_nodes()`) elements from this hierarchical structure. For more examples have a look at `?ck_manage_hierarchies`.
@@ -119,7 +108,7 @@ All hierarchy specifications must then be combined into a named list where the n
 ```{r}
 # dim.sex was created the "sdcTable-way"
 # dim.age2 was created with the more dynamic way 
-dimList <- list(sex=dim.sex, age=dim.age2)
+dimList <- list(sex = dim_sex, age = dim_age)
 print(dimList)
 ```
 

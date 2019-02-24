@@ -8,7 +8,8 @@
 #' @examples
 #' dat <- ck_create_testdata(); print(str(dat))
 ck_create_testdata <- function() {
-  testdata <- sampling_weight <- savings <- expend <- income <- age <- sex <- NULL
+  testdata <- sampling_weight <- savings <- expend <-  NULL
+  income <- age <- sex <- NULL
 
   data(testdata, envir = environment())
 

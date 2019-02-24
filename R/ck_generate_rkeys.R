@@ -16,27 +16,44 @@
 #' @export
 #' @examples
 #' dat <- ck_create_testdata()
-#' dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=2*nrow(dat), type="abs")
-#' ## rkeys for destatis method
-#' # ck_generate_rkeys(dat=dat, max_digits=6, type="destatis")
-ck_generate_rkeys <- function(dat, max_val=nrow(dat), max_digits=10, type="abs", seed=NULL, verbose=TRUE) {
-  gen_key_abs <- function(N, max_val, seed) {
-    set.seed(seed)
-    rkeys <- sample(1:max_val, size = N, replace = TRUE)
-    rkeys
-  }
-  gen_key_destatis <- function(N, max_digits, seed) {
-    set.seed(seed)
-    rkeys <- round(runif(N, min = 0, max = 1), digits = max_digits)
-    rkeys
-  }
+#'
+#' # for "abs" style parametrisation
+#' dat$rkeys_abs <- ck_generate_rkeys(
+#'   dat = dat,
+#'   max_val = 2*nrow(dat),
+#'   type = "abs"
+#' )
+#'
+#' # compute record keys for "destatis" parametrisation
+#' dat$rkeys_destatis <- ck_generate_rkeys(
+#'   dat = dat,
+#'   max_digits = 6,
+#'   type = "destatis"
+#' )
+ck_generate_rkeys <-
+  function(dat,
+           max_val = nrow(dat),
+           max_digits = 10,
+           type = "abs",
+           seed = NULL,
+           verbose = TRUE) {
+    gen_key_abs <- function(N, max_val, seed) {
+      set.seed(seed)
+      rkeys <- sample(1:max_val, size = N, replace = TRUE)
+      rkeys
+    }
+    gen_key_destatis <- function(N, max_digits, seed) {
+      set.seed(seed)
+      rkeys <- round(runif(N, min = 0, max = 1), digits = max_digits)
+      rkeys
+    }
 
   stopifnot(is_scalar_logical(verbose))
   stopifnot(is_scalar_character(type))
-  stopifnot(type %in% c("abs","destatis", "custom"))
+  stopifnot(type %in% c("abs", "destatis", "custom"))
 
   seed <- ck_create_seed_from_hash(dat)
-  if (type %in% c("abs","custom")) {
+  if (type %in% c("abs", "custom")) {
     if (!is.null(seed)) {
       stopifnot(is_scalar_integerish(seed))
     } else {
@@ -61,7 +78,11 @@ ck_generate_rkeys <- function(dat, max_val=nrow(dat), max_digits=10, type="abs",
         message("Note: Argument 'max_val' is ignored!")
       }
     }
-    rkeys <- gen_key_destatis(N = nrow(dat), max_digits = max_digits, seed = seed)
+    rkeys <- gen_key_destatis(
+      N = nrow(dat),
+      max_digits = max_digits,
+      seed = seed
+    )
   }
   return(rkeys)
 }

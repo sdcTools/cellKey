@@ -37,7 +37,7 @@ creates the required input for \code{\link{perturbTable}}.
 ## define parameters
 bigN <- 20011
 smallN <- 12
-maxV <- 214748365 #(2^31)-1
+maxV <- 214748365 # a large prime number
 dat <- ck_create_testdata()
 dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=maxV)
 mTable <- c(0.6,0.4,0.2)

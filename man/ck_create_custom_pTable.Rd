@@ -23,27 +23,41 @@ To actually modify a custom pTable, function \code{\link{ck_update_custom_pTable
 to be used.
 }
 \examples{
-## initialize
-pT_custom <- ck_create_custom_pTable(pTableSize=50)
+# initialize
+pt_custom <- ck_create_custom_pTable(pTableSize=50)
 
-## modify
-fn1 <- function() { round(rnorm(1, mean=5, sd=10)) }
-fn2 <- function() { rpois(1, lambda=5) }
+# modify
+fn1 <- function() round(rnorm(1, mean = 5, sd = 10))
+fn2 <- function() rpois(1, lambda=5)
 fn3 <- function() return(1)
 fn4 <- function() return(-1)
 
-## fn1 provides perturbation values from a normal distribution
-## with mean=5 and sd=10; we use this for all cells
-pT_custom <- ck_update_custom_pTable(pT_custom, fun=fn1)
+# fn1 provides perturbation values from a normal distribution
+# with mean = 5 and sd = 10
+# we use this for all cells
+pt_custom <- ck_update_custom_pTable(pt_custom, fun = fn1)
 
-## perturbation values from poisson-distribution with lambda=5
-## for some cells (rows)
-pT_custom <- ck_update_custom_pTable(pT_custom, fun=fn2, cols=c(1:5), rows=c(1:20))
+# perturbation values from poisson-distribution with lambda = 5
+# for some cells (rows)
+pt_custom <- ck_update_custom_pTable(
+  pTable = pt_custom,
+  fun = fn2,
+  cols = 1:5,
+  rows = 1:20
+)
 
-## we can of course write functions, that return scalars, such
-## als fn3() (always returns 1) or fn4() (always returns -1)
-pT_custom <- ck_update_custom_pTable(pT_custom, fun=fn3, cols=c(10:20))
-pT_custom <- ck_update_custom_pTable(pT_custom, fun=fn4, cols=c(21:30))
+# we can of course write functions, that return scalars, such
+# as fn3() (always returns 1) or fn4() (always returns -1)
+pt_custom <- ck_update_custom_pTable(
+  pTable = pt_custom,
+  fun = fn3,
+  cols = 10:20
+)
+pt_custom <- ck_update_custom_pTable(
+  pTable = pt_custom,
+  fun = fn4,
+  cols = 21:30
+)
 
 ## see also the example in ?perturbTable
 }

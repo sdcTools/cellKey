@@ -27,7 +27,7 @@
 #' ## define parameters
 #' bigN <- 20011
 #' smallN <- 12
-#' maxV <- 214748365 #(2^31)-1
+#' maxV <- 214748365 # a large prime number
 #' dat <- ck_create_testdata()
 #' dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=maxV)
 #' mTable <- c(0.6,0.4,0.2)
@@ -58,7 +58,7 @@ ck_create_input <- function(dat, def_rkey, pert_params) {
     }
   } else if (is_bare_integerish(def_rkey)) {
     stopifnot(is_scalar_atomic(def_rkey))
-    if (type %in% c("abs","custom")) {
+    if (type %in% c("abs", "custom")) {
       slot(out, "rkeys") <- ck_generate_rkeys(
         dat = dat,
         max_val = def_rkey,

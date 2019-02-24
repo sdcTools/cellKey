@@ -154,22 +154,12 @@
 #'
 #' # define table hierarchies
 #' # variable "sex"
-#' dim.sex <- ck_create_node(total_lab = "Total")
-#' dim.sex <- ck_add_nodes(
-#'   node = dim.sex,
-#'   reference_node = "Total",
-#'   node_labs = c("male", "female")
-#' )
-#' print(dim.sex)
+#' dim.sex <- hier_create(root = "Total", nodes = c("male", "female"))
+#' hier_display(dim.sex)
 #'
 #' # variable "sex"
-#' dim.age <- ck_create_node(total_lab = "Total")
-#' dim.age <- ck_add_nodes(
-#'   node = dim.age,
-#'   reference_node = "Total",
-#'   node_labs = paste0("age_group", 1:6)
-#' )
-#' print(dim.age)
+#' dim.age <- hier_create(root = "Total", nodes = paste0("age_group", 1:6))
+#' hier_display(dim.age)
 #'
 #' # define required inputs
 #' dimList <- list(sex = dim.sex, age = dim.age)
@@ -288,8 +278,13 @@ perturbTable <-
   type <- slot(pert_params, "type")
 
   if (!is.null(numVars)) {
-    if (nrow(slot(pert_params, "sTable")) == 0 || is.null(slot(pert_params, "mTable"))) {
-      stop("perturbation of magnitude tables not possible; sTable or mTable were not specified.\n")
+    nr <- nrow(slot(pert_params, "sTable"))
+    if (nr == 0 || is.null(slot(pert_params, "mTable"))) {
+      e <- c(
+        "Perturbation of magnitude tables is not posible:\n",
+        "`sTable` or `mTable` were not specified"
+      )
+      stop(paste(e, collapse = " "), call. = FALSE)
     }
   }
 
@@ -299,7 +294,11 @@ perturbTable <-
 
   dV <- match(names(dimList), names(dat))
   if (any(is.na(dV))) {
-    stop("check input 'dimList': --> at least one variable was not found in the input dataset\n")
+    e <- c(
+      "Check input `dimList`:",
+      "--> at least one variable was not found in the input data."
+    )
+    stop(paste(e, collapse = " "), call. = FALSE)
   }
 
   freqVar <- "tmpfreqvarfortabulation"
@@ -328,14 +327,22 @@ perturbTable <-
     # checking if all count_vars exist!
     cV <- match(countVars, names(dat))
     if (any(is.na(cV))) {
-      stop("check input 'countVars': --> at least one variable was not found in the input dataset\n")
+      e <- c(
+        "Check input `countVars`:",
+        "at least one variable was not found in the input dataset."
+      )
+      stop(paste(e, collapse = " "), call. = FALSE)
     }
     # check if all count-vars are integerish 0/1
     chk <- sapply(countVars, function(x) {
       all(unique(dat[[x]]) %in% 0:1)
     })
     if (!all(chk)) {
-      stop("check input 'countVars': --> at least one variable is not 0/1 coded!\n")
+      e <- c(
+        "Check input `countVars`:",
+        "--> at least one variable is not 0/1 coded."
+      )
+      stop(paste(e, collapse = " "), call. = FALSE)
     }
 
     # compute weighted version!
@@ -524,7 +531,15 @@ perturbTable <-
   is_weighted <- ifelse(is.null(weightVar), FALSE, TRUE)
 
   # keep variables
-  vv <- c(names(dimList), cols_n, cols_wc, cols_puwc, cols_pwc, cols_wcavg, keepNV)
+  vv <- c(
+    names(dimList),
+    cols_n,
+    cols_wc,
+    cols_puwc,
+    cols_pwc,
+    cols_wcavg,
+    keepNV
+  )
   tab <- tab[, vv, with = FALSE]
   res <- new(
     Class = "pert_table",

@@ -16,13 +16,23 @@ ck_generate_sTable <- function(smallC=12, ...) {
   nc2 <- smallC
 
   # for "large" cells
+  s <- seq(from = 0.3, to = 1.7, by = 0.01)
   dt1 <- as.data.table(
-    matrix(sample(seq(from = 0.3, to = 1.7, by = 0.01), size = nr * nc1, replace = TRUE), nrow = nr, ncol = nc1)
+    matrix(
+      data = sample(s, size = nr * nc1, replace = TRUE),
+      nrow = nr,
+      ncol = nc1
+    )
   )
 
   # for "small" cells
+  s <- seq(from = 0.7, to = 1.3, by = 0.01)
   dt2 <- as.data.table(
-    matrix(sample(seq(from = 0.7, to = 1.3, by = 0.01), size = nr * nc2, replace = TRUE), nrow = nr, ncol = nc2)
+    matrix(
+      data = sample(s, size = nr * nc2, replace = TRUE),
+      nrow = nr,
+      ncol = nc2
+    )
   )
 
   dt <- cbind(dt1, dt2)

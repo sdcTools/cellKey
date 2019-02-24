@@ -32,7 +32,18 @@ creates random record keys by sampling between 1:max_val
 }
 \examples{
 dat <- ck_create_testdata()
-dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=2*nrow(dat), type="abs")
-## rkeys for destatis method
-# ck_generate_rkeys(dat=dat, max_digits=6, type="destatis")
+
+# for "abs" style parametrisation
+dat$rkeys_abs <- ck_generate_rkeys(
+  dat = dat,
+  max_val = 2*nrow(dat),
+  type = "abs"
+)
+
+# compute record keys for "destatis" parametrisation
+dat$rkeys_destatis <- ck_generate_rkeys(
+  dat = dat,
+  max_digits = 6,
+  type = "destatis"
+)
 }

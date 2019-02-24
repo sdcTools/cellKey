@@ -28,7 +28,7 @@
 #' @export
 #'
 #' @examples
-#' ## see examples in perturbTable()
+#' # see examples in perturbTable()
 ck_freq_table <- function(inp, vname=NULL) {
   stopifnot(isS4(inp))
   stopifnot(class(inp) == "pert_table")
@@ -37,16 +37,18 @@ ck_freq_table <- function(inp, vname=NULL) {
 
   avail <- slot(inp, "countVars")
   if (is.null(vname)) {
-    cat("The following variables have been perturbed using the frequency-approach:\n")
-    cat(paste("  -->", avail), sep = "\n")
+    txt <- c(
+      "The following variables have been perturbed",
+      "using the frequency approach:\n",
+      paste("  -->", avail, "\n")
+    )
+    cat(paste(txt, collapse = ""))
     return(invisible(NULL))
   }
   stopifnot(is_scalar_character(vname))
   stopifnot(vname %in% avail)
 
   data <- slot(inp, "tab")
-
-  vv <- slot(inp, "dimVars")
 
   dt <- cbind(
     data[, slot(inp, "dimVars"), with = FALSE],

@@ -11,8 +11,9 @@ Authors@R: c(
     email="bernhard.meindl@statistik.gv.at", 
     role=c("aut", "cre")))
 Description: This packages provides functionality to add noise to or rather perturb statistical tables.
-Depends: R(>= 2.10), data.table
-Imports: rlang, methods, primes, digest, sdcTable (>= 0.23), ptable (>= 0.1.9)
+Depends: R(>= 2.10), data.table, sdcHierarchies (>= 0.16)
+Imports: rlang, methods, primes, digest, sdcTable (>= 0.27), ptable (>= 0.1.9)
+Remotes: github::bernhard-da/sdcHierarchies
 License: GPL-2
 Encoding: UTF-8
 RoxygenNote: 6.1.1

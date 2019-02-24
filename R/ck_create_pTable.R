@@ -21,10 +21,19 @@
 #' @examples
 #' ck_create_pTable(D=5, V=3, js=2, pTableSize=70, type="abs")
 #' ck_create_pTable(D=5, V=3, js=2, pstay=0.5, optim=1, mono=TRUE, typ="destatis")
-ck_create_pTable <- function(D, V, type, js=0, pstay=NULL, optim=1, mono=TRUE, epsilon=1e-07, pTableSize=70) {
-  stopifnot(is_scalar_character(type))
-  type <- tolower(type)
-  stopifnot(type %in% c("abs", "destatis"))
+ck_create_pTable <-
+  function(D,
+           V,
+           type,
+           js = 0,
+           pstay = NULL,
+           optim = 1,
+           mono = TRUE,
+           epsilon = 1e-07,
+           pTableSize = 70) {
+    stopifnot(is_scalar_character(type))
+    type <- tolower(type)
+    stopifnot(type %in% c("abs", "destatis"))
 
   pt_para <- pt_create_pParams(
     D = D,
@@ -36,5 +45,10 @@ ck_create_pTable <- function(D, V, type, js=0, pstay=NULL, optim=1, mono=TRUE, e
     epsilon = epsilon,
     pTableSize = pTableSize
   )
-  return(pt_create_pTable(params = pt_para, type = type, monitoring = FALSE, debugging = FALSE))
+  return(pt_create_pTable(
+    params = pt_para,
+    type = type,
+    monitoring = FALSE,
+    debugging = FALSE
+  ))
 }

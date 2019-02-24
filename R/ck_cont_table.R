@@ -38,7 +38,7 @@ ck_cont_table <- function(inp, vname=NULL, meanBeforeSum=TRUE) {
   stopifnot(isS4(inp))
   stopifnot(class(inp) == "pert_table")
 
-  id <- magnitude <- noise <- numVar <- NULL
+  . <- id <- magnitude <- noise <- numVar <- NULL
   vals.mod <- vals.orig <- vals.pert <- pWMean <- pWSum <- NULL
 
   avail <- slot(inp, "numVars")

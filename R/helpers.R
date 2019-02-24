@@ -15,7 +15,8 @@ check_custom_pTable <- function(pTable) {
     for (x in seq_along(fns)) {
       r <- fns[[x]]()
       if (!is_scalar_integerish(r)) {
-        stop("Function returning a non-scalar integer value found!", call. = FALSE)
+        e <- "Function returns a non-scalar integer value!"
+        stop(e, call. = FALSE)
       }
     }
   }
@@ -30,7 +31,8 @@ bintodec <- function(y) {
   if (!(all(y %in% 0:1))) {
     stop("not a binary sequence")
   }
-  res <- sum(y * 2 ^ ((length(y):1) - 1))
+  p <- (length(y):1) - 1
+  res <- sum(y * 2 ^ p)
   return(res)
 }
 
@@ -125,7 +127,8 @@ get_rowIndex <- function(cKey) {
   r <- bitwXor(r, bytes[17:24])
   r <- bitwXor(r, bytes[25:32])
 
-  row_index <- sum(r * 2 ^ ((length(r):1) - 1)) + 1
+  p <- (length(r):1) - 1
+  row_index <- sum(r * 2 ^ p) + 1
   row_index
 }
 
@@ -145,11 +148,15 @@ lookup <- function(tab, pert_params, ckeyname, freqvarname, type) {
   # lookup perturbation values using the abs-method
   # lookup_abs() is used in perturbTable()
   lookup_abs <- function(tab, pert_params, freqs, cellkeys) {
-    . <- cK <- N <- row_indices <- col_indices <- pert <- NULL
+    cK <- row_indices <- col_indices <- pert <- NULL
 
     row_indices <- sapply(freqs, get_rowIndex)
     col_indices <- sapply(freqs, function(z) {
-      get_colIndex(z, slot(pert_params, "pTableSize"), slot(pert_params, "smallN"))
+      get_colIndex(
+        N = z,
+        pTableSize = slot(pert_params, "pTableSize"),
+        smallN = slot(pert_params, "smallN")
+      )
     })
 
     dt <- data.table(row_indices = row_indices, col_indices = col_indices)
@@ -168,15 +175,23 @@ lookup <- function(tab, pert_params, ckeyname, freqvarname, type) {
 
   # custom pTable with user-defined functions!
   lookup_custom <- function(tab, pert_params, freqs, cellkeys) {
-    . <- cK <- N <- row_indices <- col_indices <- pert <- NULL
+    cK <- row_indices <- col_indices <- pert <- NULL
 
     row_indices <- sapply(freqs, get_rowIndex)
     col_indices <- sapply(freqs, function(z) {
-      get_colIndex(z, slot(pert_params, "pTableSize"), slot(pert_params, "smallN"))
+      get_colIndex(
+        N = z,
+        pTableSize = slot(pert_params, "pTableSize"),
+        smallN = slot(pert_params, "smallN")
+      )
     })
 
     if (any(col_indices < 0)) {
-      stop("we computed negative column indices; please provide a pTable with more columns!\n")
+      e <- c(
+        "Negative column indices were computed.",
+        "Please provide a pTable with more columns."
+      )
+      stop(paste(e, collapse = " "), call. = FALSE)
     }
 
     dt <- data.table(row_indices = row_indices, col_indices = col_indices)
@@ -195,7 +210,7 @@ lookup <- function(tab, pert_params, ckeyname, freqvarname, type) {
   # by Tobias Enderle
   # lookup_destatis() is used in perturbTable()
   lookup_destatis <- function(tab, pert_params, freqs, cellkeys) {
-    sumW <- i <- kum_p_o <- tmpcellkey <- col_indices <- pert  <- NULL
+    i <- kum_p_o <- NULL
     pTable <- slot(pert_params, "pTable")
     symmetry <- max(pTable$i)
 
@@ -330,8 +345,16 @@ identify_topK_cells <- function(dat, rkeys, dimList, pert_params, v=v, type) {
 
     d <- get_direction(z[1:topK, tmprkeyfortabulation], type = type)
     z[1:topK, dir := d]
-    rind <- get_row_index_cont(rec_keys = z[1:topK, tmprkeyfortabulation], type = type)
-    cind <- get_col_index_cont(cKey = calc_cKey(z[, tmprkeyfortabulation], bigN), n = nrow(z), smallC = smallC, type = type)
+    rind <- get_row_index_cont(
+      rec_keys = z[1:topK, tmprkeyfortabulation],
+      type = type
+    )
+    cind <- get_col_index_cont(
+      cKey = calc_cKey(z[, tmprkeyfortabulation], bigN),
+      n = nrow(z),
+      smallC = smallC,
+      type = type
+    )
 
     z[1:topK, noise := unlist(sTable[rind, cind, with = F])]
 
@@ -400,21 +423,6 @@ check_rkeys <- function(rkeys, type) {
     check_rkeys_destatis(rkeys)
   }
   return(TRUE)
-}
-
-# fixes tables with negative counts after perturbation
-# by computing perturbation value times -1
-fix_negative_counts <- function(tab) {
-  neg_counts <- pert <- N <- NULL
-  tab[, neg_counts := FALSE]
-  tab[pert + N < 0, neg_counts := TRUE]
-  if (sum(tab[, neg_counts]) > 0) {
-    warning("after perturbations we got negative counts!\n")
-    warning("for now, we compute pert_val=-1*pert_val for such cases, but this should be fixed in pTables\n")
-    tab[neg_counts == TRUE, pert := -1 * pert]
-  }
-  tab[, neg_counts := NULL]
-  tab
 }
 
 # statistics of a distribution of a numeric vector
