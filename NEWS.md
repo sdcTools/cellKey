@@ -1,3 +1,14 @@
+# cellKey 0.16.0
+- [TODO] use "free" instead of custom format
+- [TODO] use "default" instead of destatis and keep "abs"
+- [TODO] constistent parametrisation
+- [ok] linting
+- [ok] use sdcHierarchies
+- [TODO] check examples and vignette for code style
+- [TODO] 100% code coverage (like sdcHierarchies)
+- [TODO] run profvis on examples; check bottlenecks and improve performance
+- [TODO] rewrite vignette (hier-generation part)
+
 # cellKey 0.15.0
 - new convenience function `ck_vignette()` that displays the package vignette in a browser
 - `ck_generate_rkeys()` got a new argument `seed` that allows to overwrite the default seed computed from a hash of the input dataset.
