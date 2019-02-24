@@ -31,13 +31,17 @@ creates an \code{\link{pert_params-class}} object containing information
 about perturbation parameters
 }
 \examples{
-pTable <- ck_create_pTable(type="destatis", D=5, V=3)
+pTable <- ck_create_pTable(
+  type = "destatis",
+  D = 5,
+  V = 3
+)
 params <- ck_create_pert_params(
-  bigN=17312941,
-  smallN=12,
-  pTable=pTable,
-  sTable=ck_generate_sTable(smallC=12),
-  mTable=c(0.6,0.4,0.2))
+  bigN = 17312941,
+  smallN = 12,
+  pTable = pTable,
+  sTable = ck_generate_sTable(smallC = 12),
+  mTable = c(0.6, 0.4, 0.2))
 print(class(params))
 }
 \seealso{

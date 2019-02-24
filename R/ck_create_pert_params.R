@@ -17,13 +17,17 @@
 #' @export
 #' @seealso \url{https://preview.tinyurl.com/yyleyg48}
 #' @examples
-#' pTable <- ck_create_pTable(type="destatis", D=5, V=3)
+#' pTable <- ck_create_pTable(
+#'   type = "destatis",
+#'   D = 5,
+#'   V = 3
+#' )
 #' params <- ck_create_pert_params(
-#'   bigN=17312941,
-#'   smallN=12,
-#'   pTable=pTable,
-#'   sTable=ck_generate_sTable(smallC=12),
-#'   mTable=c(0.6,0.4,0.2))
+#'   bigN = 17312941,
+#'   smallN = 12,
+#'   pTable = pTable,
+#'   sTable = ck_generate_sTable(smallC = 12),
+#'   mTable = c(0.6, 0.4, 0.2))
 #' print(class(params))
 ck_create_pert_params <-
   function(bigN = NULL,
