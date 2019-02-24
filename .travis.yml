@@ -3,6 +3,11 @@ sudo: false
 cache:
   - packages: true
 
+r_github_packages:
+  - r-lib/covr
+  - r-lib/pkgdown
+  - jimhester/lintr
+
 warnings_are_errors: true
 r_check_args: "--as-cran"
 
@@ -13,9 +18,6 @@ before_install:
 matrix:
   include:
   - r: release
-    r_github_packages:
-    - r-lib/covr
-    - r-lib/pkgdown
     after_success:
     - R CMD INSTALL $PKG_TARBALL
     - Rscript -e 'covr::coveralls()'

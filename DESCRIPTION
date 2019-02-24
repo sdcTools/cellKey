@@ -14,7 +14,8 @@ Description: This packages provides functionality to add noise to or rather pert
 Depends: R(>= 2.10), data.table, sdcHierarchies (>= 0.16)
 Imports: rlang, methods, primes, digest, sdcTable (>= 0.27), ptable (>= 0.1.9)
 Remotes: github::bernhard-da/sdcHierarchies, 
-  github::sdcTools/sdcTable@next
+  github::sdcTools/sdcTable@next,
+  github::sdcTools/ptable
 License: GPL-2
 Encoding: UTF-8
 RoxygenNote: 6.1.1
