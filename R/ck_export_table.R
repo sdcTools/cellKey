@@ -2,29 +2,38 @@
 #' @name ck_export_table
 #' @rdname ck_export_table
 #' @param x input object
-#' @param vname (character) variable name of a perturbed count variable or a continous variable for which the output
-#' should be prepared
+#' @param vname (character) variable name of a perturbed count variable or a
+#' continous variable for which the output should be prepared
 #' @param type (character) specify the type of output. Allowed values are:
 #' \itemize{
-#' \item \code{"both"}: unweighted and weighted original and perturbed counts/values are returned
-#' \item \code{"unweighted"}: unweighted original and perturbed counts/values are returned
-#' \item \code{"weighted"}: weighted and weighted original and perturbed counts/values are returned
+#' \item \code{"both"}: unweighted and weighted original and perturbed
+#' counts/values are returned
+#' \item \code{"unweighted"}: unweighted original and perturbed counts/values
+#' are returned
+#' \item \code{"weighted"}: weighted and weighted original and perturbed
+#' counts/values are returned
 #' }
-#' @return a \code{data.table} containing all dimensional variables and, depending
-#' on the value of argument \code{type} and weather if \code{vname} is a count
-#' or a continuously scaled variable, the following columns: For count-variables:
+#' @return a \code{data.table} containing all dimensional variables and,
+#' depending on the value of argument \code{type} and weather if \code{vname}
+#' is a count or a continuously scaled variable, the following columns: For
+#' count-variables:
 #' \itemize{
-#' \item{UWC}: unweighted counts (argument \code{type} is "both" or "unweighted")
-#' \item{WC}: perturbed unweighted counts (argument \code{type} is "both" or "unweighted")
+#' \item{UWC}: unweighted counts (argument \code{type} is "both" or
+#' "unweighted")
+#' \item{WC}: perturbed unweighted counts (argument \code{type} is "both" or
+#' "unweighted")
 #' \item{pUWC}: weighted counts (argument \code{type} is "both" or "weighted")
-#' \item{pWC}: perturbed weighted counts (argument \code{type} is "both" or "weighted")
+#' \item{pWC}: perturbed weighted counts (argument \code{type} is "both" or
+#' "weighted")
 #' }
 #' For continuously-scaled variables (magnitude tables):
 #' \itemize{
 #' \item{UW}: unweighted sum (argument \code{type} is "both" or "unweighted")
-#' \item{WS}: perturbed unweighted sum (argument \code{type} is "both" or "unweighted")
+#' \item{WS}: perturbed unweighted sum (argument \code{type} is "both" or
+#' "unweighted")
 #' \item{pUW}: weighted sum (argument \code{type} is "both" or "weighted")
-#' \item{pWS}: perturbed weighted sum (argument \code{type} is "both" or "weighted")
+#' \item{pWS}: perturbed weighted sum (argument \code{type} is "both" or
+#' "weighted")
 #' }
 #' @export
 #' @examples

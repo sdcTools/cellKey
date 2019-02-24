@@ -25,7 +25,8 @@ for the random number generator}
 \item{verbose}{(logical) if \code{TRUE}, print additional information}
 }
 \value{
-a numeric vector with \code{N} record keys given a seed depending on \code{dat}
+a numeric vector with \code{N} record keys given a seed depending
+on \code{dat}
 }
 \description{
 creates random record keys by sampling between 1:max_val

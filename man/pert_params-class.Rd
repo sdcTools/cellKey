@@ -10,7 +10,8 @@ An S4 class to represent perturbation parameters for continous tables
 \section{Slots}{
 
 \describe{
-\item{\code{bigN}}{(integer) large prime number used to derive cell keys from record keys}
+\item{\code{bigN}}{(integer) large prime number used to derive
+cell keys from record keys}
 
 \item{\code{smallN}}{(integer) parameter for smallN}
 
@@ -18,16 +19,22 @@ An S4 class to represent perturbation parameters for continous tables
 
 \item{\code{pTableSize}}{(integer) number of columns of \code{pTable}}
 
-\item{\code{mTable}}{numeric vector specifying parameter mTable for continous perturbation}
+\item{\code{mTable}}{numeric vector specifying parameter mTable
+for continous perturbation}
 
-\item{\code{smallC}}{(integer) specifying parameter smallC for continous perturbation
-the row in the lookup-table that was used to get the perturbation value}
+\item{\code{smallC}}{(integer) specifying parameter smallC for
+continous perturbation
+the row in the lookup-table that was used to get the
+perturbation value}
 
-\item{\code{sTable}}{numeric vector specifying parameter sTable for continous perturbation}
+\item{\code{sTable}}{numeric vector specifying parameter sTable
+for continous perturbation}
 
-\item{\code{topK}}{(integer) specifiying the number of units in each cell whose values
+\item{\code{topK}}{(integer) specifiying the number of units in
+each cell whose values
 will be perturbed differently}
 
-\item{\code{type}}{(character) specifying the type of pTable (either 'abs' or 'destatis')}
+\item{\code{type}}{(character) specifying the type of pTable
+(either 'abs' or 'destatis')}
 }}
 

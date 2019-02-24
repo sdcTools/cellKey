@@ -14,8 +14,8 @@
 \item{x}{input object of class \code{\linkS4class{pert_table}}}
 
 \item{vname}{if not \code{NULL}, a character specifying a tabulated count
-or numeric variable for which for all combinations of dimensional variables the
-(perturbed) unweighted and (perturbed) weighted counts are printed.}
+or numeric variable for which for all combinations of dimensional variables
+the (perturbed) unweighted and (perturbed) weighted counts are printed.}
 
 \item{object}{input object of class \code{\linkS4class{pert_table}}}
 }

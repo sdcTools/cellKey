@@ -4,7 +4,8 @@
 #'
 #' @name ck_dat_hc92
 #' @docType data
-#' @format ck_dat_hc92: a data frame with 820000 observations on the following 6 variables.
+#' @format ck_dat_hc92: a data frame with 820000 observations on the
+#' following 6 variables.
 #' \describe{
 #' \item{id}{a numeric identifier}
 #' \item{geo_m}{a character vector defining regions}
@@ -12,7 +13,7 @@
 #' \item{age_m}{a character vector containing age groups}
 #' \item{yae_h}{a character vector}
 #' \item{rkey}{a numeric vector holding record keys}}
-#' @references https://ec.europa.eu/eurostat/cros/content/3-random-noise-cell-key-method_en
+#' @references \url{https://tinyurl.com/y4e9y8p4}
 #' @keywords datasets
 #' @examples
 #' data(ck_dat_hc92)
@@ -21,11 +22,13 @@ NULL
 
 #' A real-world data set on household income and expenditures
 #'
-#' 4580 Obervations in 15 Variables; This dataset also contains sampling weights!
+#' 4580 Obervations in 15 Variables; This dataset also contains
+#' sampling weights.
 #'
 #' @name testdata
 #' @docType data
-#' @format testdata: a data frame with 4580 observations on the following 15 variables.
+#' @format testdata: a data frame with 4580 observations on the following
+#' 15 variables.
 #' \describe{
 #' \item{urbrur}{a numeric vector}
 #' \item{roof}{a numeric vector}
@@ -55,7 +58,8 @@ NULL
 #'
 #' @name ptable_destatis
 #' @docType data
-#' @format ptable_destatis: a data frame with 88 rows on the following 6 variables.
+#' @format ptable_destatis: a data frame with 88 rows on the following
+#' variables.
 #' \describe{
 #' \item{i}{a numeric vector}
 #' \item{j}{a numeric vector}

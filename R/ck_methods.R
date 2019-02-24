@@ -3,8 +3,8 @@
 #' @rdname ck_methods
 #' @param x input object of class \code{\linkS4class{pert_table}}
 #' @param vname if not \code{NULL}, a character specifying a tabulated count
-#' or numeric variable for which for all combinations of dimensional variables the
-#' (perturbed) unweighted and (perturbed) weighted counts are printed.
+#' or numeric variable for which for all combinations of dimensional variables
+#' the (perturbed) unweighted and (perturbed) weighted counts are printed.
 setMethod(f = "print", signature = "pert_table",
 definition = function(x, vname=NULL) {
   if (!is.null(vname)) {

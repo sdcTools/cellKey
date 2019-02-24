@@ -14,8 +14,8 @@ perturbation values. The function must return exactly one number when called
 without parameters.}
 
 \item{cols}{numeric index specifying columns for which the given perturbation
-function should be set. If \code{NULL}, the function will be set on all columns
-of the perturbation table.}
+function should be set. If \code{NULL}, the function will be set on all
+columns of the perturbation table.}
 
 \item{rows}{numeric index specifying rows for which the given perturbation
 function should be set. If \code{NULL}, the function will be set on all

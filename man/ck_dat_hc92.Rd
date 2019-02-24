@@ -4,7 +4,8 @@
 \name{ck_dat_hc92}
 \alias{ck_dat_hc92}
 \title{A real-world data set on persons}
-\format{ck_dat_hc92: a data frame with 820000 observations on the following 6 variables.
+\format{ck_dat_hc92: a data frame with 820000 observations on the
+following 6 variables.
 \describe{
 \item{id}{a numeric identifier}
 \item{geo_m}{a character vector defining regions}
@@ -20,6 +21,6 @@ data(ck_dat_hc92)
 head(ck_dat_hc92)
 }
 \references{
-https://ec.europa.eu/eurostat/cros/content/3-random-noise-cell-key-method_en
+\url{https://tinyurl.com/y4e9y8p4}
 }
 \keyword{datasets}

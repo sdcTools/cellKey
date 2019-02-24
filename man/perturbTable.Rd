@@ -22,10 +22,11 @@ counted and perturbed; must be 0/1 coded.}
 \item{numVars}{(character) vector of numerical variables that
 should be tabulated or \code{NULL}}
 
-\item{by}{\code{NULL} or a scalar character. If specified, it is possible to use a valid variable
-name being 0/1 coded that will be used to create the perturbation of all variables
-specified in \code{numVars} only for subgroups defined by the specified count variable. If the
-variable is not listed in argument \code{countVars} it will be automatically added. If not specified or
+\item{by}{\code{NULL} or a scalar character. If specified, it is possible
+to use a valid variable name being 0/1 coded that will be used to create the
+perturbation of all variables specified in \code{numVars} only for subgroups
+defined by the specified count variable. If the variable is not listed in
+argument \code{countVars} it will be automatically added. If not specified or
 \code{NULL}, the table will be based on all units in the microdata.}
 
 \item{weightVar}{(character) vector of variable holding sampling
@@ -270,5 +271,5 @@ df_inc <- ck_export_table(res, vname = "income", type = "weighted")
 head(df_inc)
 }
 \seealso{
-\url{https://www.unece.org/fileadmin/DAM/stats/documents/ece/ces/ge.46/2013/Topic_1_ABS.pdf}
+\url{https://preview.tinyurl.com/yyleyg48}
 }

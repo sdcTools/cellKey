@@ -10,7 +10,8 @@ An S4 class to represent a perturbed table
 \section{Slots}{
 
 \describe{
-\item{\code{tab}}{a \code{data.table} containing original and pertubed values. The following variables are always present:
+\item{\code{tab}}{a \code{data.table} containing original and
+pertubed values. The following variables are always present:
 \itemize{
 \item \strong{UWC: } unweighted counts
 \item \strong{pUWC: } perturbed unweighted counts
@@ -18,30 +19,37 @@ An S4 class to represent a perturbed table
 \item \strong{pWC: } perturbed weighted counts
 \item \strong{WCavg: } average weight for each cell
 }
-Additionally, for each numerical variable the perturbed variable named {vName.pert} is included in this table.}
+Additionally, for each numerical variable the perturbed variable
+named {vName.pert} is included in this table.}
 
-\item{\code{count_modifications}}{a \code{data.table} with 3 columns (\code{row_indices}, \code{col_indices}
-and \code{applied_perturbation}) that contains information for each cell, where the applied perturbation
+\item{\code{count_modifications}}{a \code{data.table} with 3 columns
+(\code{row_indices}, \code{col_indices}
+and \code{applied_perturbation}) that contains information
+for each cell, where the applied perturbation
 was extracted from the perturbation table (useful for debugging)}
 
-\item{\code{numvars_modifications}}{(list) containing for each numerical variable
-that was tabulated a list element with a \code{data.table} showing which
-values have been modified prior to tabulation.}
+\item{\code{numvars_modifications}}{(list) containing for each
+numerical variable that was tabulated a list element with
+a \code{data.table} showing which values have been modified
+prior to tabulation.}
 
-\item{\code{dimVars}}{(character) vector of variable names used to define the table structure}
+\item{\code{dimVars}}{(character) vector of variable names used to define
+the table structure}
 
-\item{\code{numVars}}{(character) variable names of numeric variables that have been tabulated}
+\item{\code{numVars}}{(character) variable names of numeric variables
+that have been tabulated}
 
-\item{\code{countVars}}{(character) vector containing names of variables that have been tabulated
-using the frequency approach}
+\item{\code{countVars}}{(character) vector containing names of variables
+that have been tabulated using the frequency approach}
 
-\item{\code{by}}{(character) variable name (that must also be listed in \code{countVars}
-and that is used to create perturbed tables for \code{numVars} given the groups defined
-in \code{by}}
+\item{\code{by}}{(character) variable name (that must also be listed
+in \code{countVars} and that is used to create perturbed tables
+for \code{numVars} given the groups defined in \code{by}}
 
 \item{\code{is_weighted}}{(logical) TRUE if sampling weights have been used}
 
-\item{\code{type}}{(character) either \code{"abs"} or \code{"destatis"} depending on the format
+\item{\code{type}}{(character) either \code{"abs"} or \code{"destatis"}
+depending on the format
 of the perturbation table that was used.}
 }}
 

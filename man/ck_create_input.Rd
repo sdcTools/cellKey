@@ -17,11 +17,12 @@ If it is a number, we have to distinguish two cases:
 \itemize{
 \item The perturbation table is provided in "abs"-format:
 
-\code{def_rkey} is used as upper bound to compute record keys between 1 and \code{def_rkey}
+\code{def_rkey} is used as upper bound to compute record keys between
+1 and \code{def_rkey}
 \item The perturbation table is provided in "destatis"-format:
 
-\code{def_rkey} is used to specify the maximum number of digits for record keys
-that are generated from a uniform distribution between 0 and 1.
+\code{def_rkey} is used to specify the maximum number of digits for
+record keys that are generated from a uniform distribution between 0 and 1.
 }}
 
 \item{pert_params}{information on perturbation parameters created

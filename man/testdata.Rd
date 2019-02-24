@@ -4,7 +4,8 @@
 \name{testdata}
 \alias{testdata}
 \title{A real-world data set on household income and expenditures}
-\format{testdata: a data frame with 4580 observations on the following 15 variables.
+\format{testdata: a data frame with 4580 observations on the following
+15 variables.
 \describe{
 \item{urbrur}{a numeric vector}
 \item{roof}{a numeric vector}
@@ -22,7 +23,8 @@
 \item{sampling_weight}{a numeric vector}
 \item{household_weights}{a numeric vector}}}
 \description{
-4580 Obervations in 15 Variables; This dataset also contains sampling weights!
+4580 Obervations in 15 Variables; This dataset also contains
+sampling weights.
 }
 \examples{
 data(testdata)

@@ -1,44 +1,48 @@
 #' ck_cnt_measures
 #'
-#' compute utility/information loss measures for count variables of a perturbed table.
+#' compute utility/information loss measures for count variables
+#' of a perturbed table.
 #' @param x input object of class \code{\linkS4class{pert_table}}
 #' @param vname a specific tabulated count variable
 #' @return a \code{list} containing the following elements:
 #' \itemize{
-#' \item \strong{measures}: a \code{data.table} containing measures of the distribution
-#' of three different distances between original and perturbed values of the unweighted
-#' counts. The three distances are
+#' \item \strong{measures}: a \code{data.table} containing measures
+#' of the distribution of three different distances between original
+#' and perturbed values of the unweighted counts. The three distances are:
 #' \itemize{
 #' \item absolute distance (column \code{vals_abs}), \code{D1}
 #' \item relative distance (column \code{vals_rel}), \code{D2}
 #' \item absolute distance between square-roots of original and perturbed
 #' values (column \code{vals_r}), \code{D3}
 #' }
-#' \item \strong{cumDistrA}: a \code{data.table} with 3 columns showing the
-#' cummulative sum of absolute distances
+#' \item \strong{cumDistrA}: a \code{data.table} with 3 columns
+#' showing the cummulative sum of absolute distances
 #' \itemize{
 #' \item \code{kat}: possible values for distance \code{D1}
-#' \item \code{val_abs}: number of records smaller or equal the value in column \code{kat}
-#' \item \code{prop_abs}: proportion or records smaller or equal the value in column \code{kat}
+#' \item \code{val_abs}: number of records smaller or equal the
+#' value in column \code{kat}
+#' \item \code{prop_abs}: proportion or records smaller or equal
+#' the value in column \code{kat}
 #' }
-#' \item \strong{cumDistrB}: a \code{data.table} with 5 columns which show the cummulative
-#' distributions for distances \code{D2} (columns \code{val_rel} and \code{prop_rel})
-#' and \code{D3} (columns \code{val_r} and \code{prop_r}) for a set of intervals shown
-#' in column \code{kat}.
+#' \item \strong{cumDistrB}: a \code{data.table} with 5 columns
+#' which show the cummulative distributions for distances
+#' \code{D2} (columns \code{val_rel} and \code{prop_rel})
+#' and \code{D3} (columns \code{val_r} and \code{prop_r}) for a set
+#' of intervals shown in column \code{kat}.
 #' \itemize{
 #' \item \code{kat}: a specific interval
-#' \item \code{val_rel}: number of records smaller or equal the value in column \code{kat} for
-#' distance \code{D2}
-#' \item \code{prop_rel} proportion of records smaller or equal the value in column \code{kat} for
-#' distance \code{D2}
-#' \item \code{val_r}: number of records smaller or equal the value in column \code{kat} for
-#' distance \code{D3}
-#' \item \code{prop_r}: proportion of records smaller or equal the value in column \code{kat} for
-#' distance \code{D3}
+#' \item \code{val_rel}: number of records smaller or equal the
+#' value in column \code{kat} for distance \code{D2}
+#' \item \code{prop_rel} proportion of records smaller or equal the
+#' value in column \code{kat} for distance \code{D2}
+#' \item \code{val_r}: number of records smaller or equal the value
+#' in column \code{kat} for distance \code{D3}
+#' \item \code{prop_r}: proportion of records smaller or equal the
+#' value in column \code{kat} for distance \code{D3}
 #' }
 #' \item \strong{false_zero}: number of cells that were perturbed to zero
-#' \item \strong{false_positives}: number of cells that were initially zero but
-#' have been perturbed to a number different from zero
+#' \item \strong{false_positives}: number of cells that were initially
+#' zero but have been perturbed to a number different from zero
 #' }
 #' @export
 #' @examples
@@ -60,41 +64,46 @@ ck_cnt_measures <- function(x, vname="Total") {
 
 #' ck_cnt_measures_basic
 #'
-#' compute utility/information loss measures two numeric vectors (original and perturbed)
+#' compute utility/information loss measures two numeric vectors
+#' (original and perturbed)
 #' @param orig a numeric vector holding original values
 #' @param pert a numeric vector holding perturbed values
 #' @return a \code{list} containing the following elements:
 #' \itemize{
-#' \item \strong{measures}: a \code{data.table} containing measures of the distribution
-#' of three different distances between original and perturbed values of the unweighted
-#' counts. The three distances are
+#' \item \strong{measures}: a \code{data.table} containing measures
+#' of the distribution of three different distances between
+#' original and perturbed values of the unweighted counts.
+#' The three distances are:
 #' \itemize{
 #' \item absolute distance (column \code{vals_abs}), \code{D1}
 #' \item relative distance (column \code{vals_rel}), \code{D2}
 #' \item absolute distance between square-roots of original and perturbed
 #' values (column \code{vals_r}), \code{D3}
 #' }
-#' \item \strong{cumDistrA}: a \code{data.table} with 3 columns showing the
-#' cummulative sum of absolute distances
+#' \item \strong{cumDistrA}: a \code{data.table} with 3 columns
+#' showing the cummulative sum of absolute distances
 #' \itemize{
 #' \item \code{kat}: possible values for distance \code{D1}
-#' \item \code{val_abs}: number of records smaller or equal the value in column \code{kat}
-#' \item \code{prop_abs}: proportion or records smaller or equal the value in column \code{kat}
+#' \item \code{val_abs}: number of records smaller or equal the
+#' value in column \code{kat}
+#' \item \code{prop_abs}: proportion or records smaller or equal
+#' the value in column \code{kat}
 #' }
-#' \item \strong{cumDistrB}: a \code{data.table} with 5 columns which show the cummulative
-#' distributions for distances \code{D2} (columns \code{val_rel} and \code{prop_rel})
-#' and \code{D3} (columns \code{val_r} and \code{prop_r}) for a set of intervals shown
-#' in column \code{kat}.
+#' \item \strong{cumDistrB}: a \code{data.table} with 5 columns
+#' which show the cummulative distributions for distances
+#' \code{D2} (columns \code{val_rel} and \code{prop_rel}) and
+#' \code{D3} (columns \code{val_r} and \code{prop_r}) for a set
+#' of intervals shown in column \code{kat}.
 #' \itemize{
 #' \item \code{kat}: a specific interval
-#' \item \code{val_rel}: number of records smaller or equal the value in column \code{kat} for
-#' distance \code{D2}
-#' \item \code{prop_rel} proportion of records smaller or equal the value in column \code{kat} for
-#' distance \code{D2}
-#' \item \code{val_r}: number of records smaller or equal the value in column \code{kat} for
-#' distance \code{D3}
-#' \item \code{prop_r}: proportion of records smaller or equal the value in column \code{kat} for
-#' distance \code{D3}
+#' \item \code{val_rel}: number of records smaller or equal
+#' the value in column \code{kat} for distance \code{D2}
+#' \item \code{prop_rel} proportion of records smaller or
+#' equal the value in column \code{kat} for distance \code{D2}
+#' \item \code{val_r}: number of records smaller or equal
+#' the value in column \code{kat} for distance \code{D3}
+#' \item \code{prop_r}: proportion of records smaller or equal the
+#' value in column \code{kat} for distance \code{D3}
 #' }
 #' \item \strong{false_zero}: number of cells that were perturbed to zero
 #' \item \strong{false_positives}: number of cells that were initially zero but

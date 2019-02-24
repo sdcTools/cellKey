@@ -1,14 +1,17 @@
 #' Create a custom pTable
 #'
-#' This function allows to create a custom perturbation table (pTable) that contains 256 rows and
-#' \code{pTableSize} columns. Each cell of this perturbation table must be a function that returns
-#' a single number. By default, each cell gets initialized with a function that always returns
-#' \code{0}, so no perturbation would be applied.
+#' This function allows to create a custom perturbation table (pTable) that
+#' contains 256 rows and
+#' \code{pTableSize} columns. Each cell of this perturbation table must be a
+#' function that returns a single number. By default, each cell gets
+#' initialized with a function that always returns \code{0}, so no perturbation
+#' would be applied.
 #'
-#' To actually modify a custom pTable, function \code{\link{ck_update_custom_pTable}} needs
-#' to be used.
+#' To actually modify a custom pTable, function
+#' \code{\link{ck_update_custom_pTable}} needs to be used.
 #'
-#' @param pTableSize an integer specifying the number of columns for the perturbation table
+#' @param pTableSize an integer specifying the number of columns for
+#' the perturbation table
 #'
 #' @return an object of class \code{ptable} defined in the ptable-package.
 #' @export
@@ -97,8 +100,8 @@ ck_create_custom_pTable <- function(pTableSize=70) {
 #' perturbation values. The function must return exactly one number when called
 #' without parameters.
 #' @param cols numeric index specifying columns for which the given perturbation
-#' function should be set. If \code{NULL}, the function will be set on all columns
-#' of the perturbation table.
+#' function should be set. If \code{NULL}, the function will be set on all
+#' columns of the perturbation table.
 #' @param rows numeric index specifying rows for which the given perturbation
 #' function should be set. If \code{NULL}, the function will be set on all
 #' rows of the perturbation table.

@@ -7,20 +7,23 @@
 ck_create_custom_pTable(pTableSize = 70)
 }
 \arguments{
-\item{pTableSize}{an integer specifying the number of columns for the perturbation table}
+\item{pTableSize}{an integer specifying the number of columns for
+the perturbation table}
 }
 \value{
 an object of class \code{ptable} defined in the ptable-package.
 }
 \description{
-This function allows to create a custom perturbation table (pTable) that contains 256 rows and
-\code{pTableSize} columns. Each cell of this perturbation table must be a function that returns
-a single number. By default, each cell gets initialized with a function that always returns
-\code{0}, so no perturbation would be applied.
+This function allows to create a custom perturbation table (pTable) that
+contains 256 rows and
+\code{pTableSize} columns. Each cell of this perturbation table must be a
+function that returns a single number. By default, each cell gets
+initialized with a function that always returns \code{0}, so no perturbation
+would be applied.
 }
 \details{
-To actually modify a custom pTable, function \code{\link{ck_update_custom_pTable}} needs
-to be used.
+To actually modify a custom pTable, function
+\code{\link{ck_update_custom_pTable}} needs to be used.
 }
 \examples{
 # initialize

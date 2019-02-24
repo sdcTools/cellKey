@@ -4,7 +4,8 @@
 \name{ptable_destatis}
 \alias{ptable_destatis}
 \title{A perturbation table based on DESTATIS format}
-\format{ptable_destatis: a data frame with 88 rows on the following 6 variables.
+\format{ptable_destatis: a data frame with 88 rows on the following
+variables.
 \describe{
 \item{i}{a numeric vector}
 \item{j}{a numeric vector}

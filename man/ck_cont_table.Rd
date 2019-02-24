@@ -7,27 +7,34 @@
 ck_cont_table(inp, vname = NULL, meanBeforeSum = TRUE)
 }
 \arguments{
-\item{inp}{an object of class \code{\linkS4class{pert_table}} generated with \code{\link{perturbTable}}}
+\item{inp}{an object of class \code{\linkS4class{pert_table}} generated
+with \code{\link{perturbTable}}}
 
-\item{vname}{either \code{NULL} or the name of a variable for which a perturbed
-frequeny table has been generated. If \code{NULL}, the function prints the variables for
-which a perturbation has been applied.}
+\item{vname}{either \code{NULL} or the name of a variable for which a
+perturbed frequeny table has been generated. If \code{NULL}, the function
+prints the variables for which a perturbation has been applied.}
 
-\item{meanBeforeSum}{(logical) defines if the weighted means should be computed
-before weighted sums or the other way round.}
+\item{meanBeforeSum}{(logical) defines if the weighted means should
+be computed before weighted sums or the other way round.}
 }
 \value{
-a \code{data.table} containing all combinations of the dimensional variables in
-the first n columns. Afterwards, the following columns are shown:
+a \code{data.table} containing all combinations of the dimensional
+variables in the first n columns. Afterwards, the following columns
+are shown:
 \itemize{
-\item \code{UW_{vname}}: unweighted sum for variable specified in \code{vname}
+\item \code{UW_{vname}}: unweighted sum for variable specified in
+\code{vname}
 \item \code{pUW_{vname}}: perturbed unweighted sum for given variable
 \item \code{WS_{vname}}: weighted sum for given variable
-\item \code{pWS_{vname}}: perturbed weighted sum for variable specified in \code{vname}
-\item \code{pWM_{vname}}: perturbed weighted mean for variable specified in \code{vname}
+\item \code{pWS_{vname}}: perturbed weighted sum for variable specified
+in \code{vname}
+\item \code{pWM_{vname}}: perturbed weighted mean for variable specified
+in \code{vname}
 }
-The return argument has a attribute called "modifications" which contains a \code{data.table} holding all
-the specific perturbation on unit-level for reproducibility. This can be extracted using \code{attributes(ck_cont_table(...), "modifications")}.
+The return argument has a attribute called "modifications" which contains a
+\code{data.table} holding all the specific perturbation on unit-level for
+reproducibility. This can be extracted using
+\code{attributes(ck_cont_table(...), "modifications")}.
 .
 }
 \description{
@@ -36,12 +43,15 @@ this function allows to return perturbed magnitude-tables from oututs of
 using \code{\link{perturbTable}}.
 }
 \details{
-The computation of the perturbed weighted mean and the perturbed weighted sum depends
-on argument \code{meanBeforeSum}. If \code{meanBeforeSum} is \code{TRUE}, the perturbed mean is computed first
-and the perturbed sum is derived from the perturbed mean an the perturbed weighted counts. If
-\code{meanBeforeSum} is \code{FALSE}, the computation is the other way round. Details are available in the ABS
-paper \emph{Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers
-at the Australian Bureau of Statistics} (Thompson, Broadfoot, Elazar).
+The computation of the perturbed weighted mean and the perturbed
+weighted sum depends on argument \code{meanBeforeSum}. If
+\code{meanBeforeSum} is \code{TRUE}, the perturbed mean is computed first
+and the perturbed sum is derived from the perturbed mean an the perturbed
+weighted counts. If \code{meanBeforeSum} is \code{FALSE}, the computation
+is the other way round. Details are available in the ABS paper
+\emph{Methodology for the Automatic Confidentialisation of Statistical
+Outputs from Remote Servers at the Australian Bureau of Statistics}
+(Thompson, Broadfoot, Elazar).
 }
 \examples{
 # see examples in perturbTable()
