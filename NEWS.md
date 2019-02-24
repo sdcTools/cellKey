@@ -7,7 +7,7 @@
 - [TODO] check examples and vignette for code style
 - [TODO] 100% code coverage (like sdcHierarchies)
 - [TODO] run profvis on examples; check bottlenecks and improve performance
-- [TODO] rewrite vignette (hier-generation part)
+- [ok] rewrite vignette (hier-generation part)
 
 # cellKey 0.15.0
 - new convenience function `ck_vignette()` that displays the package vignette in a browser

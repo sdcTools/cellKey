@@ -26,7 +26,7 @@ This package implements methods to provide perturbation for statistical tables. 
 
 In the **cellKey** package it is possible to make use of two different ways on how to pertub multidimensional count tables - methods `abs` and `destatis`. For both of them methods are provided to generate suitable record keys using function `ck_generate_rkeys()`. For the perturbation of magnitude tables, for now only the method developed by the ABS is supported. Using sha1-checksums on the input datasets, we can make sure that the same record keys are generated whenever the same input data set is used for which record keys should be generated. However, it is also possible of course to use already pre-generated record keys available as variable in the microdata set.
 
-The package allows to make use of sampling weights. Thus, both weighted and unweighted count and magnitude tables can be perturbed. The hierarchical structure of the variables spanning the table can be arbitrarily complex. To generate these hierarchies, the **cellKey** packages imports functionality from the [**sdcHierarchies**](https://cran.r-project.org/package=sdcHierarchies) package that allows to define these hierarchies in an intuitive way. The vignette can be [**accessed online**](https://bernhard-da.github.io/sdcHierarchies/articles/usage.html). The main functions required to define a hierarchy are `hier_create()`, `hier_add()` and `hier_delete()`. Finally, auxiliary methods are provided that allow to extract valueable information from objects created by the main function of this package `perturbTable()`. For example `mod_counts()` returns a data object showing for each cell the perturbation value and where it was found in the lookup table.
+The package allows to make use of sampling weights. Thus, both weighted and unweighted count and magnitude tables can be perturbed. The hierarchical structure of the variables spanning the table can be arbitrarily complex. To generate these hierarchies, the **cellKey** packages imports functionality from the [**sdcHierarchies**](https://cran.r-project.org/package=sdcHierarchies) package that allows to define these hierarchies in an intuitive way. Finally, auxiliary methods are provided that allow to extract valueable information from objects created by the main function of this package `perturbTable()`. For example `mod_counts()` returns a data object showing for each cell the perturbation value and where it was found in the lookup table.
 
 What is left is of course identifying bugs and issues and also to optimize performance of the package as well as to include some real world examples, eg. census tables.
 
@@ -91,7 +91,7 @@ We needed to specify parameter `def_rkey`. In this argument, users may either sp
 To ensure that the same record keys are computed each and every time for the same data set, a seed based on the sha1-hash of the input dataset is computed and used before drawing the record keys.
 
 ### Specifying dimensions
-The next step is to define hierarchies for each of the classifying variables. There are two ways how the hierarchical structure of these variables (including sub-totals) can be specified. The first way is the same as dimensions have to be specified in package **sdcTable**. We give an example for the categorical variables `age` and `sex` below:
+The next step is to define hierarchies for each of the classifying variables. **cellKey** requires that the dimensions are specified by using functionality from package [**sdcHierarchies**](https://cran.r-project.org/package=sdcHierarchies). The vignette of this package that shows how to use this package can be [**accessed online**](https://bernhard-da.github.io/sdcHierarchies/articles/usage.html). The main functions required to define a hierarchy are `hier_create()`, `hier_add()` and `hier_delete()`. We now show how to create the two hierarchies for the categorical variables `age` and `sex`:
 
 ```{r}
 dim_sex <- hier_create(root = "Total", nodes = c("male", "female"))
@@ -101,13 +101,9 @@ dim_age <- hier_create(root = "Total", nodes = paste0("age_group", 1:6))
 hier_display(dim_age)
 ```
 
-The idea is to create a tree object using `ck_create_node()` and then add (using `ck_add_nodes()`) or delete (with `ck_delete_nodes()`) elements from this hierarchical structure. For more examples have a look at `?ck_manage_hierarchies`.
-
-All hierarchy specifications must then be combined into a named list where the names of the list elements contain variable names of the input data set and the elements the data objects that hold the hierarchy specification. This is why the list elements of `dimList` have to be named `sex` and `age`. Please note that it is perfectly possible to "mix" definitions of the inputs.
+The idea is to create a tree object using `hier_create()` and then add (using `hier_add()`) or delete (using `hier_delete()`) elements from this hierarchical structure. All hierarchy specifications must then be combined into a named list where the names of the list refer to variable names of the input data set and the elements are data objects created above that contain the hierarchy specification. This is why the list elements of `dimList` have to be named `sex` and `age`.
 
 ```{r}
-# dim.sex was created the "sdcTable-way"
-# dim.age2 was created with the more dynamic way 
 dimList <- list(sex = dim_sex, age = dim_age)
 print(dimList)
 ```
@@ -124,8 +120,13 @@ It is now possible to finally compute perturbed tables using function `perturbTa
 If both `countVars` and `numVars` are not specified, the perturbed count table based on all units is computed. Below it is shown, how a count table using existing sampling weights (available in variable `sampling_weight` in the input data) can be computed:
 
 ```{r}
-tab1 <- perturbTable(inp=inp, dimList=dimList, countVars=c("cnt_males", "cnt_highincome"), 
-  weightVar="sampling_weight", numVars=NULL)
+tab1 <- perturbTable(
+  inp = inp,
+  dimList = dimList,
+  countVars = c("cnt_males", "cnt_highincome"),
+  weightVar = "sampling_weight",
+  numVars = NULL
+)
 print(tab1) # custom print method
 # print(tab1, vname="Total")
 ```
@@ -134,7 +135,7 @@ Applying method `ck_freq_table()` to an output object of `perturbTable()` return
 
 ```{r}
 ck_freq_table(tab1) # show which tables have been generated
-ck_freq_table(tab1, vname="cnt_males")
+ck_freq_table(tab1, vname = "cnt_males")
 ```
 
 In the example above we see, that all cells containing `sex=="female" no perturbation has been applied. The variables on this data set (additional to the dimensional variables) are:
@@ -148,7 +149,7 @@ In the example above we see, that all cells containing `sex=="female" no perturb
 Function `ck_cnt_measures()` applied to the resulting object of `perturbTable()` allows to compute information loss measures for perturbed count variables. Its application is as simple as:
 
 ```{r}
-infoloss <- ck_cnt_measures(tab1, vname="Total")
+infoloss <- ck_cnt_measures(tab1, vname = "Total")
 ```
 
 This function returns a list with the following elements:
@@ -165,14 +166,19 @@ This function returns a list with the following elements:
 The next example shows how to create a perturbed table of continuous data using sampling weights. For this case, we need to specify parameter `numVars` in `perturbTable()`. Note that it is possible, to specify multiple variables at once.
 
 ```{r}
-tab2 <- perturbTable(inp=inp, dimList=dimList,  weightVar="sampling_weight", 
-  countVars=c("cnt_males", "cnt_highincome"), numVars=c("savings","income"))
+tab2 <- perturbTable(
+  inp = inp, 
+  dimList = dimList,  
+  weightVar = "sampling_weight", 
+  countVars = c("cnt_males", "cnt_highincome"), 
+  numVars = c("savings","income")
+)
 ```
 
 To get information about magnitute tables, function `ck_cont_table()` can be applied to the output of `perturbTable()`. In this case, we can set an additional argument `meanBeforeSum` that is either `TRUE` or `FALSE` and specifies, how the perturbed cell values are computed. Details on this method can be found in *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar) in Section *6.3*.
 
 ```{r}
-p_income <- ck_cont_table(tab2, vname="income", meanBeforeSum=TRUE)
+p_income <- ck_cont_table(tab2, vname = "income", meanBeforeSum = TRUE)
 p_income
 ```
 
@@ -195,22 +201,26 @@ We see that this `data.table` has the following variables:
 An interesting feature is that one can optionally specify argument `by` in `perturbTable()` which is relevant for the computation of perturbed magnitude tables. The idea is that it allows to compute magnitude tables restricted to some units in the data set. In the following example we show how to create a perturbed table of `savings` for only those observations that have high income (variable `cnt_highincome`).
 
 ```{r}
-tab3 <- perturbTable(inp=inp, dimList=dimList,  
-  weightVar="sampling_weight", 
-  numVars=c("savings"), by="cnt_highincome")
+tab3 <- perturbTable(
+  inp = inp, 
+  dimList = dimList,  
+  weightVar = "sampling_weight", 
+  numVars = c("savings"), 
+  by = "cnt_highincome"
+)
 ```
 
 We note that if the by_variable has been specified, it will be automatically added to `countVars` internally, so we can also use `ck_freq_table()` with the by-variable even it was not explicitely specified in `countVars`.
 
 ```{r}
 # frequency table of the by-variable
-ck_freq_table(tab3, vname="cnt_highincome")
+ck_freq_table(tab3, vname = "cnt_highincome")
 ```
 
 To show the table of variable `savings` we use again `ck_cont_table()`.
  
 ```{r}
-p_savings <- ck_cont_table(tab3, vname="savings", meanBeforeSum=TRUE)
+p_savings <- ck_cont_table(tab3, vname = "savings", meanBeforeSum = TRUE)
 p_savings
 ```
  
@@ -220,7 +230,7 @@ From the results we can observe that there are no high-income units in the highe
 Using function `ck_export_table()` which can be applied to outputs of `perturbTable()`. This functions returns a simple `data.frames` containing all cells and perturbed (weighted) values for a given perturbed variables. We could apply it to the `Total`-variable as follows
 
 ```{r}
-dt_tot <- ck_export_table(tab3, vname="Total", type="both")
+dt_tot <- ck_export_table(tab3, vname = "Total", type = "both")
 head(dt_tot)
 ```
 
@@ -245,7 +255,7 @@ Finally we note that there are `print` and `summary` methods implemented for obj
 
 ```{r}
 print(tab1)
-print(tab1, vname="Total")
+print(tab1, vname = "Total")
 summary(tab1)
 ```
 
