@@ -36,7 +36,6 @@
 
 # compute cell key from record keys
 .calc_cellkey <- function(rec_keys, bigN) {
-  #sum(as.numeric(rec_keys)) %% bigN
   sum(rec_keys) %% bigN
 }
 
