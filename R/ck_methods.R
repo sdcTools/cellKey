@@ -108,7 +108,7 @@ definition = function(object) {
   }
 
   info_nums <- mod_numvars(object)
-  num_info <- num_ratios <- NULL
+  num_info <- NULL
   if (nrow(info_nums) > 0) {
     num_info <- info_nums[, as.list(get_distr_vals(vals.pert)), by = "numVar"]
     cat("\nPerturbation statistics on numerical variables:\n")

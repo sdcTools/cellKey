@@ -1,6 +1,8 @@
-#' ck_create_pTable
+#' Create a perturbation table
 #'
-#' generates perturbation tables using functionality from package ptable
+#' This function allows to generate generates perturbation tables using
+#' functionality from package "ptable".
+#'
 #' @param D perturbation parameter for maximum perturbation (scalar or vector)
 #' @param V perturbation parameter for variance (scalar)
 #' @param js treshold value for blocking of small frequencies (i.e. there
@@ -23,7 +25,7 @@
 #' is available from the respective help-pages of these functions.
 #' @examples
 #' # "abs" style
-#' ck_create_pTable(
+#' ck_create_ptab(
 #'   D = 5,
 #'   V = 3,
 #'   js = 2,
@@ -32,7 +34,7 @@
 #' )
 #'
 #' # "destatis" style
-#' ck_create_pTable(
+#' ck_create_ptab(
 #'   D = 5,
 #'   V = 3,
 #'   js = 2,
@@ -41,7 +43,7 @@
 #'   mono = TRUE,
 #'   typ = "destatis"
 #' )
-ck_create_pTable <-
+ck_create_ptab <-
   function(D,
            V,
            type,

@@ -42,13 +42,13 @@
 #' )
 #'
 #' # creating test perturbation in "destatis", "abs" and "free" format
-#' ptab_abs <- ck_create_pTable(
+#' ptab_abs <- ck_create_ptab(
 #'   D = 5,
 #'   V = 3,
 #'   pTableSize = 70,
 #'   type = "abs"
 #' )
-#' ptab_destatis <- ck_create_pTable(
+#' ptab_destatis <- ck_create_ptab(
 #'   D = 5,
 #'   V = 3,
 #'   type = "destatis"
@@ -101,7 +101,7 @@
 #' )
 #'
 #' # set up perturbation tables and parameters for numerical variables
-#' sTable <- ck_generate_sTable(smallC = 12)
+#' sTable <- ck_generate_stab(small_c = 12)
 #' mTable <- c(0.6, 0.4, 0.2)
 #'
 #' # creating perturbation objects that are later used

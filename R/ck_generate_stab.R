@@ -1,19 +1,20 @@
-#' ck_generate_sTable
+#' Generate a perturbation table for numerical variables
 #'
-#' a perturbation table (for large and small cells) for testing purposes
+#' This function allows to create a perturbation table (differently for for
+#' large and small cell values) for testing purposes.
 #'
-#' @param smallC number of columns for the perturbation table for large cells
+#' @param small_c number of columns for the perturbation table for large cells
 #' @param ...  additional parameters, not yet used
 #'
-#' @return a \code{data.table} with 256 rows and 32+\code{smallC} columns
+#' @return a \code{data.table} with 256 rows and 32 + \code{small_c} columns
 #' @export
 #'
 #' @examples
-#' ck_generate_sTable(smallC=10)
-ck_generate_sTable <- function(smallC=12, ...) {
+#' ck_generate_stab(small_c = 10)
+ck_generate_stab <- function(small_c=12, ...) {
   nr <- 256
   nc1 <- 32
-  nc2 <- smallC
+  nc2 <- small_c
 
   # for "large" cells
   s <- seq(from = 0.3, to = 1.7, by = 0.01)

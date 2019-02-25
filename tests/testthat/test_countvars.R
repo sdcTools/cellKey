@@ -13,7 +13,7 @@ dat$rkeys <-
     verbose = TRUE
   )
 
-pTable <- ck_create_pTable(
+pTable <- ck_create_ptab(
   D = 5,
   V = 3,
   pTableSize = 70,

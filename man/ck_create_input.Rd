@@ -2,7 +2,7 @@
 % Please edit documentation in R/ck_create_input.R
 \name{ck_create_input}
 \alias{ck_create_input}
-\title{ck_create_input}
+\title{Create input for \code{\link{perturb_table}}}
 \usage{
 ck_create_input(dat, def_rkey, pert_params)
 }
@@ -32,7 +32,7 @@ using \code{\link{ck_create_pert_params}}}
 an object of class \code{\link{pert_inputdat-class}}
 }
 \description{
-creates the required input for \code{\link{perturb_table}}.
+This function creates the required input for \code{\link{perturb_table}}.
 }
 \examples{
 ## define parameters
@@ -40,15 +40,29 @@ bigN <- 20011
 smallN <- 12
 maxV <- 214748365 # a large prime number
 dat <- ck_create_testdata()
-dat$rkeys <- ck_generate_rkeys(dat=dat, max_val=maxV)
+dat$rkeys <- ck_generate_rkeys(dat = dat, max_val = maxV)
 mTable <- c(0.6,0.4,0.2)
-sTable <- ck_generate_sTable(smallC=12)
-pTable <- ck_create_pTable(D=5, V=3, pTableSize=70, type="abs")
+sTable <- ck_generate_stab(small_c = 12)
+pTable <- ck_create_ptab(
+  D = 5,
+  V = 3,
+  pTableSize = 70,
+  type = "abs"
+)
 
 pert_params <- ck_create_pert_params(
-  bigN=bigN, smallN=smallN, pTable=pTable, sTable=sTable, mTable=mTable)
+  bigN = bigN,
+  smallN = smallN,
+  pTable = pTable,
+  sTable = sTable,
+  mTable = mTable
+)
 
 ## create suitable input data using exising record keys
-inp <- ck_create_input(dat=dat, def_rkey="rkeys", pert_params=pert_params)
+inp <- ck_create_input(
+  dat = dat,
+  def_rkey = "rkeys",
+  pert_params = pert_params
+)
 print(class(inp))
 }

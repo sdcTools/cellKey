@@ -44,10 +44,10 @@ test_that("checking dimension and structure of generated testdata", {
 
 # perturbation input for continuous variables
 mTable <- c(0.6, 0.4, 0.2)
-smallC <- 12
+small_c <- 12
 
 ## ptable
-pTable <- ck_create_pTable(
+pTable <- ck_create_ptab(
   D = 5,
   V = 3,
   type = "abs",
@@ -58,7 +58,7 @@ pert_params <- ck_create_pert_params(
   bigN = bigN,
   smallN = smallN,
   pTable = pTable,
-  sTable = ck_generate_sTable(smallC = smallC),
+  sTable = ck_generate_stab(small_c = small_c),
   mTable = mTable
 )
 
