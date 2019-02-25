@@ -2,7 +2,7 @@
 % Please edit documentation in R/ck_export_table.R
 \name{ck_export_table}
 \alias{ck_export_table}
-\title{Method to extract information about modifications for count tables}
+\title{Create tabular output from perturbed table}
 \usage{
 ck_export_table(x, vname = NULL, type = "both")
 }
@@ -28,26 +28,27 @@ depending on the value of argument \code{type} and weather if \code{vname}
 is a count or a continuously scaled variable, the following columns: For
 count-variables:
 \itemize{
-\item{UWC}: unweighted counts (argument \code{type} is "both" or
+\item{uwc}: unweighted counts (argument \code{type} is "both" or
 "unweighted")
-\item{WC}: perturbed unweighted counts (argument \code{type} is "both" or
+\item{wc}: perturbed unweighted counts (argument \code{type} is "both" or
 "unweighted")
-\item{pUWC}: weighted counts (argument \code{type} is "both" or "weighted")
-\item{pWC}: perturbed weighted counts (argument \code{type} is "both" or
+\item{puwc}: weighted counts (argument \code{type} is "both" or "weighted")
+\item{pwc}: perturbed weighted counts (argument \code{type} is "both" or
 "weighted")
 }
 For continuously-scaled variables (magnitude tables):
 \itemize{
-\item{UW}: unweighted sum (argument \code{type} is "both" or "unweighted")
-\item{WS}: perturbed unweighted sum (argument \code{type} is "both" or
+\item{uw}: unweighted sum (argument \code{type} is "both" or "unweighted")
+\item{ws}: perturbed unweighted sum (argument \code{type} is "both" or
 "unweighted")
-\item{pUW}: weighted sum (argument \code{type} is "both" or "weighted")
-\item{pWS}: perturbed weighted sum (argument \code{type} is "both" or
+\item{puw}: weighted sum (argument \code{type} is "both" or "weighted")
+\item{pws}: perturbed weighted sum (argument \code{type} is "both" or
 "weighted")
 }
 }
 \description{
-Method to extract information about modifications for count tables
+This function allows to extract information from a perturbed table
+as a \code{data.table}.
 }
 \examples{
 ## see example in ?perturb_table

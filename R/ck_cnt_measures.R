@@ -47,18 +47,18 @@
 #' @export
 #' @examples
 #' ## see example in perturb_table
-ck_cnt_measures <- function(x, vname="Total") {
+ck_cnt_measures <- function(x, vname="total") {
   stopifnot(isS4(x), "pert_table" %in% class(x))
   stopifnot(is_scalar_character(vname))
-  stopifnot(vname %in% slot(x, "countVars"))
+  stopifnot(vname %in% slot(x, "countvars"))
 
 
   # unweighted
   tab <- slot(x, "tab")
 
   # unweighted
-  v_orig <- paste0("UWC_", vname)
-  v_pert <- paste0("pUWC_", vname)
+  v_orig <- paste0("uwc_", vname)
+  v_pert <- paste0("puwc_", vname)
   return(ck_cnt_measures_basic(tab[[v_orig]], tab[[v_pert]]))
 }
 

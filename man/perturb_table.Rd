@@ -4,8 +4,8 @@
 \alias{perturb_table}
 \title{Perturb a multi-dimensional table using the cell-key method}
 \usage{
-perturb_table(inp, dim_list, countVars = NULL, numVars = NULL,
-  by = NULL, weightVar = NULL)
+perturb_table(inp, dim_list, countvars = NULL, numvars = NULL,
+  by = NULL, weightvar = NULL)
 }
 \arguments{
 \item{inp}{an object of class \code{\link{pert_inputdat-class}}
@@ -16,20 +16,20 @@ tabulated. Each slot consists of a \code{data.frame} or \code{data.table}
 with columns \code{levels} and \code{codes} specifiying the
 hierarchies of the variables.}
 
-\item{countVars}{(character) vector of numerical variables that should be
+\item{countvars}{(character) vector of numerical variables that should be
 counted and perturbed; must be 0/1 coded.}
 
-\item{numVars}{(character) vector of numerical variables that
+\item{numvars}{(character) vector of numerical variables that
 should be tabulated or \code{NULL}}
 
 \item{by}{\code{NULL} or a scalar character. If specified, it is possible
 to use a valid variable name being 0/1 coded that will be used to create the
-perturbation of all variables specified in \code{numVars} only for subgroups
+perturbation of all variables specified in \code{numvars} only for subgroups
 defined by the specified count variable. If the variable is not listed in
-argument \code{countVars} it will be automatically added. If not specified or
+argument \code{countvars} it will be automatically added. If not specified or
 \code{NULL}, the table will be based on all units in the microdata.}
 
-\item{weightVar}{(character) vector of variable holding sampling
+\item{weightvar}{(character) vector of variable holding sampling
 weights or \code{NULL}}
 }
 \value{
@@ -180,42 +180,42 @@ hier_display(dim_age)
 
 # define required inputs
 dim_list <- list(sex = dim_sex, age = dim_age)
-weightVar <- "sampling_weight"
-numVars <- c("savings", "income")
+weightvar <- "sampling_weight"
+numvars <- c("savings", "income")
 
 # finally perturb the table
 res <- perturb_table(
   inp = inp_abs,
   dim_list = dim_list,
-  weightVar = weightVar,
-  countVars = NULL,
-  numVars = numVars
+  weightvar = weightvar,
+  countvars = NULL,
+  numvars = numvars
 )
 
 # access the results
-ck_freq_table(res, vname = "Total")
+ck_freq_table(res, vname = "total")
 ck_cont_table(res, vname = "income", mean_before_sum = TRUE)
 ck_cont_table(res, vname = "savings", mean_before_sum = TRUE)
 
 res <- perturb_table(
   inp = inp_destatis,
   dim_list = dim_list,
-  weightVar = weightVar,
-  countVars = NULL,
-  numVars = numVars
+  weightvar = weightvar,
+  countvars = NULL,
+  numvars = numvars
 )
-ck_freq_table(res, vname = "Total")
+ck_freq_table(res, vname = "total")
 ck_cont_table(res, vname = "income", mean_before_sum = TRUE)
 ck_cont_table(res, vname = "savings", mean_before_sum = TRUE)
 
 res <- perturb_table(
   inp = inp_free,
   dim_list = dim_list,
-  weightVar = weightVar,
-  countVars = NULL,
-  numVars = numVars
+  weightvar = weightvar,
+  countvars = NULL,
+  numvars = numvars
 )
-ck_freq_table(res, vname = "Total")
+ck_freq_table(res, vname = "total")
 ck_cont_table(res, vname = "income", mean_before_sum = TRUE)
 ck_cont_table(res, vname = "savings", mean_before_sum = TRUE)
 
@@ -227,21 +227,22 @@ mod_numvars(res)
 
 # measures of information loss and utility statistics
 # on tabulated count variables
-ck_cnt_measures(res, vname = "Total")
+ck_cnt_measures(res, vname = "total")
 
-# an example using additional countVars
+# an example using additional count variables
 res <- perturb_table(
   inp = inp_destatis,
   dim_list = dim_list,
-  weightVar = weightVar,
-  countVars = c("cnt_females", "cnt_males", "cnt_highincome"),
-  numVars = numVars)
+  weightvar = weightvar,
+  countvars = c("cnt_females", "cnt_males", "cnt_highincome"),
+  numvars = numvars
+)
 print(res) # custom print method
 summary(res) # custom summary method
 
 # show count tables
 ck_freq_table(res, vname = NULL)
-ck_freq_table(res, vname = "Total")
+ck_freq_table(res, vname = "total")
 ck_freq_table(res, vname = "cnt_females")
 ck_freq_table(res, vname = "cnt_males")
 ck_freq_table(res, vname = "cnt_highincome")
@@ -254,9 +255,9 @@ attr(p_inc, "modifications")
 res <- perturb_table(
   inp = inp_destatis,
   dim_list = dim_list,
-  weightVar = weightVar,
-  countVars = c("cnt_females", "cnt_males", "cnt_highincome"),
-  numVars = numVars,
+  weightvar = weightvar,
+  countvars = c("cnt_females", "cnt_males", "cnt_highincome"),
+  numvars = numvars,
   by = "cnt_males"
 )
 
@@ -266,7 +267,7 @@ p_sav <- ck_cont_table(res, vname = "savings"); p_sav
 attr(p_sav, "modifications") # no modifications in cells containing females!
 
 # export table to a simple data.table
-df_tot <- ck_export_table(res, vname = "Total", type = "both")
+df_tot <- ck_export_table(res, vname = "total", type = "both")
 head(df_tot)
 df_inc <- ck_export_table(res, vname = "income", type = "weighted")
 head(df_inc)

@@ -9,15 +9,15 @@ setMethod(f = "print", signature = "pert_table",
 definition = function(x, vname=NULL) {
   if (!is.null(vname)) {
     stopifnot(is_scalar_character(vname))
-    validVars <- c(slot(x, "countVars"), slot(x, "numVars"))
-    if (!vname %in% validVars) {
+    valid_vars <- c(slot(x, "countvars"), slot(x, "numvars"))
+    if (!vname %in% valid_vars) {
       vv <- shQuote(vname)
       e <- c(
         "The specified variable name",
         shQuote(vname),
         "is invalid.\n",
         "It shoud be one of:",
-        paste(shQuote(validVars), collapse = ", ")
+        paste(shQuote(valid_vars), collapse = ", ")
       )
       stop(paste(e, collapse = " "), call. = FALSE)
     }
@@ -29,10 +29,10 @@ definition = function(x, vname=NULL) {
   } else {
     txt <- paste(txt, "unweighted")
   }
-  txt <- paste0(txt, " ", length(slot(x, "dimVars")), "-dimensional table")
+  txt <- paste0(txt, " ", length(slot(x, "dimvars")), "-dimensional table")
   txt <- paste0(txt, " consists of ", nrow(slot(x, "tab")), " cells.")
 
-  if (slot(x, "by") == "Total") {
+  if (slot(x, "by") == "total") {
     txt <- paste(
       txt,
       "The results are based on all units in the input data."
@@ -47,32 +47,32 @@ definition = function(x, vname=NULL) {
   cat(txt, "\n")
 
   txt <- "The dimensions are given by the following variables\no"
-  txt <- paste(txt, paste(slot(x, "dimVars"), collapse = "\no "))
+  txt <- paste(txt, paste(slot(x, "dimvars"), collapse = "\no "))
   cat(txt, "\n\n")
 
   txt <- paste("Type of pTable-used:", shQuote(slot(x, "type")))
   cat(txt, "\n")
 
   txt <- "The following count-variables have been tabulated/perturbed:\no"
-  txt <- paste(txt, paste(slot(x, "countVars"), collapse = "\no "))
+  txt <- paste(txt, paste(slot(x, "countvars"), collapse = "\no "))
   cat(txt, "\n")
 
-  if (length(slot(x, "numVars")) == 0) {
+  if (length(slot(x, "numvars")) == 0) {
     txt <- "No numeric variables have been tabulated/perturbed in this table"
   } else {
     txt <- "The following numeric variables have been tabulated/perturbed:\no"
-    txt <- paste(txt, paste(slot(x, "numVars"), collapse = "\no "))
+    txt <- paste(txt, paste(slot(x, "numvars"), collapse = "\no "))
   }
   cat(txt, "\n")
 
   if (!is.null(vname)) {
     dt <- slot(x, "tab")
 
-    dv <- slot(x, "dimVars")
-    if (vname %in% slot(x, "countVars")) {
-      vnames <- c(dv, paste0(c("UWC", "WC", "pUWC", "pWC"), "_", vname))
+    dv <- slot(x, "dimvars")
+    if (vname %in% slot(x, "countvars")) {
+      vnames <- c(dv, paste0(c("uwc", "wc", "puwc", "pwc"), "_", vname))
     } else {
-      vnames <- c(dv, paste0(c("UW", "WS", "pUW", "pWS"), "_", vname))
+      vnames <- c(dv, paste0(c("uw", "ws", "puw", "pws"), "_", vname))
     }
     dt <- dt[, vnames, with = FALSE]
     cat("Total-Counts\n")
@@ -87,22 +87,22 @@ definition = function(x, vname=NULL) {
 #' @param object input object of class \code{\linkS4class{pert_table}}
 setMethod(f = "summary", signature = "pert_table",
 definition = function(object) {
-  vals.pert <- pert <- NULL
+  vals_pert <- pert <- NULL
   cat("Perturbation statistics count variables:\n")
   info_cnts <- mod_counts(object)
 
-  cnt_info <- info_cnts[, as.list(.distr_vals(pert)), by = "countVar"]
+  cnt_info <- info_cnts[, as.list(.distr_vals(pert)), by = "countvar"]
   print(cnt_info)
   cat("\n")
 
   # unweighted only!
-  cnt_measures <- lapply(slot(object, "countVars"), function(x) {
+  cnt_measures <- lapply(slot(object, "countvars"), function(x) {
     ck_cnt_measures(object, vname = x)
   })
-  names(cnt_measures) <- slot(object, "countVars")
+  names(cnt_measures) <- slot(object, "countvars")
 
   for (vv in names(cnt_measures)) {
-    cat("Distance-Based measures for count-variable", shQuote(vv), "\n")
+    cat("Distance-based measures for count variable", shQuote(vv), "\n")
     print(cnt_measures[[vv]]$measures)
     cat("\n")
   }
@@ -110,8 +110,8 @@ definition = function(object) {
   info_nums <- mod_numvars(object)
   num_info <- NULL
   if (nrow(info_nums) > 0) {
-    num_info <- info_nums[, as.list(.distr_vals(vals.pert)), by = "numVar"]
-    cat("\nPerturbation statistics on numerical variables:\n")
+    num_info <- info_nums[, as.list(.distr_vals(vals_pert)), by = "numvar"]
+    cat("\nPerturbation statistics for numerical variables:\n")
     print(num_info)
   }
 

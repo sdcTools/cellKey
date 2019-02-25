@@ -48,10 +48,10 @@ ck_cont_table <- function(inp, vname=NULL, mean_before_sum=TRUE) {
   stopifnot(isS4(inp))
   stopifnot(class(inp) == "pert_table")
 
-  . <- id <- magnitude <- noise <- numVar <- NULL
-  vals.mod <- vals.orig <- vals.pert <- pWMean <- pWSum <- NULL
+  . <- id <- magnitude <- noise <- numvar <- NULL
+  vals_mod <- vals_orig <- vals_pert <- pw_mean <- pw_sum <- NULL
 
-  avail <- slot(inp, "numVars")
+  avail <- slot(inp, "numvars")
   if (is.null(vname)) {
     if (length(avail) == 0) {
       cat("No continous variables have been perturbed\n")
@@ -65,7 +65,7 @@ ck_cont_table <- function(inp, vname=NULL, mean_before_sum=TRUE) {
   stopifnot(vname %in% avail)
 
   by_var <- slot(inp, "by")
-  if (by_var != "Total") {
+  if (by_var != "total") {
     message(sprintf(
       "Note: this table is restricted to groups defined by %s!\n",
       shQuote(by_var))
@@ -74,26 +74,26 @@ ck_cont_table <- function(inp, vname=NULL, mean_before_sum=TRUE) {
 
   data <- slot(inp, "tab")
   dt <- cbind(
-    data[, slot(inp, "dimVars"), with = FALSE],
+    data[, slot(inp, "dimvars"), with = FALSE],
     data[, grep(paste0("_", vname), names(data)), with = FALSE]
   )
 
   # perturbed weighted counts
-  pwc <- data[, get(paste0("pWC_", by_var))]
+  pwc <- data[, get(paste0("pwc_", by_var))]
   if (isTRUE(mean_before_sum)) {
-    out <- .mean_before_sum(dt[, get(paste0("pWS_", vname))], pWC = pwc)
+    out <- .mean_before_sum(dt[, get(paste0("pws_", vname))], pwc = pwc)
   } else {
-    out <- .sum_before_mean(dt[, get(paste0("pWS_", vname))], pWC = pwc)
+    out <- .sum_before_mean(dt[, get(paste0("pws_", vname))], pwc = pwc)
   }
-  out[is.nan(pWSum), pWSum := 0]
-  out[is.nan(pWMean), pWMean := 0]
+  out[is.nan(pw_sum), pw_sum := 0]
+  out[is.nan(pw_mean), pw_mean := 0]
 
-  set(dt, j = paste0("pWS_", vname), value = out$pWSum)
-  set(dt, j = paste0("pWM_", vname), value = out$pWMean)
+  set(dt, j = paste0("pws_", vname), value = out$pw_sum)
+  set(dt, j = paste0("pwm_", vname), value = out$pw_mean)
 
   mods <- mod_numvars(inp)
-  mods <- mods[numVar == vname,
-    .(id, magnitude, dir, noise, vals.orig, vals.pert, vals.mod)]
+  mods <- mods[numvar == vname,
+    .(id, magnitude, dir, noise, vals_orig, vals_pert, vals_mod)]
   attr(dt, "modifications") <- mods
   dt
 }

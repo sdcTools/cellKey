@@ -39,16 +39,16 @@ ck_freq_table <- function(inp, vname=NULL) {
   stopifnot(isS4(inp))
   stopifnot(class(inp) == "pert_table")
 
-  . <- col_indices <- countVar <- row_indices <- pert <- cellKey <- NULL
+  . <- col_indices <- countvar <- row_indices <- pert <- cellkey <- NULL
 
-  avail <- slot(inp, "countVars")
+  avail <- slot(inp, "countvars")
   if (is.null(vname)) {
     txt <- c(
       "The following variables have been perturbed",
       "using the frequency approach:\n",
       paste("  -->", avail, "\n")
     )
-    cat(paste(txt, collapse = ""))
+    cat(paste(txt, collapse = " "))
     return(invisible(NULL))
   }
   stopifnot(is_scalar_character(vname))
@@ -57,8 +57,9 @@ ck_freq_table <- function(inp, vname=NULL) {
   data <- slot(inp, "tab")
 
   dt <- cbind(
-    data[, slot(inp, "dimVars"), with = FALSE],
-    data[, grep(vname, names(data)), with = FALSE])
+    data[, slot(inp, "dimvars"), with = FALSE],
+    data[, grep(vname, names(data)), with = FALSE]
+  )
 
   # mods <-
   type <- slot(inp, "type")
@@ -66,7 +67,7 @@ ck_freq_table <- function(inp, vname=NULL) {
   if (type == "destatis") {
     mods[, col_indices := NA]
   }
-  mods <- mods[countVar == vname, .(row_indices, col_indices, pert, cellKey)]
+  mods <- mods[countvar == vname, .(row_indices, col_indices, pert, cellkey)]
 
   dt <- cbind(dt, mods)
   dt[]

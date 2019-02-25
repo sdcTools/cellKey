@@ -133,7 +133,7 @@
 .lookup <- function(tab, pert_params, ckeyname, freqvarname, type) {
   # lookup perturbation values using the abs-method
   .abs <- function(tab, pert_params, freqs, cellkeys) {
-    cK <- row_indices <- col_indices <- pert <- NULL
+    ck <- row_indices <- col_indices <- pert <- NULL
 
     row_indices <- sapply(freqs, .row_index_freq)
     col_indices <- sapply(freqs, function(z) {
@@ -155,13 +155,13 @@
       pert_vals[ii] <- NA
     }
     dt[, pert := unlist(pert_vals)]
-    dt[, cK := cellkeys]
+    dt[, ck := cellkeys]
     dt
   }
 
   # ptable in "free" format user defined functions
   .free <- function(tab, pert_params, freqs, cellkeys) {
-    cK <- row_indices <- col_indices <- pert <- NULL
+    ck <- row_indices <- col_indices <- pert <- NULL
 
     row_indices <- sapply(freqs, .row_index_freq)
     col_indices <- sapply(freqs, function(z) {
@@ -187,7 +187,7 @@
       pTab[[dt$col_indices[z]]][[dt$row_indices[z]]]()
     })
     dt[, pert := unlist(pert_vals)]
-    dt[, cK := cellkeys]
+    dt[, ck := cellkeys]
     dt
   }
 
@@ -225,7 +225,7 @@
       row_indices = row_indices,
       col_indices = NA,
       pert = pert_vals,
-      cK = cellkeys
+      ck = cellkeys
     )
   }
 
@@ -287,8 +287,8 @@
   # using absolute values for sorting
   tmp$tmpvarfortabulation <- abs(tmp[[v]])
 
-  v.pert <- paste0(v, ".pert")
-  v.mod <- paste0(v, ".mod")
+  v.pert <- paste0(v, "_pert")
+  v.mod <- paste0(v, "_mod")
 
   tmp[[v.pert]] <- 0
   tmp[[v.mod]] <- 0
@@ -347,19 +347,19 @@
 
 # x: values of a perturbed numerical variable
 # pWC: perturbed weighted counts
-.mean_before_sum <- function(x, pWC) {
-  pWMean <- x / pWC
-  pWSum <- pWMean * pWC
-  pWMean[is.na(pWMean)] <- 0
-  data.table(pWMean = pWMean, pWSum = pWSum)
+.mean_before_sum <- function(x, pwc) {
+  pw_mean <- x / pwc
+  pw_sum <- pw_mean * pwc
+  pw_mean[is.na(pw_mean)] <- 0
+  data.table(pw_mean = pw_mean, pw_sum = pw_sum)
 }
 # x: values of a perturbed numerical variable
-# pWC: perturbed weighted counts
-.sum_before_mean <- function(x, pWC) {
-  pWSum <- x
-  pWMean <- x / pWC
-  pWMean[is.na(pWMean)] <- 0
-  data.table(pWMean = pWMean, pWSum = pWSum)
+# pwc: perturbed weighted counts
+.sum_before_mean <- function(x, pwc) {
+  pw_sum <- x
+  pw_mean <- x / pwc
+  pw_mean[is.na(pw_mean)] <- 0
+  data.table(pw_mean = pw_mean, pw_sum = pw_sum)
 }
 
 # simple check functions for record keys

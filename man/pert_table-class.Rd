@@ -33,18 +33,18 @@ numerical variable that was tabulated a list element with
 a \code{data.table} showing which values have been modified
 prior to tabulation.}
 
-\item{\code{dimVars}}{(character) vector of variable names used to define
+\item{\code{dimvars}}{(character) vector of variable names used to define
 the table structure}
 
-\item{\code{numVars}}{(character) variable names of numeric variables
+\item{\code{numvars}}{(character) variable names of numeric variables
 that have been tabulated}
 
-\item{\code{countVars}}{(character) vector containing names of variables
+\item{\code{countvars}}{(character) vector containing names of variables
 that have been tabulated using the frequency approach}
 
 \item{\code{by}}{(character) variable name (that must also be listed
-in \code{countVars} and that is used to create perturbed tables
-for \code{numVars} given the groups defined in \code{by}}
+in \code{countvars} and that is used to create perturbed tables
+for \code{numvars} given the groups defined in \code{by}}
 
 \item{\code{is_weighted}}{(logical) TRUE if sampling weights have been used}
 

@@ -122,15 +122,15 @@ NULL
 #' numerical variable that was tabulated a list element with
 #' a \code{data.table} showing which values have been modified
 #' prior to tabulation.
-#' @slot dimVars (character) vector of variable names used to define
+#' @slot dimvars (character) vector of variable names used to define
 #' the table structure
-#' @slot numVars (character) variable names of numeric variables
+#' @slot numvars (character) variable names of numeric variables
 #' that have been tabulated
-#' @slot countVars (character) vector containing names of variables
+#' @slot countvars (character) vector containing names of variables
 #' that have been tabulated using the frequency approach
 #' @slot by (character) variable name (that must also be listed
-#' in \code{countVars} and that is used to create perturbed tables
-#' for \code{numVars} given the groups defined in \code{by}
+#' in \code{countvars} and that is used to create perturbed tables
+#' for \code{numvars} given the groups defined in \code{by}
 #' @slot is_weighted (logical) TRUE if sampling weights have been used
 #' @slot type (character) either \code{"abs"} or \code{"destatis"}
 #' depending on the format
@@ -143,9 +143,9 @@ representation = list(
   tab = "data.table",
   count_modifications = "data.table",
   numvars_modifications = "data.table",
-  dimVars = "character",
-  countVars = "character",
-  numVars = "character",
+  dimvars = "character",
+  countvars = "character",
+  numvars = "character",
   by = "character",
   is_weighted = "logical",
   type = "character"
@@ -154,9 +154,9 @@ prototype = list(
   tab = data.table(),
   count_modifications = data.table(),
   numvars_modifications = data.table(),
-  dimVars = character(),
-  countVars = character(),
-  numVars = character(),
+  dimvars = character(),
+  countvars = character(),
+  numvars = character(),
   by = character(),
   is_weighted = c(),
   type = character()
@@ -166,7 +166,7 @@ validity = function(object) {
   by <- slot(object, "by")
   if (by != "") {
     stopifnot(length(by) == 1)
-    stopifnot(by %in% slot(object, "countVars"))
+    stopifnot(by %in% slot(object, "countvars"))
   }
 })
 NULL
