@@ -1,13 +1,19 @@
 # cellKey 0.16.0
-- [TODO] use "free" instead of custom format
-- [TODO] use "default" instead of destatis and keep "abs"
-- [TODO] constistent parametrisation
+- [ok] use "free" instead of custom format
 - [ok] linting
-- [ok] use sdcHierarchies
+- [ok] use sdcHierarchies for hierarchy generation
+- [ok] rewrite vignette (hier-generation part)
+- [ok] reparametrisation: `ck_update_custom_pTable` -> `ck_update_free_ptable`
+- [ok] reparametrisation: `ck_create_custom_pTable` -> `ck_create_free_ptable`
+- [ok] reparametrisation: `perturbTable` -> `perturb_table`
+- [ok] reparametrisation: `ck_create_pTable` -> `ck_create_ptab`
+- [ok] reparametrisation: `ck_create_sTable` -> `ck_create_stab`
+- [ok] reparametrisation: `ck_cont_table`: `meanBeforeSum` -> `mean_before_sum`
+- [ok] performance improvements when perturbing magnitude tables
 - [TODO] check examples and vignette for code style
 - [TODO] 100% code coverage (like sdcHierarchies)
-- [TODO] run profvis on examples; check bottlenecks and improve performance
-- [ok] rewrite vignette (hier-generation part)
+- [TODO] use "default" instead of destatis and keep "abs"
+- [TODO] constistent parametrisation
 
 # cellKey 0.15.0
 - new convenience function `ck_vignette()` that displays the package vignette in a browser

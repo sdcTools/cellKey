@@ -10,35 +10,35 @@
 #' of the distribution of three different distances between original
 #' and perturbed values of the unweighted counts. The three distances are:
 #' \itemize{
-#' \item absolute distance (column \code{vals_abs}), \code{D1}
-#' \item relative distance (column \code{vals_rel}), \code{D2}
+#' \item absolute distance (column \code{vals_abs}), \code{d1}
+#' \item relative distance (column \code{vals_rel}), \code{d2}
 #' \item absolute distance between square-roots of original and perturbed
-#' values (column \code{vals_r}), \code{D3}
+#' values (column \code{vals_r}), \code{d3}
 #' }
-#' \item \strong{cumDistrA}: a \code{data.table} with 3 columns
+#' \item \strong{cum_distr_a}: a \code{data.table} with 3 columns
 #' showing the cummulative sum of absolute distances
 #' \itemize{
-#' \item \code{kat}: possible values for distance \code{D1}
+#' \item \code{kat}: possible values for distance \code{d1}
 #' \item \code{val_abs}: number of records smaller or equal the
 #' value in column \code{kat}
 #' \item \code{prop_abs}: proportion or records smaller or equal
 #' the value in column \code{kat}
 #' }
-#' \item \strong{cumDistrB}: a \code{data.table} with 5 columns
+#' \item \strong{cum_distr_b}: a \code{data.table} with 5 columns
 #' which show the cummulative distributions for distances
-#' \code{D2} (columns \code{val_rel} and \code{prop_rel})
-#' and \code{D3} (columns \code{val_r} and \code{prop_r}) for a set
+#' \code{d2} (columns \code{val_rel} and \code{prop_rel})
+#' and \code{d3} (columns \code{val_r} and \code{prop_r}) for a set
 #' of intervals shown in column \code{kat}.
 #' \itemize{
 #' \item \code{kat}: a specific interval
 #' \item \code{val_rel}: number of records smaller or equal the
-#' value in column \code{kat} for distance \code{D2}
+#' value in column \code{kat} for distance \code{d2}
 #' \item \code{prop_rel} proportion of records smaller or equal the
-#' value in column \code{kat} for distance \code{D2}
+#' value in column \code{kat} for distance \code{d2}
 #' \item \code{val_r}: number of records smaller or equal the value
-#' in column \code{kat} for distance \code{D3}
+#' in column \code{kat} for distance \code{d3}
 #' \item \code{prop_r}: proportion of records smaller or equal the
-#' value in column \code{kat} for distance \code{D3}
+#' value in column \code{kat} for distance \code{d3}
 #' }
 #' \item \strong{false_zero}: number of cells that were perturbed to zero
 #' \item \strong{false_positives}: number of cells that were initially
@@ -75,21 +75,21 @@ ck_cnt_measures <- function(x, vname="Total") {
 #' original and perturbed values of the unweighted counts.
 #' The three distances are:
 #' \itemize{
-#' \item absolute distance (column \code{vals_abs}), \code{D1}
-#' \item relative distance (column \code{vals_rel}), \code{D2}
+#' \item absolute distance (column \code{vals_abs}), \code{d1}
+#' \item relative distance (column \code{vals_rel}), \code{d2}
 #' \item absolute distance between square-roots of original and perturbed
-#' values (column \code{vals_r}), \code{D3}
+#' values (column \code{vals_r}), \code{d3}
 #' }
-#' \item \strong{cumDistrA}: a \code{data.table} with 3 columns
+#' \item \strong{cum_distr_a}: a \code{data.table} with 3 columns
 #' showing the cummulative sum of absolute distances
 #' \itemize{
-#' \item \code{kat}: possible values for distance \code{D1}
+#' \item \code{kat}: possible values for distance \code{d1}
 #' \item \code{val_abs}: number of records smaller or equal the
 #' value in column \code{kat}
 #' \item \code{prop_abs}: proportion or records smaller or equal
 #' the value in column \code{kat}
 #' }
-#' \item \strong{cumDistrB}: a \code{data.table} with 5 columns
+#' \item \strong{cum_distr_b}: a \code{data.table} with 5 columns
 #' which show the cummulative distributions for distances
 #' \code{D2} (columns \code{val_rel} and \code{prop_rel}) and
 #' \code{D3} (columns \code{val_r} and \code{prop_r}) for a set
@@ -112,9 +112,8 @@ ck_cnt_measures <- function(x, vname="Total") {
 #' @export
 #' @examples
 #' orig <- 1:10
-#' pert <- orig; pert[c(1,5,7)] <- c(0,6,9)
-#' ck_cnt_measures_basic(orig=orig, pert=pert)
-#'
+#' pert <- orig; pert[c(1, 5, 7)] <- c(0, 6, 9)
+#' ck_cnt_measures_basic(orig = orig, pert = pert)
 ck_cnt_measures_basic <- function(orig, pert) {
   stopifnot(is.numeric(orig), is.numeric(pert), length(orig) == length(pert))
 
@@ -164,8 +163,8 @@ ck_cnt_measures_basic <- function(orig, pert) {
   return(
     list(
       measures = dt2,
-      cumdistrA = dt_a,
-      cumdistrB = dt_b,
+      cum_distr_a = dt_a,
+      cum_distr_b = dt_b,
       false_zero = false_zero,
       false_positives = false_positives
     )

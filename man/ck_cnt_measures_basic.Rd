@@ -19,21 +19,21 @@ of the distribution of three different distances between
 original and perturbed values of the unweighted counts.
 The three distances are:
 \itemize{
-\item absolute distance (column \code{vals_abs}), \code{D1}
-\item relative distance (column \code{vals_rel}), \code{D2}
+\item absolute distance (column \code{vals_abs}), \code{d1}
+\item relative distance (column \code{vals_rel}), \code{d2}
 \item absolute distance between square-roots of original and perturbed
-values (column \code{vals_r}), \code{D3}
+values (column \code{vals_r}), \code{d3}
 }
-\item \strong{cumDistrA}: a \code{data.table} with 3 columns
+\item \strong{cum_distr_a}: a \code{data.table} with 3 columns
 showing the cummulative sum of absolute distances
 \itemize{
-\item \code{kat}: possible values for distance \code{D1}
+\item \code{kat}: possible values for distance \code{d1}
 \item \code{val_abs}: number of records smaller or equal the
 value in column \code{kat}
 \item \code{prop_abs}: proportion or records smaller or equal
 the value in column \code{kat}
 }
-\item \strong{cumDistrB}: a \code{data.table} with 5 columns
+\item \strong{cum_distr_b}: a \code{data.table} with 5 columns
 which show the cummulative distributions for distances
 \code{D2} (columns \code{val_rel} and \code{prop_rel}) and
 \code{D3} (columns \code{val_r} and \code{prop_r}) for a set
@@ -60,7 +60,6 @@ compute utility/information loss measures two numeric vectors
 }
 \examples{
 orig <- 1:10
-pert <- orig; pert[c(1,5,7)] <- c(0,6,9)
-ck_cnt_measures_basic(orig=orig, pert=pert)
-
+pert <- orig; pert[c(1, 5, 7)] <- c(0, 6, 9)
+ck_cnt_measures_basic(orig = orig, pert = pert)
 }

@@ -9,7 +9,7 @@
 #' @param vname either \code{NULL} or the name of a variable for which a
 #' perturbed frequeny table has been generated. If \code{NULL}, the function
 #' prints the variables for which a perturbation has been applied.
-#' @param meanBeforeSum (logical) defines if the weighted means should
+#' @param mean_before_sum (logical) defines if the weighted means should
 #' be computed before weighted sums or the other way round.
 #' @return a \code{data.table} containing all combinations of the dimensional
 #' variables in the first n columns. Afterwards, the following columns
@@ -30,10 +30,10 @@
 #' \code{attributes(ck_cont_table(...), "modifications")}.
 #' .
 #' @details The computation of the perturbed weighted mean and the perturbed
-#' weighted sum depends on argument \code{meanBeforeSum}. If
-#' \code{meanBeforeSum} is \code{TRUE}, the perturbed mean is computed first
+#' weighted sum depends on argument \code{mean_before_sum}. If
+#' \code{mean_before_sum} is \code{TRUE}, the perturbed mean is computed first
 #' and the perturbed sum is derived from the perturbed mean an the perturbed
-#' weighted counts. If \code{meanBeforeSum} is \code{FALSE}, the computation
+#' weighted counts. If \code{mean_before_sum} is \code{FALSE}, the computation
 #' is the other way round. Details are available in the ABS paper
 #' \emph{Methodology for the Automatic Confidentialisation of Statistical
 #' Outputs from Remote Servers at the Australian Bureau of Statistics}
@@ -44,7 +44,7 @@
 #'
 #' @examples
 #' # see examples in perturb_table()
-ck_cont_table <- function(inp, vname=NULL, meanBeforeSum=TRUE) {
+ck_cont_table <- function(inp, vname=NULL, mean_before_sum=TRUE) {
   stopifnot(isS4(inp))
   stopifnot(class(inp) == "pert_table")
 
@@ -64,11 +64,11 @@ ck_cont_table <- function(inp, vname=NULL, meanBeforeSum=TRUE) {
   stopifnot(is_scalar_character(vname))
   stopifnot(vname %in% avail)
 
-  byVar <- slot(inp, "by")
-  if (byVar != "Total") {
+  by_var <- slot(inp, "by")
+  if (by_var != "Total") {
     message(sprintf(
       "Note: this table is restricted to groups defined by %s!\n",
-      shQuote(byVar))
+      shQuote(by_var))
     )
   }
 
@@ -79,8 +79,8 @@ ck_cont_table <- function(inp, vname=NULL, meanBeforeSum=TRUE) {
   )
 
   # perturbed weighted counts
-  pwc <- data[, get(paste0("pWC_", byVar))]
-  if (meanBeforeSum == TRUE) {
+  pwc <- data[, get(paste0("pWC_", by_var))]
+  if (isTRUE(mean_before_sum)) {
     out <- .mean_before_sum(dt[, get(paste0("pWS_", vname))], pWC = pwc)
   } else {
     out <- .sum_before_mean(dt[, get(paste0("pWS_", vname))], pWC = pwc)

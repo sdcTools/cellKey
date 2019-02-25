@@ -200,7 +200,7 @@ tab <- perturb_table(
   numVars = c("income", "savings"),
   by = "cnt_males"
 )
-tt <- ck_cont_table(tab, vname = "savings", meanBeforeSum = TRUE)
+tt <- ck_cont_table(tab, vname = "savings", mean_before_sum = TRUE)
 test_that("check tabulation of savings given cnt_males", {
   expect_identical(tt[sex == "female", sum(UW_savings)], 0)
   expect_identical(tt[sex == "female", sum(pUW_savings)], 0)

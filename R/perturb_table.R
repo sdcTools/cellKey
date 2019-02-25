@@ -179,8 +179,8 @@
 #'
 #' # access the results
 #' ck_freq_table(res, vname = "Total")
-#' ck_cont_table(res, vname = "income", meanBeforeSum = TRUE)
-#' ck_cont_table(res, vname = "savings", meanBeforeSum = TRUE)
+#' ck_cont_table(res, vname = "income", mean_before_sum = TRUE)
+#' ck_cont_table(res, vname = "savings", mean_before_sum = TRUE)
 #'
 #' res <- perturb_table(
 #'   inp = inp_destatis,
@@ -190,8 +190,8 @@
 #'   numVars = numVars
 #' )
 #' ck_freq_table(res, vname = "Total")
-#' ck_cont_table(res, vname = "income", meanBeforeSum = TRUE)
-#' ck_cont_table(res, vname = "savings", meanBeforeSum = TRUE)
+#' ck_cont_table(res, vname = "income", mean_before_sum = TRUE)
+#' ck_cont_table(res, vname = "savings", mean_before_sum = TRUE)
 #'
 #' res <- perturb_table(
 #'   inp = inp_free,
@@ -201,8 +201,8 @@
 #'   numVars = numVars
 #' )
 #' ck_freq_table(res, vname = "Total")
-#' ck_cont_table(res, vname = "income", meanBeforeSum = TRUE)
-#' ck_cont_table(res, vname = "savings", meanBeforeSum = TRUE)
+#' ck_cont_table(res, vname = "income", mean_before_sum = TRUE)
+#' ck_cont_table(res, vname = "savings", mean_before_sum = TRUE)
 #'
 #' # information on modifications for count variables
 #' mod_counts(res, verbose = TRUE)

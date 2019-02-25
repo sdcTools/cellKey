@@ -155,11 +155,11 @@ infoloss <- ck_cnt_measures(tab1, vname = "Total")
 This function returns a list with the following elements:
 
 - **measures:** a data.table containing measures of the distribution of three different distances between original and perturbed values of the unweighted counts. The three distances are
-    - absolute distance (column vals_abs), *D1*
-    - relative distance (column vals_rel), *D2*
-    - absolute distance between square-roots of original and perturbed values (column vals_r), *D3*
-- **cumDistrA:** a data.table showing the cumulative sum and proportion for distance *D1*
-- **cumDistrB:** a data.table showing the cumulative distributions for distances *D2* and *D3* for a set of intervals.
+    - absolute distance (column vals_abs), *d1*
+    - relative distance (column vals_rel), *d2*
+    - absolute distance between square-roots of original and perturbed values (column vals_r), *d3*
+- **cum_distr_a:** a data.table showing the cumulative sum and proportion for distance *d1*
+- **cum_distr_b:** a data.table showing the cumulative distributions for distances *d2* and *d3* for a set of intervals.
 - **false_zero:** number of cells that were perturbed to zero
 - **false_positives:** number of cells that were initially zero but have been perturbed to a number different from zero
 
@@ -175,10 +175,10 @@ tab2 <- perturb_table(
 )
 ```
 
-To get information about magnitute tables, function `ck_cont_table()` can be applied to the output of `perturb_table()`. In this case, we can set an additional argument `meanBeforeSum` that is either `TRUE` or `FALSE` and specifies, how the perturbed cell values are computed. Details on this method can be found in *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar) in Section *6.3*.
+To get information about magnitute tables, function `ck_cont_table()` can be applied to the output of `perturb_table()`. In this case, we can set an additional argument `mean_before_sum` that is either `TRUE` or `FALSE` and specifies, how the perturbed cell values are computed. Details on this method can be found in *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar) in Section *6.3*.
 
 ```{r}
-p_income <- ck_cont_table(tab2, vname = "income", meanBeforeSum = TRUE)
+p_income <- ck_cont_table(tab2, vname = "income", mean_before_sum = TRUE)
 p_income
 ```
 
@@ -220,7 +220,7 @@ ck_freq_table(tab3, vname = "cnt_highincome")
 To show the table of variable `savings` we use again `ck_cont_table()`.
  
 ```{r}
-p_savings <- ck_cont_table(tab3, vname = "savings", meanBeforeSum = TRUE)
+p_savings <- ck_cont_table(tab3, vname = "savings", mean_before_sum = TRUE)
 p_savings
 ```
  

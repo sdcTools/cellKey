@@ -4,7 +4,7 @@
 \alias{ck_cont_table}
 \title{ck_cont_table}
 \usage{
-ck_cont_table(inp, vname = NULL, meanBeforeSum = TRUE)
+ck_cont_table(inp, vname = NULL, mean_before_sum = TRUE)
 }
 \arguments{
 \item{inp}{an object of class \code{\linkS4class{pert_table}} generated
@@ -14,7 +14,7 @@ with \code{\link{perturb_table}}}
 perturbed frequeny table has been generated. If \code{NULL}, the function
 prints the variables for which a perturbation has been applied.}
 
-\item{meanBeforeSum}{(logical) defines if the weighted means should
+\item{mean_before_sum}{(logical) defines if the weighted means should
 be computed before weighted sums or the other way round.}
 }
 \value{
@@ -44,10 +44,10 @@ using \code{\link{perturb_table}}.
 }
 \details{
 The computation of the perturbed weighted mean and the perturbed
-weighted sum depends on argument \code{meanBeforeSum}. If
-\code{meanBeforeSum} is \code{TRUE}, the perturbed mean is computed first
+weighted sum depends on argument \code{mean_before_sum}. If
+\code{mean_before_sum} is \code{TRUE}, the perturbed mean is computed first
 and the perturbed sum is derived from the perturbed mean an the perturbed
-weighted counts. If \code{meanBeforeSum} is \code{FALSE}, the computation
+weighted counts. If \code{mean_before_sum} is \code{FALSE}, the computation
 is the other way round. Details are available in the ABS paper
 \emph{Methodology for the Automatic Confidentialisation of Statistical
 Outputs from Remote Servers at the Australian Bureau of Statistics}
