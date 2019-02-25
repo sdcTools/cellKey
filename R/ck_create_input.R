@@ -59,7 +59,7 @@ ck_create_input <- function(dat, def_rkey, pert_params) {
     }
   } else if (is_bare_integerish(def_rkey)) {
     stopifnot(is_scalar_atomic(def_rkey))
-    if (type %in% c("abs", "custom")) {
+    if (type %in% c("abs", "free")) {
       slot(out, "rkeys") <- ck_generate_rkeys(
         dat = dat,
         max_val = def_rkey,

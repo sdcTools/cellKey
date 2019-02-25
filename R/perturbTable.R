@@ -40,22 +40,22 @@
 #'   verbose = TRUE
 #' )
 #'
-#' # creating test perturbation in "abs", "destatis" and "custom" format
-#' pTable_abs <- ck_create_pTable(
+#' # creating test perturbation in "destatis", "abs" and "free" format
+#' ptab_abs <- ck_create_pTable(
 #'   D = 5,
 #'   V = 3,
 #'   pTableSize = 70,
 #'   type = "abs"
 #' )
-#' pTable_destatis <- ck_create_pTable(
+#' ptab_destatis <- ck_create_pTable(
 #'   D = 5,
 #'   V = 3,
 #'   type = "destatis"
 #' )
 #'
 #' # "free" format is a bit more complicated to set up
-#' pTable_custom <- ck_create_custom_pTable(
-#'   pTableSize = 70
+#' ptab_free <- ck_create_free_ptable(
+#'   nrcol = 70
 #' )
 #'
 #' # create some functions first that return a single number
@@ -67,20 +67,20 @@
 #'
 #' # fn1 provides perturbation values from a normal distribution
 #' # with mean = 5 and sd = 10; we use this for all cells
-#' pTable_custom <- ck_update_custom_pTable(
-#'   pTable = pTable_custom,
+#' ptab_free <- ck_update_free_ptable(
+#'   ptab = ptab_free,
 #'   fun = fn1
 #' )
 #'
 #' # perturbation values from poisson distributions for some cells
-#' pTable_custom <- ck_update_custom_pTable(
-#'   pTable = pTable_custom,
+#' ptab_free <- ck_update_free_ptable(
+#'   ptab = ptab_free,
 #'   fun = fn2,
 #'   cols = 1:20,
 #'   rows = 1:100
 #' )
-#' pTable_custom <- ck_update_custom_pTable(
-#'   pTable = pTable_custom,
+#' ptab_free <- ck_update_free_ptable(
+#'   ptab = ptab_free,
 #'   fun = fn3,
 #'   cols = 1:20,
 #'   rows = 101:256
@@ -88,13 +88,13 @@
 #'
 #' # we can of course write functions, that return scalars, such
 #' # as fn4() and fn5() always return 1 or -1
-#' pTable_custom <- ck_update_custom_pTable(
-#'   pTable = pTable_custom,
+#' ptab_free <- ck_update_free_ptable(
+#'   ptab = ptab_free,
 #'   fun=fn4,
 #'   cols=10:20
 #' )
-#' pTable_custom <- ck_update_custom_pTable(
-#'   pTable = pTable_custom,
+#' ptab_free <- ck_update_free_ptable(
+#'   ptab = ptab_free,
 #'   fun=fn5,
 #'   cols = 21:30
 #' )
@@ -108,22 +108,22 @@
 #' pert_params_abs <- ck_create_pert_params(
 #'   bigN = 17312941,
 #'   smallN = 12,
-#'   pTable = pTable_abs,
+#'   pTable = ptab_abs,
 #'   sTable = sTable,
 #'   mTable = mTable
 #' )
 #'
 #' pert_params_destatis <- ck_create_pert_params(
 #'   smallN = 12,
-#'   pTable = pTable_destatis,
+#'   pTable = ptab_destatis,
 #'   sTable = sTable,
 #'   mTable = mTable
 #' )
 #'
-#' pert_params_custom <- ck_create_pert_params(
+#' pert_params_free <- ck_create_pert_params(
 #'   bigN = 17312941,
 #'   smallN = 12,
-#'   pTable = pTable_custom,
+#'   pTable = ptab_free,
 #'   sTable = sTable,
 #'   mTable = mTable
 #' )
@@ -147,23 +147,23 @@
 #'
 #' # input using a perturbation table in "free" format
 #' # consisting making use of custom functions
-#' inp_custom <- ck_create_input(
+#' inp_free <- ck_create_input(
 #'   dat = dat,
 #'   def_rkey = "rkeys",
-#'   pert_params = pert_params_custom
+#'   pert_params = pert_params_free
 #' )
 #'
 #' # define table hierarchies
 #' # variable "sex"
-#' dim.sex <- hier_create(root = "Total", nodes = c("male", "female"))
-#' hier_display(dim.sex)
+#' dim_sex <- hier_create(root = "Total", nodes = c("male", "female"))
+#' hier_display(dim_sex)
 #'
-#' # variable "sex"
-#' dim.age <- hier_create(root = "Total", nodes = paste0("age_group", 1:6))
-#' hier_display(dim.age)
+#' # variable "age"
+#' dim_age <- hier_create(root = "Total", nodes = paste0("age_group", 1:6))
+#' hier_display(dim_age)
 #'
 #' # define required inputs
-#' dimList <- list(sex = dim.sex, age = dim.age)
+#' dimList <- list(sex = dim_sex, age = dim_age)
 #' weightVar <- "sampling_weight"
 #' numVars <- c("savings", "income")
 #'
@@ -193,7 +193,7 @@
 #' ck_cont_table(res, vname = "savings", meanBeforeSum = TRUE)
 #'
 #' res <- perturbTable(
-#'   inp = inp_custom,
+#'   inp = inp_free,
 #'   dimList = dimList,
 #'   weightVar = weightVar,
 #'   countVars = NULL,

@@ -16,7 +16,7 @@
 #' each cell whose values
 #' will be perturbed differently
 #' @slot type (character) specifying the type of pTable
-#' (either 'abs' or 'destatis')
+#' (either "destatis", "abs" or "free")
 #' @name pert_params-class
 #' @rdname pert_params-class
 #' @export
@@ -52,19 +52,19 @@ validity = function(object) {
     stopifnot(is_scalar_integer(slot(object, "smallC")))
   }
   stopifnot(is_scalar_character(slot(object, "type")))
-  if (!slot(object, "type") %in% c("abs", "destatis", "custom")) {
-    stop("type must be either 'abs', 'destatis' or 'custom'\n")
+  if (!slot(object, "type") %in% c("destatis", "abs", "free")) {
+    stop("`type` must be either `destatis`, `abs` or `free`", call. = FALSE)
   }
   stopifnot(is_scalar_integer(slot(object, "bigN")))
   stopifnot(is_scalar_integer(slot(object, "smallN")))
 
   if (slot(object, "type") == "abs") {
     if (!is_prime(slot(object, "bigN"))) {
-      stop("bigN must be a prime number!\n")
+      stop("`bigN` must be a prime number!", call. = FALSE)
     }
   } else if (slot(object, "type") == "abs") {
     if (slot(object, "bigN") != 1) {
-      stop("bigN must equal 1 for the destatis-method!\n")
+      stop("`bigN` must equal 1 for method `destatis`.", call. = FALSE)
     }
   }
   return(TRUE)
@@ -161,7 +161,7 @@ prototype = list(
   type = character()
 ),
 validity = function(object) {
-  stopifnot(object@type %in% c("abs", "destatis", "custom"))
+  stopifnot(object@type %in% c("abs", "destatis", "free"))
   by <- slot(object, "by")
   if (by != "") {
     stopifnot(length(by) == 1)

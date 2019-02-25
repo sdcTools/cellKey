@@ -1,24 +1,23 @@
-#' Create a custom pTable
+#' Create a perturbation table in `free` format
 #'
-#' This function allows to create a custom perturbation table (pTable) that
-#' contains 256 rows and
-#' \code{pTableSize} columns. Each cell of this perturbation table must be a
-#' function that returns a single number. By default, each cell gets
-#' initialized with a function that always returns \code{0}, so no perturbation
-#' would be applied.
+#' This function allows to create a perturbation table in "free" format
+#' that contains 256 rows and \code{ncol} columns. Each cell of this
+#' perturbation table must be a function that returns a single number.
+#' By default, each cell gets initialized with a function that always
+#' returns \code{0}, so no perturbation is be applied.
 #'
-#' To actually modify a custom pTable, function
-#' \code{\link{ck_update_custom_pTable}} needs to be used.
+#' To actually modify such an perturbation table, function
+#' \code{\link{ck_update_free_ptable}} needs to be used.
 #'
-#' @param pTableSize an integer specifying the number of columns for
+#' @param nrcol an integer specifying the number of columns for
 #' the perturbation table
 #'
-#' @return an object of class \code{ptable} defined in the ptable-package.
+#' @return an object of class \code{ptable} as defined in the ptable-package.
 #' @export
 #' @author Bernhard Meindl
 #' @examples
 #' # initialize
-#' pt_custom <- ck_create_custom_pTable(pTableSize=50)
+#' pt_free <- ck_create_free_ptable(nrcol=50)
 #'
 #' # modify
 #' fn1 <- function() round(rnorm(1, mean = 5, sd = 10))
@@ -29,12 +28,15 @@
 #' # fn1 provides perturbation values from a normal distribution
 #' # with mean = 5 and sd = 10
 #' # we use this for all cells
-#' pt_custom <- ck_update_custom_pTable(pt_custom, fun = fn1)
+#' pt_free <- ck_update_free_ptable(
+#'   ptab = pt_free,
+#'   fun = fn1
+#' )
 #'
 #' # perturbation values from poisson-distribution with lambda = 5
 #' # for some cells (rows)
-#' pt_custom <- ck_update_custom_pTable(
-#'   pTable = pt_custom,
+#' pt_free <- ck_update_free_ptable(
+#'   ptab = pt_free,
 #'   fun = fn2,
 #'   cols = 1:5,
 #'   rows = 1:20
@@ -42,24 +44,24 @@
 #'
 #' # we can of course write functions, that return scalars, such
 #' # as fn3() (always returns 1) or fn4() (always returns -1)
-#' pt_custom <- ck_update_custom_pTable(
-#'   pTable = pt_custom,
+#' pt_free <- ck_update_free_ptable(
+#'   ptab = pt_free,
 #'   fun = fn3,
 #'   cols = 10:20
 #' )
-#' pt_custom <- ck_update_custom_pTable(
-#'   pTable = pt_custom,
+#' pt_free <- ck_update_free_ptable(
+#'   ptab = pt_free,
 #'   fun = fn4,
 #'   cols = 21:30
 #' )
 #'
 #' ## see also the example in ?perturbTable
-ck_create_custom_pTable <- function(pTableSize=70) {
-  stopifnot(is_scalar_integerish(pTableSize))
-  stopifnot(pTableSize > 0)
+ck_create_free_ptable <- function(nrcol=70) {
+  stopifnot(is_scalar_integerish(nrcol))
+  stopifnot(nrcol > 0)
 
   out <- list(); length(out) <- 256
-  tmp <- list(); length(tmp) <- pTableSize
+  tmp <- list(); length(tmp) <- nrcol
 
   out <- lapply(1:length(out), function(x) {
     out[[x]] <- tmp
@@ -84,18 +86,21 @@ ck_create_custom_pTable <- function(pTableSize=70) {
   # prepare output
   ret <- new("ptable")
   params <- new("ptable_params")
-  slot(params, "pTableSize") <- as.integer(pTableSize)
-  slot(params, "label") <- "custom perturbation"
+  slot(params, "pTableSize") <- as.integer(nrcol)
+  slot(params, "label") <- "free_perturbation"
   slot(ret, "pParams") <- params
   slot(ret, "pTable") <- dt
-  slot(ret, "type") <- "custom"
+  slot(ret, "type") <- "free"
   slot(ret, "tStamp") <- format(Sys.time(), "%Y%m%d%H%M%S")
   return(ret)
 }
 
-#' Modify a custom perturbation table
+#' Modify a perturbation table in "free" format
 #'
-#' @param pTable an object created using \code{\link{ck_create_custom_pTable}}
+#' This function allows to change and update a perturbation table that
+#' is in "free" format.
+#'
+#' @param ptab an object created using \code{\link{ck_create_free_ptable}}
 #' @param fun a function that will be used for given cells to derive the
 #' perturbation values. The function must return exactly one number when called
 #' without parameters.
@@ -111,12 +116,12 @@ ck_create_custom_pTable <- function(pTableSize=70) {
 #' @author Bernhard Meindl
 #' @export
 #' @examples
-#' ## see examples in ?ck_create_custom_pTable and ?perturbTable
-ck_update_custom_pTable <- function(pTable, fun, cols=NULL, rows=NULL) {
-  valid_custom_ptable(pTable)
+#' ## see examples in ?ck_create_free_ptable and ?perturbTable
+ck_update_free_ptable <- function(ptab, fun, cols=NULL, rows=NULL) {
+  valid_free_ptable(ptab)
   stopifnot(is.function(fun))
 
-  tab <- slot(pTable, "pTable")
+  tab <- slot(ptab, "pTable")
   nr <- nrow(tab)
   nc <- ncol(tab)
 
@@ -149,8 +154,8 @@ ck_update_custom_pTable <- function(pTable, fun, cols=NULL, rows=NULL) {
     }
     tab[[column]] <- new
   }
-  slot(pTable, "pTable") <- tab
-  validObject(pTable)
-  check_custom_pTable(pTable)
-  return(pTable)
+  slot(ptab, "pTable") <- tab
+  validObject(ptab)
+  check_free_ptable(ptab)
+  return(ptab)
 }

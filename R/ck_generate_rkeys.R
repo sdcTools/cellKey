@@ -51,10 +51,10 @@ ck_generate_rkeys <-
 
   stopifnot(is_scalar_logical(verbose))
   stopifnot(is_scalar_character(type))
-  stopifnot(type %in% c("abs", "destatis", "custom"))
+  stopifnot(type %in% c("destatis", "abs", "free"))
 
   seed <- ck_create_seed_from_hash(dat)
-  if (type %in% c("abs", "custom")) {
+  if (type %in% c("abs", "free")) {
     if (!is.null(seed)) {
       stopifnot(is_scalar_integerish(seed))
     } else {

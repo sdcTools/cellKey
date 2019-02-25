@@ -35,6 +35,6 @@ each cell whose values
 will be perturbed differently}
 
 \item{\code{type}}{(character) specifying the type of pTable
-(either 'abs' or 'destatis')}
+(either "destatis", "abs" or "free")}
 }}
 

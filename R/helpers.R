@@ -1,14 +1,14 @@
-# check if input is a valid "custom" pTable
-valid_custom_ptable <- function(pTable) {
-  stopifnot(isS4(pTable))
-  stopifnot(isS4(pTable), class(pTable) == "ptable")
-  stopifnot(slot(pTable, "type") == "custom")
+# check if input is a valid ptable in "free" format
+valid_free_ptable <- function(ptab) {
+  stopifnot(isS4(ptab))
+  stopifnot(isS4(ptab), class(ptab) == "ptable")
+  stopifnot(slot(ptab, "type") == "free")
   return(TRUE)
 }
 
-check_custom_pTable <- function(pTable) {
-  valid_custom_ptable(pTable)
-  tab <- slot(pTable, "pTable")
+check_free_ptable <- function(ptab) {
+  valid_free_ptable(ptab)
+  tab <- slot(ptab, "pTable")
 
   for (j in 1:ncol(tab)) {
     fns <- unique(tab[[j]])
@@ -56,9 +56,9 @@ get_direction <- function(rec_keys, type) {
     ifelse(rec_keys <= 0.5, -1, 1)
   }
   stopifnot(is_scalar_character(type))
-  stopifnot(type %in% c("abs", "destatis", "custom"))
+  stopifnot(type %in% c("destatis", "abs", "free"))
 
-  if (type %in% c("abs", "custom")) {
+  if (type %in% c("abs", "free")) {
     return(get_direction_abs(rec_keys))
   }
   if (type == "destatis") {
@@ -80,9 +80,9 @@ get_row_index_cont <- function(rec_keys, type) {
   }
 
   stopifnot(is_scalar_character(type))
-  stopifnot(type %in% c("abs", "destatis", "custom"))
+  stopifnot(type %in% c("destatis", "abs", "free"))
 
-  if (type %in% c("abs", "custom")) {
+  if (type %in% c("abs", "free")) {
     return(get_row_index_cont_abs(rec_keys))
   }
   if (type == "destatis") {
@@ -108,9 +108,9 @@ get_col_index_cont <- function(cKey, n, smallC, type) {
   }
 
   stopifnot(is_scalar_character(type))
-  stopifnot(type %in% c("abs", "destatis", "custom"))
+  stopifnot(type %in% c("destatis", "abs", "free"))
 
-  if (type %in% c("abs", "custom")) {
+  if (type %in% c("abs", "free")) {
     return(get_col_index_cont_abs(cKey, n, smallC))
   }
   if (type == "destatis") {
@@ -173,8 +173,8 @@ lookup <- function(tab, pert_params, ckeyname, freqvarname, type) {
     dt
   }
 
-  # custom pTable with user-defined functions!
-  lookup_custom <- function(tab, pert_params, freqs, cellkeys) {
+  # ptable in "free" format user defined functions
+  lookup_free <- function(tab, pert_params, freqs, cellkeys) {
     cK <- row_indices <- col_indices <- pert <- NULL
 
     row_indices <- sapply(freqs, get_rowIndex)
@@ -251,7 +251,7 @@ lookup <- function(tab, pert_params, ckeyname, freqvarname, type) {
   stopifnot(is_scalar_character(freqvarname))
   stopifnot(freqvarname %in% names(tab))
 
-  stopifnot(type %in% c("abs", "destatis", "custom"))
+  stopifnot(type %in% c("destatis", "abs", "free"))
 
   cellkeys <- tab[, get(ckeyname)]
   freqs <- tab[, get(freqvarname)]
@@ -264,8 +264,8 @@ lookup <- function(tab, pert_params, ckeyname, freqvarname, type) {
       cellkeys = cellkeys
     ))
   }
-  if (type == "custom") {
-    return(lookup_custom(
+  if (type == "free") {
+    return(lookup_free(
       tab = tab,
       pert_params = pert_params,
       freqs = freqs,
