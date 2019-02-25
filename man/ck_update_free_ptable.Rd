@@ -29,7 +29,7 @@ This function allows to change and update a perturbation table that
 is in "free" format.
 }
 \examples{
-## see examples in ?ck_create_free_ptable and ?perturbTable
+## see examples in ?ck_create_free_ptable and ?perturb_table
 }
 \author{
 Bernhard Meindl

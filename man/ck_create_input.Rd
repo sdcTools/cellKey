@@ -32,7 +32,7 @@ using \code{\link{ck_create_pert_params}}}
 an object of class \code{\link{pert_inputdat-class}}
 }
 \description{
-creates the required input for \code{\link{perturbTable}}.
+creates the required input for \code{\link{perturb_table}}.
 }
 \examples{
 ## define parameters

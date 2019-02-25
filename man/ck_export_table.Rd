@@ -50,5 +50,5 @@ For continuously-scaled variables (magnitude tables):
 Method to extract information about modifications for count tables
 }
 \examples{
-## see example in ?perturbTable
+## see example in ?perturb_table
 }

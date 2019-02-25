@@ -37,7 +37,7 @@
 #' }
 #' @export
 #' @examples
-#' ## see example in ?perturbTable
+#' ## see example in ?perturb_table
 ck_export_table <- function(x, vname=NULL, type="both") {
   stopifnot(is_scalar_character(type))
   stopifnot(type %in% c("both", "weighted", "unweighted"))

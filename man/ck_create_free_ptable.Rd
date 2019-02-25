@@ -64,7 +64,7 @@ pt_free <- ck_update_free_ptable(
   cols = 21:30
 )
 
-## see also the example in ?perturbTable
+## see also the example in ?perturb_table
 }
 \author{
 Bernhard Meindl

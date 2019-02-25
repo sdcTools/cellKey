@@ -55,7 +55,7 @@
 #'   cols = 21:30
 #' )
 #'
-#' ## see also the example in ?perturbTable
+#' ## see also the example in ?perturb_table
 ck_create_free_ptable <- function(nrcol=70) {
   stopifnot(is_scalar_integerish(nrcol))
   stopifnot(nrcol > 0)
@@ -116,7 +116,7 @@ ck_create_free_ptable <- function(nrcol=70) {
 #' @author Bernhard Meindl
 #' @export
 #' @examples
-#' ## see examples in ?ck_create_free_ptable and ?perturbTable
+#' ## see examples in ?ck_create_free_ptable and ?perturb_table
 ck_update_free_ptable <- function(ptab, fun, cols=NULL, rows=NULL) {
   valid_free_ptable(ptab)
   stopifnot(is.function(fun))

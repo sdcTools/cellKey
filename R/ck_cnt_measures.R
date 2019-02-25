@@ -46,7 +46,7 @@
 #' }
 #' @export
 #' @examples
-#' ## see example in perturbTable
+#' ## see example in perturb_table
 ck_cnt_measures <- function(x, vname="Total") {
   stopifnot(isS4(x), "pert_table" %in% class(x))
   stopifnot(is_scalar_character(vname))

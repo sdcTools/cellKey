@@ -143,10 +143,10 @@ get_colIndex <- function(N, pTableSize, smallN) {
 }
 
 # perform actual lookup to get perturbation values;
-# used in perturbTable()
+# used in perturb_table()
 lookup <- function(tab, pert_params, ckeyname, freqvarname, type) {
   # lookup perturbation values using the abs-method
-  # lookup_abs() is used in perturbTable()
+  # lookup_abs() is used in perturb_table()
   lookup_abs <- function(tab, pert_params, freqs, cellkeys) {
     cK <- row_indices <- col_indices <- pert <- NULL
 
@@ -208,7 +208,7 @@ lookup <- function(tab, pert_params, ckeyname, freqvarname, type) {
   # lookup perturbation values if the perturbation table is in destatis
   # format. This function is based on the fifo()-function provided
   # by Tobias Enderle
-  # lookup_destatis() is used in perturbTable()
+  # lookup_destatis() is used in perturb_table()
   lookup_destatis <- function(tab, pert_params, freqs, cellkeys) {
     i <- kum_p_o <- NULL
     pTable <- slot(pert_params, "pTable")

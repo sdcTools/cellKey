@@ -1,6 +1,7 @@
-#' perturbTable
+#' Perturb a multi-dimensional table using the cell-key method
 #'
-#' compute perturbed tables containing counts and continous variables.
+#' This function allows to compute perturbed tables containing counts as
+#' well as continous variables.
 #'
 #' @param inp an object of class \code{\link{pert_inputdat-class}}
 #' generated with \code{\link{ck_create_input}}
@@ -104,7 +105,7 @@
 #' mTable <- c(0.6, 0.4, 0.2)
 #'
 #' # creating perturbation objects that are later used
-#' # as inputs in perturbTable()
+#' # as inputs in perturb_table()
 #' pert_params_abs <- ck_create_pert_params(
 #'   bigN = 17312941,
 #'   smallN = 12,
@@ -168,7 +169,7 @@
 #' numVars <- c("savings", "income")
 #'
 #' # finally perturb the table
-#' res <- perturbTable(
+#' res <- perturb_table(
 #'   inp = inp_abs,
 #'   dimList = dimList,
 #'   weightVar = weightVar,
@@ -181,7 +182,7 @@
 #' ck_cont_table(res, vname = "income", meanBeforeSum = TRUE)
 #' ck_cont_table(res, vname = "savings", meanBeforeSum = TRUE)
 #'
-#' res <- perturbTable(
+#' res <- perturb_table(
 #'   inp = inp_destatis,
 #'   dimList = dimList,
 #'   weightVar = weightVar,
@@ -192,7 +193,7 @@
 #' ck_cont_table(res, vname = "income", meanBeforeSum = TRUE)
 #' ck_cont_table(res, vname = "savings", meanBeforeSum = TRUE)
 #'
-#' res <- perturbTable(
+#' res <- perturb_table(
 #'   inp = inp_free,
 #'   dimList = dimList,
 #'   weightVar = weightVar,
@@ -214,7 +215,7 @@
 #' ck_cnt_measures(res, vname = "Total")
 #'
 #' # an example using additional countVars
-#' res <- perturbTable(
+#' res <- perturb_table(
 #'   inp = inp_destatis,
 #'   dimList = dimList,
 #'   weightVar = weightVar,
@@ -235,7 +236,7 @@
 #' attr(p_inc, "modifications")
 #'
 #' # create perturbed magnitude table for subgroups of data
-#' res <- perturbTable(
+#' res <- perturb_table(
 #'   inp = inp_destatis,
 #'   dimList = dimList,
 #'   weightVar = weightVar,
@@ -254,7 +255,7 @@
 #' head(df_tot)
 #' df_inc <- ck_export_table(res, vname = "income", type = "weighted")
 #' head(df_inc)
-perturbTable <-
+perturb_table <-
   function(inp,
            dimList,
            countVars = NULL,

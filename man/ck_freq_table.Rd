@@ -8,7 +8,7 @@ ck_freq_table(inp, vname = NULL)
 }
 \arguments{
 \item{inp}{an object of class \code{\linkS4class{pert_table}} generated with
-\code{\link{perturbTable}}}
+\code{\link{perturb_table}}}
 
 \item{vname}{either \code{NULL} or the name of a variable for which a
 perturbed frequeny table has been generated. If \code{NULL}, the function
@@ -38,13 +38,13 @@ have been used.
 \description{
 this function allows to return perturbed count-tables from oututs of
 \code{\linkS4class{pert_table}} objects typically generated
-using \code{\link{perturbTable}}.
+using \code{\link{perturb_table}}.
 }
 \examples{
-# see examples in perturbTable()
+# see examples in perturb_table()
 }
 \seealso{
-ck_cont_table perturbTable
+ck_cont_table perturb_table
 }
 \author{
 Bernhard Meindl

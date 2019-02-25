@@ -26,7 +26,7 @@ This package implements methods to provide perturbation for statistical tables. 
 
 In the **cellKey** package it is possible to make use of two different ways on how to pertub multidimensional count tables - methods `abs` and `destatis`. For both of them methods are provided to generate suitable record keys using function `ck_generate_rkeys()`. For the perturbation of magnitude tables, for now only the method developed by the ABS is supported. Using sha1-checksums on the input datasets, we can make sure that the same record keys are generated whenever the same input data set is used for which record keys should be generated. However, it is also possible of course to use already pre-generated record keys available as variable in the microdata set.
 
-The package allows to make use of sampling weights. Thus, both weighted and unweighted count and magnitude tables can be perturbed. The hierarchical structure of the variables spanning the table can be arbitrarily complex. To generate these hierarchies, the **cellKey** packages imports functionality from the [**sdcHierarchies**](https://cran.r-project.org/package=sdcHierarchies) package that allows to define these hierarchies in an intuitive way. Finally, auxiliary methods are provided that allow to extract valueable information from objects created by the main function of this package `perturbTable()`. For example `mod_counts()` returns a data object showing for each cell the perturbation value and where it was found in the lookup table.
+The package allows to make use of sampling weights. Thus, both weighted and unweighted count and magnitude tables can be perturbed. The hierarchical structure of the variables spanning the table can be arbitrarily complex. To generate these hierarchies, the **cellKey** packages imports functionality from the [**sdcHierarchies**](https://cran.r-project.org/package=sdcHierarchies) package that allows to define these hierarchies in an intuitive way. Finally, auxiliary methods are provided that allow to extract valueable information from objects created by the main function of this package `perturb_table()`. For example `mod_counts()` returns a data object showing for each cell the perturbation value and where it was found in the lookup table.
 
 What is left is of course identifying bugs and issues and also to optimize performance of the package as well as to include some real world examples, eg. census tables.
 
@@ -109,7 +109,7 @@ print(dimList)
 ```
 
 ### Compute perturbed tables
-It is now possible to finally compute perturbed tables using function `perturbTable()`. This function takes the following parameters:
+It is now possible to finally compute perturbed tables using function `perturb_table()`. This function takes the following parameters:
 
 - `inp`: required, an object of class `pert_input` created with `ck_create_input()`
 - `dimList`: required, a `list` containing definitions of hierarchies of all variables that will define the table
@@ -120,7 +120,7 @@ It is now possible to finally compute perturbed tables using function `perturbTa
 If both `countVars` and `numVars` are not specified, the perturbed count table based on all units is computed. Below it is shown, how a count table using existing sampling weights (available in variable `sampling_weight` in the input data) can be computed:
 
 ```{r}
-tab1 <- perturbTable(
+tab1 <- perturb_table(
   inp = inp,
   dimList = dimList,
   countVars = c("cnt_males", "cnt_highincome"),
@@ -131,7 +131,7 @@ print(tab1) # custom print method
 # print(tab1, vname="Total")
 ```
 
-Applying method `ck_freq_table()` to an output object of `perturbTable()` returns a `data.table` with all combinations of the dimensional variables `sex` and `age` as well as original and perturbed (un)weighted values are returned. In any case, the tabulation of all observations can be extracted (`vnames="Total"`). If additional variables have been specified in argument `countVars`, these can be queried too as shown below:
+Applying method `ck_freq_table()` to an output object of `perturb_table()` returns a `data.table` with all combinations of the dimensional variables `sex` and `age` as well as original and perturbed (un)weighted values are returned. In any case, the tabulation of all observations can be extracted (`vnames="Total"`). If additional variables have been specified in argument `countVars`, these can be queried too as shown below:
 
 ```{r}
 ck_freq_table(tab1) # show which tables have been generated
@@ -146,7 +146,7 @@ In the example above we see, that all cells containing `sex=="female" no perturb
 - `pWC`: perturbed weighted counts
 - `WCavg`: cell average weight
 
-Function `ck_cnt_measures()` applied to the resulting object of `perturbTable()` allows to compute information loss measures for perturbed count variables. Its application is as simple as:
+Function `ck_cnt_measures()` applied to the resulting object of `perturb_table()` allows to compute information loss measures for perturbed count variables. Its application is as simple as:
 
 ```{r}
 infoloss <- ck_cnt_measures(tab1, vname = "Total")
@@ -163,10 +163,10 @@ This function returns a list with the following elements:
 - **false_zero:** number of cells that were perturbed to zero
 - **false_positives:** number of cells that were initially zero but have been perturbed to a number different from zero
 
-The next example shows how to create a perturbed table of continuous data using sampling weights. For this case, we need to specify parameter `numVars` in `perturbTable()`. Note that it is possible, to specify multiple variables at once.
+The next example shows how to create a perturbed table of continuous data using sampling weights. For this case, we need to specify parameter `numVars` in `perturb_table()`. Note that it is possible, to specify multiple variables at once.
 
 ```{r}
-tab2 <- perturbTable(
+tab2 <- perturb_table(
   inp = inp, 
   dimList = dimList,  
   weightVar = "sampling_weight", 
@@ -175,7 +175,7 @@ tab2 <- perturbTable(
 )
 ```
 
-To get information about magnitute tables, function `ck_cont_table()` can be applied to the output of `perturbTable()`. In this case, we can set an additional argument `meanBeforeSum` that is either `TRUE` or `FALSE` and specifies, how the perturbed cell values are computed. Details on this method can be found in *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar) in Section *6.3*.
+To get information about magnitute tables, function `ck_cont_table()` can be applied to the output of `perturb_table()`. In this case, we can set an additional argument `meanBeforeSum` that is either `TRUE` or `FALSE` and specifies, how the perturbed cell values are computed. Details on this method can be found in *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar) in Section *6.3*.
 
 ```{r}
 p_income <- ck_cont_table(tab2, vname = "income", meanBeforeSum = TRUE)
@@ -198,10 +198,10 @@ We see that this `data.table` has the following variables:
 - `vals.pert`: the amount of perturbation (`magnitude * dir * noise * vals.orig`)
 - `vals.mod`: the final perturbed value (`vals.orig`+`vals.pert`)
 
-An interesting feature is that one can optionally specify argument `by` in `perturbTable()` which is relevant for the computation of perturbed magnitude tables. The idea is that it allows to compute magnitude tables restricted to some units in the data set. In the following example we show how to create a perturbed table of `savings` for only those observations that have high income (variable `cnt_highincome`).
+An interesting feature is that one can optionally specify argument `by` in `perturb_table()` which is relevant for the computation of perturbed magnitude tables. The idea is that it allows to compute magnitude tables restricted to some units in the data set. In the following example we show how to create a perturbed table of `savings` for only those observations that have high income (variable `cnt_highincome`).
 
 ```{r}
-tab3 <- perturbTable(
+tab3 <- perturb_table(
   inp = inp, 
   dimList = dimList,  
   weightVar = "sampling_weight", 
@@ -227,7 +227,7 @@ p_savings
 From the results we can observe that there are no high-income units in the highest age group (`age_group6`) and those cells are not perturbed at all.
 
 
-Using function `ck_export_table()` which can be applied to outputs of `perturbTable()`. This functions returns a simple `data.frames` containing all cells and perturbed (weighted) values for a given perturbed variables. We could apply it to the `Total`-variable as follows
+Using function `ck_export_table()` which can be applied to outputs of `perturb_table()`. This functions returns a simple `data.frames` containing all cells and perturbed (weighted) values for a given perturbed variables. We could apply it to the `Total`-variable as follows
 
 ```{r}
 dt_tot <- ck_export_table(tab3, vname = "Total", type = "both")
@@ -235,7 +235,7 @@ head(dt_tot)
 ```
 
 ### Extract information from results
-Some auxiliary methods may be applied to output object of function `perturbTable()`. The structure of such objects is shown below:
+Some auxiliary methods may be applied to output object of function `perturb_table()`. The structure of such objects is shown below:
 
 ```{r}
 slotNames(tab2)
@@ -251,7 +251,7 @@ Information on perturbations for numerical variables can be extracted using `mod
 head(mod_numvars(tab2))
 ```
 
-Finally we note that there are `print` and `summary` methods implemented for objects returned from `perturbTable()` which can be used as shown below:
+Finally we note that there are `print` and `summary` methods implemented for objects returned from `perturb_table()` which can be used as shown below:
 
 ```{r}
 print(tab1)

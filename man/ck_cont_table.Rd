@@ -8,7 +8,7 @@ ck_cont_table(inp, vname = NULL, meanBeforeSum = TRUE)
 }
 \arguments{
 \item{inp}{an object of class \code{\linkS4class{pert_table}} generated
-with \code{\link{perturbTable}}}
+with \code{\link{perturb_table}}}
 
 \item{vname}{either \code{NULL} or the name of a variable for which a
 perturbed frequeny table has been generated. If \code{NULL}, the function
@@ -40,7 +40,7 @@ reproducibility. This can be extracted using
 \description{
 this function allows to return perturbed magnitude-tables from oututs of
 \code{\linkS4class{pert_table}} objects typically generated
-using \code{\link{perturbTable}}.
+using \code{\link{perturb_table}}.
 }
 \details{
 The computation of the perturbed weighted mean and the perturbed
@@ -54,10 +54,10 @@ Outputs from Remote Servers at the Australian Bureau of Statistics}
 (Thompson, Broadfoot, Elazar).
 }
 \examples{
-# see examples in perturbTable()
+# see examples in perturb_table()
 }
 \seealso{
-ck_freq_table perturbTable
+ck_freq_table perturb_table
 }
 \author{
 Bernhard Meindl

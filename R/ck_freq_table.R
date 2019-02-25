@@ -2,10 +2,10 @@
 #'
 #' this function allows to return perturbed count-tables from oututs of
 #' \code{\linkS4class{pert_table}} objects typically generated
-#' using \code{\link{perturbTable}}.
+#' using \code{\link{perturb_table}}.
 #'
 #' @param inp an object of class \code{\linkS4class{pert_table}} generated with
-#' \code{\link{perturbTable}}
+#' \code{\link{perturb_table}}
 #' @param vname either \code{NULL} or the name of a variable for which a
 #' perturbed frequeny table has been generated. If \code{NULL}, the function
 #' prints the variables for which a perturbation has been applied.
@@ -30,11 +30,11 @@
 #' \code{vname}
 #' }
 #' @author Bernhard Meindl
-#' @seealso ck_cont_table perturbTable
+#' @seealso ck_cont_table perturb_table
 #' @export
 #'
 #' @examples
-#' # see examples in perturbTable()
+#' # see examples in perturb_table()
 ck_freq_table <- function(inp, vname=NULL) {
   stopifnot(isS4(inp))
   stopifnot(class(inp) == "pert_table")

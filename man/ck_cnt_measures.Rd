@@ -58,5 +58,5 @@ compute utility/information loss measures for count variables
 of a perturbed table.
 }
 \examples{
-## see example in perturbTable
+## see example in perturb_table
 }

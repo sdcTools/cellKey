@@ -86,7 +86,7 @@ test_that("checking output of createInput() with non-existing record keys", {
 })
 
 # Frequency Tables, weighted
-tab_freq <- perturbTable(
+tab_freq <- perturb_table(
   inp = inp,
   dimList = dimList,
   weightVar = "sampling_weight",
@@ -98,7 +98,7 @@ test_that("checking weighted version of perturbedFreqTable", {
   expect_equal(head(res_weighted$UWC_Total, 1), 4580)
 })
 
-tab_freq_noweights <- perturbTable(
+tab_freq_noweights <- perturb_table(
   inp = inp,
   dimList = dimList,
   weightVar = NULL,
@@ -111,7 +111,7 @@ test_that("checking unweighted version of perturbedFreqTable", {
 })
 
 context("Testing Magnitude Tables")
-tab_cont <- perturbTable(
+tab_cont <- perturb_table(
   inp = inp,
   dimList = dimList,
   weightVar = NULL,
@@ -151,7 +151,7 @@ inp <- ck_create_input(
   pert_params = pert_params
 )
 
-tab <- perturbTable(
+tab <- perturb_table(
   inp = inp,
   dimList = dimList,
   weightVar = "sampling_weight",
@@ -192,7 +192,7 @@ test_that("check tabulation of cnt_males", {
 })
 
 context("Testing numVars with by")
-tab <- perturbTable(
+tab <- perturb_table(
   inp = inp,
   dimList = dimList,
   weightVar = "sampling_weight",

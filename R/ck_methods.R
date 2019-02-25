@@ -129,7 +129,7 @@ definition = function(object) {
 #' @param ... additional parameters passed to specific methods
 #' @exportMethod mod_counts
 #' @examples
-#' ## see example in ?perturbTable
+#' ## see example in ?perturb_table
 setGeneric("mod_counts", function(x, ...) {
   standardGeneric("mod_counts")
 })

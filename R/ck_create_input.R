@@ -1,6 +1,6 @@
 #' ck_create_input
 #'
-#' creates the required input for \code{\link{perturbTable}}.
+#' creates the required input for \code{\link{perturb_table}}.
 #'
 #' @param dat a \code{data.table} containing micro data
 #' @param def_rkey either a column name within \code{dat} specifying a variable

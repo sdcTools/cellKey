@@ -36,7 +36,7 @@ dimList <- list(sex = dim.sex, age = dim.age)
 weightVar <- "sampling_weight"
 
 ## perturbing the table
-res <- perturbTable(
+res <- perturb_table(
   inp = inp,
   dimList = dimList,
   weightVar = weightVar,
