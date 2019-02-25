@@ -91,7 +91,7 @@ definition = function(object) {
   cat("Perturbation statistics count variables:\n")
   info_cnts <- mod_counts(object)
 
-  cnt_info <- info_cnts[, as.list(get_distr_vals(pert)), by = "countVar"]
+  cnt_info <- info_cnts[, as.list(.distr_vals(pert)), by = "countVar"]
   print(cnt_info)
   cat("\n")
 
@@ -110,7 +110,7 @@ definition = function(object) {
   info_nums <- mod_numvars(object)
   num_info <- NULL
   if (nrow(info_nums) > 0) {
-    num_info <- info_nums[, as.list(get_distr_vals(vals.pert)), by = "numVar"]
+    num_info <- info_nums[, as.list(.distr_vals(vals.pert)), by = "numVar"]
     cat("\nPerturbation statistics on numerical variables:\n")
     print(num_info)
   }

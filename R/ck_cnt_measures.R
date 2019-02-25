@@ -151,10 +151,10 @@ ck_cnt_measures_basic <- function(orig, pert) {
   dt_b[, prop_r := val_rel / length(dr)]
 
   ## cumdistr
-  vv <- get_distr_vals(dabs)
+  vv <- .distr_vals(dabs)
   dt2 <- data.table(what = names(vv), vals_abs = vv)
-  dt2[, vals_rel := get_distr_vals(drel)]
-  dt2[, vals_r := get_distr_vals(dr)]
+  dt2[, vals_rel := .distr_vals(drel)]
+  dt2[, vals_r := .distr_vals(dr)]
 
   # false zero cells: cells that were perturbed to zero
   false_zero <- sum(pert == 0 & orig != 0)

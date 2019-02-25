@@ -30,15 +30,15 @@ inp <- ck_create_input(
   pert_params = pert_params
 )
 
-dim.sex <- hier_create(root = "Total", nodes = c("male", "female"))
-dim.age <- hier_create(root = "Total", nodes = paste0("age_group", 1:6))
-dimList <- list(sex = dim.sex, age = dim.age)
+dim_sex <- hier_create(root = "Total", nodes = c("male", "female"))
+dim_age <- hier_create(root = "Total", nodes = paste0("age_group", 1:6))
+dl <- list(sex = dim_sex, age = dim_age)
 weightVar <- "sampling_weight"
 
 ## perturbing the table
 res <- perturb_table(
   inp = inp,
-  dimList = dimList,
+  dim_list = dl,
   weightVar = weightVar,
   countVars = c("cnt_mixed", "cnt_onlyones", "cnt_onlyzero"),
   numVars = NULL

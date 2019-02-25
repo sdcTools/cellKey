@@ -75,21 +75,21 @@ ck_cont_table <- function(inp, vname=NULL, meanBeforeSum=TRUE) {
   data <- slot(inp, "tab")
   dt <- cbind(
     data[, slot(inp, "dimVars"), with = FALSE],
-    data[, grep(paste0("_", vname), names(data)), with = FALSE])
+    data[, grep(paste0("_", vname), names(data)), with = FALSE]
+  )
 
   # perturbed weighted counts
   pwc <- data[, get(paste0("pWC_", byVar))]
   if (meanBeforeSum == TRUE) {
-    out <- mean_before_sum(dt[, get(paste0("pWS_", vname))], pWC = pwc)
+    out <- .mean_before_sum(dt[, get(paste0("pWS_", vname))], pWC = pwc)
   } else {
-    out <- sum_before_mean(dt[, get(paste0("pWS_", vname))], pWC = pwc)
+    out <- .sum_before_mean(dt[, get(paste0("pWS_", vname))], pWC = pwc)
   }
   out[is.nan(pWSum), pWSum := 0]
   out[is.nan(pWMean), pWMean := 0]
 
   set(dt, j = paste0("pWS_", vname), value = out$pWSum)
   set(dt, j = paste0("pWM_", vname), value = out$pWMean)
-
 
   mods <- mod_numvars(inp)
   mods <- mods[numVar == vname,

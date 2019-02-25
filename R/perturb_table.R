@@ -5,7 +5,7 @@
 #'
 #' @param inp an object of class \code{\link{pert_inputdat-class}}
 #' generated with \code{\link{ck_create_input}}
-#' @param dimList a list containing slots for each variable that should be
+#' @param dim_list a list containing slots for each variable that should be
 #' tabulated. Each slot consists of a \code{data.frame} or \code{data.table}
 #' with columns \code{levels} and \code{codes} specifiying the
 #' hierarchies of the variables.
@@ -29,9 +29,9 @@
 #' dat <- ck_create_testdata()
 #'
 #' # create some binary (0,1) variables that should be perturbed later
-#' dat[, cnt_females := ifelse(sex=="male", 0, 1)]
-#' dat[, cnt_males := ifelse(sex=="male", 1, 0)]
-#' dat[, cnt_highincome := ifelse(income>=9000, 1, 0)]
+#' dat[, cnt_females := ifelse(sex == "male", 0, 1)]
+#' dat[, cnt_males := ifelse(sex == "male", 1, 0)]
+#' dat[, cnt_highincome := ifelse(income >= 9000, 1, 0)]
 #'
 #' ## create record keys
 #' dat$rkeys <- ck_generate_rkeys(
@@ -60,9 +60,9 @@
 #' )
 #'
 #' # create some functions first that return a single number
-#' fn1 <- function() { round(rnorm(1, mean=5, sd=10)) }
-#' fn2 <- function() { rpois(1, lambda=2) }
-#' fn3 <- function() { rpois(1, lambda=5) }
+#' fn1 <- function() round(rnorm(1, mean = 5, sd = 10))
+#' fn2 <- function() rpois(1, lambda = 2)
+#' fn3 <- function() rpois(1, lambda = 5)
 #' fn4 <- function() return(1)
 #' fn5 <- function() return(-1)
 #'
@@ -91,12 +91,12 @@
 #' # as fn4() and fn5() always return 1 or -1
 #' ptab_free <- ck_update_free_ptable(
 #'   ptab = ptab_free,
-#'   fun=fn4,
-#'   cols=10:20
+#'   fun = fn4,
+#'   cols = 10:20
 #' )
 #' ptab_free <- ck_update_free_ptable(
 #'   ptab = ptab_free,
-#'   fun=fn5,
+#'   fun = fn5,
 #'   cols = 21:30
 #' )
 #'
@@ -164,14 +164,14 @@
 #' hier_display(dim_age)
 #'
 #' # define required inputs
-#' dimList <- list(sex = dim_sex, age = dim_age)
+#' dim_list <- list(sex = dim_sex, age = dim_age)
 #' weightVar <- "sampling_weight"
 #' numVars <- c("savings", "income")
 #'
 #' # finally perturb the table
 #' res <- perturb_table(
 #'   inp = inp_abs,
-#'   dimList = dimList,
+#'   dim_list = dim_list,
 #'   weightVar = weightVar,
 #'   countVars = NULL,
 #'   numVars = numVars
@@ -184,7 +184,7 @@
 #'
 #' res <- perturb_table(
 #'   inp = inp_destatis,
-#'   dimList = dimList,
+#'   dim_list = dim_list,
 #'   weightVar = weightVar,
 #'   countVars = NULL,
 #'   numVars = numVars
@@ -195,7 +195,7 @@
 #'
 #' res <- perturb_table(
 #'   inp = inp_free,
-#'   dimList = dimList,
+#'   dim_list = dim_list,
 #'   weightVar = weightVar,
 #'   countVars = NULL,
 #'   numVars = numVars
@@ -217,7 +217,7 @@
 #' # an example using additional countVars
 #' res <- perturb_table(
 #'   inp = inp_destatis,
-#'   dimList = dimList,
+#'   dim_list = dim_list,
 #'   weightVar = weightVar,
 #'   countVars = c("cnt_females", "cnt_males", "cnt_highincome"),
 #'   numVars = numVars)
@@ -238,7 +238,7 @@
 #' # create perturbed magnitude table for subgroups of data
 #' res <- perturb_table(
 #'   inp = inp_destatis,
-#'   dimList = dimList,
+#'   dim_list = dim_list,
 #'   weightVar = weightVar,
 #'   countVars = c("cnt_females", "cnt_males", "cnt_highincome"),
 #'   numVars = numVars,
@@ -257,7 +257,7 @@
 #' head(df_inc)
 perturb_table <-
   function(inp,
-           dimList,
+           dim_list,
            countVars = NULL,
            numVars = NULL,
            by = NULL,
@@ -294,10 +294,10 @@ perturb_table <-
   dat[, tmprkeysfortabulation := slot(inp, "rkeys")]
   dat[, tmpidforsorting := .I]
 
-  dV <- match(names(dimList), names(dat))
+  dV <- match(names(dim_list), names(dat))
   if (any(is.na(dV))) {
     e <- c(
-      "Check input `dimList`:",
+      "Check input `dim_list`:",
       "--> at least one variable was not found in the input data."
     )
     stop(paste(e, collapse = " "), call. = FALSE)
@@ -399,10 +399,10 @@ perturb_table <-
         vals_orig <- dat[, get(v) * get(by)]
         set(dat, j = vnum_orig, value = vals_orig)
       }
-      rr <- identify_topK_cells(
+      rr <- .identify_topk_cells(
         dat = dat,
         rkeys = slot(inp, "rkeys"),
-        dimList = dimList,
+        dim_list = dim_list,
         pert_params = pert_params,
         v = v,
         type = type
@@ -424,7 +424,7 @@ perturb_table <-
   nV <- match(nV, names(dat))
   prob <- makeProblem(
     data = dat,
-    dimList = dimList,
+    dimList = dim_list,
     dimVarInd = dV,
     freqVarInd = fV,
     numVarInd = nV,
@@ -467,7 +467,7 @@ perturb_table <-
   # list with perturbation results for each countVar
   cols_pert <- gen_vnames(countVars, prefix = "pert")
   count_modifications <- lapply(1:length(cols_n), function(x) {
-    dt <- lookup(
+    dt <- .lookup(
       tab = tab,
       pert_params = pert_params,
       ckeyname = cols_ck[x],
@@ -481,7 +481,7 @@ perturb_table <-
   })
   count_modifications <- rbindlist(count_modifications)
   count_modifications <-
-    cbind(tab[, c(names(dimList)), with = F], count_modifications)
+    cbind(tab[, c(names(dim_list)), with = F], count_modifications)
 
   # compute perturbed unweighted counts
   cols_puwc <- gen_vnames(countVars, prefix = "pUWC")
@@ -534,7 +534,7 @@ perturb_table <-
 
   # keep variables
   vv <- c(
-    names(dimList),
+    names(dim_list),
     cols_n,
     cols_wc,
     cols_puwc,
@@ -548,7 +548,7 @@ perturb_table <-
     tab = tab,
     count_modifications = count_modifications,
     numvars_modifications = pert_info_cont,
-    dimVars = names(dimList),
+    dimVars = names(dim_list),
     countVars = countVar_names,
     numVars = numVars,
     by = by,

@@ -101,18 +101,18 @@ dim_age <- hier_create(root = "Total", nodes = paste0("age_group", 1:6))
 hier_display(dim_age)
 ```
 
-The idea is to create a tree object using `hier_create()` and then add (using `hier_add()`) or delete (using `hier_delete()`) elements from this hierarchical structure. All hierarchy specifications must then be combined into a named list where the names of the list refer to variable names of the input data set and the elements are data objects created above that contain the hierarchy specification. This is why the list elements of `dimList` have to be named `sex` and `age`.
+The idea is to create a tree object using `hier_create()` and then add (using `hier_add()`) or delete (using `hier_delete()`) elements from this hierarchical structure. All hierarchy specifications must then be combined into a named list where the names of the list refer to variable names of the input data set and the elements are data objects created above that contain the hierarchy specification. This is why the list elements of `dim_list` have to be named `sex` and `age`.
 
 ```{r}
-dimList <- list(sex = dim_sex, age = dim_age)
-print(dimList)
+dl <- list(sex = dim_sex, age = dim_age)
+print(dl)
 ```
 
 ### Compute perturbed tables
 It is now possible to finally compute perturbed tables using function `perturb_table()`. This function takes the following parameters:
 
 - `inp`: required, an object of class `pert_input` created with `ck_create_input()`
-- `dimList`: required, a `list` containing definitions of hierarchies of all variables that will define the table
+- `dim_list`: required, a `list` containing definitions of hierarchies of all variables that will define the table
 - `weightVar`: optional, a variable name existing in `slot(inp, "microdat)` holding sampling weights for each unit in the micro data or or `NULL` if no weights are available. In this case, each unit is assigned sampling weight 1 in the data
 - `countVars`: optional, a vector of variable names existing in `slot(inp, "microdat)` that should be perturbed. The key is that these variables need to be binary (0/1 coded).
 - `numVars`: optional, a vector of variable names existing in the input microdata that should be tabulated (and perturbed). 
@@ -122,7 +122,7 @@ If both `countVars` and `numVars` are not specified, the perturbed count table b
 ```{r}
 tab1 <- perturb_table(
   inp = inp,
-  dimList = dimList,
+  dim_list = dl,
   countVars = c("cnt_males", "cnt_highincome"),
   weightVar = "sampling_weight",
   numVars = NULL
@@ -168,7 +168,7 @@ The next example shows how to create a perturbed table of continuous data using 
 ```{r}
 tab2 <- perturb_table(
   inp = inp, 
-  dimList = dimList,  
+  dim_list = dl,  
   weightVar = "sampling_weight", 
   countVars = c("cnt_males", "cnt_highincome"), 
   numVars = c("savings","income")
@@ -203,7 +203,7 @@ An interesting feature is that one can optionally specify argument `by` in `pert
 ```{r}
 tab3 <- perturb_table(
   inp = inp, 
-  dimList = dimList,  
+  dim_list = dl,  
   weightVar = "sampling_weight", 
   numVars = c("savings"), 
   by = "cnt_highincome"

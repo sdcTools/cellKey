@@ -118,7 +118,7 @@ ck_create_free_ptable <- function(nrcol=70) {
 #' @examples
 #' ## see examples in ?ck_create_free_ptable and ?perturb_table
 ck_update_free_ptable <- function(ptab, fun, cols=NULL, rows=NULL) {
-  valid_free_ptable(ptab)
+  .valid_free_ptable(ptab)
   stopifnot(is.function(fun))
 
   tab <- slot(ptab, "pTable")
@@ -156,6 +156,6 @@ ck_update_free_ptable <- function(ptab, fun, cols=NULL, rows=NULL) {
   }
   slot(ptab, "pTable") <- tab
   validObject(ptab)
-  check_free_ptable(ptab)
+  .check_free_ptable(ptab)
   return(ptab)
 }

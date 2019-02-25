@@ -1,13 +1,13 @@
 # check if input is a valid ptable in "free" format
-valid_free_ptable <- function(ptab) {
+.valid_free_ptable <- function(ptab) {
   stopifnot(isS4(ptab))
   stopifnot(isS4(ptab), class(ptab) == "ptable")
   stopifnot(slot(ptab, "type") == "free")
   return(TRUE)
 }
 
-check_free_ptable <- function(ptab) {
-  valid_free_ptable(ptab)
+.check_free_ptable <- function(ptab) {
+  .valid_free_ptable(ptab)
   tab <- slot(ptab, "pTable")
 
   for (j in 1:ncol(tab)) {
@@ -23,10 +23,8 @@ check_free_ptable <- function(ptab) {
   return(invisible(TRUE))
 }
 
-
-
 # convert bin to decimal
-bintodec <- function(y) {
+.bintodec <- function(y) {
   # find the decimal number corresponding to binary sequence 'y'
   if (!(all(y %in% 0:1))) {
     stop("not a binary sequence")
@@ -37,14 +35,15 @@ bintodec <- function(y) {
 }
 
 # compute cell key from record keys
-calc_cKey <- function(rec_keys, bigN) {
-  sum(as.numeric(rec_keys)) %% bigN
+.calc_cellkey <- function(rec_keys, bigN) {
+  #sum(as.numeric(rec_keys)) %% bigN
+  sum(rec_keys) %% bigN
 }
 
 # +1 if 9th bit of record_key is 1, -1 else
 # used for perturbation of numerical variables
-get_direction <- function(rec_keys, type) {
-  get_direction_abs <- function(rec_keys) {
+.direction <- function(rec_keys, type) {
+  .abs <- function(rec_keys) {
     out <- rep(-1, length(rec_keys))
     rr <- sapply(1:length(rec_keys), function(x) {
       as.integer(intToBits(rec_keys[x]))[9] == 1
@@ -52,76 +51,64 @@ get_direction <- function(rec_keys, type) {
     out[rr] <- 1
     out
   }
-  get_direction_destatis <- function(rec_keys) {
+  .destatis <- function(rec_keys) {
     ifelse(rec_keys <= 0.5, -1, 1)
   }
-  stopifnot(is_scalar_character(type))
-  stopifnot(type %in% c("destatis", "abs", "free"))
-
   if (type %in% c("abs", "free")) {
-    return(get_direction_abs(rec_keys))
+    return(.abs(rec_keys))
   }
   if (type == "destatis") {
-    return(get_direction_destatis(rec_keys))
+    return(.destatis(rec_keys))
   }
-  stop("error in get_direction()\n")
 }
 
 # in which row should we look in the perturbation table
 # used for perturbation of numerical variables
-get_row_index_cont <- function(rec_keys, type) {
-  get_row_index_cont_abs <- function(rec_keys) {
+.row_index_cont <- function(rec_keys, type) {
+  .abs <- function(rec_keys) {
     sapply(1:length(rec_keys), function(x) {
-      bintodec(as.integer(intToBits(rec_keys[x]))[1:8]) + 1
+      .bintodec(as.integer(intToBits(rec_keys[x]))[1:8]) + 1
     })
   }
-  get_row_index_cont_destatis <- function(rec_keys) {
+  .destatis <- function(rec_keys) {
     as.numeric(cut(rec_keys, seq(0, 1, length = 257)))
   }
 
-  stopifnot(is_scalar_character(type))
-  stopifnot(type %in% c("destatis", "abs", "free"))
-
   if (type %in% c("abs", "free")) {
-    return(get_row_index_cont_abs(rec_keys))
+    return(.abs(rec_keys))
   }
   if (type == "destatis") {
-    return(get_row_index_cont_destatis(rec_keys))
+    return(.destatis(rec_keys))
   }
-  stop("error in get_row_index_cont()\n")
 }
 
 # in which row should we look in the perturbation table
 # used for perturbation of numerical variables
-get_col_index_cont <- function(cKey, n, smallC, type) {
-  get_col_index_cont_abs <- function(cKey, n, smallC) {
+.col_index_cont <- function(cKey, n, smallC, type) {
+  .abs <- function(cKey, n, smallC) {
     if (n <= smallC) {
       return(n + 32)
     }
-    bintodec(as.integer(intToBits(cKey))[1:5]) + 1
+    .bintodec(as.integer(intToBits(cKey))[1:5]) + 1
   }
-  get_col_index_cont_destatis <- function(cKey, n, smallC) {
+  .destatis <- function(cKey, n, smallC) {
     if (n <= smallC) {
       return(n + 32)
     }
     as.numeric(cut(cKey, seq(0, 1, length = smallC + 1)))
   }
 
-  stopifnot(is_scalar_character(type))
-  stopifnot(type %in% c("destatis", "abs", "free"))
-
   if (type %in% c("abs", "free")) {
-    return(get_col_index_cont_abs(cKey, n, smallC))
+    return(.abs(cKey, n, smallC))
   }
   if (type == "destatis") {
-    return(get_col_index_cont_destatis(cKey, n, smallC))
+    return(.destatis(cKey, n, smallC))
   }
-  stop("error in get_col_index_cont_destatis()\n")
 }
 
 # row index for perturbation - see page 11
 # used for counts
-get_rowIndex <- function(cKey) {
+.row_index_freq <- function(cKey) {
   bytes <- as.integer(intToBits(cKey))
   r <- bitwXor(bytes[1:8], bytes[9:16])
   r <- bitwXor(r, bytes[17:24])
@@ -134,7 +121,7 @@ get_rowIndex <- function(cKey) {
 
 # column index for perturbation - see page 11
 # used for counts
-get_colIndex <- function(N, pTableSize, smallN) {
+.col_index_freq <- function(N, pTableSize, smallN) {
   if (N <= pTableSize - smallN) {
     return(N)
   } else {
@@ -144,15 +131,14 @@ get_colIndex <- function(N, pTableSize, smallN) {
 
 # perform actual lookup to get perturbation values;
 # used in perturb_table()
-lookup <- function(tab, pert_params, ckeyname, freqvarname, type) {
+.lookup <- function(tab, pert_params, ckeyname, freqvarname, type) {
   # lookup perturbation values using the abs-method
-  # lookup_abs() is used in perturb_table()
-  lookup_abs <- function(tab, pert_params, freqs, cellkeys) {
+  .abs <- function(tab, pert_params, freqs, cellkeys) {
     cK <- row_indices <- col_indices <- pert <- NULL
 
-    row_indices <- sapply(freqs, get_rowIndex)
+    row_indices <- sapply(freqs, .row_index_freq)
     col_indices <- sapply(freqs, function(z) {
-      get_colIndex(
+      .col_index_freq(
         N = z,
         pTableSize = slot(pert_params, "pTableSize"),
         smallN = slot(pert_params, "smallN")
@@ -174,12 +160,12 @@ lookup <- function(tab, pert_params, ckeyname, freqvarname, type) {
   }
 
   # ptable in "free" format user defined functions
-  lookup_free <- function(tab, pert_params, freqs, cellkeys) {
+  .free <- function(tab, pert_params, freqs, cellkeys) {
     cK <- row_indices <- col_indices <- pert <- NULL
 
-    row_indices <- sapply(freqs, get_rowIndex)
+    row_indices <- sapply(freqs, .row_index_freq)
     col_indices <- sapply(freqs, function(z) {
-      get_colIndex(
+      .col_index_freq(
         N = z,
         pTableSize = slot(pert_params, "pTableSize"),
         smallN = slot(pert_params, "smallN")
@@ -208,8 +194,7 @@ lookup <- function(tab, pert_params, ckeyname, freqvarname, type) {
   # lookup perturbation values if the perturbation table is in destatis
   # format. This function is based on the fifo()-function provided
   # by Tobias Enderle
-  # lookup_destatis() is used in perturb_table()
-  lookup_destatis <- function(tab, pert_params, freqs, cellkeys) {
+  .destatis <- function(tab, pert_params, freqs, cellkeys) {
     i <- kum_p_o <- NULL
     pTable <- slot(pert_params, "pTable")
     symmetry <- max(pTable$i)
@@ -244,20 +229,16 @@ lookup <- function(tab, pert_params, ckeyname, freqvarname, type) {
     )
   }
 
-  stopifnot(is_scalar_character(type))
   stopifnot(is_scalar_character(ckeyname))
   stopifnot(ckeyname %in% names(tab))
-
   stopifnot(is_scalar_character(freqvarname))
   stopifnot(freqvarname %in% names(tab))
-
-  stopifnot(type %in% c("destatis", "abs", "free"))
 
   cellkeys <- tab[, get(ckeyname)]
   freqs <- tab[, get(freqvarname)]
 
   if (type == "abs") {
-    return(lookup_abs(
+    return(.abs(
       tab = tab,
       pert_params = pert_params,
       freqs = freqs,
@@ -265,7 +246,7 @@ lookup <- function(tab, pert_params, ckeyname, freqvarname, type) {
     ))
   }
   if (type == "free") {
-    return(lookup_free(
+    return(.free(
       tab = tab,
       pert_params = pert_params,
       freqs = freqs,
@@ -273,41 +254,22 @@ lookup <- function(tab, pert_params, ckeyname, freqvarname, type) {
     ))
   }
   if (type == "destatis") {
-    return(lookup_destatis(
+    return(.destatis(
       tab = tab,
       pert_params = pert_params,
       freqs = freqs,
       cellkeys = cellkeys
     ))
   }
-  stop("error in lookup()\n")
 }
 
-check_weight <- function(dat, w) {
-  tmpweight_for_tabulation <- NULL
-  w_new <- "tmpweight_for_tabulation"
-  if (!is.null(w)) {
-    stopifnot(w %in% names(dat))
-    stopifnot(length(w) == 1)
-    expr <- paste0("dat[,", w_new, ":=", w, "]")
-    eval(parse(text = expr))
-    is_weighted <- TRUE
-  } else {
-    dat[, tmpweight_for_tabulation := 1]
-    is_weighted <- FALSE
-  }
-  return(list(
-    dat = dat,
-    is_weighted = is_weighted,
-    w_new = w_new
-  ))
-}
+# identify top k contributors to each cell and compute
+# the required amount of perturbation
+.identify_topk_cells <- function(dat, rkeys, dim_list, pert_params, v=v, type) {
+  tmprkeyfortabulation <- tmpidforsorting <- NULL
+  is_topK <- magnitude <- noise <- NULL
 
-identify_topK_cells <- function(dat, rkeys, dimList, pert_params, v=v, type) {
-  tmprkeyfortabulation <- is_topK <- magnitude <- noise <- NULL
-  tmpidforsorting <- NULL
-
-  keys <- names(dimList)
+  keys <- names(dim_list)
   tmp <- copy(dat)
 
   mTable <- slot(pert_params, "mTable")
@@ -315,61 +277,63 @@ identify_topK_cells <- function(dat, rkeys, dimList, pert_params, v=v, type) {
   bigN <- slot(pert_params, "bigN")
   smallC <- slot(pert_params, "smallC")
 
-  tmp <- tmp[, c(v, keys, "tmpidforsorting"), with = F]
+  tmp <- tmp[, c(v, keys, "tmpidforsorting"), with = FALSE]
   tmp[, tmprkeyfortabulation := rkeys]
 
-  # groups defined by key-variables
-  setkeyv(tmp, keys)
-
-  tmp[, is_topK := FALSE]
-  tmp[, magnitude := NA_real_]
-  tmp[, dir := NA_real_]
-  tmp[, noise := NA_real_]
+  tmp$is_topK <- FALSE
+  tmp$magnitude <- NA_real_
+  tmp$dir <- NA_real_
+  tmp$noise <- NA_real_
 
   # using absolute values for sorting
-  tmp[, ("tmpvarfortabulation") := abs(get(v))]
+  tmp$tmpvarfortabulation <- abs(tmp[[v]])
+
+  v.pert <- paste0(v, ".pert")
+  v.mod <- paste0(v, ".mod")
+
+  tmp[[v.pert]] <- 0
+  tmp[[v.mod]] <- 0
+
+  setorderv(tmp, c(keys, "tmpvarfortabulation"), order = -1)
 
   res <- NULL
   spl <- split(tmp, by = keys)
-  v.pert <- paste0(v, ".pert")
-  v.mod <- paste0(v, ".mod")
+
   res <- lapply(1:length(spl), function(i) {
     z <- spl[[i]]
-    setorderv(z, "tmpvarfortabulation", order = -1)
 
     topK <- min(nrow(z), slot(pert_params, "topK"))
-    mTab <- mTable[1:topK]
+    z <- z[1:topK]
 
-    z[1:topK, is_topK := TRUE]
-    z[1:topK, magnitude := mTab]
+    rkeys <- z$tmprkeyfortabulation
 
-    d <- get_direction(z[1:topK, tmprkeyfortabulation], type = type)
-    z[1:topK, dir := d]
-    rind <- get_row_index_cont(
-      rec_keys = z[1:topK, tmprkeyfortabulation],
+    z[, is_topK := TRUE]
+    z[, magnitude := mTable[1:topK]]
+
+    z[, dir := .direction(rkeys, type = type)]
+    rind <- .row_index_cont(
+      rec_keys = rkeys,
       type = type
     )
-    cind <- get_col_index_cont(
-      cKey = calc_cKey(z[, tmprkeyfortabulation], bigN),
-      n = nrow(z),
+    cind <- .col_index_cont(
+      cKey = .calc_cellkey(spl[[i]]$tmprkeyfortabulation, bigN),
+      n = nrow(spl[[i]]),
       smallC = smallC,
       type = type
     )
 
-    z[1:topK, noise := unlist(sTable[rind, cind, with = F])]
+    z[, noise := sTable[[cind]][rind]]
 
-    # .pert die tatsaechliche verschmutzung
-    z[, eval(v.pert) := 0]
-    z[is_topK == TRUE, eval(v.pert) := get(v) * magnitude * dir * noise]
+    # .pert: the amount of perturbation
+    z[, eval(v.pert) := z[[v]] * z$magnitude * z$dir * z$noise]
 
-    # .mod: die neuen gewichteten werte der variablen
-    z[, eval(v.mod) := get(v) + get(v.pert)]
+    # .mod: new values of weighted variable
+    z[, eval(v.mod) := z[[v]] + z[[v.pert]]]
+    z
   })
 
-  res <- rbindlist(res)
-  setkey(res, tmpidforsorting)
-  # modified
-  mod <- res[is_topK == TRUE]
+  mod <- rbindlist(res)
+  setkey(mod, tmpidforsorting)
 
   vv <- c(
     "tmpidforsorting",
@@ -387,7 +351,7 @@ identify_topK_cells <- function(dat, rkeys, dimList, pert_params, v=v, type) {
 
 # x: values of a perturbed numerical variable
 # pWC: perturbed weighted counts
-mean_before_sum <- function(x, pWC) {
+.mean_before_sum <- function(x, pWC) {
   pWMean <- x / pWC
   pWSum <- pWMean * pWC
   pWMean[is.na(pWMean)] <- 0
@@ -395,7 +359,7 @@ mean_before_sum <- function(x, pWC) {
 }
 # x: values of a perturbed numerical variable
 # pWC: perturbed weighted counts
-sum_before_mean <- function(x, pWC) {
+.sum_before_mean <- function(x, pWC) {
   pWSum <- x
   pWMean <- x / pWC
   pWMean[is.na(pWMean)] <- 0
@@ -403,13 +367,13 @@ sum_before_mean <- function(x, pWC) {
 }
 
 # simple check functions for record keys
-check_rkeys <- function(rkeys, type) {
-  check_rkeys_abs <- function(rkeys) {
+.check_rkeys <- function(rkeys, type) {
+  .abs <- function(rkeys) {
     stopifnot(is_integerish(rkeys))
     stopifnot(all(rkeys > 0))
     return(TRUE)
   }
-  check_rkeys_destatis <- function(rkeys) {
+  .destatis <- function(rkeys) {
     stopifnot(is_double(rkeys))
     stopifnot(all(rkeys >= 0))
     stopifnot(all(rkeys <= 1))
@@ -417,16 +381,16 @@ check_rkeys <- function(rkeys, type) {
   }
 
   if (type == "abs") {
-    check_rkeys_abs(rkeys)
+    .abs(rkeys)
   }
   if (type == "destatis") {
-    check_rkeys_destatis(rkeys)
+    .destatis(rkeys)
   }
   return(TRUE)
 }
 
 # statistics of a distribution of a numeric vector
-get_distr_vals <- function(dd) {
+.distr_vals <- function(dd) {
   stopifnot(is.numeric(dd))
   dd <- na.omit(dd)
   vals <- c(

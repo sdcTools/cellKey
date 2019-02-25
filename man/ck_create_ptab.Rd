@@ -5,7 +5,7 @@
 \title{Create a perturbation table}
 \usage{
 ck_create_ptab(D, V, type, js = 0, pstay = NULL, optim = 1,
-  mono = TRUE, epsilon = 1e-07, pTableSize = 70)
+  mono = TRUE, epsilon = 0.0000001, pTableSize = 70)
 }
 \arguments{
 \item{D}{perturbation parameter for maximum perturbation (scalar or vector)}

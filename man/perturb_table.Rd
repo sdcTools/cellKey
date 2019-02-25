@@ -4,14 +4,14 @@
 \alias{perturb_table}
 \title{Perturb a multi-dimensional table using the cell-key method}
 \usage{
-perturb_table(inp, dimList, countVars = NULL, numVars = NULL,
+perturb_table(inp, dim_list, countVars = NULL, numVars = NULL,
   by = NULL, weightVar = NULL)
 }
 \arguments{
 \item{inp}{an object of class \code{\link{pert_inputdat-class}}
 generated with \code{\link{ck_create_input}}}
 
-\item{dimList}{a list containing slots for each variable that should be
+\item{dim_list}{a list containing slots for each variable that should be
 tabulated. Each slot consists of a \code{data.frame} or \code{data.table}
 with columns \code{levels} and \code{codes} specifiying the
 hierarchies of the variables.}
@@ -44,9 +44,9 @@ well as continous variables.
 dat <- ck_create_testdata()
 
 # create some binary (0,1) variables that should be perturbed later
-dat[, cnt_females := ifelse(sex=="male", 0, 1)]
-dat[, cnt_males := ifelse(sex=="male", 1, 0)]
-dat[, cnt_highincome := ifelse(income>=9000, 1, 0)]
+dat[, cnt_females := ifelse(sex == "male", 0, 1)]
+dat[, cnt_males := ifelse(sex == "male", 1, 0)]
+dat[, cnt_highincome := ifelse(income >= 9000, 1, 0)]
 
 ## create record keys
 dat$rkeys <- ck_generate_rkeys(
@@ -75,9 +75,9 @@ ptab_free <- ck_create_free_ptable(
 )
 
 # create some functions first that return a single number
-fn1 <- function() { round(rnorm(1, mean=5, sd=10)) }
-fn2 <- function() { rpois(1, lambda=2) }
-fn3 <- function() { rpois(1, lambda=5) }
+fn1 <- function() round(rnorm(1, mean = 5, sd = 10))
+fn2 <- function() rpois(1, lambda = 2)
+fn3 <- function() rpois(1, lambda = 5)
 fn4 <- function() return(1)
 fn5 <- function() return(-1)
 
@@ -106,12 +106,12 @@ ptab_free <- ck_update_free_ptable(
 # as fn4() and fn5() always return 1 or -1
 ptab_free <- ck_update_free_ptable(
   ptab = ptab_free,
-  fun=fn4,
-  cols=10:20
+  fun = fn4,
+  cols = 10:20
 )
 ptab_free <- ck_update_free_ptable(
   ptab = ptab_free,
-  fun=fn5,
+  fun = fn5,
   cols = 21:30
 )
 
@@ -179,14 +179,14 @@ dim_age <- hier_create(root = "Total", nodes = paste0("age_group", 1:6))
 hier_display(dim_age)
 
 # define required inputs
-dimList <- list(sex = dim_sex, age = dim_age)
+dim_list <- list(sex = dim_sex, age = dim_age)
 weightVar <- "sampling_weight"
 numVars <- c("savings", "income")
 
 # finally perturb the table
 res <- perturb_table(
   inp = inp_abs,
-  dimList = dimList,
+  dim_list = dim_list,
   weightVar = weightVar,
   countVars = NULL,
   numVars = numVars
@@ -199,7 +199,7 @@ ck_cont_table(res, vname = "savings", meanBeforeSum = TRUE)
 
 res <- perturb_table(
   inp = inp_destatis,
-  dimList = dimList,
+  dim_list = dim_list,
   weightVar = weightVar,
   countVars = NULL,
   numVars = numVars
@@ -210,7 +210,7 @@ ck_cont_table(res, vname = "savings", meanBeforeSum = TRUE)
 
 res <- perturb_table(
   inp = inp_free,
-  dimList = dimList,
+  dim_list = dim_list,
   weightVar = weightVar,
   countVars = NULL,
   numVars = numVars
@@ -232,7 +232,7 @@ ck_cnt_measures(res, vname = "Total")
 # an example using additional countVars
 res <- perturb_table(
   inp = inp_destatis,
-  dimList = dimList,
+  dim_list = dim_list,
   weightVar = weightVar,
   countVars = c("cnt_females", "cnt_males", "cnt_highincome"),
   numVars = numVars)
@@ -253,7 +253,7 @@ attr(p_inc, "modifications")
 # create perturbed magnitude table for subgroups of data
 res <- perturb_table(
   inp = inp_destatis,
-  dimList = dimList,
+  dim_list = dim_list,
   weightVar = weightVar,
   countVars = c("cnt_females", "cnt_males", "cnt_highincome"),
   numVars = numVars,

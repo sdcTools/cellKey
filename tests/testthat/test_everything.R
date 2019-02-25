@@ -11,9 +11,9 @@ test_that("check seed from hash generation", {
   expect_equal(seed, 483520795)
 })
 
-dim.sex <- hier_create(root = "Total", nodes = c("male", "female"))
-dim.age <- hier_create(root = "Total", nodes = paste0("age_group", 1:6))
-dimList <- list(sex = dim.sex, age = dim.age)
+dim_sex <- hier_create(root = "Total", nodes = c("male", "female"))
+dim_age <- hier_create(root = "Total", nodes = paste0("age_group", 1:6))
+dl <- list(sex = dim_sex, age = dim_age)
 
 ## test generation of destatis rkeys
 rr <- ck_generate_rkeys(
@@ -88,7 +88,7 @@ test_that("checking output of createInput() with non-existing record keys", {
 # Frequency Tables, weighted
 tab_freq <- perturb_table(
   inp = inp,
-  dimList = dimList,
+  dim_list = dl,
   weightVar = "sampling_weight",
   numVars = NULL
 )
@@ -100,7 +100,7 @@ test_that("checking weighted version of perturbedFreqTable", {
 
 tab_freq_noweights <- perturb_table(
   inp = inp,
-  dimList = dimList,
+  dim_list = dl,
   weightVar = NULL,
   numVars = NULL
 )
@@ -113,7 +113,7 @@ test_that("checking unweighted version of perturbedFreqTable", {
 context("Testing Magnitude Tables")
 tab_cont <- perturb_table(
   inp = inp,
-  dimList = dimList,
+  dim_list = dl,
   weightVar = NULL,
   numVars = c("savings")
 )
@@ -153,7 +153,7 @@ inp <- ck_create_input(
 
 tab <- perturb_table(
   inp = inp,
-  dimList = dimList,
+  dim_list = dl,
   weightVar = "sampling_weight",
   countVars = c("cnt_males", "cnt_highincome"),
   numVars = NULL,
@@ -194,7 +194,7 @@ test_that("check tabulation of cnt_males", {
 context("Testing numVars with by")
 tab <- perturb_table(
   inp = inp,
-  dimList = dimList,
+  dim_list = dl,
   weightVar = "sampling_weight",
   countVars = c("cnt_males"),
   numVars = c("income", "savings"),
