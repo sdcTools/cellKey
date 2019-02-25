@@ -1,9 +1,9 @@
 context("Testing Frequency Tables")
 
 set.seed(120)
-bigN <- 17312941
+big_n <- 17312941
 pTableSize <- 70
-smallN <- 12
+small_n <- 12
 dat <- ck_create_testdata()
 
 seed <- ck_create_seed_from_hash(dat)
@@ -43,11 +43,11 @@ test_that("checking dimension and structure of generated testdata", {
 })
 
 # perturbation input for continuous variables
-mTable <- c(0.6, 0.4, 0.2)
+mtab <- c(0.6, 0.4, 0.2)
 small_c <- 12
 
 ## ptable
-pTable <- ck_create_ptab(
+ptab <- ck_create_ptab(
   D = 5,
   V = 3,
   type = "abs",
@@ -55,11 +55,11 @@ pTable <- ck_create_ptab(
 )
 
 pert_params <- ck_create_pert_params(
-  bigN = bigN,
-  smallN = smallN,
-  pTable = pTable,
-  sTable = ck_generate_stab(small_c = small_c),
-  mTable = mTable
+  big_n = big_n,
+  small_n = small_n,
+  ptab = ptab,
+  stab = ck_generate_stab(small_c = small_c),
+  mtab = mtab
 )
 
 inp <- ck_create_input(

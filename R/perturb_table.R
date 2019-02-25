@@ -101,32 +101,32 @@
 #' )
 #'
 #' # set up perturbation tables and parameters for numerical variables
-#' sTable <- ck_generate_stab(small_c = 12)
-#' mTable <- c(0.6, 0.4, 0.2)
+#' stab <- ck_generate_stab(small_c = 12)
+#' mtab <- c(0.6, 0.4, 0.2)
 #'
 #' # creating perturbation objects that are later used
 #' # as inputs in perturb_table()
 #' pert_params_abs <- ck_create_pert_params(
-#'   bigN = 17312941,
-#'   smallN = 12,
-#'   pTable = ptab_abs,
-#'   sTable = sTable,
-#'   mTable = mTable
+#'   big_n = 17312941,
+#'   small_n = 12,
+#'   ptab = ptab_abs,
+#'   stab = stab,
+#'   mtab = mtab
 #' )
 #'
 #' pert_params_destatis <- ck_create_pert_params(
-#'   smallN = 12,
-#'   pTable = ptab_destatis,
-#'   sTable = sTable,
-#'   mTable = mTable
+#'   small_n = 12,
+#'   ptab = ptab_destatis,
+#'   stab = stab,
+#'   mtab = mtab
 #' )
 #'
 #' pert_params_free <- ck_create_pert_params(
-#'   bigN = 17312941,
-#'   smallN = 12,
-#'   pTable = ptab_free,
-#'   sTable = sTable,
-#'   mTable = mTable
+#'   big_n = 17312941,
+#'   small_n = 12,
+#'   ptab = ptab_free,
+#'   stab = stab,
+#'   mtab = mtab
 #' )
 #'
 #' # create suitable input data using existing record keys

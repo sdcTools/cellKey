@@ -13,16 +13,16 @@ dat$rkeys <-
     verbose = TRUE
   )
 
-pTable <- ck_create_ptab(
+ptab <- ck_create_ptab(
   D = 5,
   V = 3,
   pTableSize = 70,
   type = "abs"
 )
 pert_params <- ck_create_pert_params(
-  bigN = 17312941,
-  smallN = 12,
-  pTable = pTable
+  big_n = 17312941,
+  small_n = 12,
+  ptab = ptab
 )
 inp <- ck_create_input(
   dat = dat,

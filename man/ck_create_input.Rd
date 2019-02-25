@@ -36,14 +36,14 @@ This function creates the required input for \code{\link{perturb_table}}.
 }
 \examples{
 ## define parameters
-bigN <- 20011
-smallN <- 12
+big_n <- 20011
+small_n <- 12
 maxV <- 214748365 # a large prime number
 dat <- ck_create_testdata()
 dat$rkeys <- ck_generate_rkeys(dat = dat, max_val = maxV)
-mTable <- c(0.6,0.4,0.2)
-sTable <- ck_generate_stab(small_c = 12)
-pTable <- ck_create_ptab(
+mtab <- c(0.6,0.4,0.2)
+stab <- ck_generate_stab(small_c = 12)
+ptab <- ck_create_ptab(
   D = 5,
   V = 3,
   pTableSize = 70,
@@ -51,11 +51,11 @@ pTable <- ck_create_ptab(
 )
 
 pert_params <- ck_create_pert_params(
-  bigN = bigN,
-  smallN = smallN,
-  pTable = pTable,
-  sTable = sTable,
-  mTable = mTable
+  big_n = big_n,
+  small_n = small_n,
+  ptab = ptab,
+  stab = stab,
+  mtab = mtab
 )
 
 ## create suitable input data using exising record keys
