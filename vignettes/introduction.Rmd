@@ -93,10 +93,10 @@ To ensure that the same record keys are computed each and every time for the sam
 The next step is to define hierarchies for each of the classifying variables. **cellKey** requires that the dimensions are specified by using functionality from package [**sdcHierarchies**](https://cran.r-project.org/package=sdcHierarchies). The vignette of this package that shows how to use this package can be [**accessed online**](https://bernhard-da.github.io/sdcHierarchies/articles/usage.html). The main functions required to define a hierarchy are `hier_create()`, `hier_add()` and `hier_delete()`. We now show how to create the two hierarchies for the categorical variables `age` and `sex`:
 
 ```{r}
-dim_sex <- hier_create(root = "Total", nodes = c("male", "female"))
+dim_sex <- hier_create(root = "total", nodes = c("male", "female"))
 hier_display(dim_sex)
 
-dim_age <- hier_create(root = "Total", nodes = paste0("age_group", 1:6))
+dim_age <- hier_create(root = "total", nodes = paste0("age_group", 1:6))
 hier_display(dim_age)
 ```
 
@@ -122,15 +122,15 @@ If both `countVars` and `numVars` are not specified, the perturbed count table b
 tab1 <- perturb_table(
   inp = inp,
   dim_list = dl,
-  countVars = c("cnt_males", "cnt_highincome"),
-  weightVar = "sampling_weight",
-  numVars = NULL
+  countvars = c("cnt_males", "cnt_highincome"),
+  weightvar = "sampling_weight",
+  numvars = NULL
 )
 print(tab1) # custom print method
-# print(tab1, vname="Total")
+# print(tab1, vname="total")
 ```
 
-Applying method `ck_freq_table()` to an output object of `perturb_table()` returns a `data.table` with all combinations of the dimensional variables `sex` and `age` as well as original and perturbed (un)weighted values are returned. In any case, the tabulation of all observations can be extracted (`vnames="Total"`). If additional variables have been specified in argument `countVars`, these can be queried too as shown below:
+Applying method `ck_freq_table()` to an output object of `perturb_table()` returns a `data.table` with all combinations of the dimensional variables `sex` and `age` as well as original and perturbed (un)weighted values are returned. In any case, the tabulation of all observations can be extracted (`vnames = "total"`). If additional variables have been specified in argument `countvars`, these can be queried too as shown below:
 
 ```{r}
 ck_freq_table(tab1) # show which tables have been generated
@@ -139,16 +139,16 @@ ck_freq_table(tab1, vname = "cnt_males")
 
 In the example above we see, that all cells containing `sex=="female" no perturbation has been applied. The variables on this data set (additional to the dimensional variables) are:
 
-- `UWC`: unweighted counts
-- `pUWC`: perturbed unweighted counts
-- `WC`: weighted counts
-- `pWC`: perturbed weighted counts
-- `WCavg`: cell average weight
+- `uwc`: unweighted counts
+- `puwc`: perturbed unweighted counts
+- `wc`: weighted counts
+- `pwc`: perturbed weighted counts
+- `wcavg`: cell average weight
 
 Function `ck_cnt_measures()` applied to the resulting object of `perturb_table()` allows to compute information loss measures for perturbed count variables. Its application is as simple as:
 
 ```{r}
-infoloss <- ck_cnt_measures(tab1, vname = "Total")
+infoloss <- ck_cnt_measures(tab1, vname = "total")
 ```
 
 This function returns a list with the following elements:
@@ -168,9 +168,9 @@ The next example shows how to create a perturbed table of continuous data using 
 tab2 <- perturb_table(
   inp = inp, 
   dim_list = dl,  
-  weightVar = "sampling_weight", 
-  countVars = c("cnt_males", "cnt_highincome"), 
-  numVars = c("savings","income")
+  weightvar = "sampling_weight", 
+  countvars = c("cnt_males", "cnt_highincome"), 
+  numvars = c("savings", "income")
 )
 ```
 
@@ -203,13 +203,13 @@ An interesting feature is that one can optionally specify argument `by` in `pert
 tab3 <- perturb_table(
   inp = inp, 
   dim_list = dl,  
-  weightVar = "sampling_weight", 
-  numVars = c("savings"), 
+  weightvar = "sampling_weight", 
+  numvars = "savings", 
   by = "cnt_highincome"
 )
 ```
 
-We note that if the by_variable has been specified, it will be automatically added to `countVars` internally, so we can also use `ck_freq_table()` with the by-variable even it was not explicitely specified in `countVars`.
+We note that if a *"by"* variable has been specified, it will be automatically added to `countvars` internally, so we can also use `ck_freq_table()` with the by-variable even it was not explicitely specified in argument `countvars`.
 
 ```{r}
 # frequency table of the by-variable
@@ -226,10 +226,10 @@ p_savings
 From the results we can observe that there are no high-income units in the highest age group (`age_group6`) and those cells are not perturbed at all.
 
 
-Using function `ck_export_table()` which can be applied to outputs of `perturb_table()`. This functions returns a simple `data.frames` containing all cells and perturbed (weighted) values for a given perturbed variables. We could apply it to the `Total`-variable as follows
+Using function `ck_export_table()` which can be applied to outputs of `perturb_table()`. This functions returns a simple `data.frames` containing all cells and perturbed (weighted) values for a given perturbed variables. We could apply it to the `total`-variable as follows
 
 ```{r}
-dt_tot <- ck_export_table(tab3, vname = "Total", type = "both")
+dt_tot <- ck_export_table(tab3, vname = "total", type = "both")
 head(dt_tot)
 ```
 
@@ -254,7 +254,7 @@ Finally we note that there are `print` and `summary` methods implemented for obj
 
 ```{r}
 print(tab1)
-print(tab1, vname = "Total")
+print(tab1, vname = "total")
 summary(tab1)
 ```
 

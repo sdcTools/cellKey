@@ -1,4 +1,8 @@
-#' Method to extract information about modifications for count tables
+#' Create tabular output from perturbed table
+#'
+#' This function allows to extract information from a perturbed table
+#' as a \code{data.table}.
+#'
 #' @name ck_export_table
 #' @rdname ck_export_table
 #' @param x input object
@@ -18,21 +22,21 @@
 #' is a count or a continuously scaled variable, the following columns: For
 #' count-variables:
 #' \itemize{
-#' \item{UWC}: unweighted counts (argument \code{type} is "both" or
+#' \item{uwc}: unweighted counts (argument \code{type} is "both" or
 #' "unweighted")
-#' \item{WC}: perturbed unweighted counts (argument \code{type} is "both" or
+#' \item{wc}: perturbed unweighted counts (argument \code{type} is "both" or
 #' "unweighted")
-#' \item{pUWC}: weighted counts (argument \code{type} is "both" or "weighted")
-#' \item{pWC}: perturbed weighted counts (argument \code{type} is "both" or
+#' \item{puwc}: weighted counts (argument \code{type} is "both" or "weighted")
+#' \item{pwc}: perturbed weighted counts (argument \code{type} is "both" or
 #' "weighted")
 #' }
 #' For continuously-scaled variables (magnitude tables):
 #' \itemize{
-#' \item{UW}: unweighted sum (argument \code{type} is "both" or "unweighted")
-#' \item{WS}: perturbed unweighted sum (argument \code{type} is "both" or
+#' \item{uw}: unweighted sum (argument \code{type} is "both" or "unweighted")
+#' \item{ws}: perturbed unweighted sum (argument \code{type} is "both" or
 #' "unweighted")
-#' \item{pUW}: weighted sum (argument \code{type} is "both" or "weighted")
-#' \item{pWS}: perturbed weighted sum (argument \code{type} is "both" or
+#' \item{puw}: weighted sum (argument \code{type} is "both" or "weighted")
+#' \item{pws}: perturbed weighted sum (argument \code{type} is "both" or
 #' "weighted")
 #' }
 #' @export
@@ -42,7 +46,7 @@ ck_export_table <- function(x, vname=NULL, type="both") {
   stopifnot(is_scalar_character(type))
   stopifnot(type %in% c("both", "weighted", "unweighted"))
 
-  allvars <- c(slot(x, "countVars"), slot(x, "numVars"))
+  allvars <- c(slot(x, "countvars"), slot(x, "numvars"))
   if (!is.null(vname)) {
     stopifnot(is_scalar_character(vname))
     if (!vname %in% allvars) {
@@ -57,39 +61,36 @@ ck_export_table <- function(x, vname=NULL, type="both") {
 
   tab <- slot(x, "tab")
 
-  names_count <- function(v, type) {
+  .n_freq <- function(v, type) {
     if (type == "both") {
-      return(c(paste0(c("UWC", "WC", "pUWC", "pWC"), "_", v)))
+      return(c(paste0(c("uwc", "wc", "puwc", "pwc"), "_", v)))
     }
     if (type == "unweighted") {
-      return(c(paste0(c("UWC", "pUWC"), "_", v)))
+      return(c(paste0(c("wuc", "puwc"), "_", v)))
     }
     if (type == "weighted") {
-      return(c(paste0(c("WC", "pWC"), "_", v)))
+      return(c(paste0(c("wc", "pwc"), "_", v)))
     }
-    stop("non-allowed value in 'type'")
-
   }
-  names_cont <- function(v, type) {
+  .n_cont <- function(v, type) {
     if (type == "both") {
-      return(c(paste0(c("UW", "WS", "pUW", "pWS"), "_", v)))
+      return(c(paste0(c("uw", "ws", "puw", "pws"), "_", v)))
     }
     if (type == "unweighted") {
-      return(c(paste0(c("UW", "pUW"), "_", v)))
+      return(c(paste0(c("uw", "puw"), "_", v)))
     }
     if (type == "weighted") {
-      return(c(paste0(c("WS", "pWS"), "_", v)))
+      return(c(paste0(c("ws", "pws"), "_", v)))
     }
-    stop("non-allowed value in 'type'")
   }
 
-  if (vname %in% slot(x, "countVars")) {
-    get_vars <- names_count(vname, type = type)
+  if (vname %in% slot(x, "countvars")) {
+    get_vars <- .n_freq(vname, type = type)
   } else {
-    get_vars <- names_cont(vname, type = type)
+    get_vars <- .n_cont(vname, type = type)
   }
 
-  vdim <- slot(x, "dimVars")
+  vdim <- slot(x, "dimvars")
   tt <- tab[, vdim, with = FALSE]
   t2 <- tab[, get_vars, with = FALSE]
   names(t2) <- gsub(paste0("_", vname), "", names(t2))

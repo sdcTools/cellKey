@@ -9,17 +9,17 @@
 #' tabulated. Each slot consists of a \code{data.frame} or \code{data.table}
 #' with columns \code{levels} and \code{codes} specifiying the
 #' hierarchies of the variables.
-#' @param countVars (character) vector of numerical variables that should be
+#' @param countvars (character) vector of numerical variables that should be
 #' counted and perturbed; must be 0/1 coded.
-#' @param numVars (character) vector of numerical variables that
+#' @param numvars (character) vector of numerical variables that
 #' should be tabulated or \code{NULL}
 #' @param by \code{NULL} or a scalar character. If specified, it is possible
 #' to use a valid variable name being 0/1 coded that will be used to create the
-#' perturbation of all variables specified in \code{numVars} only for subgroups
+#' perturbation of all variables specified in \code{numvars} only for subgroups
 #' defined by the specified count variable. If the variable is not listed in
-#' argument \code{countVars} it will be automatically added. If not specified or
+#' argument \code{countvars} it will be automatically added. If not specified or
 #' \code{NULL}, the table will be based on all units in the microdata.
-#' @param weightVar (character) vector of variable holding sampling
+#' @param weightvar (character) vector of variable holding sampling
 #' weights or \code{NULL}
 #' @return an object of class \code{\link{pert_table-class}}.
 #' @seealso \url{https://preview.tinyurl.com/yyleyg48}
@@ -165,42 +165,42 @@
 #'
 #' # define required inputs
 #' dim_list <- list(sex = dim_sex, age = dim_age)
-#' weightVar <- "sampling_weight"
-#' numVars <- c("savings", "income")
+#' weightvar <- "sampling_weight"
+#' numvars <- c("savings", "income")
 #'
 #' # finally perturb the table
 #' res <- perturb_table(
 #'   inp = inp_abs,
 #'   dim_list = dim_list,
-#'   weightVar = weightVar,
-#'   countVars = NULL,
-#'   numVars = numVars
+#'   weightvar = weightvar,
+#'   countvars = NULL,
+#'   numvars = numvars
 #' )
 #'
 #' # access the results
-#' ck_freq_table(res, vname = "Total")
+#' ck_freq_table(res, vname = "total")
 #' ck_cont_table(res, vname = "income", mean_before_sum = TRUE)
 #' ck_cont_table(res, vname = "savings", mean_before_sum = TRUE)
 #'
 #' res <- perturb_table(
 #'   inp = inp_destatis,
 #'   dim_list = dim_list,
-#'   weightVar = weightVar,
-#'   countVars = NULL,
-#'   numVars = numVars
+#'   weightvar = weightvar,
+#'   countvars = NULL,
+#'   numvars = numvars
 #' )
-#' ck_freq_table(res, vname = "Total")
+#' ck_freq_table(res, vname = "total")
 #' ck_cont_table(res, vname = "income", mean_before_sum = TRUE)
 #' ck_cont_table(res, vname = "savings", mean_before_sum = TRUE)
 #'
 #' res <- perturb_table(
 #'   inp = inp_free,
 #'   dim_list = dim_list,
-#'   weightVar = weightVar,
-#'   countVars = NULL,
-#'   numVars = numVars
+#'   weightvar = weightvar,
+#'   countvars = NULL,
+#'   numvars = numvars
 #' )
-#' ck_freq_table(res, vname = "Total")
+#' ck_freq_table(res, vname = "total")
 #' ck_cont_table(res, vname = "income", mean_before_sum = TRUE)
 #' ck_cont_table(res, vname = "savings", mean_before_sum = TRUE)
 #'
@@ -212,21 +212,22 @@
 #'
 #' # measures of information loss and utility statistics
 #' # on tabulated count variables
-#' ck_cnt_measures(res, vname = "Total")
+#' ck_cnt_measures(res, vname = "total")
 #'
-#' # an example using additional countVars
+#' # an example using additional count variables
 #' res <- perturb_table(
 #'   inp = inp_destatis,
 #'   dim_list = dim_list,
-#'   weightVar = weightVar,
-#'   countVars = c("cnt_females", "cnt_males", "cnt_highincome"),
-#'   numVars = numVars)
+#'   weightvar = weightvar,
+#'   countvars = c("cnt_females", "cnt_males", "cnt_highincome"),
+#'   numvars = numvars
+#' )
 #' print(res) # custom print method
 #' summary(res) # custom summary method
 #'
 #' # show count tables
 #' ck_freq_table(res, vname = NULL)
-#' ck_freq_table(res, vname = "Total")
+#' ck_freq_table(res, vname = "total")
 #' ck_freq_table(res, vname = "cnt_females")
 #' ck_freq_table(res, vname = "cnt_males")
 #' ck_freq_table(res, vname = "cnt_highincome")
@@ -239,9 +240,9 @@
 #' res <- perturb_table(
 #'   inp = inp_destatis,
 #'   dim_list = dim_list,
-#'   weightVar = weightVar,
-#'   countVars = c("cnt_females", "cnt_males", "cnt_highincome"),
-#'   numVars = numVars,
+#'   weightvar = weightvar,
+#'   countvars = c("cnt_females", "cnt_males", "cnt_highincome"),
+#'   numvars = numvars,
 #'   by = "cnt_males"
 #' )
 #'
@@ -251,35 +252,35 @@
 #' attr(p_sav, "modifications") # no modifications in cells containing females!
 #'
 #' # export table to a simple data.table
-#' df_tot <- ck_export_table(res, vname = "Total", type = "both")
+#' df_tot <- ck_export_table(res, vname = "total", type = "both")
 #' head(df_tot)
 #' df_inc <- ck_export_table(res, vname = "income", type = "weighted")
 #' head(df_inc)
 perturb_table <-
   function(inp,
            dim_list,
-           countVars = NULL,
-           numVars = NULL,
+           countvars = NULL,
+           numvars = NULL,
            by = NULL,
-           weightVar = NULL) {
+           weightvar = NULL) {
   # rename variables
-  .vnames <- function(countVars, prefix="sumRK") {
-    if (length(countVars) == 0) {
-      return(paste0(prefix, "_Total"))
+  .vnames <- function(countvars, prefix="sum_rk") {
+    if (length(countvars) == 0) {
+      return(paste0(prefix, "_total"))
     }
-    c(paste0(prefix, "_Total"), paste0(prefix, "_", countVars))
+    c(paste0(prefix, "_total"), paste0(prefix, "_", countvars))
   }
 
   sdcStatus <- strID <- NULL
   tmprkeysfortabulation <- tmpweightvarfortabulation <- tmpidforsorting <- NULL
-  pert <- countVar <- numVar <- NULL
+  pert <- countvar <- numvar <- NULL
 
   stopifnot(isS4(inp))
   stopifnot(class(inp) == "pert_inputdat")
   pert_params <- slot(inp, "pert_params")
   type <- slot(pert_params, "type")
 
-  if (!is.null(numVars)) {
+  if (!is.null(numvars)) {
     nr <- nrow(slot(pert_params, "stab"))
     if (nr == 0 || is.null(slot(pert_params, "mtab"))) {
       e <- c(
@@ -303,99 +304,99 @@ perturb_table <-
     stop(paste(e, collapse = " "), call. = FALSE)
   }
 
-  freqVar <- "tmpfreqvarfortabulation"
-  dat[, c(freqVar) := 1]
+  freq_var <- "tmpfreqvarfortabulation"
+  dat[, c(freq_var) := 1]
 
   dat[, tmpweightvarfortabulation := 1]
-  if (!is.null(weightVar)) {
-    stopifnot(weightVar %in% names(dat))
-    dat[, tmpweightvarfortabulation := get(weightVar)]
+  if (!is.null(weightvar)) {
+    stopifnot(weightvar %in% names(dat))
+    dat[, tmpweightvarfortabulation := get(weightvar)]
   }
 
   # check if we have subgroups
   if (!is.null(by)) {
     stopifnot(is_scalar_character(by))
-    if (!by %in% countVars) {
-      countVars <- c(countVars, by)
+    if (!by %in% countvars) {
+      countvars <- c(countvars, by)
     }
   } else {
-    by <- "Total"
+    by <- "total"
   }
 
-  # check and prepare countVars
-  if (is.null(countVars)) {
-    countVars <- countVars_w <- countVars_rec <- c()
+  # check and prepare count variables
+  if (is.null(countvars)) {
+    countvars <- countvars_w <- countvars_rec <- c()
   } else {
     # checking if all count_vars exist!
-    cV <- match(countVars, names(dat))
-    if (any(is.na(cV))) {
+    cv <- match(countvars, names(dat))
+    if (any(is.na(cv))) {
       e <- c(
-        "Check input `countVars`:",
+        "Check input `countvars`:",
         "at least one variable was not found in the input dataset."
       )
       stop(paste(e, collapse = " "), call. = FALSE)
     }
     # check if all count-vars are integerish 0/1
-    chk <- sapply(countVars, function(x) {
+    chk <- sapply(countvars, function(x) {
       all(unique(dat[[x]]) %in% 0:1)
     })
     if (!all(chk)) {
       e <- c(
-        "Check input `countVars`:",
+        "Check input `countvars`:",
         "--> at least one variable is not 0/1 coded."
       )
       stop(paste(e, collapse = " "), call. = FALSE)
     }
 
     # compute weighted version!
-    countVars_w <- paste0("wc_", countVars)
-    dat[, (countVars_w) := lapply(
+    countvars_w <- paste0("wc_", countvars)
+    dat[, (countvars_w) := lapply(
       .SD, function(x) {
         x * tmpweightvarfortabulation
       }
-    ), .SDcols = countVars]
+    ), .SDcols = countvars]
 
     # record_keys using an indicator
-    countVars_rec <- paste0("recKey_", countVars)
-    dat[, (countVars_rec) := lapply(
+    countvars_rec <- paste0("reckey_", countvars)
+    dat[, (countvars_rec) := lapply(
       .SD, function(x) {
         x * tmprkeysfortabulation
       }
-    ), .SDcols = countVars]
+    ), .SDcols = countvars]
   }
 
-  countVar_names <- c("Total", countVars)
+  countvar_names <- c("total", countvars)
 
-  fV <- match(freqVar, names(dat))
+  fV <- match(freq_var, names(dat))
   nV <- c(
     "tmprkeysfortabulation",
     "tmpweightvarfortabulation",
-    countVars,
-    countVars_w,
-    countVars_rec
+    countvars,
+    countvars_w,
+    countvars_rec
   )
   pert_info_cont <- list()
-  if (!is.null(numVars)) {
-    nV2 <- match(numVars, names(dat))
-    if (any(is.na(nV2))) {
-      stop("check numVars!\n")
+  if (!is.null(numvars)) {
+    nv2 <- match(numvars, names(dat))
+    if (any(is.na(nv2))) {
+      stop("check input `numvars`\n", call. = FALSE)
     }
-    nV <- c(nV, numVars)
-    length(pert_info_cont) <- length(numVars)
-    names(pert_info_cont) <- numVars
-    for (i in 1:length(numVars)) {
-      v <- numVars[i]
+    nV <- c(nV, numvars)
+    length(pert_info_cont) <- length(numvars)
+    names(pert_info_cont) <- numvars
+    for (i in 1:length(numvars)) {
+      v <- numvars[i]
       vnum_orig <- paste0(v, "_tmporigforcalculation")
       nV <- c(nV, vnum_orig)
 
       # copy numerical variable
-      if (by == "Total") {
+      if (by == "total") {
         vals_orig <- dat[, get(v)]
         set(dat, j = vnum_orig, value = vals_orig)
       } else {
         # we need to set original numerical variable to 0
         # where by variable is also 0!
-        dat[, (numVars[i]) := get(numVars[i]) * get(by)]
+        dat[, (numvars[i]) := get(numvars[i]) * get(by)]
         vals_orig <- dat[, get(v) * get(by)]
         set(dat, j = vnum_orig, value = vals_orig)
       }
@@ -407,18 +408,19 @@ perturb_table <-
         v = v,
         type = type
       )
-      dat[rr[, tmpidforsorting], c(v) := rr[, get(paste0(v, ".mod"))]]
+
+      dat[rr[, tmpidforsorting], c(v) := rr[, get(paste0(v, "_mod"))]]
       setnames(rr, "tmpidforsorting", "id")
 
-      n_old <- c(v, paste0(v, c(".pert", ".mod")))
-      n_new <- c(paste0("vals.", c("orig", "pert", "mod")))
+      n_old <- c(v, paste0(v, c("_pert", "_mod")))
+      n_new <- c(paste0("vals_", c("orig", "pert", "mod")))
       setnames(rr, n_old, n_new)
-      rr[, numVar := v]
+      rr[, numvar := v]
       pert_info_cont[[i]] <- rr
     }
     pert_info_cont <- rbindlist(pert_info_cont)
   } else {
-    by <- "Total"
+    by <- "total"
     pert_info_cont <- data.table()
   }
   nV <- match(nV, names(dat))
@@ -440,17 +442,17 @@ perturb_table <-
   tab[, strID := NULL]
   tab[, sdcStatus := NULL]
 
-  cols_reckey <- .vnames(countVars, prefix = "sumRK")
-  setnames(tab, c("tmprkeysfortabulation", countVars_rec), cols_reckey)
+  cols_reckey <- .vnames(countvars, prefix = "sumrk")
+  setnames(tab, c("tmprkeysfortabulation", countvars_rec), cols_reckey)
 
-  cols_n <- .vnames(countVars, prefix = "UWC")
-  setnames(tab, c("freq", countVars), cols_n)
+  cols_n <- .vnames(countvars, prefix = "uwc")
+  setnames(tab, c("freq", countvars), cols_n)
 
-  cols_wc <- .vnames(countVars, prefix = "WC")
-  setnames(tab, c("tmpweightvarfortabulation", countVars_w), cols_wc)
+  cols_wc <- .vnames(countvars, prefix = "wc")
+  setnames(tab, c("tmpweightvarfortabulation", countvars_w), cols_wc)
 
   # compute average weights
-  cols_wcavg <- .vnames(countVars, prefix = "WCavg")
+  cols_wcavg <- .vnames(countvars, prefix = "wc_avg")
   for (i in seq_along(cols_n)) {
     wcavg <- tab[, get(cols_wc[i]) / get(cols_n[i])]
     wcavg[is.nan(wcavg)] <- 0
@@ -458,14 +460,14 @@ perturb_table <-
   }
 
   # compute cell-keys for each column independently
-  cols_ck <- .vnames(countVars, prefix = "cellKey")
+  cols_ck <- .vnames(countvars, prefix = "cellkey")
   for (i in seq_along(cols_n)) {
     ck <- tab[, get(cols_reckey[i]) %% slot(pert_params, "big_n")]
     set(tab, j = cols_ck[i], value = ck)
   }
 
   # list with perturbation results for each countVar
-  cols_pert <- .vnames(countVars, prefix = "pert")
+  cols_pert <- .vnames(countvars, prefix = "pert")
   count_modifications <- lapply(1:length(cols_n), function(x) {
     dt <- .lookup(
       tab = tab,
@@ -475,17 +477,19 @@ perturb_table <-
       type = type
     )
     set(tab, j = cols_pert[x], value = dt[, pert])
-    dt[, countVar := countVar_names[x]]
-    setnames(dt, "cK", "cellKey")
+    dt[, countvar := countvar_names[x]]
+    setnames(dt, "ck", "cellkey")
     dt
   })
   count_modifications <- rbindlist(count_modifications)
-  count_modifications <-
-    cbind(tab[, c(names(dim_list)), with = F], count_modifications)
+  count_modifications <- cbind(
+    tab[, c(names(dim_list)), with = FALSE],
+    count_modifications
+  )
 
   # compute perturbed unweighted counts
-  cols_puwc <- .vnames(countVars, prefix = "pUWC")
-  cols_pwc <- .vnames(countVars, prefix = "pWC")
+  cols_puwc <- .vnames(countvars, prefix = "puwc")
+  cols_pwc <- .vnames(countvars, prefix = "pwc")
   for (i in seq_along(cols_n)) {
     # compute perturbed unweighted counts
     puwc <- tab[, get(cols_pert[i]) + get(cols_n[i])]
@@ -499,38 +503,38 @@ perturb_table <-
   }
 
   # compute measures for each numerical variable
-  if (!is.null(numVars)) {
-    from <- c(paste0(numVars, "_tmporigforcalculation"), numVars)
+  if (!is.null(numvars)) {
+    from <- c(paste0(numvars, "_tmporigforcalculation"), numvars)
 
-    nvOrig <- paste0("UW_", numVars)
-    nvPert <- paste0("pUW_", numVars)
-    setnames(tab, from, c(nvOrig, nvPert))
+    nv_orig <- paste0("uw_", numvars)
+    nv_pert <- paste0("puw_", numvars)
+    setnames(tab, from, c(nv_orig, nv_pert))
 
-    cn1 <- paste0("WS_", numVars)
-    cn2 <- paste0("pWS_", numVars)
+    cn1 <- paste0("ws_", numvars)
+    cn2 <- paste0("pws_", numvars)
 
-    by_wgt <- paste0("WCavg_", by)
+    by_wgt <- paste0("wc_avg_", by)
     res1 <- tab[, lapply(
       .SD, function(x) {
         x * get(by_wgt)
       }
-    ), .SDcols = nvOrig]
+    ), .SDcols = nv_orig]
     tab[, c(cn1) := res1]
 
     res2 <- tab[, lapply(
       .SD, function(x) {
         x * get(by_wgt)
       }
-    ), .SDcols = nvPert]
+    ), .SDcols = nv_pert]
     tab[, c(cn2) := res2]
 
-    keepNV <- c(nvOrig, nvPert, cn1, cn2)
+    keep_nv <- c(nv_orig, nv_pert, cn1, cn2)
   } else {
-    keepNV <- numVars <- character()
+    keep_nv <- numvars <- character()
   }
 
   # prepare output object
-  is_weighted <- ifelse(is.null(weightVar), FALSE, TRUE)
+  is_weighted <- ifelse(is.null(weightvar), FALSE, TRUE)
 
   # keep variables
   vv <- c(
@@ -540,17 +544,16 @@ perturb_table <-
     cols_puwc,
     cols_pwc,
     cols_wcavg,
-    keepNV
+    keep_nv
   )
   tab <- tab[, vv, with = FALSE]
-  res <- new(
-    Class = "pert_table",
+  res <- new("pert_table",
     tab = tab,
     count_modifications = count_modifications,
     numvars_modifications = pert_info_cont,
-    dimVars = names(dim_list),
-    countVars = countVar_names,
-    numVars = numVars,
+    dimvars = names(dim_list),
+    countvars = countvar_names,
+    numvars = numvars,
     by = by,
     is_weighted = is_weighted,
     type = type

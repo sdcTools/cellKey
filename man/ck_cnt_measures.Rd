@@ -4,7 +4,7 @@
 \alias{ck_cnt_measures}
 \title{ck_cnt_measures}
 \usage{
-ck_cnt_measures(x, vname = "Total")
+ck_cnt_measures(x, vname = "total")
 }
 \arguments{
 \item{x}{input object of class \code{\linkS4class{pert_table}}}
