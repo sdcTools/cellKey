@@ -60,7 +60,7 @@ dat$rkeys <- ck_generate_rkeys(
 ptab_abs <- ck_create_ptab(
   D = 5,
   V = 3,
-  pTableSize = 70,
+  ptab_size = 70,
   type = "abs"
 )
 ptab_destatis <- ck_create_ptab(

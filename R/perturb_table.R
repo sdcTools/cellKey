@@ -45,7 +45,7 @@
 #' ptab_abs <- ck_create_ptab(
 #'   D = 5,
 #'   V = 3,
-#'   pTableSize = 70,
+#'   ptab_size = 70,
 #'   type = "abs"
 #' )
 #' ptab_destatis <- ck_create_ptab(
@@ -263,7 +263,7 @@ perturb_table <-
            by = NULL,
            weightVar = NULL) {
   # rename variables
-  gen_vnames <- function(countVars, prefix="sumRK") {
+  .vnames <- function(countVars, prefix="sumRK") {
     if (length(countVars) == 0) {
       return(paste0(prefix, "_Total"))
     }
@@ -280,11 +280,11 @@ perturb_table <-
   type <- slot(pert_params, "type")
 
   if (!is.null(numVars)) {
-    nr <- nrow(slot(pert_params, "sTable"))
-    if (nr == 0 || is.null(slot(pert_params, "mTable"))) {
+    nr <- nrow(slot(pert_params, "stab"))
+    if (nr == 0 || is.null(slot(pert_params, "mtab"))) {
       e <- c(
         "Perturbation of magnitude tables is not posible:\n",
-        "`sTable` or `mTable` were not specified"
+        "`stab` or `mtab` were not specified"
       )
       stop(paste(e, collapse = " "), call. = FALSE)
     }
@@ -440,17 +440,17 @@ perturb_table <-
   tab[, strID := NULL]
   tab[, sdcStatus := NULL]
 
-  cols_reckey <- gen_vnames(countVars, prefix = "sumRK")
+  cols_reckey <- .vnames(countVars, prefix = "sumRK")
   setnames(tab, c("tmprkeysfortabulation", countVars_rec), cols_reckey)
 
-  cols_n <- gen_vnames(countVars, prefix = "UWC")
+  cols_n <- .vnames(countVars, prefix = "UWC")
   setnames(tab, c("freq", countVars), cols_n)
 
-  cols_wc <- gen_vnames(countVars, prefix = "WC")
+  cols_wc <- .vnames(countVars, prefix = "WC")
   setnames(tab, c("tmpweightvarfortabulation", countVars_w), cols_wc)
 
   # compute average weights
-  cols_wcavg <- gen_vnames(countVars, prefix = "WCavg")
+  cols_wcavg <- .vnames(countVars, prefix = "WCavg")
   for (i in seq_along(cols_n)) {
     wcavg <- tab[, get(cols_wc[i]) / get(cols_n[i])]
     wcavg[is.nan(wcavg)] <- 0
@@ -458,14 +458,14 @@ perturb_table <-
   }
 
   # compute cell-keys for each column independently
-  cols_ck <- gen_vnames(countVars, prefix = "cellKey")
+  cols_ck <- .vnames(countVars, prefix = "cellKey")
   for (i in seq_along(cols_n)) {
-    ck <- tab[, get(cols_reckey[i]) %% slot(pert_params, "bigN")]
+    ck <- tab[, get(cols_reckey[i]) %% slot(pert_params, "big_n")]
     set(tab, j = cols_ck[i], value = ck)
   }
 
   # list with perturbation results for each countVar
-  cols_pert <- gen_vnames(countVars, prefix = "pert")
+  cols_pert <- .vnames(countVars, prefix = "pert")
   count_modifications <- lapply(1:length(cols_n), function(x) {
     dt <- .lookup(
       tab = tab,
@@ -484,8 +484,8 @@ perturb_table <-
     cbind(tab[, c(names(dim_list)), with = F], count_modifications)
 
   # compute perturbed unweighted counts
-  cols_puwc <- gen_vnames(countVars, prefix = "pUWC")
-  cols_pwc <- gen_vnames(countVars, prefix = "pWC")
+  cols_puwc <- .vnames(countVars, prefix = "pUWC")
+  cols_pwc <- .vnames(countVars, prefix = "pWC")
   for (i in seq_along(cols_n)) {
     # compute perturbed unweighted counts
     puwc <- tab[, get(cols_pert[i]) + get(cols_n[i])]

@@ -35,8 +35,8 @@
 }
 
 # compute cell key from record keys
-.calc_cellkey <- function(rec_keys, bigN) {
-  sum(rec_keys) %% bigN
+.calc_cellkey <- function(rec_keys, big_n) {
+  sum(rec_keys) %% big_n
 }
 
 # +1 if 9th bit of record_key is 1, -1 else
@@ -83,25 +83,25 @@
 
 # in which row should we look in the perturbation table
 # used for perturbation of numerical variables
-.col_index_cont <- function(cKey, n, smallC, type) {
-  .abs <- function(cKey, n, smallC) {
-    if (n <= smallC) {
+.col_index_cont <- function(ckey, n, small_c, type) {
+  .abs <- function(ckey, n, small_c) {
+    if (n <= small_c) {
       return(n + 32)
     }
-    .bintodec(as.integer(intToBits(cKey))[1:5]) + 1
+    .bintodec(as.integer(intToBits(ckey))[1:5]) + 1
   }
-  .destatis <- function(cKey, n, smallC) {
-    if (n <= smallC) {
+  .destatis <- function(ckey, n, small_c) {
+    if (n <= small_c) {
       return(n + 32)
     }
-    as.numeric(cut(cKey, seq(0, 1, length = smallC + 1)))
+    as.numeric(cut(ckey, seq(0, 1, length = small_c + 1)))
   }
 
   if (type %in% c("abs", "free")) {
-    return(.abs(cKey, n, smallC))
+    return(.abs(ckey, n, small_c))
   }
   if (type == "destatis") {
-    return(.destatis(cKey, n, smallC))
+    return(.destatis(ckey, n, small_c))
   }
 }
 
@@ -120,11 +120,11 @@
 
 # column index for perturbation - see page 11
 # used for counts
-.col_index_freq <- function(N, pTableSize, smallN) {
-  if (N <= pTableSize - smallN) {
+.col_index_freq <- function(N, ptab_size, small_n) {
+  if (N <= ptab_size - small_n) {
     return(N)
   } else {
-    return(pTableSize - smallN + N %% smallN + 1)
+    return(ptab_size - small_n + N %% small_n + 1)
   }
 }
 
@@ -139,15 +139,16 @@
     col_indices <- sapply(freqs, function(z) {
       .col_index_freq(
         N = z,
-        pTableSize = slot(pert_params, "pTableSize"),
-        smallN = slot(pert_params, "smallN")
+        ptab_size = slot(pert_params, "ptab_size"),
+        small_n = slot(pert_params, "small_n")
       )
     })
 
     dt <- data.table(row_indices = row_indices, col_indices = col_indices)
 
     pert_vals <- lapply(1:nrow(dt), function(z) {
-      pert_params@pTable[dt[z, row_indices], dt[z, col_indices], with = FALSE]
+      ptab <- slot(pert_params, "ptab")
+      ptab[dt[z, row_indices], dt[z, col_indices], with = FALSE]
     })
     ii <- which(sapply(pert_vals, function(x) nrow(x) != 1))
     if (length(ii) > 0) {
@@ -166,21 +167,21 @@
     col_indices <- sapply(freqs, function(z) {
       .col_index_freq(
         N = z,
-        pTableSize = slot(pert_params, "pTableSize"),
-        smallN = slot(pert_params, "smallN")
+        ptab_size = slot(pert_params, "ptab_size"),
+        small_n = slot(pert_params, "small_n")
       )
     })
 
     if (any(col_indices < 0)) {
       e <- c(
         "Negative column indices were computed.",
-        "Please provide a pTable with more columns."
+        "Please provide a perturbation table with more columns."
       )
       stop(paste(e, collapse = " "), call. = FALSE)
     }
 
     dt <- data.table(row_indices = row_indices, col_indices = col_indices)
-    pTab <- slot(pert_params, "pTable")
+    pTab <- slot(pert_params, "ptab")
     pert_vals <- lapply(1:nrow(dt), function(z) {
       set.seed(cellkeys[z]) # reproducibility
       pTab[[dt$col_indices[z]]][[dt$row_indices[z]]]()
@@ -195,8 +196,8 @@
   # by Tobias Enderle
   .destatis <- function(tab, pert_params, freqs, cellkeys) {
     i <- kum_p_o <- NULL
-    pTable <- slot(pert_params, "pTable")
-    symmetry <- max(pTable$i)
+    ptab <- slot(pert_params, "ptab")
+    symmetry <- max(ptab$i)
 
     row_indices <- rep(-1, nrow(tab))
     pert_vals <- rep(0L, nrow(tab))
@@ -208,9 +209,9 @@
         rkind <- freqs == d
       }
       if (sum(rkind) > 0) {
-        v <- pTable[i == d, kum_p_o]
+        v <- ptab[i == d, kum_p_o]
         ck <- cellkeys[rkind]
-        diffs <- pTable[i == d, diff]
+        diffs <- ptab[i == d, diff]
 
         # row_ind
         rI <- sapply(1:sum(rkind), function(x) {
@@ -266,20 +267,19 @@
 # the required amount of perturbation
 .identify_topk_cells <- function(dat, rkeys, dim_list, pert_params, v=v, type) {
   tmprkeyfortabulation <- tmpidforsorting <- NULL
-  is_topK <- magnitude <- noise <- NULL
+  magnitude <- noise <- NULL
 
   keys <- names(dim_list)
   tmp <- copy(dat)
 
-  mTable <- slot(pert_params, "mTable")
-  sTable <- slot(pert_params, "sTable")
-  bigN <- slot(pert_params, "bigN")
-  smallC <- slot(pert_params, "smallC")
+  mtab <- slot(pert_params, "mtab")
+  stab <- slot(pert_params, "stab")
+  big_n <- slot(pert_params, "big_n")
+  small_c <- slot(pert_params, "small_c")
 
   tmp <- tmp[, c(v, keys, "tmpidforsorting"), with = FALSE]
   tmp[, tmprkeyfortabulation := rkeys]
 
-  tmp$is_topK <- FALSE
   tmp$magnitude <- NA_real_
   tmp$dir <- NA_real_
   tmp$noise <- NA_real_
@@ -301,27 +301,24 @@
   res <- lapply(1:length(spl), function(i) {
     z <- spl[[i]]
 
-    topK <- min(nrow(z), slot(pert_params, "topK"))
-    z <- z[1:topK]
+    top_k <- min(nrow(z), slot(pert_params, "top_k"))
+    z <- z[1:top_k]
 
     rkeys <- z$tmprkeyfortabulation
 
-    z[, is_topK := TRUE]
-    z[, magnitude := mTable[1:topK]]
-
+    z[, magnitude := mtab[1:top_k]]
     z[, dir := .direction(rkeys, type = type)]
     rind <- .row_index_cont(
       rec_keys = rkeys,
       type = type
     )
     cind <- .col_index_cont(
-      cKey = .calc_cellkey(spl[[i]]$tmprkeyfortabulation, bigN),
+      ckey = .calc_cellkey(spl[[i]]$tmprkeyfortabulation, big_n),
       n = nrow(spl[[i]]),
-      smallC = smallC,
+      small_c = small_c,
       type = type
     )
-
-    z[, noise := sTable[[cind]][rind]]
+    z[, noise := stab[[cind]][rind]]
 
     # .pert: the amount of perturbation
     z[, eval(v.pert) := z[[v]] * z$magnitude * z$dir * z$noise]

@@ -66,8 +66,8 @@ ck_create_pert_params <-
       message(paste(m, collapse = " "))
     }
     message(paste(m, collapse = " "))
-    slot(out, "bigN") <- as.integer(1)
-    slot(out, "smallN") <- 0L
+    slot(out, "big_n") <- as.integer(1)
+    slot(out, "small_n") <- 0L
   } else if (cur_type %in% c("abs", "free")) {
     stopifnot(is.numeric(big_n), length(big_n) == 1, big_n >= 1)
     if (big_n > .Machine$integer.max) {
@@ -80,15 +80,15 @@ ck_create_pert_params <-
     }
     stopifnot(is_bare_integerish(big_n))
     stopifnot(is_bare_integerish(small_n), small_n >= 1)
-    slot(out, "bigN") <- as.integer(big_n)
-    slot(out, "smallN") <- as.integer(small_n)
+    slot(out, "big_n") <- as.integer(big_n)
+    slot(out, "small_n") <- as.integer(small_n)
   } else {
     stop("invalid input!\n")
   }
-  slot(out, "pTable") <- ptab
-  slot(out, "pTableSize") <- as.integer(ncol(ptab))
+  slot(out, "ptab") <- ptab
+  slot(out, "ptab_size") <- as.integer(ncol(ptab))
 
-  if (slot(out, "smallN") >= slot(out, "pTableSize")) {
+  if (slot(out, "small_n") >= slot(out, "ptab_size")) {
     e <- c(
       "Parameter `small_n` must be smaller than the number",
       "of columns in `ptab`"
@@ -97,12 +97,12 @@ ck_create_pert_params <-
   }
 
   if (!is.null(mtab)) {
-    slot(out, "mTable") <- mtab
-    slot(out, "topK") <- as.integer(length(mtab))
+    slot(out, "mtab") <- mtab
+    slot(out, "top_k") <- as.integer(length(mtab))
   }
   if (!is.null(stab)) {
-    slot(out, "sTable") <- stab
-    slot(out, "smallC") <- as.integer(ncol(stab) - 32)
+    slot(out, "stab") <- stab
+    slot(out, "small_c") <- as.integer(ncol(stab) - 32)
   }
   validObject(out)
   out

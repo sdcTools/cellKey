@@ -12,7 +12,7 @@
 #' @param mono (logical) vector specifying optimization parameter for monotony
 #' condition
 #' @param epsilon (double)
-#' @param pTableSize (number) defining the number of required columns in the
+#' @param ptab_size (number) defining the number of required columns in the
 #' "abs"-approach
 #' @param type character specifying the format of the input table. Valid choices
 #' are \code{"abs"} and \code{"destatis"}.
@@ -29,7 +29,7 @@
 #'   D = 5,
 #'   V = 3,
 #'   js = 2,
-#'   pTableSize = 70,
+#'   ptab_size = 70,
 #'   type = "abs"
 #' )
 #'
@@ -52,7 +52,7 @@ ck_create_ptab <-
            optim = 1,
            mono = TRUE,
            epsilon = 1e-07,
-           pTableSize = 70) {
+           ptab_size = 70) {
     stopifnot(is_scalar_character(type))
     type <- tolower(type)
     stopifnot(type %in% c("abs", "destatis"))
@@ -65,7 +65,7 @@ ck_create_ptab <-
     optim = optim,
     mono = mono,
     epsilon = epsilon,
-    pTableSize = pTableSize
+    pTableSize = ptab_size
   )
   return(pt_create_pTable(
     params = pt_para,

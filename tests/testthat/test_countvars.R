@@ -16,7 +16,7 @@ dat$rkeys <-
 ptab <- ck_create_ptab(
   D = 5,
   V = 3,
-  pTableSize = 70,
+  ptab_size = 70,
   type = "abs"
 )
 pert_params <- ck_create_pert_params(

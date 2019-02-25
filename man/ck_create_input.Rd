@@ -46,7 +46,7 @@ stab <- ck_generate_stab(small_c = 12)
 ptab <- ck_create_ptab(
   D = 5,
   V = 3,
-  pTableSize = 70,
+  ptab_size = 70,
   type = "abs"
 )
 

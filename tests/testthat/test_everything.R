@@ -2,7 +2,7 @@ context("Testing Frequency Tables")
 
 set.seed(120)
 big_n <- 17312941
-pTableSize <- 70
+ptab_size <- 70
 small_n <- 12
 dat <- ck_create_testdata()
 
@@ -51,7 +51,7 @@ ptab <- ck_create_ptab(
   D = 5,
   V = 3,
   type = "abs",
-  pTableSize = pTableSize
+  ptab_size = ptab_size
 )
 
 pert_params <- ck_create_pert_params(
@@ -70,7 +70,7 @@ inp <- ck_create_input(
 test_that("checking output of createInput() with already existing rec-keys", {
   expect_s4_class(inp, "pert_inputdat")
   expect_s4_class(inp@pert_params, "pert_params")
-  expect_equal(slot(inp@pert_params, "bigN"), 17312941)
+  expect_equal(slot(inp@pert_params, "big_n"), 17312941)
 })
 
 dat$rec_key <- NULL
@@ -82,7 +82,7 @@ inp2 <- ck_create_input(
 test_that("checking output of createInput() with non-existing record keys", {
   expect_s4_class(inp2, "pert_inputdat")
   expect_s4_class(inp2@pert_params, "pert_params")
-  expect_equal(slot(inp2@pert_params, "bigN"), 17312941)
+  expect_equal(slot(inp2@pert_params, "big_n"), 17312941)
 })
 
 # Frequency Tables, weighted

@@ -36,7 +36,7 @@
 #' ptab <- ck_create_ptab(
 #'   D = 5,
 #'   V = 3,
-#'   pTableSize = 70,
+#'   ptab_size = 70,
 #'   type = "abs"
 #' )
 #'

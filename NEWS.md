@@ -9,6 +9,7 @@
 - [ok] reparametrisation: `ck_create_pTable` -> `ck_create_ptab`
 - [ok] reparametrisation: `ck_create_sTable` -> `ck_create_stab`
 - [ok] reparametrisation: `ck_cont_table`: `meanBeforeSum` -> `mean_before_sum`
+- [ok] snake_case for class `pert_params`
 - [ok] performance improvements when perturbing magnitude tables
 - [TODO] check examples and vignette for code style
 - [TODO] 100% code coverage (like sdcHierarchies)

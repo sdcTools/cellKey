@@ -5,7 +5,7 @@
 \title{Create a perturbation table}
 \usage{
 ck_create_ptab(D, V, type, js = 0, pstay = NULL, optim = 1,
-  mono = TRUE, epsilon = 0.0000001, pTableSize = 70)
+  mono = TRUE, epsilon = 0.0000001, ptab_size = 70)
 }
 \arguments{
 \item{D}{perturbation parameter for maximum perturbation (scalar or vector)}
@@ -27,7 +27,7 @@ condition}
 
 \item{epsilon}{(double)}
 
-\item{pTableSize}{(number) defining the number of required columns in the
+\item{ptab_size}{(number) defining the number of required columns in the
 "abs"-approach}
 }
 \value{
@@ -43,7 +43,7 @@ ck_create_ptab(
   D = 5,
   V = 3,
   js = 2,
-  pTableSize = 70,
+  ptab_size = 70,
   type = "abs"
 )
 

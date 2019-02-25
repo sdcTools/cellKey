@@ -1,18 +1,19 @@
 #' An S4 class to represent perturbation parameters for continous tables
-#' @slot bigN (integer) large prime number used to derive
+#' @slot big_n (integer) large prime number used to derive
 #' cell keys from record keys
-#' @slot smallN (integer) parameter for smallN
-#' @slot pTable (data.table) perturbation table with 256 rows
-#' @slot pTableSize (integer) number of columns of \code{pTable}
-#' @slot mTable numeric vector specifying parameter mTable
+#' @slot small_n (integer) parameter for parameter `small_n` from as
+#' introduced in the ABS-specification of the algorithm.
+#' @slot ptab (data.table) perturbation table with 256 rows
+#' @slot ptab_size (integer) number of columns of \code{pTable}
+#' @slot mtab numeric vector specifying parameter mTable
 #' for continous perturbation
-#' @slot smallC (integer) specifying parameter smallC for
+#' @slot small_c (integer) specifying parameter smallC for
 #' continous perturbation
 #' the row in the lookup-table that was used to get the
 #' perturbation value
-#' @slot sTable numeric vector specifying parameter sTable
+#' @slot stab numeric vector specifying parameter sTable
 #' for continous perturbation
-#' @slot topK (integer) specifiying the number of units in
+#' @slot top_k (integer) specifiying the number of units in
 #' each cell whose values
 #' will be perturbed differently
 #' @slot type (character) specifying the type of pTable
@@ -22,49 +23,49 @@
 #' @export
 setClass("pert_params",
 representation = list(
-  bigN = "integer",
-  smallN = "integer",
-  pTable = "data.table",
-  pTableSize = "integer",
-  sTable = "data.table",
-  mTable = "numeric",
-  smallC = "integer",
-  topK = "integer",
+  big_n = "integer",
+  small_n = "integer",
+  ptab = "data.table",
+  ptab_size = "integer",
+  stab = "data.table",
+  mtab = "numeric",
+  small_c = "integer",
+  top_k = "integer",
   type = "character"
 ),
 prototype = list(
-  bigN = integer(),
-  smallN = integer(),
-  pTable = data.table(),
-  pTableSize = integer(),
-  mTable = numeric(),
-  smallC = integer(),
-  sTable = data.table(),
-  topK = integer(),
+  big_n = integer(),
+  small_n = integer(),
+  ptab = data.table(),
+  ptab_size = integer(),
+  mtab = numeric(),
+  small_c = integer(),
+  stab = data.table(),
+  top_k = integer(),
   type = character()
 ),
 validity = function(object) {
-  if (length(slot(object, "mTable")) > 0) {
-    stopifnot(all(slot(object, "mTable") > 0))
-    stopifnot(is_scalar_integer(slot(object, "topK")))
+  if (length(slot(object, "mtab")) > 0) {
+    stopifnot(all(slot(object, "mtab") > 0))
+    stopifnot(is_scalar_integer(slot(object, "top_k")))
   }
-  if (nrow(slot(object, "sTable")) > 0) {
-    stopifnot(is_scalar_integer(slot(object, "smallC")))
+  if (nrow(slot(object, "stab")) > 0) {
+    stopifnot(is_scalar_integer(slot(object, "small_c")))
   }
   stopifnot(is_scalar_character(slot(object, "type")))
   if (!slot(object, "type") %in% c("destatis", "abs", "free")) {
     stop("`type` must be either `destatis`, `abs` or `free`", call. = FALSE)
   }
-  stopifnot(is_scalar_integer(slot(object, "bigN")))
-  stopifnot(is_scalar_integer(slot(object, "smallN")))
+  stopifnot(is_scalar_integer(slot(object, "big_n")))
+  stopifnot(is_scalar_integer(slot(object, "small_n")))
 
   if (slot(object, "type") == "abs") {
-    if (!is_prime(slot(object, "bigN"))) {
-      stop("`bigN` must be a prime number!", call. = FALSE)
+    if (!is_prime(slot(object, "big_n"))) {
+      stop("`big_n` must be a prime number!", call. = FALSE)
     }
   } else if (slot(object, "type") == "abs") {
-    if (slot(object, "bigN") != 1) {
-      stop("`bigN` must equal 1 for method `destatis`.", call. = FALSE)
+    if (slot(object, "big_n") != 1) {
+      stop("`big_n` must equal 1 for method `destatis`.", call. = FALSE)
     }
   }
   return(TRUE)

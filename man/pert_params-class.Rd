@@ -10,27 +10,28 @@ An S4 class to represent perturbation parameters for continous tables
 \section{Slots}{
 
 \describe{
-\item{\code{bigN}}{(integer) large prime number used to derive
+\item{\code{big_n}}{(integer) large prime number used to derive
 cell keys from record keys}
 
-\item{\code{smallN}}{(integer) parameter for smallN}
+\item{\code{small_n}}{(integer) parameter for parameter `small_n` from as
+introduced in the ABS-specification of the algorithm.}
 
-\item{\code{pTable}}{(data.table) perturbation table with 256 rows}
+\item{\code{ptab}}{(data.table) perturbation table with 256 rows}
 
-\item{\code{pTableSize}}{(integer) number of columns of \code{pTable}}
+\item{\code{ptab_size}}{(integer) number of columns of \code{pTable}}
 
-\item{\code{mTable}}{numeric vector specifying parameter mTable
+\item{\code{mtab}}{numeric vector specifying parameter mTable
 for continous perturbation}
 
-\item{\code{smallC}}{(integer) specifying parameter smallC for
+\item{\code{small_c}}{(integer) specifying parameter smallC for
 continous perturbation
 the row in the lookup-table that was used to get the
 perturbation value}
 
-\item{\code{sTable}}{numeric vector specifying parameter sTable
+\item{\code{stab}}{numeric vector specifying parameter sTable
 for continous perturbation}
 
-\item{\code{topK}}{(integer) specifiying the number of units in
+\item{\code{top_k}}{(integer) specifiying the number of units in
 each cell whose values
 will be perturbed differently}
 
