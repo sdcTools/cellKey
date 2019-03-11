@@ -2,7 +2,7 @@
 % Please edit documentation in R/perturbTable.R
 \name{perturbTable}
 \alias{perturbTable}
-\title{perturbTable}
+\title{Perturb a table}
 \usage{
 perturbTable(inp, dimList, countVars = NULL, numVars = NULL,
   by = NULL, weightVar = NULL, pThreshold = NULL)
@@ -39,7 +39,8 @@ unweighted counts.}
 an object of class \code{\link{pert_table-class}}.
 }
 \description{
-compute perturbed tables containing counts and continous variables.
+This function allows to perturb a complex statistical table containing
+containing counts (frequencies) and optionally continous variables.
 }
 \examples{
 # loading testdata and adding record keys (for abs-algorithm)
@@ -110,23 +111,17 @@ inp_destatis <- ck_create_input(
 )
 
 # definining table hierarchies
+# note that you could also use functionality from sdcHierarchies-package directly
+# see: help(pa='sdcHierarchies') or an example:
+# dim.sex <- sdcHierarchies::sdcHier_create("Total", node_labs=c("male", "female"))
+# dim.sex <- sdcHier(dim.sex) # interactive shiny-app to modify the hierarchy
 # variable 'sex'
-dim.sex <- ck_create_node(total_lab = "Total")
-dim.sex <- ck_add_nodes(
-  dim.sex,
-  reference_node = "Total",
-  node_labs = c("male", "female")
-)
-print(dim.sex)
+dim.sex <- ck_create_node(total_lab="Total", node_labs=c("male", "female"))
+sdcHierarchies::hier_display(dim.sex)
 
-# variable 'sex'
-dim.age <- ck_create_node(total_lab = "Total")
-dim.age <- ck_add_nodes(
-  dim.age,
-  reference_node = "Total",
-  node_labs = paste0("age_group", 1:6)
-)
-print(dim.age)
+## variable 'sex'
+dim.age <- ck_create_node(total_lab="Total", node_labs=paste0("age_group",1:6))
+sdcHierarchies::hier_display(dim.age)
 
 # define required inputs
 dimList <- list(sex = dim.sex, age = dim.age)

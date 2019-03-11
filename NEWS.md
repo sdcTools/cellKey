@@ -1,4 +1,9 @@
-# cellKey 0.15.x
+# cellKey 0.16.0
+- make use of new package `sdcHierarchies` to generate and update hierarchies
+- new function `ck_rename_nodes()`
+- `perturbTable()` got a new argument `pThreshold` that allows to specify a threshold above no perturbation is applied independent from the perturbation table.
+
+# cellKey 0.15.0
 - new convenience function `ck_vignette()` that displays the package vignette in a browser
 - `ck_generate_rkeys()` got a new argument `seed` that allows to overwrite the default seed computed from a hash of the input dataset.
 - improvements in code-styling and readability of examples
@@ -34,7 +39,7 @@
 - feature: use package [**ptable**](http://github.com/sdcTools/ptable) to generate pTables in destatis format
 
 # cellKey 0.11.0
-- feature: use functions to create hierarchies directly from `sdcTable` and bump version requirement of this package to `>=0.23` 
+- feature: use functions to create hierarchies directly from `sdcTable` and bump version requirement of this package to `>=0.23`
 
 # cellKey 0.10.2
 - feature: if a (valid) variable is specified in argument `by` `in perturbTable()` it is automatically added to `countVars` even though not explicitely specified.
@@ -53,9 +58,9 @@
 
 # cellKey 0.9.0
 - feature: new dynamic way to specify hierarchies for tables, for an example see `?ck_manage_hierarchies`. This functionality will eventually also find its way to **sdcTable**
-  
-# cellKey 0.8.2
-- bugfix: rkeys need not to be integer if the "destatis"-method is used
+
+  # cellKey 0.8.2
+  - bugfix: rkeys need not to be integer if the "destatis"-method is used
 
 # cellKey 0.8.1
 - small fixes and some exported function gained `verbose` arguments

@@ -7,6 +7,7 @@
 #' @importFrom stats addmargins formula weights xtabs runif median na.omit quantile
 #' @importFrom utils data RShowDoc
 #' @importFrom digest sha1
-#' @importFrom sdcTable makeProblem sdcProb2df create_node add_nodes delete_nodes
+#' @importFrom sdcTable makeProblem sdcProb2df
 #' @importFrom ptable pt_create_pParams pt_create_pTable
+#' @import sdcHierarchies
 NULL

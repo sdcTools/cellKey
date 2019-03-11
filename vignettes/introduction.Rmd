@@ -111,7 +111,7 @@ print(dim.age)
 
 Each hierarchy is represented with a `data.frame` or `data.table` holding two variables. The first variables (`levels`) shows the level of a given characteristic that is shown in the second column (`codes`). The levels can be interpreted as `@` being the upmost level (overall total) while all codes with value `@@` contribute to this total. In the (very simple) case of variable `sex` we have one overall total in level 1 (called `Total`) that is computed from two characteristics (`1` and `2`) in level 2. This approach allows to specify quite complex hierarchies in many levels.
 
-An alternative way (available from versions `>=0.9.0`) is to use functions `ck_create_node()`, `ck_add_nodes()` and `ck_delete_nodes()` to build the hierarchies. These functions make use of functionality available in the [**data.tree**](https://cran.r-project.org/package=data.tree) package and return a tree-like structure. **cellKey** will internally convert input provided in such format automatically into the format used in [**sdcTable**](https://cran.r-project.org/package=sdcTable). We now show the alternative way on how to specify the hierarchies for variables `sex`:
+An alternative way (available from versions `>=0.9.0`) is to use functions `ck_create_node()`, `ck_add_nodes()` and `ck_delete_nodes()` to build the hierarchies. These functions make use of functionality available in the [**sdcHierarchy**](https://github.com/bernhard-da/sdcHierarchies) package which itself uses the [**data.tree**](https://cran.r-project.org/package=data.tree) package extensivly. These functions return a tree-like structure that can be used as input to the table-building functions borrowed from [**sdcTable**](https://cran.r-project.org/package=sdcTable). We now show the alternative way on how to specify the hierarchies for variables `sex`:
 
 ```{r}
 dim.sex2 <- ck_create_node(total_lab = "Total")
@@ -120,7 +120,7 @@ dim.sex2 <- ck_add_nodes(
   reference_node = "Total", 
   node_labs = c("male", "female")
 )
-print(dim.sex2)
+sdcHierarchies::hier_display(dim.sex2)
 ```
 
 For variable `age` the process is quite similar:
@@ -131,12 +131,12 @@ dim.age2 <- ck_add_nodes(
   reference_node = "Total", 
   node_labs = paste0("age_group", 1:6)
 )
-print(dim.age2)
+sdcHierarchies::hier_display(dim.age2)
 ```
 
-The idea is to create a tree object using `ck_create_node()` and then add (using `ck_add_nodes()`) or delete (with `ck_delete_nodes()`) elements from this hierarchical structure. For more examples have a look at `?ck_manage_hierarchies`.
+The idea is to create a tree object using `ck_create_node()` and then add (using `ck_add_nodes()`) or delete (with `ck_delete_nodes()`) elements from this hierarchical structure. For more examples have a look at `?ck_manage_hierarchies`. Please note that these tree-based objects could also be created with the functions `sdcHier_create()`, `sdcHier_add()`, `sdcHier_delete()` and/or `sdcHier_rename()` from the [**sdcHierarchy**](https://github.com/bernhard-da/sdcHierarchies) package as the `ck_xyz()`-functions only wrap the methods from this package. [**sdcHierarchy**](https://github.com/bernhard-da/sdcHierarchies) also contains a shiny-app that can be called with `sdcHier()` which allows to interactively change and modify a hierarchy and allows to convert tree- and data.frame based inputs into various formats. For more information, have a look at `?sdcHierarchies::sdcHier` and the other help-files of the package.
 
-All hierarchy specifications must then be combined into a named list where the names of the list elements contain variable names of the input data set and the elements the data objects that hold the hierarchy specification. This is why the list elements of `dimList` have to be named `sex` and `age`. Please note that it is perfectly possible to "mix" definitions of the inputs.
+After all dimensions have been specified, these inputs must then be combined into a named list where the names of the list elements contain variable names of the input data set and the elements the data objects that hold the hierarchy specification. This is why the list elements of `dimList` in this example have to be named `sex` and `age`. Please also note that it is perfectly possible to "mix" definitions of the inputs.
 
 ```{r}
 # dim.sex was created the "sdcTable-way"
