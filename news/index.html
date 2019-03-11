@@ -16,7 +16,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
@@ -60,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.15.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.16.0</span>
       </span>
     </div>
 
@@ -68,7 +69,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -110,9 +111,20 @@
       
     </div>
 
-    <div id="cellkey-0-15-x" class="section level1">
+    <div id="cellkey-0-16-0" class="section level1">
 <h1 class="page-header">
-<a href="#cellkey-0-15-x" class="anchor"></a>cellKey 0.15.x</h1>
+<a href="#cellkey-0-16-0" class="anchor"></a>cellKey 0.16.0</h1>
+<ul>
+<li>make use of new package <code>sdcHierarchies</code> to generate and update hierarchies</li>
+<li>new function <code><a href="../reference/ck_manage_hierarchies.html">ck_rename_nodes()</a></code>
+</li>
+<li>
+<code><a href="../reference/perturbTable.html">perturbTable()</a></code> got a new argument <code>pThreshold</code> that allows to specify a threshold above no perturbation is applied independent from the perturbation table.</li>
+</ul>
+</div>
+    <div id="cellkey-0-15-0" class="section level1">
+<h1 class="page-header">
+<a href="#cellkey-0-15-0" class="anchor"></a>cellKey 0.15.0</h1>
 <ul>
 <li>new convenience function <code><a href="../reference/ck_vignette.html">ck_vignette()</a></code> that displays the package vignette in a browser</li>
 <li>
@@ -227,15 +239,13 @@
 <h1 class="page-header">
 <a href="#cellkey-0-9-0" class="anchor"></a>cellKey 0.9.0</h1>
 <ul>
-<li>feature: new dynamic way to specify hierarchies for tables, for an example see <code><a href="../reference/ck_manage_hierarchies.html">?ck_manage_hierarchies</a></code>. This functionality will eventually also find its way to <strong>sdcTable</strong>
-</li>
-</ul>
-</div>
-    <div id="cellkey-0-8-2" class="section level1">
-<h1 class="page-header">
-<a href="#cellkey-0-8-2" class="anchor"></a>cellKey 0.8.2</h1>
+<li>
+<p>feature: new dynamic way to specify hierarchies for tables, for an example see <code><a href="../reference/ck_manage_hierarchies.html">?ck_manage_hierarchies</a></code>. This functionality will eventually also find its way to <strong>sdcTable</strong></p>
+<h1 id="cellkey-0.8.2" class="page-header">cellKey 0.8.2</h1>
 <ul>
 <li>bugfix: rkeys need not to be integer if the “destatis”-method is used</li>
+</ul>
+</li>
 </ul>
 </div>
     <div id="cellkey-0-8-1" class="section level1">
@@ -258,7 +268,8 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="#cellkey-0-15-x">0.15</a></li>
+        <li><a href="#cellkey-0-16-0">0.16.0</a></li>
+        <li><a href="#cellkey-0-15-0">0.15.0</a></li>
         <li><a href="#cellkey-0-14-0">0.14.0</a></li>
         <li><a href="#cellkey-0-13-4">0.13.4</a></li>
         <li><a href="#cellkey-0-13-3">0.13.3</a></li>
@@ -272,7 +283,6 @@
         <li><a href="#cellkey-0-10-0">0.10.0</a></li>
         <li><a href="#version-0-9-1">0.9.1</a></li>
         <li><a href="#cellkey-0-9-0">0.9.0</a></li>
-        <li><a href="#cellkey-0-8-2">0.8.2</a></li>
         <li><a href="#cellkey-0-8-1">0.8.1</a></li>
         <li><a href="#cellkey-0-8-0">0.8.0</a></li>
       </ul>

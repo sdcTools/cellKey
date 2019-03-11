@@ -8,7 +8,8 @@
 <title>Implementing ABS cell-key method for adding noise to frequency
         and continous tables • cellKey</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Implementing ABS cell-key method for adding noise to frequency
         and continous tables">
@@ -32,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.15.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.16.0</span>
       </span>
     </div>
 
@@ -40,7 +41,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -86,43 +87,35 @@
 <div id="information" class="section level3">
 <h3 class="hasAnchor">
 <a href="#information" class="anchor"></a>Information</h3>
-<p>This package is developed within the SGA <code>Open source tools for perturbative confidentiality methods</code>. This package is not yet tested or optimized but already contains the core-functionality to compute perturbed count-/magitude tables with some pre-defined hierarchies.</p>
+<p>This package is developed within the SGA <code>Open source tools for perturbative confidentiality methods</code>. This package is not optimized but already contains the core functionality to compute perturbed count- and magnitude tables with complex hierarchies.</p>
 <p>We have a first rough version with which interested users may play around. Feedback (via issues) with regards to bugs or features requests are very welcome as well as pull-requests. One the package is deemed stable, a version will be released on CRAN too.</p>
 </div>
 <div id="installation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h3>
-<p>The package can directly be installed from <code>github</code> using the <code>devtools</code> package which must be installed on your system.</p>
-<pre><code>if (!require("devtools")) install.packages("devtools")
-library(devtools)
-
-# update all packages
+<p>The package can directly be installed from <code>github</code> using the <code>remotes</code> package which is pulled in as a dependency from the <code>devtools</code> package. The following snippet installs the package:</p>
+<pre><code><a href="https://www.rdocumentation.org/packages/utils/topics/update.packages"># make sure that all packages are up-to-date
 update.packages(ask = FALSE)
 
-# finally install directly from github.com
-# install ptable
-install_github(
-  repo = "sdcTools/ptable", 
-  dependencies = c("Depends", "Imports"), 
-  force = TRUE, 
-  build_opts = "--build-vignettes"
-)
-  
-# install cellKey
-install_github(
+# make sure that devtools-pkg is available
+if (!require("devtools")) install.packages("devtools")
+library(devtools)
+
+# install cellKey from github.com
+remotes::install_github(
   repo = "sdcTools/cellKey", 
   force = TRUE, 
-  build_opts = "--build-vignettes"
-)</code></pre>
+  build_opts = "--no-resave-data"
+)</a></code></pre>
 <p>If you experience a timeout due to a proxy server while downloading, one can work around this issue by specifying the proxy-server using the <code>httr</code> package:</p>
 <pre><code>httr::set_config(use_proxy(url = "xxx.xxx.xxx.xxx, port = yy))</code></pre>
 </div>
 <div id="usage" class="section level3">
 <h3 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h3>
-<p>An example using both possible input formats for perturbation tables is given in the main-function of the package <code><a href="reference/perturbTable.html">perturbTable()</a></code>. See</p>
+<p>An example using both possible input formats for perturbation tables is given in the main function of the packge <code><a href="reference/perturbTable.html">perturbTable()</a></code></p>
 <pre><code><a href="reference/perturbTable.html">?cellKey::perturbTable</a></code></pre>
-<p>The package vignette is currently work-in-progress. It can be looked at using <code><a href="reference/ck_vignette.html">cellKey::ck_vignette()</a></code> or via the automatically deployed documentation by clicking <a href="https://sdctools.github.io/cellKey/articles/introduction.html"><strong>here</strong></a>. The complete <a href="https://sdctools.github.io/cellKey/"><strong>documentation</strong></a> is also updated automatically and can be browsed online.</p>
+<p>The package vignette is currently work-in-progress. It can be looked at using <code><a href="reference/ck_vignette.html">cellKey::ck_vignette()</a></code> or via the automatically deployed documentation by clicking <a href="https://sdctools.github.io/cellKey/articles/introduction.html"><strong>here</strong></a>. The complete <a href="https://sdctools.github.io/cellKey/"><strong>documentation</strong></a> is also updated automatically and can be browed online.</p>
 </div>
 <div id="updates" class="section level3">
 <h3 class="hasAnchor">
