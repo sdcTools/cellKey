@@ -9,5 +9,5 @@
 #' @importFrom digest sha1
 #' @importFrom sdcTable makeProblem sdcProb2df
 #' @importFrom ptable pt_create_pParams pt_create_pTable
-#' @import sdcHierarchies
+#' @importFrom sdcHierarchies hier_create hier_add hier_rename hier_delete
 NULL

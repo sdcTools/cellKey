@@ -44,23 +44,25 @@ NULL
 ##' @rdname ck_manage_hierarchies
 ##' @export
 ck_create_node <- function(total_lab="Total", node_labs=NULL) {
-  return(sdcHier_create(tot_lab = total_lab, node_labs = node_labs))
+  return(hier_create(root = total_lab, nodes = node_labs))
 }
 
 ##' @rdname ck_manage_hierarchies
 ##' @export
 ck_add_nodes <- function(node, node_labs, reference_node) {
-  return(sdcHier_add(h=node, node_labs = node_labs, refnode = reference_node))
+  return(hier_add(tree = node, root = reference_node, nodes = node_labs))
 }
 
 ##' @rdname ck_manage_hierarchies
 ##' @export
-ck_delete_nodes <- function(node, node_labs, reference_node) {
-  return(sdcHier_delete(h = node, node_labs = node_labs))
+ck_delete_nodes <- function(node, node_labs, reference_node = NULL) {
+  return(hier_delete(tree = node, nodes = node_labs))
 }
 
 ##' @rdname ck_manage_hierarchies
 ##' @export
 ck_rename_nodes <- function(node, node_labs, node_labs_new) {
-  return(sdcHier_rename(h = node, node_labs = node_labs, node_labs_new = node_labs_new))
+  nn <- node_labs_new
+  names(nn) <- node_labs
+  return(hier_rename(tree = node, nodes = nn))
 }

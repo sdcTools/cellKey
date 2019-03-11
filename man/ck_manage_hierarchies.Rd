@@ -12,7 +12,7 @@ ck_create_node(total_lab = "Total", node_labs = NULL)
 
 ck_add_nodes(node, node_labs, reference_node)
 
-ck_delete_nodes(node, node_labs, reference_node)
+ck_delete_nodes(node, node_labs, reference_node = NULL)
 
 ck_rename_nodes(node, node_labs, node_labs_new)
 }
