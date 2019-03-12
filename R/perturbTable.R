@@ -20,9 +20,6 @@
 #' \code{NULL}, the table will be based on all units in the microdata.
 #' @param weightVar (character) vector of variable holding sampling
 #' weights or \code{NULL}
-#' @param pThreshold (\code{NULL} or a integer > 0) specifices a threshold
-#' above which no perturbation will be applied. This threshold is applied to
-#' unweighted counts.
 #' @return an object of class \code{\link{pert_table-class}}.
 #' @seealso \url{https://www.unece.org/fileadmin/DAM/stats/documents/ece/ces/ge.46/2013/Topic_1_ABS.pdf}
 #' @export
@@ -195,8 +192,7 @@ perturbTable <- function(
   countVars=NULL,
   numVars=NULL,
   by=NULL,
-  weightVar=NULL,
-  pThreshold=NULL) {
+  weightVar=NULL) {
   # rename variables
   gen_vnames <- function(countVars, prefix="sumRK") {
     if (length(countVars) == 0) {

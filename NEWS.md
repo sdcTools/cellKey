@@ -1,7 +1,10 @@
+# cellKey 0.16.1
+- removed placeholder for `pThreshold` in `perturbTable()`
+
 # cellKey 0.16.0
 - make use of new package `sdcHierarchies` to generate and update hierarchies
 - new function `ck_rename_nodes()`
-- `perturbTable()` got a new argument `pThreshold` that allows to specify a threshold above no perturbation is applied independent from the perturbation table.
+- `perturbTable()` got a new argument `pThreshold` that allows to specify a threshold above no perturbation is applied independent from the perturbation table. Currently only a placeholder and not used.
 
 # cellKey 0.15.0
 - new convenience function `ck_vignette()` that displays the package vignette in a browser

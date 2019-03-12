@@ -5,7 +5,7 @@
 \title{Perturb a table}
 \usage{
 perturbTable(inp, dimList, countVars = NULL, numVars = NULL,
-  by = NULL, weightVar = NULL, pThreshold = NULL)
+  by = NULL, weightVar = NULL)
 }
 \arguments{
 \item{inp}{an object of class \code{\link{pert_inputdat-class}}
@@ -30,10 +30,6 @@ variable is not listed in argument \code{countVars} it will be automatically add
 
 \item{weightVar}{(character) vector of variable holding sampling
 weights or \code{NULL}}
-
-\item{pThreshold}{(\code{NULL} or a integer > 0) specifices a threshold
-above which no perturbation will be applied. This threshold is applied to
-unweighted counts.}
 }
 \value{
 an object of class \code{\link{pert_table-class}}.
