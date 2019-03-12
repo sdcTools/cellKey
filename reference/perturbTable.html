@@ -65,7 +65,7 @@ containing counts (frequencies) and optionally continous variables." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.16.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.16.1</span>
       </span>
     </div>
 
@@ -124,7 +124,7 @@ containing counts (frequencies) and optionally continous variables.</p>
     </div>
 
     <pre class="usage"><span class='fu'>perturbTable</span>(<span class='no'>inp</span>, <span class='no'>dimList</span>, <span class='kw'>countVars</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>numVars</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>weightVar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pThreshold</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+  <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>weightVar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -163,12 +163,6 @@ variable is not listed in argument <code>countVars</code> it will be automatical
       <th>weightVar</th>
       <td><p>(character) vector of variable holding sampling
 weights or <code>NULL</code></p></td>
-    </tr>
-    <tr>
-      <th>pThreshold</th>
-      <td><p>(<code>NULL</code> or a integer &gt; 0) specifices a threshold
-above which no perturbation will be applied. This threshold is applied to
-unweighted counts.</p></td>
     </tr>
     </table>
     
