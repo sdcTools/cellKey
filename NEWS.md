@@ -1,3 +1,6 @@
+# cellKey 0.16.2
+- install `ptable` from personal fork until `sdcTools/ptable` is updated
+
 # cellKey 0.16.1
 - removed placeholder for `pThreshold` in `perturbTable()`
 
