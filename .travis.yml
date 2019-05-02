@@ -14,7 +14,7 @@ addons:
 
 r_github_packages:
   - jimhester/lintr
-  - sdcTools/ptable
+  - bernhard-da/ptable
   - r-lib/covr
   - r-lib/pkgdown
 
