@@ -67,7 +67,7 @@ define the (hierarchical) structure of tables." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.16.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.16.3</span>
       </span>
     </div>
 
@@ -175,16 +175,16 @@ to define table inputs in <code><a href='perturbTable.html'>perturbTable</a></co
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>dim</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_create_node</span>(<span class='kw'>total_lab</span><span class='kw'>=</span><span class='st'>"Total"</span>)
 <span class='no'>dim</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_add_nodes</span>(<span class='no'>dim</span>, <span class='kw'>reference_node</span><span class='kw'>=</span><span class='st'>"Total"</span>, <span class='kw'>node_labs</span><span class='kw'>=</span><span class='no'>LETTERS</span>[<span class='fl'>1</span>:<span class='fl'>4</span>])
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>dim</span>)</div><div class='output co'>#&gt;     root  leaf
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>dim</span>)</div><div class='output co'>#&gt;     root  leaf
 #&gt; 1: Total Total
 #&gt; 2: Total     A
 #&gt; 3: Total     B
 #&gt; 4: Total     C
 #&gt; 5: Total     D</div><div class='input'>
 <span class='co'>## add some levels below "A" and "C"</span>
-<span class='no'>dim</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_add_nodes</span>(<span class='no'>dim</span>, <span class='kw'>reference_node</span><span class='kw'>=</span><span class='st'>"A"</span>, <span class='kw'>node_labs</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste0</a></span>(<span class='st'>"a"</span>, <span class='fl'>1</span>:<span class='fl'>5</span>))
-<span class='no'>dim</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_add_nodes</span>(<span class='no'>dim</span>, <span class='kw'>reference_node</span><span class='kw'>=</span><span class='st'>"C"</span>, <span class='kw'>node_labs</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste0</a></span>(<span class='st'>"c"</span>, <span class='fl'>1</span>:<span class='fl'>5</span>))
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>dim</span>)</div><div class='output co'>#&gt;      root  leaf
+<span class='no'>dim</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_add_nodes</span>(<span class='no'>dim</span>, <span class='kw'>reference_node</span><span class='kw'>=</span><span class='st'>"A"</span>, <span class='kw'>node_labs</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"a"</span>, <span class='fl'>1</span>:<span class='fl'>5</span>))
+<span class='no'>dim</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_add_nodes</span>(<span class='no'>dim</span>, <span class='kw'>reference_node</span><span class='kw'>=</span><span class='st'>"C"</span>, <span class='kw'>node_labs</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"c"</span>, <span class='fl'>1</span>:<span class='fl'>5</span>))
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>dim</span>)</div><div class='output co'>#&gt;      root  leaf
 #&gt;  1: Total Total
 #&gt;  2: Total     A
 #&gt;  3: Total     B
@@ -201,8 +201,8 @@ to define table inputs in <code><a href='perturbTable.html'>perturbTable</a></co
 #&gt; 14:     C    c4
 #&gt; 15:     C    c5</div><div class='input'>
 <span class='co'>## delete some specific levels</span>
-<span class='no'>dim</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_delete_nodes</span>(<span class='no'>dim</span>, <span class='kw'>reference_node</span><span class='kw'>=</span><span class='st'>"A"</span>, <span class='kw'>node_labs</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"a1"</span>, <span class='st'>"a4"</span>))
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>dim</span>)</div><div class='output co'>#&gt;      root  leaf
+<span class='no'>dim</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_delete_nodes</span>(<span class='no'>dim</span>, <span class='kw'>reference_node</span><span class='kw'>=</span><span class='st'>"A"</span>, <span class='kw'>node_labs</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"a1"</span>, <span class='st'>"a4"</span>))
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>dim</span>)</div><div class='output co'>#&gt;      root  leaf
 #&gt;  1: Total Total
 #&gt;  2: Total     A
 #&gt;  3: Total     B
@@ -217,8 +217,8 @@ to define table inputs in <code><a href='perturbTable.html'>perturbTable</a></co
 #&gt; 12:     C    c4
 #&gt; 13:     C    c5</div><div class='input'>
 <span class='co'>## delete entire subtree</span>
-<span class='no'>dim</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_delete_nodes</span>(<span class='no'>dim</span>, <span class='kw'>reference_node</span><span class='kw'>=</span><span class='st'>"Total"</span>, <span class='kw'>node_labs</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"C"</span>))
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>dim</span>)</div><div class='output co'>#&gt;     root  leaf
+<span class='no'>dim</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_delete_nodes</span>(<span class='no'>dim</span>, <span class='kw'>reference_node</span><span class='kw'>=</span><span class='st'>"Total"</span>, <span class='kw'>node_labs</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"C"</span>))
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>dim</span>)</div><div class='output co'>#&gt;     root  leaf
 #&gt; 1: Total Total
 #&gt; 2: Total     A
 #&gt; 3: Total     B
