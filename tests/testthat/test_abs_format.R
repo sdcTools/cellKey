@@ -1,6 +1,11 @@
 context("Testing Frequency Tables (abs)")
 
-set.seed(120)
+if (R.version$major >= 3 & R.version$minor >= 6) {
+  suppressWarnings(set.seed(120, sample.kind = "Rounding"))
+} else {
+  set.seed(120)
+}
+
 options(digits = 20)
 bigN <- 17312941
 pTableSize <- 70
