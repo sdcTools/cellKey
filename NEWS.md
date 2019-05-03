@@ -1,3 +1,6 @@
+# cellKey 0.16.3
+- fix tests due to changes in R 3.6.0
+
 # cellKey 0.16.2
 - install `ptable` from personal fork until `sdcTools/ptable` is updated
 
