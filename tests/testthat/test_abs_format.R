@@ -17,11 +17,8 @@ test_that("check seed from hash generation", {
   expect_equal(seed, 483520795)
 })
 
-dim.sex <- ck_create_node(total_lab = "Total")
-dim.sex <- ck_add_nodes(dim.sex, reference_node = "Total", node_labs = c("male", "female"))
-
-dim.age <- ck_create_node(total_lab = "Total")
-dim.age <- ck_add_nodes(dim.age, reference_node = "Total", node_labs = paste0("age_group", 1:6))
+dim.sex <- hier_create(root = "Total", nodes = c("male", "female"))
+dim.age <- hier_create(root = "Total", paste0("age_group", 1:6))
 dimList <- list(sex = dim.sex, age = dim.age)
 
 maxV <- 10 * nrow(dat)

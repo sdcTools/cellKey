@@ -24,7 +24,7 @@ This package implements methods to provide perturbation for statistical tables. 
 ## Main Features
 In the **cellKey** package it is possible to make use of two different ways on how to pertub multidimensional count tables - methods `abs` and `destatis`. For both of them methods are provided to generate suitable record keys using function `ck_generate_rkeys()`. For the perturbation of magnitude tables, for now only the method developed by the ABS is supported. Using sha1-checksums on the input datasets, we can make sure that the same record keys are generated whenever the same input data set is used for which record keys should be generated. However, it is also possible of course to use already pre-generated record keys available as variable in the microdata set.
 
-The package allows to make use of sampling weights. Thus, both weighted and unweighted count and magnitude tables can be perturbed. The hierarchical structure of the variables spanning the table can be arbitrarily complex. To generate these hierarchies, the **cellKey** packages allows not only to specify dimensions the same way as in package [**sdcTable**](https://cran.r-project.org/package=sdcTable) but also comes with a new and improved way using function `ck_create_node()`, `ck_add_nodes()` and `ck_delete_nodes()`. Finally, auxiliary methods are provided that allow to extract valueable information from objects created by the main function of this package `perturbTable()`. For example `mod_counts()` returns a data object showing for each cell the perturbation value and where it was found in the lookup table.
+The package allows to make use of sampling weights. Thus, both weighted and unweighted count and magnitude tables can be perturbed. The hierarchical structure of the variables spanning the table can be arbitrarily complex. To generate these hierarchies, the **cellKey** packages depends on functionality available in package [**sdcHierarchies**](https://cran.r-project.org/package=sdcHierarchies). Finally, auxiliary methods are provided that allow to extract valueable information from objects created by the main function of this package `perturbTable()`. For example `mod_counts()` returns a data object showing for each cell the perturbation value and where it was found in the lookup table.
 
 What is left is of course identifying bugs and issues and also to optimize performance of the package as well as to include some real world examples, eg. census tables.
 
@@ -66,7 +66,7 @@ pert_params <- ck_create_pert_params(
     pTableSize = 70, 
     type = "destatis"
   ),
-  sTable = ck_generate_sTable(smallC=12), 
+  sTable = ck_generate_sTable(smallC = 12), 
   mTable = c(0.6, 0.4, 0.2)
 )
 ```
@@ -93,55 +93,25 @@ We were able to specify the (existing) variable name `rkeys` containing record k
 To ensure that the same record keys are computed each and every time for the same data set, a seed based on the sha1-hash of the input dataset is computed and used before drawing the record keys.
 
 ### Specifying dimensions
-The next step is to define hierarchies for each of the classifying variables. There are two ways how the hierarchical structure of these variables (including sub-totals) can be specified. The first way is the same as dimensions have to be specified in package **sdcTable**. We give an example for the categorical variables `age` and `sex` below:
+The next step is to define hierarchies for each of the classifying variables. There are two ways how the hierarchical structure of these variables (including sub-totals) can be specified. One way is to use `"@; value` format as (also) used in [**sdcTable**](ttps://cran.r-project.org/package=sdcTable). We would suggest however, to use the second alternative which is using functionality from package [**sdcHierarchies**](ttps://cran.r-project.org/package=sdcHierarchies). In this vignette, we only show the preferred way to generate hierarchies for categorical variables `age` and `sex` below:
 
 ```{r}
-dim.sex <- data.table(
-  levels = c("@", "@@", "@@"), 
-  codes = c("Total", "male", "female")
-)
-print(dim.sex)
-
-dim.age <- data.table(
-  levels = c("@", rep("@@", 6)), 
-  codes = c("Total", paste0("age_group", 1:6))
-)
-print(dim.age)
+dim_sex <- hier_create(root = "Total", nodes = c("male", "female"))
+hier_display(dim_sex)
 ```
 
-Each hierarchy is represented with a `data.frame` or `data.table` holding two variables. The first variables (`levels`) shows the level of a given characteristic that is shown in the second column (`codes`). The levels can be interpreted as `@` being the upmost level (overall total) while all codes with value `@@` contribute to this total. In the (very simple) case of variable `sex` we have one overall total in level 1 (called `Total`) that is computed from two characteristics (`1` and `2`) in level 2. This approach allows to specify quite complex hierarchies in many levels.
-
-An alternative way (available from versions `>=0.9.0`) is to use functions `ck_create_node()`, `ck_add_nodes()` and `ck_delete_nodes()` to build the hierarchies. These functions make use of functionality available in the [**sdcHierarchy**](https://github.com/bernhard-da/sdcHierarchies) package which itself uses the [**data.tree**](https://cran.r-project.org/package=data.tree) package extensivly. These functions return a tree-like structure that can be used as input to the table-building functions borrowed from [**sdcTable**](https://cran.r-project.org/package=sdcTable). We now show the alternative way on how to specify the hierarchies for variables `sex`:
-
+For variable `age` the process is very much the same:
 ```{r}
-dim.sex2 <- ck_create_node(total_lab = "Total")
-dim.sex2 <- ck_add_nodes(
-  dim.sex2, 
-  reference_node = "Total", 
-  node_labs = c("male", "female")
-)
-sdcHierarchies::hier_display(dim.sex2)
+dim_age <- hier_create(root = "Total", nodes = paste0("age_group", 1:6))
+hier_display(dim_age)
 ```
 
-For variable `age` the process is quite similar:
-```{r}
-dim.age2 <- ck_create_node(total_lab = "Total")
-dim.age2 <- ck_add_nodes(
-  dim.age2, 
-  reference_node = "Total", 
-  node_labs = paste0("age_group", 1:6)
-)
-sdcHierarchies::hier_display(dim.age2)
-```
+The idea of [**sdcHierarchy**](https://github.com/bernhard-da/sdcHierarchies) is to create a tree object using `hier_create()` and then add (using `hier_add()`), delete (with `hier_delete()`) or rename (using `hier_rename()`) elements from this hierarchical structure. For more examples have a look at the package vignette of the package which can be accessed with `sdcHierarchies::hier_vignette()`. [**sdcHierarchy**](https://github.com/bernhard-da/sdcHierarchies) also contains a shiny-app that can be called with `hier_app()` which allows to interactively change and modify a hierarchy and allows to convert tree- and data.frame based inputs into various formats. For more information, have a look at `?hier_app` and the other help-files of the package.
 
-The idea is to create a tree object using `ck_create_node()` and then add (using `ck_add_nodes()`) or delete (with `ck_delete_nodes()`) elements from this hierarchical structure. For more examples have a look at `?ck_manage_hierarchies`. Please note that these tree-based objects could also be created with the functions `sdcHier_create()`, `sdcHier_add()`, `sdcHier_delete()` and/or `sdcHier_rename()` from the [**sdcHierarchy**](https://github.com/bernhard-da/sdcHierarchies) package as the `ck_xyz()`-functions only wrap the methods from this package. [**sdcHierarchy**](https://github.com/bernhard-da/sdcHierarchies) also contains a shiny-app that can be called with `sdcHier()` which allows to interactively change and modify a hierarchy and allows to convert tree- and data.frame based inputs into various formats. For more information, have a look at `?sdcHierarchies::sdcHier` and the other help-files of the package.
-
-After all dimensions have been specified, these inputs must then be combined into a named list where the names of the list elements contain variable names of the input data set and the elements the data objects that hold the hierarchy specification. This is why the list elements of `dimList` in this example have to be named `sex` and `age`. Please also note that it is perfectly possible to "mix" definitions of the inputs.
+After all dimensions have been specified, these inputs must then be combined into a named list where the names of the list elements contain variable names of the input data set and the elements the data objects that hold the hierarchy specification. This is why the list elements of `dimList` in this example have to be named `sex` and `age`. 
 
 ```{r}
-# dim.sex was created the "sdcTable-way"
-# dim.age2 was created with the more dynamic way 
-dimList <- list(sex = dim.sex, age = dim.age2)
+dimList <- list(sex = dim_sex, age = dim_age)
 print(dimList)
 ```
 

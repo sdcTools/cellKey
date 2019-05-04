@@ -106,21 +106,16 @@ inp_destatis <- ck_create_input(
   pert_params = pert_params_destatis
 )
 
-# definining table hierarchies
-# note that you could also use functionality from sdcHierarchies-package directly
-# see: help(pa='sdcHierarchies') or an example:
-# dim.sex <- sdcHierarchies::sdcHier_create("Total", node_labs=c("male", "female"))
-# dim.sex <- sdcHier(dim.sex) # interactive shiny-app to modify the hierarchy
-# variable 'sex'
-dim.sex <- ck_create_node(total_lab="Total", node_labs=c("male", "female"))
-sdcHierarchies::hier_display(dim.sex)
+# definining table hierarchies using functionality from pkg sdcHierarchies
+dim_sex <- hier_create(root = "Total", nodes = c("male", "female"))
+hier_display(dim_sex)
 
 ## variable 'sex'
-dim.age <- ck_create_node(total_lab="Total", node_labs=paste0("age_group",1:6))
-sdcHierarchies::hier_display(dim.age)
+dim_age <- hier_create(root = "Total", nodes = paste0("age_group", 1:6))
+hier_display(dim_age)
 
 # define required inputs
-dimList <- list(sex = dim.sex, age = dim.age)
+dimList <- list(sex = dim_sex, age = dim_age)
 weightVar <- "sampling_weight"
 numVars <- c("savings", "income")
 

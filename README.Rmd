@@ -14,6 +14,14 @@ This package is developed within the SGA `Open source tools for perturbative con
 
 We have a first rough version with which interested users may play around. Feedback (via issues) with regards to bugs or features requests are very welcome as well as pull-requests. One the package is deemed stable, a version will be released on CRAN too.
 
+### Important Note:
+As of versions `>= 0.17`, you need to use functionality of [`sdcHierarchies`](https://cran.r-project.org/package=sdcHierarchies) to setup hierarchies of your tables in `perturbTable()`. The following changes are possibly required in existing code. 
+
+- replace `ck_create_node()` with `hier_create()`
+- replace `ck_add_nodes()` with `hier_add()`
+- replace `ck_delete_nodes()` with `hier_delete()`
+- replace `ck_rename_nodes()` with `hier_rename()`
+
 ### Installation
 The package can directly be installed from `github` using the `remotes` package which is pulled in as a dependency from the `devtools` package. The following snippet installs the package:
 

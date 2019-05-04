@@ -1,3 +1,6 @@
+# cellKey 0.17.0
+- Defunc functions 
+
 # cellKey 0.16.3
 - fix tests due to changes in R 3.6.0
 

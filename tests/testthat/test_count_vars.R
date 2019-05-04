@@ -11,10 +11,8 @@ pTable <- ck_create_pTable(D = 5, V = 3, pTableSize = 70, type = "abs")
 pert_params <- ck_create_pert_params(bigN = 17312941, smallN = 12, pTable = pTable)
 inp <- ck_create_input(dat = dat, def_rkey = "rkeys", pert_params = pert_params)
 
-dim.sex <- ck_create_node(total_lab = "Total")
-dim.sex <- ck_add_nodes(dim.sex, reference_node = "Total", node_labs = c("male", "female"))
-dim.age <- ck_create_node(total_lab = "Total")
-dim.age <- ck_add_nodes(dim.age, reference_node = "Total", node_labs = paste0("age_group", 1:6))
+dim.sex <- hier_create(root = "Total", nodes = c("male", "female"))
+dim.age <- hier_create(root = "Total", paste0("age_group", 1:6))
 dimList <- list(sex = dim.sex, age = dim.age)
 weightVar <- "sampling_weight"
 
