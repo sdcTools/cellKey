@@ -5,13 +5,14 @@
 \alias{ck_dat_hc92}
 \title{A real-world data set on persons}
 \format{ck_dat_hc92: a data frame with 820000 observations on the following 6 variables.
-\describe{
-\item{id}{a numeric identifier}
-\item{geo_m}{a character vector defining regions}
-\item{sex}{a character vector defining gender}
-\item{age_m}{a character vector containing age groups}
-\item{yae_h}{a character vector}
-\item{rkey}{a numeric vector holding record keys}}}
+\itemize{
+\item \code{id}: a numeric identifier
+\item \code{geo_m}: a character vector defining regions
+\item \code{sex a}: character vector defining gender
+\item \code{age_m}: a character vector containing age groups
+\item \code{yae_h}: a character vector
+\item \code{rkey}: a numeric vector holding record keys
+}}
 \description{
 820000 obervations in 5 Variables without sampling weights.
 }

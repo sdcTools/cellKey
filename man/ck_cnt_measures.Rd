@@ -2,57 +2,55 @@
 % Please edit documentation in R/ck_cnt_measures.R
 \name{ck_cnt_measures}
 \alias{ck_cnt_measures}
-\title{ck_cnt_measures}
+\title{Utility measures for perturbed counts}
 \usage{
-ck_cnt_measures(x, vname = "Total")
+ck_cnt_measures(orig, pert)
 }
 \arguments{
-\item{x}{input object of class \code{\linkS4class{pert_table}}}
+\item{orig}{a numeric vector holding original values}
 
-\item{vname}{a specific tabulated count variable}
+\item{pert}{a numeric vector holding perturbed values}
 }
 \value{
 a \code{list} containing the following elements:
 \itemize{
-\item \strong{measures}: a \code{data.table} containing measures of the distribution
-of three different distances between original and perturbed values of the unweighted
-counts. The three distances are
+\item \code{overview}: a \code{data.table} with the following three columns:
 \itemize{
-\item absolute distance (column \code{vals_abs}), \code{D1}
-\item relative distance (column \code{vals_rel}), \code{D2}
-\item absolute distance between square-roots of original and perturbed
-values (column \code{vals_r}), \code{D3}
+\item \code{noise}: amount of noise computed as \code{orig} - \code{pert}
+\item \code{cnt}: number of cells perturbed with the value given in column \code{noise}
+\item \code{pct}: percentage of cells perturbed with the value given in column \code{noise}
 }
-\item \strong{cumDistrA}: a \code{data.table} with 3 columns showing the
-cummulative sum of absolute distances
+\item \code{measures: a }data.table\code{containing measures of the distribution of three different distances between original and perturbed values of the unweighted counts. Column}what` specifies the computed measure.
+The three distances considered are:
 \itemize{
-\item \code{kat}: possible values for distance \code{D1}
-\item \code{val_abs}: number of records smaller or equal the value in column \code{kat}
-\item \code{prop_abs}: proportion or records smaller or equal the value in column \code{kat}
+\item \code{d1}: absolute distance between original and masked values
+\item \code{d2}: relative absolute distance between original and masked values
+\item \code{d3}: absolute distance between square-roots of original and perturbed
+values
 }
-\item \strong{cumDistrB}: a \code{data.table} with 5 columns which show the cummulative
-distributions for distances \code{D2} (columns \code{val_rel} and \code{prop_rel})
-and \code{D3} (columns \code{val_r} and \code{prop_r}) for a set of intervals shown
-in column \code{kat}.
+\item \code{cumdistr_d1}, \code{cumdistr_d2} and \code{cumdistr_d3}: for each distance \code{d1}, \code{d2}
+and \code{d3}, a \code{data.table} with the following three columns:
 \itemize{
-\item \code{kat}: a specific interval
-\item \code{val_rel}: number of records smaller or equal the value in column \code{kat} for
-distance \code{D2}
-\item \code{prop_rel} proportion of records smaller or equal the value in column \code{kat} for
-distance \code{D2}
-\item \code{val_r}: number of records smaller or equal the value in column \code{kat} for
-distance \code{D3}
-\item \code{prop_r}: proportion of records smaller or equal the value in column \code{kat} for
-distance \code{D3}
+\item \code{kat}: a specific value (for \code{d1}) or interval (for distances \code{d2} and \code{d3})
+\item \code{cnt}: number of records smaller or equal the value in column \code{kat} for the
+given distance
+\item \code{pct} proportion of records smaller or equal the value
+in column \code{kat} for the selected distance
 }
-\item \strong{false_zero}: number of cells that were perturbed to zero
-\item \strong{false_positives}: number of cells that were initially zero but
+\item \code{false_zero}: number of cells that were perturbed to zero
+\item \code{false_positives}: number of cells that were initially zero but
 have been perturbed to a number different from zero
 }
 }
 \description{
-compute utility/information loss measures for count variables of a perturbed table.
+This function computes utility/information loss measures
+based on two numeric vectors (original and perturbed)
 }
 \examples{
-## see example in perturbTable
+orig <- 1:10
+pert <- orig; pert[c(1, 5, 7)] <- c(0, 6, 9)
+ck_cnt_measures(
+  orig = orig,
+  pert = pert
+)
 }

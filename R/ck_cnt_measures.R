@@ -1,149 +1,93 @@
-#' ck_cnt_measures
+#' Utility measures for perturbed counts
 #'
-#' compute utility/information loss measures for count variables of a perturbed table.
-#' @param x input object of class \code{\linkS4class{pert_table}}
-#' @param vname a specific tabulated count variable
-#' @return a \code{list} containing the following elements:
-#' \itemize{
-#' \item \strong{measures}: a \code{data.table} containing measures of the distribution
-#' of three different distances between original and perturbed values of the unweighted
-#' counts. The three distances are
-#' \itemize{
-#' \item absolute distance (column \code{vals_abs}), \code{D1}
-#' \item relative distance (column \code{vals_rel}), \code{D2}
-#' \item absolute distance between square-roots of original and perturbed
-#' values (column \code{vals_r}), \code{D3}
-#' }
-#' \item \strong{cumDistrA}: a \code{data.table} with 3 columns showing the
-#' cummulative sum of absolute distances
-#' \itemize{
-#' \item \code{kat}: possible values for distance \code{D1}
-#' \item \code{val_abs}: number of records smaller or equal the value in column \code{kat}
-#' \item \code{prop_abs}: proportion or records smaller or equal the value in column \code{kat}
-#' }
-#' \item \strong{cumDistrB}: a \code{data.table} with 5 columns which show the cummulative
-#' distributions for distances \code{D2} (columns \code{val_rel} and \code{prop_rel})
-#' and \code{D3} (columns \code{val_r} and \code{prop_r}) for a set of intervals shown
-#' in column \code{kat}.
-#' \itemize{
-#' \item \code{kat}: a specific interval
-#' \item \code{val_rel}: number of records smaller or equal the value in column \code{kat} for
-#' distance \code{D2}
-#' \item \code{prop_rel} proportion of records smaller or equal the value in column \code{kat} for
-#' distance \code{D2}
-#' \item \code{val_r}: number of records smaller or equal the value in column \code{kat} for
-#' distance \code{D3}
-#' \item \code{prop_r}: proportion of records smaller or equal the value in column \code{kat} for
-#' distance \code{D3}
-#' }
-#' \item \strong{false_zero}: number of cells that were perturbed to zero
-#' \item \strong{false_positives}: number of cells that were initially zero but
-#' have been perturbed to a number different from zero
-#' }
-#' @export
-#' @examples
-#' ## see example in perturbTable
-ck_cnt_measures <- function(x, vname="Total") {
-  stopifnot(isS4(x), "pert_table" %in% class(x))
-  stopifnot(is_scalar_character(vname))
-  stopifnot(vname %in% slot(x, "countVars"))
-
-
-  # unweighted
-  tab <- slot(x, "tab")
-
-  # unweighted
-  v_orig <- paste0("UWC_", vname)
-  v_pert <- paste0("pUWC_", vname)
-  return(ck_cnt_measures_basic(tab[[v_orig]], tab[[v_pert]]))
-}
-
-#' ck_cnt_measures_basic
+#' This function computes utility/information loss measures
+#' based on two numeric vectors (original and perturbed)
 #'
-#' compute utility/information loss measures two numeric vectors (original and perturbed)
 #' @param orig a numeric vector holding original values
 #' @param pert a numeric vector holding perturbed values
-#' @return a \code{list} containing the following elements:
-#' \itemize{
-#' \item \strong{measures}: a \code{data.table} containing measures of the distribution
-#' of three different distances between original and perturbed values of the unweighted
-#' counts. The three distances are
-#' \itemize{
-#' \item absolute distance (column \code{vals_abs}), \code{D1}
-#' \item relative distance (column \code{vals_rel}), \code{D2}
-#' \item absolute distance between square-roots of original and perturbed
-#' values (column \code{vals_r}), \code{D3}
-#' }
-#' \item \strong{cumDistrA}: a \code{data.table} with 3 columns showing the
-#' cummulative sum of absolute distances
-#' \itemize{
-#' \item \code{kat}: possible values for distance \code{D1}
-#' \item \code{val_abs}: number of records smaller or equal the value in column \code{kat}
-#' \item \code{prop_abs}: proportion or records smaller or equal the value in column \code{kat}
-#' }
-#' \item \strong{cumDistrB}: a \code{data.table} with 5 columns which show the cummulative
-#' distributions for distances \code{D2} (columns \code{val_rel} and \code{prop_rel})
-#' and \code{D3} (columns \code{val_r} and \code{prop_r}) for a set of intervals shown
-#' in column \code{kat}.
-#' \itemize{
-#' \item \code{kat}: a specific interval
-#' \item \code{val_rel}: number of records smaller or equal the value in column \code{kat} for
-#' distance \code{D2}
-#' \item \code{prop_rel} proportion of records smaller or equal the value in column \code{kat} for
-#' distance \code{D2}
-#' \item \code{val_r}: number of records smaller or equal the value in column \code{kat} for
-#' distance \code{D3}
-#' \item \code{prop_r}: proportion of records smaller or equal the value in column \code{kat} for
-#' distance \code{D3}
-#' }
-#' \item \strong{false_zero}: number of cells that were perturbed to zero
-#' \item \strong{false_positives}: number of cells that were initially zero but
+#' @return a `list` containing the following elements:
+#' - `overview`: a `data.table` with the following three columns:
+#'    * `noise`: amount of noise computed as `orig` - `pert`
+#'    * `cnt`: number of cells perturbed with the value given in column `noise`
+#'    * `pct`: percentage of cells perturbed with the value given in column `noise`
+#' - `measures: a `data.table` containing measures of the distribution
+#' of three different distances between original and perturbed values
+#' of the unweighted counts. Column `what` specifies the computed measure.
+#' The three distances considered are:
+#'    * `d1`: absolute distance between original and masked values
+#'    * `d2`: relative absolute distance between original and masked values
+#'    * `d3`: absolute distance between square-roots of original and perturbed
+#' values
+#'
+#' - `cumdistr_d1`, `cumdistr_d2` and `cumdistr_d3`: for each distance `d1`, `d2`
+#' and `d3`, a `data.table` with the following three columns:
+#'    * `kat`: a specific value (for `d1`) or interval (for distances `d2` and `d3`)
+#'    * `cnt`: number of records smaller or equal the value in column `kat` for the
+#'    given distance
+#'    * `pct` proportion of records smaller or equal the value
+#'    in column `kat` for the selected distance
+#' - `false_zero`: number of cells that were perturbed to zero
+#' - `false_positives`: number of cells that were initially zero but
 #' have been perturbed to a number different from zero
-#' }
 #' @export
+#' @md
 #' @examples
 #' orig <- 1:10
 #' pert <- orig; pert[c(1, 5, 7)] <- c(0, 6, 9)
-#' ck_cnt_measures_basic(
+#' ck_cnt_measures(
 #'   orig = orig,
 #'   pert = pert
 #' )
-ck_cnt_measures_basic <- function(orig, pert) {
-  stopifnot(is.numeric(orig), is.numeric(pert), length(orig) == length(pert))
+ck_cnt_measures <- function(orig, pert) {
+  pct <- cnt <- NULL
 
-  val_abs <- vals_abs <- prop_abs <- val_rel <- vals_rel <- prop_rel <- NULL
-  val_r <- vals_r <- prop_r <- NULL
-  quantvals <- c(seq(from = 0, to = 0.1, by = 0.01), seq(from = 0.15, to = 1, by = 0.05), Inf)
+  # for measures, see
+  # https://ec.europa.eu/eurostat/cros/system/files/methods_for_protecting_census_data.pdf
 
-  dabs <- abs(pert - orig)
-  drel <- (abs(pert - orig)) / orig
-  drel[is.nan(drel)] <- 0
+  if (!is.numeric(orig) | !is.numeric(pert)) {
+    stop("Arguments `orig` and `pert` must be numeric vectors", call. = FALSE)
+  }
+  if (length(orig) != length(pert)) {
+    stop("Number of elements in `orig` and `pert` differs", call. = FALSE)
+  }
 
-  dr <- abs(sqrt(pert) - sqrt(orig))
+  dt_overview <- as.data.table(as.data.frame.table(table(orig - pert)))
+  dt_overview$pct <- dt_overview$Freq / length(orig)
+  setnames(dt_overview, c("noise", "cnt", "pct"))
 
-  # absolute
-  cs_abs <- cumsum(table(dabs))
-  dt_a <- data.table(kat = names(cs_abs), val_abs = cs_abs)
-  dt_a[, prop_abs := val_abs / length(dabs)]
+  quantvals <- c(0, 0.02, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, Inf)
 
-  # relative and squared distances
-  drelf <- cut(drel, quantvals, include.lowest = TRUE)
-  drf <- cut(dr, quantvals, include.lowest = TRUE)
+  # distances per cell
+  # absolute distances
+  dist_d1 <- abs(pert - orig)
 
-  cs_rel <- cumsum(table(drelf))
-  cs_r <- cumsum(table(drf))
+  # relative absolute distance
+  dist_d2 <- (abs(pert - orig)) / orig
+  dist_d2[is.nan(dist_d2)] <- 0
 
-  dt_b <- data.table(kat = names(cs_rel), val_rel = cs_rel)
-  dt_b[, prop_rel := val_rel / length(drel)]
-
-  dt_b[, val_r := cs_r]
-  dt_b[, prop_r := val_rel / length(dr)]
+  # absolute distances of square roots
+  dist_d3 <- abs(sqrt(pert) - sqrt(orig))
 
   ## cumdistr
-  vv <- get_distr_vals(dabs)
-  dt2 <- data.table(what = names(vv), vals_abs = vv)
-  dt2[, vals_rel := get_distr_vals(drel)]
-  dt2[, vals_r := get_distr_vals(dr)]
+  vv <- get_distr_vals(dist_d1)
+  dt_measures <- data.table(what = names(vv), d1 = vv)
+  dt_measures$d2 <- get_distr_vals(dist_d2)
+  dt_measures$d3 <- get_distr_vals(dist_d3)
+
+  # absolute distances
+  cumsum_d1 <- cumsum(table(dist_d1))
+  cumdistr_d1 <- data.table(kat = names(cumsum_d1), cnt = cumsum_d1)
+  cumdistr_d1[, pct := cnt / length(dist_d1)]
+
+  # relative absolute distances
+  cumsum_d2 <- cumsum(table(cut(dist_d2, quantvals, include.lowest = TRUE)))
+  cumdistr_d2 <- data.table(kat = names(cumsum_d2), cnt = cumsum_d2)
+  cumdistr_d2[, pct := cnt / length(dist_d2)]
+
+  # absolute distance between square roots
+  cumsum_d3 <- cumsum(table(cut(dist_d3, quantvals, include.lowest = TRUE)))
+  cumdistr_d3 <- data.table(kat = names(cumsum_d3), cnt = cumsum_d3)
+  cumdistr_d3[, pct := cnt / length(dist_d3)]
 
   # false zero cells: cells that were perturbed to zero
   false_zero <- sum(pert == 0 & orig != 0)
@@ -152,9 +96,11 @@ ck_cnt_measures_basic <- function(orig, pert) {
 
   return(
     list(
-      measures = dt2,
-      cumdistrA = dt_a,
-      cumdistrB = dt_b,
+      overview = dt_overview[],
+      measures = dt_measures[],
+      cumdistr_d1 = cumdistr_d1,
+      cumdistr_d2 = cumdistr_d2,
+      cumdistr_d3 = cumdistr_d3,
       false_zero = false_zero,
       false_positives = false_positives
     )

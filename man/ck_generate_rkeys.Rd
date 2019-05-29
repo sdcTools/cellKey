@@ -2,48 +2,27 @@
 % Please edit documentation in R/ck_generate_rkeys.R
 \name{ck_generate_rkeys}
 \alias{ck_generate_rkeys}
-\title{ck_generate_rkeys}
+\title{Generate random record keys}
 \usage{
-ck_generate_rkeys(dat, max_val = nrow(dat), max_digits = 10,
-  type = "abs", seed = NULL, verbose = TRUE)
+ck_generate_rkeys(dat, nr_digits = 10, seed = NULL)
 }
 \arguments{
 \item{dat}{microdata used to generated hash for random seed}
 
-\item{max_val}{maximum number for record-key}
+\item{nr_digits}{maximum number of digits in the record keys.}
 
-\item{max_digits}{maximum number of digits in the record keys.
-This parameter is only used if \code{type} equals \code{abs}.
-This parameter is only used if \code{type} equals \code{destatis}.}
-
-\item{type}{(character) choice how to compute record keys. Valid choices
-are \code{abs} and \code{destatis}.}
-
-\item{seed}{if not \code{NULL} a number specifying the initial seed value
-for the random number generator}
-
-\item{verbose}{(logical) if \code{TRUE}, print additional information}
+\item{seed}{if not \code{NULL}, a number specifying the initial seed value
+for the random number generator. If \code{NULL}, a seed is computed from \code{dat} itself.}
 }
 \value{
-a numeric vector with \code{N} record keys given a seed depending on \code{dat}
+a numeric vector with \code{nrow(dat)} record keys
 }
 \description{
-creates random record keys by sampling between 1:max_val
+This function allows to create random record keys from a uniform distribution. If no seed is
+specified, a seed value is computed from the input data set to allow for reproducability depending
+on the input data set.
 }
 \examples{
 dat <- ck_create_testdata()
-dat$rkeys <- ck_generate_rkeys(
-  dat = dat,
-  max_val = 2 * nrow(dat),
-  type = "abs"
-)
-
-# rkeys for destatis method
-\dontrun{
-ck_generate_rkeys(
-  dat = dat,
-  max_digits = 6,
-  type = "destatis"
-)
-}
+dat$rkeys <- ck_generate_rkeys(dat = ck_create_testdata(), nr_digits = 6)
 }

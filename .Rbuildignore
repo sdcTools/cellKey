@@ -9,3 +9,4 @@ ckm_20170517/
 README.Rmd
 debugzeugs
 debug
+^data-raw$

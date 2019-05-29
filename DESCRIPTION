@@ -1,6 +1,6 @@
 Package: cellKey
 Type: Package
-Date: 2019-05-03
+Date: 2019-05-26
 Title: Implementing ABS cell-key method for adding noise to frequency
         and continous tables
 Version: 0.17
@@ -12,7 +12,14 @@ Authors@R: c(
     role=c("aut", "cre")))
 Description: This packages provides functionality to add noise to or rather perturb statistical tables.
 Depends: R(>= 2.10), sdcHierarchies (>= 0.17.0), data.table
-Imports: rlang, methods, primes, digest, sdcTable (>= 0.27), ptable (>= 0.2.0)
+Imports: 
+    rlang,
+    methods,
+    primes,
+    digest,
+    sdcTable (>= 0.27),
+    ptable (>= 0.2.0),
+    cli
 License: GPL-2
 Encoding: UTF-8
 RoxygenNote: 6.1.1
