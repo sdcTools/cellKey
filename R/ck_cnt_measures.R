@@ -21,13 +21,13 @@
 #'
 #' - `cumdistr_d1`, `cumdistr_d2` and `cumdistr_d3`: for each distance `d1`, `d2`
 #' and `d3`, a `data.table` with the following three columns:
-#'    * `kat`: a specific value (for `d1`) or interval (for distances `d2` and `d3`)
-#'    * `cnt`: number of records smaller or equal the value in column `kat` for the
+#'    * `cat`: a specific value (for `d1`) or interval (for distances `d2` and `d3`)
+#'    * `cnt`: number of records smaller or equal the value in column `cat` for the
 #'    given distance
 #'    * `pct` proportion of records smaller or equal the value
-#'    in column `kat` for the selected distance
+#'    in column `cat` for the selected distance
 #' - `false_zero`: number of cells that were perturbed to zero
-#' - `false_positives`: number of cells that were initially zero but
+#' - `false_nonzero`: number of cells that were initially zero but
 #' have been perturbed to a number different from zero
 #' @export
 #' @md
@@ -76,23 +76,23 @@ ck_cnt_measures <- function(orig, pert) {
 
   # absolute distances
   cumsum_d1 <- cumsum(table(dist_d1))
-  cumdistr_d1 <- data.table(kat = names(cumsum_d1), cnt = cumsum_d1)
+  cumdistr_d1 <- data.table(cat = names(cumsum_d1), cnt = cumsum_d1)
   cumdistr_d1[, pct := cnt / length(dist_d1)]
 
   # relative absolute distances
   cumsum_d2 <- cumsum(table(cut(dist_d2, quantvals, include.lowest = TRUE)))
-  cumdistr_d2 <- data.table(kat = names(cumsum_d2), cnt = cumsum_d2)
+  cumdistr_d2 <- data.table(cat = names(cumsum_d2), cnt = cumsum_d2)
   cumdistr_d2[, pct := cnt / length(dist_d2)]
 
   # absolute distance between square roots
   cumsum_d3 <- cumsum(table(cut(dist_d3, quantvals, include.lowest = TRUE)))
-  cumdistr_d3 <- data.table(kat = names(cumsum_d3), cnt = cumsum_d3)
+  cumdistr_d3 <- data.table(cat = names(cumsum_d3), cnt = cumsum_d3)
   cumdistr_d3[, pct := cnt / length(dist_d3)]
 
   # false zero cells: cells that were perturbed to zero
   false_zero <- sum(pert == 0 & orig != 0)
   # false positive: zeros that were perturbed to a value !=0
-  false_positives <- sum(orig == 0 & pert != 0)
+  false_nonzero <- sum(orig == 0 & pert != 0)
 
   return(
     list(
@@ -102,7 +102,7 @@ ck_cnt_measures <- function(orig, pert) {
       cumdistr_d2 = cumdistr_d2,
       cumdistr_d3 = cumdistr_d3,
       false_zero = false_zero,
-      false_positives = false_positives
+      false_nonzero = false_nonzero
     )
   )
 }

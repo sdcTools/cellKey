@@ -31,14 +31,14 @@ values
 \item \code{cumdistr_d1}, \code{cumdistr_d2} and \code{cumdistr_d3}: for each distance \code{d1}, \code{d2}
 and \code{d3}, a \code{data.table} with the following three columns:
 \itemize{
-\item \code{kat}: a specific value (for \code{d1}) or interval (for distances \code{d2} and \code{d3})
-\item \code{cnt}: number of records smaller or equal the value in column \code{kat} for the
+\item \code{cat}: a specific value (for \code{d1}) or interval (for distances \code{d2} and \code{d3})
+\item \code{cnt}: number of records smaller or equal the value in column \code{cat} for the
 given distance
 \item \code{pct} proportion of records smaller or equal the value
-in column \code{kat} for the selected distance
+in column \code{cat} for the selected distance
 }
 \item \code{false_zero}: number of cells that were perturbed to zero
-\item \code{false_positives}: number of cells that were initially zero but
+\item \code{false_nonzero}: number of cells that were initially zero but
 have been perturbed to a number different from zero
 }
 }
