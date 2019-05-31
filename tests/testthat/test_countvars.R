@@ -1,6 +1,11 @@
 context("Testing Frequency Tables")
 
-set.seed(120)
+if (R.version$major >= 3 & R.version$minor >= 6) {
+  suppressWarnings(set.seed(120, sample.kind = "Rounding"))
+} else {
+  set.seed(120)
+}
+
 dat <- ck_create_testdata()
 
 seed <- ck_create_seed_from_hash(dat)
