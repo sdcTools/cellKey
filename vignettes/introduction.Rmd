@@ -151,6 +151,30 @@ tab$perturb(v = "total")
 
 After this call, object `tab` is updated and contains now also perturbed values for variable `total`. The actual results can then be extracted using the `freqtab()`-method as discussed in the next section.
 
+### Modify perturbation parameters
+Using methods `params_cnts()` and `params_nums()` it is possible to modify the current set perturbation parameters. This is useful if one wants to use different perturbation inputs for different variables. We now show how to replace the current perturbation input for count variables. The first step is to create a new object containing perturbation parameters using `ck_params_cnts()`.
+```{r}
+params_cnts2 <- ck_params_cnts(
+  D = 8,
+  V = 10,
+  js = 4
+)
+```
+
+Updating/replacing the perturbation parameters can then be achieved as shown below:
+
+```{r}
+tab$params_cnts(params_cnts2)
+```
+
+From now on, these parameters will be used to perturb any count variables.
+
+
+```{r}
+tab$perturb(v = "cnt_males")
+```
+
+
 ### Extract perturbed tables
 Applying the `freqtab()`-methods to one ore more already perturbed variables returns a `data.table` that contains for each table cell the unpertubed and perturbed (weighted and/or unweighted) counts. This function has the following arguments:
 

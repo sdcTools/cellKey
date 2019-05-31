@@ -416,6 +416,24 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     #mod_nums=function() {
     #  private$modifications(type = "nums")
     #},
+    params_cnts=function(val) {
+      if (missing(val)) {
+        private$.pert_params$cnts
+      } else {
+        if (!inherits(val, "ck_params")) {
+          stop("Please create the input using `ck_params_cnts()`", call. = FALSE)
+        }
+        if (val$type != "cnts") {
+          stop("Please create the input using `ck_params_cnts()`", call. = FALSE)
+        }
+        private$.pert_params$cnts <- val
+        message("Perturbation parameters for count variables were modified.")
+        return(invisible(self))
+      }
+    },
+    # get/set peturbation parameters for numerical variables
+    #params_nums=function(value) {
+    #},
     summary=function() {
       cli::cat_line(cli::boxx("Utility measures for perturbed count variables", padding = 0))
 
@@ -737,6 +755,10 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'    For a detailed description of the computed measures, see [ck_cnt_measures()]
 #'
 #' - **`mod_cnts()`**: returns a `data.table` containing modifications applied to count variables
+#'
+#' - **`params_cnts(val)`**: returns or modifies perturbation parameters used for count variables. If
+#' `val` is not provided, the current perturbation object is returned, otherwise the current perturbation
+#' parameters are replaced with the ones provided (which need to be created using ([ck_params_cnts()])
 #' @export
 #' @examples
 #' x <- ck_create_testdata()
@@ -797,6 +819,20 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'
 #' # perturb a single variable
 #' tab$perturb(v = "total")
+#'
+#' # modify the perturbation parameters
+#' # create alternative perturbation parameters
+#' params_cnts_alt <- ck_params_cnts(
+#'   D = 8,
+#'   V = 3,
+#'   js = 2,
+#'   pstay = 0.5,
+#'   optim = 1,
+#'   mono = TRUE
+#' )
+#' # we creplace the current parameters with the alternatives
+#' # they will be used from now on
+#' tab$params_cnts(params_cnts_alt)
 #'
 #' # multiple variables can be perturbed as well
 #' tab$perturb(v = c("cnt_males", "cnt_highincome"))

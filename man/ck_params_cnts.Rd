@@ -91,6 +91,20 @@ print(tab) # identical with tab$print()
 # perturb a single variable
 tab$perturb(v = "total")
 
+# modify the perturbation parameters
+# create alternative perturbation parameters
+params_cnts_alt <- ck_params_cnts(
+  D = 8,
+  V = 3,
+  js = 2,
+  pstay = 0.5,
+  optim = 1,
+  mono = TRUE
+)
+# we creplace the current parameters with the alternatives
+# they will be used from now on
+tab$params_cnts(params_cnts_alt)
+
 # multiple variables can be perturbed as well
 tab$perturb(v = c("cnt_males", "cnt_highincome"))
 

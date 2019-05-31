@@ -79,6 +79,9 @@ the first n columns. Additionally, the following columns are shown:
 This method returns a \code{list} containing a set of utility measures based on some distance functions.
 For a detailed description of the computed measures, see \code{\link[=ck_cnt_measures]{ck_cnt_measures()}}
 \item \strong{\code{mod_cnts()}}: returns a \code{data.table} containing modifications applied to count variables
+\item \strong{\code{params_cnts(val)}}: returns or modifies perturbation parameters used for count variables. If
+\code{val} is not provided, the current perturbation object is returned, otherwise the current perturbation
+parameters are replaced with the ones provided (which need to be created using (\code{\link[=ck_params_cnts]{ck_params_cnts()}})
 }
 }
 
@@ -141,6 +144,20 @@ print(tab) # identical with tab$print()
 
 # perturb a single variable
 tab$perturb(v = "total")
+
+# modify the perturbation parameters
+# create alternative perturbation parameters
+params_cnts_alt <- ck_params_cnts(
+  D = 8,
+  V = 3,
+  js = 2,
+  pstay = 0.5,
+  optim = 1,
+  mono = TRUE
+)
+# we creplace the current parameters with the alternatives
+# they will be used from now on
+tab$params_cnts(params_cnts_alt)
 
 # multiple variables can be perturbed as well
 tab$perturb(v = c("cnt_males", "cnt_highincome"))
