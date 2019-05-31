@@ -133,9 +133,34 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         if (any(chk)) {
           stop("Some elements provided in `numvars` are not numeric.", call. = FALSE)
         }
+
+        # compute weighted variables and index to compute record keys for only
+        # units actually contributing
+        numvars_w <- paste0("ws_", numvars)
+        nozero_reckeys_nums <- paste0("rkey_nozero_", numvars)
+        numvars_ind <- paste0("ind_nonzero", numvars)
+        for (i in seq_along(numvars)) {
+          v <- numvars[i]
+          x[[numvars_w[i]]] <- x[[wvar]] * x[[v]]
+
+          # compute index
+          index <- rep(1, nrow(x))
+          index[is.na(x[[v]])] <- 0
+          index[is.nan(x[[v]])] <- 0
+          index[x[[v]] == 0] <- 0
+
+          # record keys is 0 for non-contributing units
+          x[[nozero_reckeys_nums[i]]] <- x[[rkeyvar]] * index
+        }
+      } else {
+        max_contributions <- numvars_w <- nozero_reckeys_nums <- NULL
       }
 
-      nv <- c(rkeyvar, wvar, countvars, countvars_w, countvars_rec, numvars)
+      nv <- c(
+        rkeyvar, wvar, countvars, countvars_w, countvars_rec,
+        numvars, numvars_w, nozero_reckeys_nums
+      )
+
       prob <- makeProblem(
         data = x,
         dimList = dims,
@@ -160,6 +185,45 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
           input = list(strids[x]))
       })
       names(contr_indices) <- strids
+
+      message("finding top_k contributors for each cell and numerical variable")
+      microdat <- prob@dataObj@rawData[, c(names(dims), numvars, wvar), with = FALSE]
+      microdat$.tmpid <- 1:nrow(microdat)
+
+      # perhaps c++?
+      # for each numerical variable and each cell, get the top_k contributions
+      # along with its ids and its values
+      .get_max_contributions <- function(indices, microdat, wvar, nv, top_k) {
+        res <- vector("list", length = length(indices))
+        names(res) <- names(indices)
+
+        for (i in 1:length(res)) {
+          out <- vector("list", length = length(nv))
+          names(out) <- nv
+          xx <- microdat[.tmpid %in% indices[[i]]]
+          top_k <- min(top_k, nrow(xx))
+          for (v in nv) {
+            setorderv(xx, v, order = -1L)
+            out[[v]]$ids <- xx$.tmpid[1:top_k]
+            out[[v]]$vals <- xx[[v]][1:top_k]
+            out[[v]]$spread <- diff(range(xx[[v]], na.rm = TRUE))
+            out[[v]]$wsum <- sum(xx[[v]] * xx[[wvar]], na.rm = TRUE)
+            out[[v]]$wmean <- out[[v]]$wsum / sum(xx[[wvar]], na.rm = TRUE)
+          }
+          res[[i]] <- out
+        }
+        res
+      }
+
+      # top_k is hardcoded to 6;
+      # this is the maximum allowed value for top_k, also in params_nums()
+      max_contributions <- .get_max_contributions(
+        indices = contr_indices,
+        microdat = microdat,
+        nv = numvars,
+        wvar = wvar,
+        top_k = 6
+      )
 
       res <- tab[, c("strID", "freq", dimvars, nv), with = FALSE]
       setnames(res, nv, tolower(nv))
@@ -210,15 +274,14 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         setnames(res, numvars, cols_uws)
         cols_ws <- gen_vnames(numvars, prefix = "ws")
         for (j in 1:length(numvars)) {
-          res[[cols_ws[j]]] <- NA_real_
-          set(res, j = cols_ws[j], value = res[[cols_uws[j]]] * tab[[wvar]])
-
-          vv <- c(
-            gen_vnames("total", prefix = "ck"),
-            cols_uws[j], cols_ws[j])
+          cn1 <- gen_vnames("total", prefix = "ck")
+          cn2 <- gen_vnames(numvars[j], prefix = "rkey_nozero")
+          vv <- c(cn1, cn2, cols_uws[j], cols_ws[j])
           vv <- res[, vv, with = FALSE]
-          setnames(vv, gen_vnames("total", prefix = "ck"), gen_vnames(numvars[j], prefix = "ck"))
+          vv[[cn2]] <- vv[[cn2]] %% 1 # normalize cellkey
 
+          setnames(vv, cn1, gen_vnames(numvars[j], prefix = "ck"))
+          setnames(vv, cn2, gen_vnames(numvars[j], prefix = "ck_nz"))
           resnums[[j]] <- vv
         }
         rescnts <- append(rescnts, resnums)
@@ -256,7 +319,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       )
 
       private$.prob <- prob
-      private$.contr_indices <- contr_indices
+      private$.max_contributions <- max_contributions
       private$.varsdt <- varsdt
       private$.is_weighted <- is_weighted
       private$.pert_params <- pert_params
@@ -382,8 +445,40 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       return(res)
     },
     # return a table for perturbed numeric variables
-    numtab=function(v = NULL, meanBeforeSum = FALSE, path = NULL, type = "both") {
+    numtab=function(v = NULL, mean_before_sum = FALSE, path = NULL, type = "both") {
       stop("not yet", call. = FALSE)
+      if (!is_scalar_character(type)) {
+        stop("Argument `type` must be a scalar character.", call. = FALSE)
+      }
+      if (!type %in% c("both", "weighted", "unweighted")) {
+        stop("Argument `type` must be either `both`, `weighted` or `unweighted`.", call. = FALSE)
+      }
+      if (!is.null(path)) {
+        if (!is_scalar_character(path)) {
+          stop("Argument `path` must be a scalar character.", call. = FALSE)
+        }
+      }
+
+      avail <- private$.ck_perturbed_vars(what = "numvars")
+      if (length(avail) == 0) {
+        stop("No perturbed numerical variables found, please use the `perturb()-method` first.", call. = FALSE)
+      }
+
+      if (is.null(v)) {
+        message("The following numerical variables have been perturbed:")
+        message(paste("  -->", shQuote(avail), collapse = "\n"))
+        return(invisible(NULL))
+      }
+
+      if (!is.character(v)) {
+        stop("Argument `v` must be a character vector specifying variable names.", call. = FALSE)
+      }
+
+      v <- tolower(v)
+      if (!all(v %in% avail)) {
+        e <- "Some provided variable(s) in `v` are not valid, already perturbed numerical variables."
+        stop(e, call. = FALSE)
+      }
     },
     # compute distance-based utility measures
     measures=function(v) {
@@ -432,8 +527,22 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       }
     },
     # get/set peturbation parameters for numerical variables
-    #params_nums=function(value) {
-    #},
+    params_nums=function(val) {
+      if (missing(val)) {
+        private$.pert_params$nums
+      } else {
+        if (!inherits(val, "ck_params")) {
+          stop("Please create the input using `ck_params_nums()`", call. = FALSE)
+        }
+        if (val$type != "nums") {
+          stop("Please create the input using `ck_params_nums()`", call. = FALSE)
+        }
+
+        private$.pert_params$nums <- val
+        message("Perturbation parameters for numerical variables were modified.")
+        return(invisible(self))
+      }
+    },
     summary=function() {
       cli::cat_line(cli::boxx("Utility measures for perturbed count variables", padding = 0))
 
@@ -525,7 +634,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
   ),
   private=list(
     .prob = NULL,
-    .contr_indices = NULL,
+    .max_contributions = NULL,
     .varsdt = NULL,
     .is_weighted = NULL,
     .pert_params = list(),
