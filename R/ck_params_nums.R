@@ -88,8 +88,8 @@ ck_params_nums <-
     if (is.null(top_k)) {
       stop("please provide a value for `top_k`", call. = FALSE)
     }
-    if (!is_integerish(top_k) | top_k < 1) {
-      stop("`top_k` must be an integer(ish) number >= 1")
+    if (!is_integerish(top_k) | top_k < 1 | top_k > 6) {
+      stop("`top_k` must be an integer(ish) number >= 1 and <= 6")
     }
   } else {
     if (!is.null(top_k)) {
