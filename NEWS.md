@@ -1,31 +1,37 @@
-# cellKey 0.18.0
+# [todo] cellKey 0.18.0
 - [todo] implement magnitude tables
+  * new method `$params_nums()` that allow to query and set perturbation parameters for magnitude variables
+  * added maximum value of `6` in `params_num()` for parameter `top_k`
+  * compute cell keys for both variants (all units and all units contributing to a given numerical key variable)
+  * [todo] `$mod_nums()`
+  * [todo] add extra perturbation parameter mu_c in `params_num()`
+  * [todo] new method `$numtab()` to extract numerical tables
+  * [todo] update method `$summary()` to include values for perturbed magnitude tables
+- [todo] make arguments `params_cnts` and `params_nums` optional in `ck_setup`
+- [todo] remove or re-implement `by`-argument in ck_perturb()    
 
 # cellKey 0.17.0
 - defunc functions and force to use functionality from [`sdcHierarchies`](https://github.com/bernhard-da/sdcHierarchies)
-- rewrite frequency table perturbation
-    * [ok] new function `ck_define_table()` to setup a table
-    * [ok] perturb variables in `ck_perturb()` using side-effects
-    * [ok] allow multiple variables in `ck_freq_table()`
-    * [ok] update utility measures in `ck_cnt_measures()` and improve documentation
-    * [ok] add list wise data structure in tab$res
-    * [ok] `ck_perturb()`: update varsdt$is_perturbed
-    * [ok] rewrite in R6-classes
-    * [ok] allow multiple count variable to be perturbed in `perturb()` method
-    * [ok] add table of to ck_cnt_measures showing exact perturbations
-    * [ok] removed `ck_export_table()` and added arguments to `freqtab` method
-    * [ok] new unit tests for count data based on hashes
-    * [ok] write new print-method for ck_result objects
-    * [ok] new method $mod_cnts()
-
-    * [in progress] write new summary-method for ck_result objects
-    * [todo] harmonize cnt stats
-
-    * [todo] start rewrite of package vignette
-    * [todo] $mod_nums()
-
-    * [todo] remove or re-implement `by`-argument in ck_perturb()
-
+- [todo] rewrite frequency table perturbation using R6 classes
+    * new function `ck_setup()` to setup a table
+    * allow multiple variables in method `$perturb()`
+    * update utility measures in `ck_cnt_measures()` and improve documentation
+    * updated data structure in R6 object
+    * `ck_perturb()`: update varsdt$is_perturbed
+    * allow multiple count variable to be perturbed in `perturb()` method
+    * removed `ck_export_table()` and added arguments to method `freqtab()`
+    * new method `$print()` for R6 objects
+    * new method `$summary()` for R6 objects
+    * new method `$mod_cnts()` returning modifications for count variables
+    * new method `$params_cnts()` that allow to query and set count parameters
+    
+- rewrite utility statistics for count variables in method `$measures()`
+    * renamed `false_positives` to `false_nonzero`
+    * improve documentation
+    * add table of to ck_cnt_measures showing exact perturbations
+    * harmonized output with tau-argus
+- updated unit tests for counts based on hases
+- [in progress] start rewrite of package vignette
 
 # cellKey 0.16.3
 - fix tests due to changes in R 3.6.0
