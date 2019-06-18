@@ -10,7 +10,7 @@
 #'    * `noise`: amount of noise computed as `orig` - `pert`
 #'    * `cnt`: number of cells perturbed with the value given in column `noise`
 #'    * `pct`: percentage of cells perturbed with the value given in column `noise`
-#' - `measures: a `data.table` containing measures of the distribution
+#' - `measures`: a `data.table` containing measures of the distribution
 #' of three different distances between original and perturbed values
 #' of the unweighted counts. Column `what` specifies the computed measure.
 #' The three distances considered are:
@@ -24,7 +24,7 @@
 #'    * `cat`: a specific value (for `d1`) or interval (for distances `d2` and `d3`)
 #'    * `cnt`: number of records smaller or equal the value in column `cat` for the
 #'    given distance
-#'    * `pct` proportion of records smaller or equal the value
+#'    * `pct`: proportion of records smaller or equal the value
 #'    in column `cat` for the selected distance
 #' - `false_zero`: number of cells that were perturbed to zero
 #' - `false_nonzero`: number of cells that were initially zero but

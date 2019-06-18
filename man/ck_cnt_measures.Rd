@@ -20,7 +20,9 @@ a \code{list} containing the following elements:
 \item \code{cnt}: number of cells perturbed with the value given in column \code{noise}
 \item \code{pct}: percentage of cells perturbed with the value given in column \code{noise}
 }
-\item \code{measures: a }data.table\code{containing measures of the distribution of three different distances between original and perturbed values of the unweighted counts. Column}what` specifies the computed measure.
+\item \code{measures}: a \code{data.table} containing measures of the distribution
+of three different distances between original and perturbed values
+of the unweighted counts. Column \code{what} specifies the computed measure.
 The three distances considered are:
 \itemize{
 \item \code{d1}: absolute distance between original and masked values
@@ -34,7 +36,7 @@ and \code{d3}, a \code{data.table} with the following three columns:
 \item \code{cat}: a specific value (for \code{d1}) or interval (for distances \code{d2} and \code{d3})
 \item \code{cnt}: number of records smaller or equal the value in column \code{cat} for the
 given distance
-\item \code{pct} proportion of records smaller or equal the value
+\item \code{pct}: proportion of records smaller or equal the value
 in column \code{cat} for the selected distance
 }
 \item \code{false_zero}: number of cells that were perturbed to zero
