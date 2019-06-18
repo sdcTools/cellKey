@@ -19,7 +19,26 @@ library(rmarkdown)
 
 # Introduction
 
-This package implements methods to provide perturbation for statistical tables. The method implemented in this package is largely based on the paper *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar). This approach however was generalized and a new specification on how record keys are specified and the lookup-tables are defined is used. This package makes usage of perturbation tables that can be defined in the [**ptable**](https://github.com/sdcTools/ptable) package.
+This package implements methods to provide perturbation for statistical tables. The implementation if greatly inspired by the the paper *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar). This approach however was generalized and a new specification on how record keys are specified and the lookup-tables are defined is used. This package makes usage of perturbation tables that can be defined in the [**ptable**](https://github.com/sdcTools/ptable) package. This document describes the usage of version ``r packageVersion("cellKey")`` of the package.
+
+## Installation
+Package [**cellKey**](https://github.com/sdcTools/cellKey) is not yet on `CRAN` and thus needs to be installed from source. The following code gives instructions on how to install the latest version of the package directly from [**github.com**](https://www.github.com):
+
+```{r, eval = FALSE}
+# update your R installation
+update.packages(ask = FALSE)
+
+# install cellKey from github.com
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes")
+}
+remotes::install_github(
+  repo = "sdcTools/cellKey",
+  dependencies = TRUE,
+  build_opts = "--no-resave-data",
+  force = TRUE
+)
+```
 
 ## Main Features
 In the **cellKey** package it is possible to pertub multidimensional count and magnitude tables. Functionality to generate suitable record keys is provided in function `ck_generate_rkeys()`. Using sha1-checksums on the input datasets, we can make sure that the same record keys are generated whenever the same input data set is used for which record keys should be generated. However, it is also possible of course to use already pre-generated record keys available as variable in the microdata set.
@@ -32,10 +51,16 @@ What is left is of course identifying bugs and issues and also to optimize perfo
 We now show the capabilities of the **cellKey** package by running an example that 
 
 ### Load the Package
-```{r}
+```{r, include = FALSE, echo = TRUE}
 library(cellKey)
 packageVersion("cellKey")
 ```
+
+```{r, echo = TRUE}
+library(cellKey)
+packageVersion("cellKey")
+```
+
 
 
 The first step in this approach is to generate a statistical table, which can be achieved using `ck_setup`. This function generates an object that contains all the information required to perturb count- (and optionally continuously scaled) variables. There are however a few inputs that `ck_setup()` requires and that need to be generated beforehand. These inputs are:
@@ -45,9 +70,14 @@ The first step in this approach is to generate a statistical table, which can be
 - `dims`: a named list where each list element contains a hierarchy created with functionality from package [**sdcHierarchies**](ttps://cran.r-project.org/package=sdcHierarchies) and each name refers to a variable in `x`
 - `w`: either `NULL` (no weights) or the name of a variable in `x` that contains weights
 - `countvars`: an optional character vector of variables in `x` holding counts. In any case a special count variable `total` is internally generated that is `1` for each row of `x`
-- `numvars`: an optional character vector of variables in `x` holding numerical variables that can later be perturbed.
 - `params_cnts`: an object containing perturbation parameters relevant to `countvars` that needs to be created using `ck_params_cnts()`.
-- `params_nums`: if `numvars` was specified, an object containing perturbation parameters relevant to `numvars` that must to be created using `ck_params_nums()`.
+
+```{r, echo = FALSE}
+# additional parameters for ck_setup()
+#- `numvars`: an optional character vector of variables in `x` holding numerical variables that can later be perturbed.
+#- `params_nums`: if `numvars` was specified, an object containing perturbation parameters relevant to `numvars` that must to be #created using `ck_params_nums()`.
+```
+
 
 We now show how to generate the required inputs. The first step is to prepare the inputdata.
 
@@ -92,7 +122,6 @@ After all dimensions have been specified, these inputs must then be combined int
 
 ```{r}
 dims <- list(sex = dim_sex, age = dim_age)
-print(dims)
 ```
 
 
@@ -113,7 +142,7 @@ params_cnts <- ck_params_cnts(
 The output of `ck_params_cnts` is an object that can be directly used in `ck_setup()` as we will see later.
 
 ### Define perturbation parameters for continuous variables
-To be written
+Future versions of `cellKey` will allow to perturb continuous variables as well. This is however not yet implemented.
 
 
 ### Setup a table instance
@@ -126,9 +155,7 @@ tab <- ck_setup(
   dims = dims,
   w = "sampling_weight",
   countvars = c("cnt_males", "cnt_highincome"),
-  numvars = NULL,
-  params_cnts = params_cnts,
-  params_nums = NULL
+  params_cnts = params_cnts
 )
 ```
 
@@ -141,7 +168,7 @@ print(tab)
 ```
 
 ### Compute perturbed tables
-It is now possible to finally perturbed variables using the `perturb()`-method. As `tab` - the object created with `ck_setup()` - already contains all possible data, the only required input is the name of a count- or numeric variable that should be perturbed.
+It is now possible to finally perturbed variables using the `perturb()`-method. As `tab` - the object created with `ck_setup()` - already contains all possible data, the only required input is the name of a variable that should be perturbed.
 
 - `v`: a character vector specifying one or more variables that should be perturbed.
 
@@ -149,10 +176,10 @@ It is now possible to finally perturbed variables using the `perturb()`-method. 
 tab$perturb(v = "total")
 ```
 
-After this call, object `tab` is updated and contains now also perturbed values for variable `total`. The actual results can then be extracted using the `freqtab()`-method as discussed in the next section.
+After this call, object `tab` is updated and contains now also perturbed values for variable `total`. We note that no explicit assignment is required.
 
 ### Modify perturbation parameters
-Using methods `params_cnts()` and `params_nums()` it is possible to modify the current set perturbation parameters. This is useful if one wants to use different perturbation inputs for different variables. We now show how to replace the current perturbation input for count variables. The first step is to create a new object containing perturbation parameters using `ck_params_cnts()`.
+Using method `params_cnts()` it is possible to modify the current set perturbation parameters. This is useful if one wants to use different perturbation inputs for different variables. We now show how to replace the current perturbation input for count variables. The first step is to create a new object containing perturbation parameters using `ck_params_cnts()`.
 ```{r}
 params_cnts2 <- ck_params_cnts(
   D = 8,
@@ -174,6 +201,7 @@ From now on, these parameters will be used to perturb any count variables.
 tab$perturb(v = "cnt_males")
 ```
 
+A `data.table` containing original and perturbed values can now be extracted using the `freqtab()`-method as discussed next.
 
 ### Extract perturbed tables
 Applying the `freqtab()`-methods to one ore more already perturbed variables returns a `data.table` that contains for each table cell the unpertubed and perturbed (weighted and/or unweighted) counts. This function has the following arguments:
@@ -208,46 +236,73 @@ Method `measures()` allows to compute information loss measures for perturbed co
 tab$measures(v = "total")
 ```
 
-This function returns a list several utility measures which are described in detail in `?ck_cnt_measures`.
+This function returns a list with several utility measures that are now discussed. For further information have a look at `?ck_cnt_measures` as the same set of measures can also be computed for two vectors containing original and perturbed values.
 
-### Perturbing numeric variables
 
-The next example shows how to create a perturbed table of continuous data using sampling weights. We can perturb all variables that were specified in argument `numvars` when calling `ck_setup()`. Note that it is also possible to specify multiple variables at once.
+- `overview`: a `data.table` with the following three columns:
+    * noise: amount of noise computed as orig - pert
+    * cnt: number of cells perturbed with the value given in column noise
+    * pct: percentage of cells perturbed with the value given in column noise
 
-```{r, eval = FALSE}
-tab$perturb(v = "income")
-```
+- `measures`: a `data.table` containing measures of the distribution of three different distances between original and perturbed values of the unweighted counts. Column `what` specifies the computed measure. The three distances considered are:
+    * `d1`: absolute distance between original and masked values
+    * `d2`: relative absolute distance between original and masked values
+    * `d3`: absolute distance between square-roots of original and perturbed values
 
-To get information about magnitude tables, method `numtab()` can be used. In this case, we can set an additional argument `mean_before_sum` that is either `TRUE` or `FALSE` and specifies how the perturbed cell values are computed. Details on this method can be found in *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar) in Section *6.3*. All other arguments are identical to method `freqtab()` that was previously introduced.
+- `cumdistr_d1`, `cumdistr_d2` and `cumdistr_d3`: for each distance d1, d2 and d3, a data.table with the following three columns:
+    * `cat`: a specific value (for d1) or interval (for distances d2 and d3)
+    * `cnt`: number of records smaller or equal the value in column cat for the given distance
+    * `pct`: proportion of records smaller or equal the value in column cat for the selected distance
 
-```{r, eval = FALSE}
-p_income <- tab$numtab(v = "income", mean_before_sum = TRUE)
-p_income
-```
+- `false_zero`: number of cells that were perturbed to zero
+- `false_nonzero`: number of cells that were initially zero but have been perturbed to a number different from zero
 
+### Perturbing continuously scaled variables
+The perturbation of magnitude tables is currently in development and will be available in future versions of the `cellKey` package.
+
+```{r, echo = FALSE}
+#The next example shows how to create a perturbed table of continuous data using sampling weights. We can perturb all variables that #were specified in argument `numvars` when calling `ck_setup()`. Note that it is also possible to specify multiple variables at once.
+
+#```{r, eval = FALSE}
+#tab$perturb(v = "income")
+#```
+
+#To get information about magnitude tables, method `numtab()` can be used. In this case, we can set an additional argument #`mean_before_sum` that is either `TRUE` or `FALSE` and specifies how the perturbed cell values are computed. Details on this method #can be found in *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau #of Statistics* (Thompson, Broadfoot, Elazar) in Section *6.3*. All other arguments are identical to method `freqtab()` that was #previously introduced.
+
+#```{r, eval = FALSE}
+#p_income <- tab$numtab(v = "income", mean_before_sum = TRUE)
+#p_income
+#```
 
 ### Extract information from results
-Some auxiliary methods may be applied to an object created with `ck_setup()`. For example one can query the applied perturbations for counts using the `mod_cnts()` method. This returns a `data.table` showing for each cell and tabulated variable the row and the column of the perturbation table that was used to find the perturbation value actually used. The value itself is also included.
+#Some auxiliary methods may be applied to an object created with `ck_setup()`. For example one can query the applied perturbations for #counts using the `mod_cnts()` method. This returns a `data.table` showing for each cell and tabulated variable the row and the column #of the perturbation table that was used to find the perturbation value actually used. The value itself is also included.
 
-```{r}
-tab$mod_cnts()
-```
+#```{r}
+#tab$mod_cnts()
+#```
 
-Information on perturbations for numerical variables can be extracted using `mod_nums()`. This `data.table` contains the ids of the observations of the input variables that have been modified. For each observation and tabulated numerical variable (given in `numvars`), the parameters used in modifying (direction, magnitude and noise) are shown as well as the original values, the perturbation and the final modified value. These values were finally used to compute the tables itself.
-```{r, echo = FALSE}
-message("WRITE METHOD mod_nums()")
-```
+#Information on perturbations for numerical variables can be extracted using `mod_nums()`. This `data.table` contains the ids of the #observations of the input variables that have been modified. For each observation and tabulated numerical variable (given in #`numvars`), the parameters used in modifying (direction, magnitude and noise) are shown as well as the original values, the #perturbation and the final modified value. These values were finally used to compute the tables itself.
+#```{r, echo = FALSE}
+#message("WRITE METHOD mod_nums()")
+#```
 
-```{r, eval = FALSE}
-tab$mod_nums()
+#```{r, eval = FALSE}
+#tab$mod_nums()
+#```
 ```
 
 Finally we note that there are `print` and `summary` methods implemented for objects created with from `ck_setup()` which can be used as shown below:
 
+The `print()`-method shows the dimension of the table as well as the variables that are (or possibly can be) perturbed. It is also displayed if the table was constructed using weights. 
+
 ```{r}
-print(tab)
-#summary(tab)
+tab$print() # same as (print(tab))
+```
+
+The `summary`-method shows some utility statistics for already perturbed variables as shown below:
+```{r}
+tab$summary()
 ```
 
 ## Summary
-In case you have any suggestions or improvements, please feel free to file an issue at [**our issue tracker**](https://github.com/sdcTools/cellKey/issues) or contribute to the package by filing a [**pull request**](https://github.com/sdcTools/cellKey/pulls) against the master branch.
+The package is *"work in progress"* and therefore, suggestions and/or bugreports are welcome. Please feel free to file an issue at [**our issue tracker**](https://github.com/sdcTools/cellKey/issues) or contribute to the package by filing a [**pull request**](https://github.com/sdcTools/cellKey/pulls) against the master branch.
