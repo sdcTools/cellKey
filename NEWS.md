@@ -1,37 +1,24 @@
-# [todo] cellKey 0.18.0
-- [todo] implement magnitude tables
-  * new method `$params_nums()` that allow to query and set perturbation parameters for magnitude variables
-  * added maximum value of `6` in `params_num()` for parameter `top_k`
-  * compute cell keys for both variants (all units and all units contributing to a given numerical key variable)
-  * [todo] `$mod_nums()`
-  * [todo] add extra perturbation parameter mu_c in `params_num()`
-  * [todo] new method `$numtab()` to extract numerical tables
-  * [todo] update method `$summary()` to include values for perturbed magnitude tables
-- [todo] make arguments `params_cnts` and `params_nums` optional in `ck_setup`
-- [todo] remove or re-implement `by`-argument in ck_perturb()    
-
 # cellKey 0.17.0
-- defunc functions and force to use functionality from [`sdcHierarchies`](https://github.com/bernhard-da/sdcHierarchies)
-- [todo] rewrite frequency table perturbation using R6 classes
-    * new function `ck_setup()` to setup a table
-    * allow multiple variables in method `$perturb()`
-    * update utility measures in `ck_cnt_measures()` and improve documentation
-    * updated data structure in R6 object
-    * `ck_perturb()`: update varsdt$is_perturbed
-    * allow multiple count variable to be perturbed in `perturb()` method
+- force usage of functionality from [`sdcHierarchies`](https://github.com/bernhard-da/sdcHierarchies) to define hierarchies
+- removed features to perturb magnitude tables for now as parametrisation from `ptable`-pkg is not yet defined
+- removed possiblity to specify parameters for count variables using the `ABS` definition
+- removed `by`-argument in `$perturb()` method
+- rewrite frequency table perturbation using `R6` classes
+    * new function `ck_setup()` to define a table
+    * allow multiple variables in method `$perturb()`-method
     * removed `ck_export_table()` and added arguments to method `freqtab()`
     * new method `$print()` for R6 objects
     * new method `$summary()` for R6 objects
     * new method `$mod_cnts()` returning modifications for count variables
     * new method `$params_cnts()` that allow to query and set count parameters
-    
-- rewrite utility statistics for count variables in method `$measures()`
+- updated `ck_cnt_measures()`
     * renamed `false_positives` to `false_nonzero`
-    * improve documentation
-    * add table of to ck_cnt_measures showing exact perturbations
+    * improved documentation
+    * add table of to `ck_cnt_measures` showing exact perturbations
     * harmonized output with tau-argus
-- updated unit tests for counts based on hases
-- [in progress] start rewrite of package vignette
+- new method `$measures()` uses `ck_cnt_measures()` internally for count variables
+- updated unit tests for counts based on hashes
+- updated of package vignette
 
 # cellKey 0.16.3
 - fix tests due to changes in R 3.6.0
