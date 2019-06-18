@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Generate random record keys — ck_generate_rkeys • cellKey</title>
+<title>Perturbation parameters for count variables — params_cnts • cellKey</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,11 +32,10 @@
 
 
 
-<meta property="og:title" content="Generate random record keys — ck_generate_rkeys" />
+<meta property="og:title" content="Perturbation parameters for count variables — params_cnts" />
 
-<meta property="og:description" content="This function allows to create random record keys from a uniform distribution. If no seed is
-specified, a seed value is computed from the input data set to allow for reproducability depending
-on the input data set." />
+<meta property="og:description" content="This object is a result from [ck_params_cnts())] and is used in unit-tests.
+[ck_params_cnts())]: R:ck_params_cnts())" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -115,54 +114,91 @@ on the input data set." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Generate random record keys</h1>
+    <h1>Perturbation parameters for count variables</h1>
     
-    <div class="hidden name"><code>ck_generate_rkeys.Rd</code></div>
+    <div class="hidden name"><code>params_cnts.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function allows to create random record keys from a uniform distribution. If no seed is
-specified, a seed value is computed from the input data set to allow for reproducability depending
-on the input data set.</p>
+    <p>This object is a result from [ck_params_cnts())] and is used in unit-tests.</p>
+<p>[ck_params_cnts())]: R:ck_params_cnts())</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>ck_generate_rkeys</span>(<span class='no'>dat</span>, <span class='kw'>nr_digits</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
-    
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>dat</th>
-      <td><p>microdata used to generated hash for random seed</p></td>
-    </tr>
-    <tr>
-      <th>nr_digits</th>
-      <td><p>maximum number of digits in the record keys.</p></td>
-    </tr>
-    <tr>
-      <th>seed</th>
-      <td><p>if not <code>NULL</code>, a number specifying the initial seed value
-for the random number generator. If <code>NULL</code>, a seed is computed from <code>dat</code> itself.</p></td>
-    </tr>
-    </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+        
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>a numeric vector with <code><a href='https://rdrr.io/r/base/nrow.html'>nrow(dat)</a></code> record keys</p>
+    <p>params_cnts: a <code>ck_params</code> object that can be used as input in <code><a href='cellkey_pkg.html'>cellkey_pkg()</a></code> and
+contains parameters to perturb count variables</p>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>https://ec.europa.eu/eurostat/cros/content/3-random-noise-cell-key-method_en</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ck_create_testdata.html'>ck_create_testdata</a></span>()
-<span class='no'>dat</span>$<span class='no'>rkeys</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_generate_rkeys</span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='fu'><a href='ck_create_testdata.html'>ck_create_testdata</a></span>(), <span class='kw'>nr_digits</span> <span class='kw'>=</span> <span class='fl'>6</span>)</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>params_cnts</span>)</div><div class='output co'>#&gt; List of 2
+#&gt;  $ params:List of 1
+#&gt;   ..$ ptable:Formal class 'ptable' [package "ptable"] with 8 slots
+#&gt;   .. .. ..@ pMatrix   : num [1:9, 1:14] 1 0.7345 0.4088 0.1874 0.0915 ...
+#&gt;   .. .. .. ..- attr(*, "dimnames")=List of 2
+#&gt;   .. .. .. .. ..$ : chr [1:9] "0" "1" "2" "3" ...
+#&gt;   .. .. .. .. ..$ : chr [1:14] "0" "1" "2" "3" ...
+#&gt;   .. .. ..@ pClasses  : int [1:9] 0 1 2 3 4 5 6 7 8
+#&gt;   .. .. ..@ pTable    :Classes 'data.table' and 'data.frame':	66 obs. of  6 variables:
+#&gt;   .. .. .. ..$ i       : int [1:66] 0 1 1 1 1 1 2 2 2 2 ...
+#&gt;   .. .. .. ..$ j       : int [1:66] 0 0 3 4 5 6 0 3 4 5 ...
+#&gt;   .. .. .. ..$ p       : num [1:66] 1 0.7345 0.1367 0.0728 0.0374 ...
+#&gt;   .. .. .. ..$ v       : int [1:66] 0 -1 2 3 4 5 -2 1 2 3 ...
+#&gt;   .. .. .. ..$ p_int_lb: num [1:66] 0 0 0.734 0.871 0.944 ...
+#&gt;   .. .. .. ..$ p_int_ub: num [1:66] 1 0.734 0.871 0.944 0.981 ...
+#&gt;   .. .. .. ..- attr(*, ".internal.selfref")=&lt;externalptr&gt; 
+#&gt;   .. .. .. ..- attr(*, "type")= chr "destatis"
+#&gt;   .. .. ..@ dFrame    :Classes 'data.table' and 'data.frame':	126 obs. of  8 variables:
+#&gt;   .. .. .. ..$ i       : Factor w/ 9 levels "0","1","2","3",..: 1 1 1 1 1 1 1 1 1 1 ...
+#&gt;   .. .. .. ..$ j       : Factor w/ 14 levels "0","1","2","3",..: 1 2 3 4 5 6 7 8 9 10 ...
+#&gt;   .. .. .. ..$ p       : num [1:126] 1 0 0 0 0 0 0 0 0 0 ...
+#&gt;   .. .. .. ..$ v       : num [1:126] 0 1 2 3 4 5 6 7 8 9 ...
+#&gt;   .. .. .. ..$ check   : logi [1:126] TRUE FALSE FALSE TRUE TRUE TRUE ...
+#&gt;   .. .. .. ..$ p_int_lb: num [1:126] 0 1 1 1 1 1 1 1 1 1 ...
+#&gt;   .. .. .. ..$ p_int_ub: num [1:126] 1 1 1 1 1 1 1 1 1 1 ...
+#&gt;   .. .. .. ..$ i_info  : chr [1:126] "i=0" "i=0" "i=0" "i=0" ...
+#&gt;   .. .. .. ..- attr(*, ".internal.selfref")=&lt;externalptr&gt; 
+#&gt;   .. .. .. ..- attr(*, "index")= int(0) 
+#&gt;   .. .. .. .. ..- attr(*, "__v")= int [1:126] 113 99 114 85 100 115 71 86 101 116 ...
+#&gt;   .. .. .. ..- attr(*, "label")= chr "D5V300"
+#&gt;   .. .. ..@ empResults:Classes 'data.table' and 'data.frame':	9 obs. of  6 variables:
+#&gt;   .. .. .. ..$ i     : int [1:9] 0 1 2 3 4 5 6 7 8
+#&gt;   .. .. .. ..$ p_mean: num [1:9] 0 0 0 0 0 0 0 0 0
+#&gt;   .. .. .. ..$ p_var : num [1:9] 0 3 3 3 3 3 3 3 3
+#&gt;   .. .. .. ..$ p_sum : num [1:9] 1 1 1 1 1 1 1 1 1
+#&gt;   .. .. .. ..$ p_stay: num [1:9] 1 0 0 0.5 0.5 0.5 0.5 0.5 0.5
+#&gt;   .. .. .. ..$ iter  : int [1:9] 0 1 1 1 1 1 1 1 1
+#&gt;   .. .. .. ..- attr(*, ".internal.selfref")=&lt;externalptr&gt; 
+#&gt;   .. .. ..@ pParams   :Formal class 'ptable_params' [package "ptable"] with 10 slots
+#&gt;   .. .. .. .. ..@ D         : int 5
+#&gt;   .. .. .. .. ..@ V         : num 3
+#&gt;   .. .. .. .. ..@ js        : int 2
+#&gt;   .. .. .. .. ..@ ncat      : int 8
+#&gt;   .. .. .. .. ..@ epsilon   : num [1:8] 0.0000001 0.0000001 0.0000001 0.0000001 0.0000001 0.0000001 0.0000001 0.0000001
+#&gt;   .. .. .. .. ..@ pstay     : num [1:8] 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5
+#&gt;   .. .. .. .. ..@ optim     : int [1:8] 1 1 1 1 1 1 1 1
+#&gt;   .. .. .. .. ..@ mono      : logi [1:8] TRUE TRUE TRUE TRUE TRUE TRUE ...
+#&gt;   .. .. .. .. ..@ pTableSize: int 70
+#&gt;   .. .. .. .. ..@ label     : chr "D5V300"
+#&gt;   .. .. ..@ tStamp    : chr "20190528144930"
+#&gt;   .. .. ..@ type      : chr "destatis"
+#&gt;  $ type  : chr "cnts"
+#&gt;  - attr(*, "class")= chr "ck_params"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#value">Value</a></li>
+      <li><a href="#format">Format</a></li>
+
+      <li><a href="#references">References</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

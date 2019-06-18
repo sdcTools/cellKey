@@ -10,7 +10,7 @@
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Implementing ABS cell-key method for adding noise to frequency
         and continous tables">
 <meta property="og:description" content="This packages provides functionality to add noise to or rather perturb statistical tables.">
@@ -21,7 +21,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-article">
+    <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.16.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.17</span>
       </span>
     </div>
 
@@ -73,12 +73,9 @@
 <!--/.navbar -->
 
       
-      </header><div class="row">
-  <div class="col-md-9 contents">
-    
 
-    
-    
+      </header><div class="row">
+  <div class="contents col-md-9">
 <div id="cellkey" class="section level2">
 <h2 class="hasAnchor">
 <a href="#cellkey" class="anchor"></a>cellKey</h2>
@@ -90,32 +87,55 @@
 <p>This package is developed within the SGA <code>Open source tools for perturbative confidentiality methods</code>. This package is not optimized but already contains the core functionality to compute perturbed count- and magnitude tables with complex hierarchies.</p>
 <p>We have a first rough version with which interested users may play around. Feedback (via issues) with regards to bugs or features requests are very welcome as well as pull-requests. One the package is deemed stable, a version will be released on CRAN too.</p>
 </div>
+<div id="important-note" class="section level3">
+<h3 class="hasAnchor">
+<a href="#important-note" class="anchor"></a>Important Note:</h3>
+<p>Major parts of the package were rewritten in version <code>0.17</code> compared to previous versions. The following changes are now described:</p>
+<ul>
+<li>
+<p><strong>Definition of hierarchies</strong> One main change is that it is now required to directly use functionality from <a href="https://cran.r-project.org/package=sdcHierarchies"><code>sdcHierarchies</code></a> to setup hierarchies when defining of tables. The following changes are possibly required in existing code.</p>
+<ul>
+<li>replace <code>ck_create_node()</code> with <code>hier_create()</code>
+</li>
+<li>replace <code>ck_add_nodes()</code> with <code>hier_add()</code>
+</li>
+<li>replace <code>ck_delete_nodes()</code> with <code>hier_delete()</code>
+</li>
+<li>replace <code>ck_rename_nodes()</code> with <code>hier_rename()</code>
+</li>
+</ul>
+</li>
+<li><p><strong>Removing “abs”-input format</strong> For the sake of simplification, the differentiation between the <em>“abs”</em> and <em>“destatis”</em> format was removed. Internally, only the “destatis” format is used.</p></li>
+<li><p><strong>Removing possibility to perturb magnitude tables</strong> The feature to perturb continuously scaled variables (magnitude tables) was removed in version <code>0.17</code> of the package as the input format for perturbation tables is not yet finalized. Future versions of the package will gain the functionality to perturb magnitude tables again.</p></li>
+<li><p><strong>Simplification</strong> In order to simplify the application of the package, the process of defining, modifying and perturbing tables was modified. The implementation in versions <code>&gt;=0.17</code> is based on <code>R6</code> classes and is described in detail in the new and package vignette that can be viewed after installation of the package using <code><a href="reference/ck_vignette.html">ck_vignette()</a></code> or <a href="https://sdctools.github.io/cellKey/articles/introduction.html"><strong>online</strong></a>.</p></li>
+</ul>
+</div>
 <div id="installation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h3>
 <p>The package can directly be installed from <code>github</code> using the <code>remotes</code> package which is pulled in as a dependency from the <code>devtools</code> package. The following snippet installs the package:</p>
-<pre><code><a href="https://rdrr.io/r/utils/update.packages.html"># make sure that all packages are up-to-date
-update.packages(ask = FALSE)
-
-# make sure that devtools-pkg is available
-if (!require("devtools")) install.packages("devtools")
-library(devtools)
-
-# install cellKey from github.com
-remotes::install_github(
-  repo = "sdcTools/cellKey", 
-  force = TRUE, 
-  build_opts = "--no-resave-data"
-)</a></code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># update your R installation</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/utils/update.packages.html">update.packages</a></span>(<span class="dt">ask =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co"># install cellKey from github.com</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="cf">if</span> (<span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"remotes"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) {</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">  <span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"remotes"</span>)</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">}</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">remotes<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/remotes/man/install_github.html">install_github</a></span>(</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">  <span class="dt">repo =</span> <span class="st">"sdcTools/cellKey"</span>,</a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">  <span class="dt">dependencies =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">  <span class="dt">build_opts =</span> <span class="st">"--no-resave-data"</span>,</a>
+<a class="sourceLine" id="cb1-12" data-line-number="12">  <span class="dt">force =</span> <span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb1-13" data-line-number="13">)</a></code></pre></div>
 <p>If you experience a timeout due to a proxy server while downloading, one can work around this issue by specifying the proxy-server using the <code>httr</code> package:</p>
-<pre><code>httr::set_config(use_proxy(url = "xxx.xxx.xxx.xxx, port = yy))</code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">httr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/httr/man/set_config.html">set_config</a></span>(<span class="kw">use_proxy</span>(<span class="dt">url =</span> <span class="st">"xxx.xxx.xxx.xxx, port = yy))</span></a></code></pre></div>
 </div>
 <div id="usage" class="section level3">
 <h3 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h3>
-<p>An example using both possible input formats for perturbation tables is given in the main function of the packge <code><a href="reference/perturbTable.html">perturbTable()</a></code></p>
-<pre><code><a href="reference/perturbTable.html">?cellKey::perturbTable</a></code></pre>
-<p>The package vignette is currently work-in-progress. It can be looked at using <code><a href="reference/ck_vignette.html">cellKey::ck_vignette()</a></code> or via the automatically deployed documentation by clicking <a href="https://sdctools.github.io/cellKey/articles/introduction.html"><strong>here</strong></a>. The complete <a href="https://sdctools.github.io/cellKey/"><strong>documentation</strong></a> is also updated automatically and can be browed online.</p>
+<p>An example on how to apply the package is provided in <code><a href="reference/cellkey_pkg.html">?cellKey::cellkey_pkg</a></code> where also all the available methods are described.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">?cellKey<span class="op">::</span>cellkey_pkg</a></code></pre></div>
+<p>The package vignette is currently work-in-progress. It can be looked at using <code><a href="reference/ck_vignette.html">cellKey::ck_vignette()</a></code> or via the automatically deployed documentation by clicking <a href="https://sdctools.github.io/cellKey/articles/introduction.html"><strong>here</strong></a>. The complete <a href="https://sdctools.github.io/cellKey/"><strong>documentation</strong></a> is also updated automatically and can be viewed online.</p>
 </div>
 <div id="updates" class="section level3">
 <h3 class="hasAnchor">
@@ -146,7 +166,7 @@ remotes::install_github(
 </ul>
 </div>
 
-      <div class="dev-status">
+  <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://travis-ci.org/sdcTools/cellKey"><img src="https://travis-ci.org/sdcTools/cellKey.svg?branch=master" alt="Travis build status"></a></li>
@@ -156,7 +176,6 @@ remotes::install_github(
 </ul>
 </div>
 </div>
-
 </div>
 
 
@@ -165,12 +184,14 @@ remotes::install_github(
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9100.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

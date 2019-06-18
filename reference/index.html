@@ -22,8 +22,9 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -45,6 +46,7 @@
 <![endif]-->
 
 
+
   </head>
 
   <body>
@@ -61,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.16.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.17</span>
       </span>
     </div>
 
@@ -102,6 +104,7 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -128,39 +131,15 @@
       <tr>
         
         <td>
+          <p><code><a href="cellkey_pkg.html">ck_setup()</a></code> </p>
+        </td>
+        <td><p>cellKey - an post-tabular perturbation method</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="ck_cnt_measures.html">ck_cnt_measures()</a></code> </p>
         </td>
-        <td><p>ck_cnt_measures</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ck_cnt_measures_basic.html">ck_cnt_measures_basic()</a></code> </p>
-        </td>
-        <td><p>ck_cnt_measures_basic</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ck_cont_table.html">ck_cont_table()</a></code> </p>
-        </td>
-        <td><p>ck_cont_table</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ck_create_input.html">ck_create_input()</a></code> </p>
-        </td>
-        <td><p>ck_create_input</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ck_create_pTable.html">ck_create_pTable()</a></code> </p>
-        </td>
-        <td><p>ck_create_pTable</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ck_create_pert_params.html">ck_create_pert_params()</a></code> </p>
-        </td>
-        <td><p>ck_create_pert_params</p></td>
+        <td><p>Utility measures for perturbed counts</p></td>
       </tr><tr>
         
         <td>
@@ -176,87 +155,27 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="ck_export_table.html">ck_export_table()</a></code> </p>
-        </td>
-        <td><p>Method to extract information about modifications for count tables</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ck_freq_table.html">ck_freq_table()</a></code> </p>
-        </td>
-        <td><p>ck_freq_table</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="ck_generate_rkeys.html">ck_generate_rkeys()</a></code> </p>
         </td>
-        <td><p>ck_generate_rkeys</p></td>
+        <td><p>Generate random record keys</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="ck_generate_sTable.html">ck_generate_sTable()</a></code> </p>
+          <p><code><a href="ck_params_cnts.html">ck_params_cnts()</a></code> </p>
         </td>
-        <td><p>ck_generate_sTable</p></td>
+        <td><p>Create perturbation parameters for count variables</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="ck_manage_hierarchies.html">ck_create_node()</a></code> <code><a href="ck_manage_hierarchies.html">ck_add_nodes()</a></code> <code><a href="ck_manage_hierarchies.html">ck_delete_nodes()</a></code> <code><a href="ck_manage_hierarchies.html">ck_rename_nodes()</a></code> </p>
+          <p><code><a href="ck_params_nums.html">ck_params_nums()</a></code> </p>
         </td>
-        <td><p>Create and modify the structure of hierarchies</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ck_methods.html">print(<i>&lt;pert_table&gt;</i>)</a></code> <code><a href="ck_methods.html">summary(<i>&lt;pert_table&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Method to extract results</p></td>
+        <td><p>Create perturbation parameters for continuous variables</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="ck_vignette.html">ck_vignette()</a></code> </p>
         </td>
         <td><p>ck_vignette</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="mod_counts-methods.html">mod_counts()</a></code> </p>
-        </td>
-        <td><p>Method to extract information about modifications for count tables</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="mod_numvars-methods.html">mod_numvars()</a></code> </p>
-        </td>
-        <td><p>Method to extract information about modifications for counts</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pert_inputdat-class.html">pert_inputdat-class</a></code> </p>
-        </td>
-        <td><p>An S4-class to represent input data for applying the cell-key method</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pert_params-class.html">pert_params-class</a></code> </p>
-        </td>
-        <td><p>An S4 class to represent perturbation parameters for continous tables</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pert_table-class.html">pert_table-class</a></code> </p>
-        </td>
-        <td><p>An S4 class to represent a perturbed table</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="perturbTable.html">perturbTable()</a></code> </p>
-        </td>
-        <td><p>Perturb a table</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ptable_destatis.html">ptable_destatis</a></code> </p>
-        </td>
-        <td><p>A perturbation table based on DESTATIS format</p></td>
       </tr><tr>
         
         <td>
@@ -276,19 +195,23 @@
   </div>
 </div>
 
+
       <footer>
       <div class="copyright">
   <p>Developed by Bernhard Meindl.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9100.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 
