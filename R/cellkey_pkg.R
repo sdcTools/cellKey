@@ -2,6 +2,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
   public=list(
     initialize=function(x, rkey, dims, w, countvars = NULL, numvars = NULL, params_cnts, params_nums = NULL) {
       type <- is_perturbed <- NULL
+      params_nums <- numvars <- NULL
 
       if (!inherits(x, "data.frame")) {
         stop("an object coercible to a `data.frame` must be provided in `x`.", call. = FALSE)
@@ -186,7 +187,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       })
       names(contr_indices) <- strids
 
-      message("finding top_k contributors for each cell and numerical variable")
+      # finding top_k contributors for each cell and numerical variable
       microdat <- prob@dataObj@rawData[, c(names(dims), numvars, wvar), with = FALSE]
       microdat$.tmpid <- 1:nrow(microdat)
 
@@ -444,42 +445,6 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       }
       return(res)
     },
-    # return a table for perturbed numeric variables
-    numtab=function(v = NULL, mean_before_sum = FALSE, path = NULL, type = "both") {
-      stop("not yet", call. = FALSE)
-      if (!is_scalar_character(type)) {
-        stop("Argument `type` must be a scalar character.", call. = FALSE)
-      }
-      if (!type %in% c("both", "weighted", "unweighted")) {
-        stop("Argument `type` must be either `both`, `weighted` or `unweighted`.", call. = FALSE)
-      }
-      if (!is.null(path)) {
-        if (!is_scalar_character(path)) {
-          stop("Argument `path` must be a scalar character.", call. = FALSE)
-        }
-      }
-
-      avail <- private$.ck_perturbed_vars(what = "numvars")
-      if (length(avail) == 0) {
-        stop("No perturbed numerical variables found, please use the `perturb()-method` first.", call. = FALSE)
-      }
-
-      if (is.null(v)) {
-        message("The following numerical variables have been perturbed:")
-        message(paste("  -->", shQuote(avail), collapse = "\n"))
-        return(invisible(NULL))
-      }
-
-      if (!is.character(v)) {
-        stop("Argument `v` must be a character vector specifying variable names.", call. = FALSE)
-      }
-
-      v <- tolower(v)
-      if (!all(v %in% avail)) {
-        e <- "Some provided variable(s) in `v` are not valid, already perturbed numerical variables."
-        stop(e, call. = FALSE)
-      }
-    },
     # compute distance-based utility measures
     measures=function(v) {
       if (!is_scalar_character(v)) {
@@ -508,9 +473,6 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     mod_cnts=function() {
       private$modifications(type = "cnts")
     },
-    #mod_nums=function() {
-    #  private$modifications(type = "nums")
-    #},
     params_cnts=function(val) {
       if (missing(val)) {
         private$.pert_params$cnts
@@ -523,23 +485,6 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         }
         private$.pert_params$cnts <- val
         message("Perturbation parameters for count variables were modified.")
-        return(invisible(self))
-      }
-    },
-    # get/set peturbation parameters for numerical variables
-    params_nums=function(val) {
-      if (missing(val)) {
-        private$.pert_params$nums
-      } else {
-        if (!inherits(val, "ck_params")) {
-          stop("Please create the input using `ck_params_nums()`", call. = FALSE)
-        }
-        if (val$type != "nums") {
-          stop("Please create the input using `ck_params_nums()`", call. = FALSE)
-        }
-
-        private$.pert_params$nums <- val
-        message("Perturbation parameters for numerical variables were modified.")
         return(invisible(self))
       }
     },
@@ -562,27 +507,30 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         })
         names(cnt_measures) <- cv
 
+        cli::cat_line()
         cli::cat_rule("Distance-based measures")
-
         for (vv in names(cnt_measures)) {
           cli::cat_line(cli::symbol$tick, " Variable: ", shQuote(vv), "\n")
           print(cnt_measures[[vv]]$measures)
+          cli::cat_line()
         }
       }
 
-      cli::cat_line(cli::boxx("Utility measures for perturbed numerical variables", padding = 0))
-      nv <- private$.ck_perturbed_vars("numvars")
-      if (length(nv) == 0) {
-        cli::cat_line(cli::symbol$cross, " no numerical variables have been perturbed")
-      } else {
-        message("Todo")
-        # info_nums <- mod_numvars(object)
-        # num_info <- num_ratios <- NULL
-        # if (nrow(info_nums) > 0) {
-        #   num_info <- info_nums[, as.list(get_distr_vals(vals.pert)), by = "numVar"]
-        #   cat("\nPerturbation statistics on numerical variables:\n")
-        #   print(num_info)
-        # }
+      numvars_available <- FALSE
+      if (numvars_available) {
+        cli::cat_line(cli::boxx("Utility measures for perturbed numerical variables", padding = 0))
+        nv <- private$.ck_perturbed_vars("numvars")
+        if (length(nv) == 0) {
+          cli::cat_line(cli::symbol$cross, " no numerical variables have been perturbed")
+        } else {
+          # info_nums <- mod_numvars(object)
+          # num_info <- num_ratios <- NULL
+          # if (nrow(info_nums) > 0) {
+          #   num_info <- info_nums[, as.list(get_distr_vals(vals.pert)), by = "numVar"]
+          #   cat("\nPerturbation statistics on numerical variables:\n")
+          #   print(num_info)
+          # }
+        }
       }
       return(invisible(NULL))
       # return(invisible(
@@ -615,22 +563,28 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         }
       }
 
-      cli::cat_rule("Tabulated / Perturbed numvars")
-      numvars <- private$.varsdt[type == "numvars"]
-      if (nrow(numvars) == 0) {
-        cli::cat_line(cli::symbol$cross, " no continuous variables available")
-      } else {
-        for (i in 1:nrow(numvars)) {
-          v <- numvars$vname[i]
-          if (numvars$is_perturbed[i]) {
-            cli::cat_line(cli::symbol$checkbox_on, " ", shQuote(v), " (perturbed)")
-          } else {
-            cli::cat_line(cli::symbol$checkbox_off, " ", shQuote(v))
+      numvars_available <- FALSE
+      if (numvars_available) {
+        cli::cat_rule("Tabulated / Perturbed numvars")
+        numvars <- private$.varsdt[type == "numvars"]
+        if (nrow(numvars) == 0) {
+          cli::cat_line(cli::symbol$cross, " no continuous variables available")
+        } else {
+          for (i in 1:nrow(numvars)) {
+            v <- numvars$vname[i]
+            if (numvars$is_perturbed[i]) {
+              cli::cat_line(cli::symbol$checkbox_on, " ", shQuote(v), " (perturbed)")
+            } else {
+              cli::cat_line(cli::symbol$checkbox_off, " ", shQuote(v))
+            }
           }
         }
       }
       return(invisible(NULL))
     }
+    # to delete
+    #max_contributions=function() { private$.max_contributions },
+    #results=function() { private$.results }
   ),
   private=list(
     .prob = NULL,
@@ -802,6 +756,62 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       }
       return(private$.modifications[[type]])
     },
+    mod_nums=function() {
+      private$modifications(type = "nums")
+    },
+    # get/set peturbation parameters for numerical variables
+    params_nums=function(val) {
+      stop("This is not yet possible.", call. = FALSE)
+      if (missing(val)) {
+        private$.pert_params$nums
+      } else {
+        if (!inherits(val, "ck_params")) {
+          stop("Please create the input using `ck_params_nums()`", call. = FALSE)
+        }
+        if (val$type != "nums") {
+          stop("Please create the input using `ck_params_nums()`", call. = FALSE)
+        }
+        private$.pert_params$nums <- val
+        message("Perturbation parameters for numerical variables were modified.")
+        return(invisible(self))
+      }
+    },
+    # return a table for perturbed numeric variables
+    numtab=function(v = NULL, mean_before_sum = FALSE, path = NULL, type = "both") {
+      stop("not yet", call. = FALSE)
+      if (!is_scalar_character(type)) {
+        stop("Argument `type` must be a scalar character.", call. = FALSE)
+      }
+      if (!type %in% c("both", "weighted", "unweighted")) {
+        stop("Argument `type` must be either `both`, `weighted` or `unweighted`.", call. = FALSE)
+      }
+      if (!is.null(path)) {
+        if (!is_scalar_character(path)) {
+          stop("Argument `path` must be a scalar character.", call. = FALSE)
+        }
+      }
+
+      avail <- private$.ck_perturbed_vars(what = "numvars")
+      if (length(avail) == 0) {
+        stop("No perturbed numerical variables found, please use the `perturb()-method` first.", call. = FALSE)
+      }
+
+      if (is.null(v)) {
+        message("The following numerical variables have been perturbed:")
+        message(paste("  -->", shQuote(avail), collapse = "\n"))
+        return(invisible(NULL))
+      }
+
+      if (!is.character(v)) {
+        stop("Argument `v` must be a character vector specifying variable names.", call. = FALSE)
+      }
+
+      v <- tolower(v)
+      if (!all(v %in% avail)) {
+        e <- "Some provided variable(s) in `v` are not valid, already perturbed numerical variables."
+        stop(e, call. = FALSE)
+      }
+    },
     .validate = function() {
       if (!private$.is_initialized) {
         return(invisible(TRUE))
@@ -830,12 +840,12 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' @param countvars (character) an optional vector containing names of binary (0/1 coded)
 #' variables withing `x` that should be included in the problem instance.
 #' These variables can later be perturbed.
-#' @param numvars (character) an optional vector of numerical variables that can later be tabulated.
+# @param numvars (character) an optional vector of numerical variables that can later be tabulated.
 #' @param params_cnts an object containing perturbation parameters for count variables that needs
 #' to be created with [ck_params_cnts()]
-#' @param params_nums if not `NULL`, an object containing perturbation parameters for continuous variables
-#' that must be created with [ck_params_nums()]. This argument needs to be provided if `numvars` is
-#' not `NULL`.
+# @param params_nums if not `NULL`, an object containing perturbation parameters for continuous variables
+# that must be created with [ck_params_nums()]. This argument needs to be provided if `numvars` is
+# not `NULL`.
 #' @format [R6::R6Class] object.
 #' @section Usage: For usage details see the **Methods** and **Examples** sections.
 #' @section Methods: The following methods are available and can be used:
@@ -894,7 +904,6 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' # create a named list
 #' dims <- list(sex = d_sex, age = d_age)
 #' w <- "sampling_weight"
-#' numvars <- c("savings", "income")
 #' countvars <- c("cnt_females", "cnt_males", "cnt_highincome")
 #' rkey <- "rkey"
 #'
@@ -908,9 +917,6 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'   mono = TRUE
 #' )
 #'
-#' # perturbation parameters for continuous variables
-#' params_nums <- ck_params_nums(D = 5, l = 0.2, top_k = 3)
-#'
 #' # define the cell key object
 #' tab <- ck_setup(
 #'   x = x,
@@ -918,9 +924,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'   dims = dims,
 #'   w = w,
 #'   countvars = countvars,
-#'   numvars = numvars,
-#'   params_cnts = params_cnts,
-#'   params_nums = params_nums
+#'   params_cnts = params_cnts
 #' )
 #'
 #' # show some information about this table instance
@@ -968,7 +972,9 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'
 #' # display a summary about utility measures
 #' tab$summary()
-ck_setup <- function(x, rkey, dims, w, countvars = NULL, numvars = NULL, params_cnts, params_nums = NULL) {
+ck_setup <- function(x, rkey, dims, w, countvars = NULL, params_cnts) {
+  numvars <- NULL
+  params_nums <- NULL
   cellkey_obj_class$new(
     x = x,
     rkey = rkey,

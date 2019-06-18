@@ -56,7 +56,6 @@ d_age <- hier_add(d_age, root = "age_group2", "ag2a")
 # create a named list
 dims <- list(sex = d_sex, age = d_age)
 w <- "sampling_weight"
-numvars <- c("savings", "income")
 countvars <- c("cnt_females", "cnt_males", "cnt_highincome")
 rkey <- "rkey"
 
@@ -70,9 +69,6 @@ params_cnts <- ck_params_cnts(
   mono = TRUE
 )
 
-# perturbation parameters for continuous variables
-params_nums <- ck_params_nums(D = 5, l = 0.2, top_k = 3)
-
 # define the cell key object
 tab <- ck_setup(
   x = x,
@@ -80,9 +76,7 @@ tab <- ck_setup(
   dims = dims,
   w = w,
   countvars = countvars,
-  numvars = numvars,
-  params_cnts = params_cnts,
-  params_nums = params_nums
+  params_cnts = params_cnts
 )
 
 # show some information about this table instance
