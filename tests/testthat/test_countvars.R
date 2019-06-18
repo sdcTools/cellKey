@@ -60,49 +60,33 @@ test_that("checking perturbation parameters for counts", {
 
 countvars <- NULL
 w <- "sampling_weight"
-numvars <- NULL
-params_nums <- NULL
 rkey <- "rec_key"
 
 test_that("ck_setup() fails with invalid inputs", {
   # input must be a data.frame
   expect_error(
     tab <- ck_setup(
-      x = 1:5, rkey = "rec_key",
-      dims = dims, w = w,
-      countvars = countvars, numvars = numvars,
-      params_cnts = params_cnts, params_nums = params_nums
+      x = 1:5,
+      rkey = "rec_key",
+      dims = dims,
+      w = w,
+      countvars = countvars,
+      params_cnts = params_cnts
     )
   )
 
   # params_cnts must be created with ck_params_*()
   expect_error(
     tab <- ck_setup(
-      x = dat, rkey = "rec_key",
-      dims = dims, w = w,
-      countvars = countvars, numvars = numvars,
-      params_cnts = 1:5, params_nums = params_nums
-    )
-  )
-  # params_nums must be created with ck_params_*()
-  expect_error(
-    tab <- ck_setup(
-      x = dat, rkey = "rec_key",
-      dims = dims, w = w,
-      countvars = countvars, numvars = numvars,
-      params_cnts = params_cnts, params_nums = 1:5
+      x = dat,
+      rkey = "rec_key",
+      dims = dims,
+      w = w,
+      countvars = countvars,
+      params_cnts = 1:5
     )
   )
 
-  # numvars specified but params_nums is empty
-  expect_error(
-    tab <- ck_setup(
-      x = dat, rkey = "rec_key",
-      dims = dims, w = w,
-      countvars = countvars, numvars = "income",
-      params_cnts = params_cnts, params_nums = NULL
-    )
-  )
   # invalid record keys
   expect_error(
     tab <- ck_setup(
@@ -116,30 +100,36 @@ test_that("ck_setup() fails with invalid inputs", {
   # dims is not named
   expect_error(
     tab <- ck_setup(
-      x = dat, rkey = "rec_key",
-      dims = 1:5, w = w,
-      countvars = countvars, numvars = numvars,
-      params_cnts = params_cnts, params_nums = params_nums
+      x = dat,
+      rkey = "rec_key",
+      dims = 1:5,
+      w = w,
+      countvars = countvars,
+      params_cnts = params_cnts
     )
   )
 
   # dims is not a named list
   expect_error(
     tab <- ck_setup(
-      x = dat, rkey = "rec_key",
-      dims = c("a" = 5, "b" = 3), w = w,
-      countvars = countvars, numvars = numvars,
-      params_cnts = params_cnts, params_nums = params_nums
+      x = dat,
+      rkey = "rec_key",
+      dims = c("a" = 5, "b" = 3),
+      w = w,
+      countvars = countvars,
+      params_cnts = params_cnts
     )
   )
 
   # invalid variable names in `dims`
   expect_error(
     tab <- ck_setup(
-      x = dat, rkey = "rec_key",
-      dims = list("a" = 5, "b" = 3), w = w,
-      countvars = countvars, numvars = numvars,
-      params_cnts = params_cnts, params_nums = params_nums
+      x = dat,
+      rkey = "rec_key",
+      dims = list("a" = 5, "b" = 3),
+      w = w,
+      countvars = countvars,
+      params_cnts = params_cnts
     )
   )
 
@@ -147,9 +137,10 @@ test_that("ck_setup() fails with invalid inputs", {
   expect_error(
     tab <- ck_setup(
       x = dat, rkey = "rec_key",
-      dims = list("sex" = 5, "age" = 3), w = w,
-      countvars = countvars, numvars = numvars,
-      params_cnts = params_cnts, params_nums = params_nums
+      dims = list("sex" = 5, "age" = 3),
+      w = w,
+      countvars = countvars,
+      params_cnts = params_cnts
     )
   )
 })
@@ -160,9 +151,7 @@ tab <- ck_setup(
   dims = dims,
   w = w,
   countvars = countvars,
-  numvars = numvars,
-  params_cnts = params_cnts,
-  params_nums = params_nums
+  params_cnts = params_cnts
 )
 
 expect_message(tab$perturb("total"))
@@ -183,9 +172,7 @@ tab <- ck_setup(
   dims = dims,
   w = w,
   countvars = countvars,
-  numvars = numvars,
-  params_cnts = params_cnts,
-  params_nums = params_nums
+  params_cnts = params_cnts
 )
 
 expect_message(tab$perturb("total"), "Count variable 'total' was perturbed.")
@@ -215,9 +202,7 @@ tab <- ck_setup(
   dims = dims,
   w = NULL,
   countvars = countvars,
-  numvars = numvars,
-  params_cnts = params_cnts,
-  params_nums = params_nums
+  params_cnts = params_cnts
 )
 
 tab$perturb("total")
@@ -239,9 +224,7 @@ tab <- ck_setup(
   dims = dims,
   w = w,
   countvars = countvars,
-  numvars = numvars,
-  params_cnts = params_cnts,
-  params_nums = params_nums
+  params_cnts = params_cnts
 )
 tab$perturb(c("total", "cnt_males", "cnt_highincome"))
 
