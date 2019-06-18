@@ -26,15 +26,38 @@ stable, a version will be released on CRAN too.
 
 ### Important Note:
 
-As of versions `>= 0.17`, you need to use functionality of
-[`sdcHierarchies`](https://cran.r-project.org/package=sdcHierarchies) to
-setup hierarchies of your tables in `perturbTable()`. The following
-changes are possibly required in existing code.
+Major parts of the package were rewritten in version `0.17` compared to
+previous versions. The following changes are now described:
 
-  - replace `ck_create_node()` with `hier_create()`
-  - replace `ck_add_nodes()` with `hier_add()`
-  - replace `ck_delete_nodes()` with `hier_delete()`
-  - replace `ck_rename_nodes()` with `hier_rename()`
+  - **Definition of hierarchies** One main change is that it is now
+    required to directly use functionality from
+    [`sdcHierarchies`](https://cran.r-project.org/package=sdcHierarchies)
+    to setup hierarchies when defining of tables. The following changes
+    are possibly required in existing code.
+    
+      - replace `ck_create_node()` with `hier_create()`
+      - replace `ck_add_nodes()` with `hier_add()`
+      - replace `ck_delete_nodes()` with `hier_delete()`
+      - replace `ck_rename_nodes()` with `hier_rename()`
+
+  - **Removing “abs”-input format** For the sake of simplification, the
+    differentiation between the *“abs”* and *“destatis”* format was
+    removed. Internally, only the “destatis” format is used.
+
+  - **Removing possibility to perturb magnitude tables** The feature to
+    perturb continuously scaled variables (magnitude tables) was removed
+    in version `0.17` of the package as the input format for
+    perturbation tables is not yet finalized. Future versions of the
+    package will gain the functionality to perturb magnitude tables
+    again.
+
+  - **Simplification** In order to simplify the application of the
+    package, the process of defining, modifying and perturbing tables
+    was modified. The implementation in versions `>=0.17` is based on
+    `R6` classes and is described in detail in the new and package
+    vignette that can be viewed after installation of the package using
+    `ck_vignette()` or
+    [**online**](https://sdctools.github.io/cellKey/articles/introduction.html).
 
 ### Installation
 
@@ -42,18 +65,18 @@ The package can directly be installed from `github` using the `remotes`
 package which is pulled in as a dependency from the `devtools` package.
 The following snippet installs the package:
 
-    # make sure that all packages are up-to-date
+    # update your R installation
     update.packages(ask = FALSE)
     
-    # make sure that devtools-pkg is available
-    if (!require("devtools")) install.packages("devtools")
-    library(devtools)
-    
     # install cellKey from github.com
+    if (!requireNamespace("remotes", quietly = TRUE)) {
+      install.packages("remotes")
+    }
     remotes::install_github(
-      repo = "sdcTools/cellKey", 
-      force = TRUE, 
-      build_opts = "--no-resave-data"
+      repo = "sdcTools/cellKey",
+      dependencies = TRUE,
+      build_opts = "--no-resave-data",
+      force = TRUE
     )
 
 If you experience a timeout due to a proxy server while downloading, one
@@ -64,17 +87,18 @@ can work around this issue by specifying the proxy-server using the
 
 ### Usage
 
-An example using both possible input formats for perturbation tables is
-given in the main function of the packge `perturbTable()`
+An example on how to apply the package is provided in
+`?cellKey::cellkey_pkg` where also all the available methods are
+described.
 
-    ?cellKey::perturbTable
+    ?cellKey::cellkey_pkg
 
 The package vignette is currently work-in-progress. It can be looked at
 using `cellKey::ck_vignette()` or via the automatically deployed
 documentation by clicking
 [**here**](https://sdctools.github.io/cellKey/articles/introduction.html).
 The complete [**documentation**](https://sdctools.github.io/cellKey/) is
-also updated automatically and can be browed online.
+also updated automatically and can be viewed online.
 
 ### Updates
 
