@@ -1,3 +1,7 @@
+# cellKey 0.17.1
+- adding parameter `exclude_zero_cells` to `ck_cnt_measures()`
+- updated documentation
+
 # cellKey 0.17.0
 - force usage of functionality from [`sdcHierarchies`](https://github.com/bernhard-da/sdcHierarchies) to define hierarchies
 - removed features to perturb magnitude tables for now as parametrisation from `ptable`-pkg is not yet defined
