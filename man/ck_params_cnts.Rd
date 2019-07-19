@@ -116,8 +116,8 @@ tab$freqtab(v = c("total", "cnt_males"), path = "outtab")
 # only weighted and perturbed weighted counts
 tab$freqtab(v = c("total", "cnt_males"), type = "weighted")
 
-# utility measures
-tab$measures(v = "total")
+# utility measures for a count variable
+tab$measures_cnts(v = "total", exclude_zeros = TRUE)
 
 # modifications for perturbed count variables
 tab$mod_cnts()

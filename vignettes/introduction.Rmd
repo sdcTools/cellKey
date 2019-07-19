@@ -230,10 +230,10 @@ tab$freqtab(v = "total", type = "weighted")
 
 
 ### Computing utility measures for count variables
-Method `measures()` allows to compute information loss measures for perturbed count variables. Its application is as simple as:
+Method `measures_cnts()` allows to compute information loss measures for perturbed count variables. Its application is as simple as:
 
 ```{r}
-tab$measures(v = "total")
+tab$measures_cnts(v = "total", exclude_zeros = TRUE)
 ```
 
 This function returns a list with several utility measures that are now discussed. For further information have a look at `?ck_cnt_measures` as the same set of measures can also be computed for two vectors containing original and perturbed values.
@@ -256,6 +256,8 @@ This function returns a list with several utility measures that are now discusse
 
 - `false_zero`: number of cells that were perturbed to zero
 - `false_nonzero`: number of cells that were initially zero but have been perturbed to a number different from zero
+
+If argument `exclude_zeros` is `TRUE` (the default setting), empty cells are excluded when computing distance-based measures `d1`, `d2` and `d3`.
 
 ### Perturbing continuously scaled variables
 The perturbation of magnitude tables is currently in development and will be available in future versions of the `cellKey` package.

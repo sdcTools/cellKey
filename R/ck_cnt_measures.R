@@ -5,6 +5,9 @@
 #'
 #' @param orig a numeric vector holding original values
 #' @param pert a numeric vector holding perturbed values
+#' @param exclude_zeros a scalar logical value; if `TRUE` (the default), all only cells
+#' with counts `> 0` are used when computing distances `d1`, `d2` and `d3`. If this
+#' argument is `FALSE`, the complete vector is used.
 #' @return a `list` containing the following elements:
 #' - `overview`: a `data.table` with the following three columns:
 #'    * `noise`: amount of noise computed as `orig` - `pert`
@@ -29,26 +32,34 @@
 #' - `false_zero`: number of cells that were perturbed to zero
 #' - `false_nonzero`: number of cells that were initially zero but
 #' have been perturbed to a number different from zero
+#' - `exclude_zeros`: were empty cells exluded from computation or not
 #' @export
 #' @md
 #' @examples
-#' orig <- 1:10
+#' orig <- c(1:10, 0, 0)
 #' pert <- orig; pert[c(1, 5, 7)] <- c(0, 6, 9)
-#' ck_cnt_measures(
-#'   orig = orig,
-#'   pert = pert
-#' )
-ck_cnt_measures <- function(orig, pert) {
+#'
+#' # ignore empty cells when computing measures `d1`, `d2`, `d3`
+#' ck_cnt_measures(orig = orig, pert = pert, exclude_zeros = TRUE)
+#'
+#' # use all cells
+#' ck_cnt_measures(orig = orig, pert = pert, exclude_zeros = FALSE)
+#'
+#' # for an application on a perturbed object, see ?cellkey_pkg
+ck_cnt_measures <- function(orig, pert, exclude_zeros = TRUE) {
   pct <- cnt <- NULL
 
   # for measures, see
   # https://ec.europa.eu/eurostat/cros/system/files/methods_for_protecting_census_data.pdf
 
   if (!is.numeric(orig) | !is.numeric(pert)) {
-    stop("Arguments `orig` and `pert` must be numeric vectors", call. = FALSE)
+    stop("Arguments `orig` and `pert` must be numeric vectors.", call. = FALSE)
   }
   if (length(orig) != length(pert)) {
-    stop("Number of elements in `orig` and `pert` differs", call. = FALSE)
+    stop("Number of elements in `orig` and `pert` differs.", call. = FALSE)
+  }
+  if (!rlang::is_scalar_logical(exclude_zeros)) {
+    stop("Argument `exclude_zeros` needs to be a scalar logical value.", call. = FALSE)
   }
 
   dt_overview <- as.data.table(as.data.frame.table(table(orig - pert)))
@@ -59,14 +70,27 @@ ck_cnt_measures <- function(orig, pert) {
 
   # distances per cell
   # absolute distances
-  dist_d1 <- abs(pert - orig)
+
+  if (exclude_zeros) {
+    ii <- which(pert != 0)
+    if (length(ii) == 0) {
+      dist_d1 <- dist_d2 <- dist_d3 <- rep(NA, length(orig))
+    }
+    ovec <- orig[ii]
+    pvec <- pert[ii]
+  } else {
+    ovec <- orig
+    pvec <- pert
+  }
+
+  dist_d1 <- abs(pvec - ovec)
 
   # relative absolute distance
-  dist_d2 <- (abs(pert - orig)) / orig
+  dist_d2 <- (abs(pvec - ovec)) / ovec
   dist_d2[is.nan(dist_d2)] <- 0
 
   # absolute distances of square roots
-  dist_d3 <- abs(sqrt(pert) - sqrt(orig))
+  dist_d3 <- abs(sqrt(pvec) - sqrt(ovec))
 
   ## cumdistr
   vv <- get_distr_vals(dist_d1)
@@ -102,7 +126,8 @@ ck_cnt_measures <- function(orig, pert) {
       cumdistr_d2 = cumdistr_d2,
       cumdistr_d3 = cumdistr_d3,
       false_zero = false_zero,
-      false_nonzero = false_nonzero
+      false_nonzero = false_nonzero,
+      exclude_zeros = exclude_zeros
     )
   )
 }

@@ -446,13 +446,16 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       return(res)
     },
     # compute distance-based utility measures
-    measures=function(v) {
+    measures_cnts=function(v, exclude_zeros = TRUE) {
       if (!is_scalar_character(v)) {
         stop("Argument `v` needs to be a scalar character!", call. = FALSE)
       }
+      if (!rlang::is_scalar_logical(exclude_zeros)) {
+        stop("Argument `exclude_zeros` needs to be a scalar logical value.", call. = FALSE)
+      }
       v <- tolower(v)
       if (private$.is_perturbed_countvar(v)) {
-        return(private$.ck_utility_cnts(v))
+        return(private$.ck_utility_cnts(v, exclude_zeros = exclude_zeros))
       } else if (private$.is_perturbed_numvar(v)) {
         return(private$.ck_utility_nums(v))
       } else {
@@ -502,8 +505,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         print(cnt_info)
 
         # unweighted only!
-        cnt_measures <- lapply(cv, function(x) {
-          self$measures(v = x)
+        cnt_measures <- lapply(cv, function(x, excl) {
+          self$measures_cnts(v = x)
         })
         names(cnt_measures) <- cv
 
@@ -721,13 +724,14 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       stop("perturbation of magnitude tables not yet supported", call. = FALSE)
     },
     # utility measures for count variables
-    .ck_utility_cnts=function(v) {
-      if (!is_scalar_character(v)) {
-        stop("Argument `v` needs to be a scalar character.", call. = FALSE)
-      }
+    .ck_utility_cnts=function(v, exclude_zeros) {
       v <- tolower(v)
       dt <- private$.results[[v]]
-      return(ck_cnt_measures(orig = dt$uwc, pert = dt$puwc))
+      return(ck_cnt_measures(
+        orig = dt$uwc,
+        pert = dt$puwc,
+        exclude_zeros = exclude_zeros
+      ))
     },
     # utility measures for numeric variables
     .ck_utility_nums=function(v) {
@@ -867,9 +871,9 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'    * `wc`: weighted counts (if `type` is `"both"` or `"weighted"`)
 #'    * `puwc`: perturbed unweighted counts (if `type` is `"both"` or `"unweighted"`)
 #'    * `pwc`: perturbed weighted counts (if `type` is `"both"` or `"weighted"`)
-#' - **`measures(v)`**: utility measures for perturbed variables. The required arguments are:
-#'    * `v`: name of a count or magnitude variable for which utility measures should be computed.
-#'
+#' - **`measures_cnts(v, exclude_zeros = TRUE)`**: utility measures for perturbed count variables. The required arguments are:
+#'    * `v`: name of a count variable for which utility measures should be computed.
+#'    * `exclude_zeros`: should empty (zero) cells in the original values be excluded when computing distance measures
 #'    This method returns a `list` containing a set of utility measures based on some distance functions.
 #'    For a detailed description of the computed measures, see [ck_cnt_measures()]
 #'
@@ -964,8 +968,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' # only weighted and perturbed weighted counts
 #' tab$freqtab(v = c("total", "cnt_males"), type = "weighted")
 #'
-#' # utility measures
-#' tab$measures(v = "total")
+#' # utility measures for a count variable
+#' tab$measures_cnts(v = "total", exclude_zeros = TRUE)
 #'
 #' # modifications for perturbed count variables
 #' tab$mod_cnts()

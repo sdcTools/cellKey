@@ -64,13 +64,13 @@ the first n columns. Additionally, the following columns are shown:
 \item \code{puwc}: perturbed unweighted counts (if \code{type} is \code{"both"} or \code{"unweighted"})
 \item \code{pwc}: perturbed weighted counts (if \code{type} is \code{"both"} or \code{"weighted"})
 }
-\item \strong{\code{measures(v)}}: utility measures for perturbed variables. The required arguments are:
+\item \strong{\code{measures_cnts(v, exclude_zeros = TRUE)}}: utility measures for perturbed count variables. The required arguments are:
 \itemize{
-\item \code{v}: name of a count or magnitude variable for which utility measures should be computed.
-}
-
+\item \code{v}: name of a count variable for which utility measures should be computed.
+\item \code{exclude_zeros}: should empty (zero) cells in the original values be excluded when computing distance measures
 This method returns a \code{list} containing a set of utility measures based on some distance functions.
 For a detailed description of the computed measures, see \code{\link[=ck_cnt_measures]{ck_cnt_measures()}}
+}
 \item \strong{\code{mod_cnts()}}: returns a \code{data.table} containing modifications applied to count variables
 \item \strong{\code{params_cnts(val)}}: returns or modifies perturbation parameters used for count variables. If
 \code{val} is not provided, the current perturbation object is returned, otherwise the current perturbation
@@ -163,8 +163,8 @@ tab$freqtab(v = c("total", "cnt_males"), path = "outtab")
 # only weighted and perturbed weighted counts
 tab$freqtab(v = c("total", "cnt_males"), type = "weighted")
 
-# utility measures
-tab$measures(v = "total")
+# utility measures for a count variable
+tab$measures_cnts(v = "total", exclude_zeros = TRUE)
 
 # modifications for perturbed count variables
 tab$mod_cnts()

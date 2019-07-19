@@ -4,12 +4,16 @@
 \alias{ck_cnt_measures}
 \title{Utility measures for perturbed counts}
 \usage{
-ck_cnt_measures(orig, pert)
+ck_cnt_measures(orig, pert, exclude_zeros = TRUE)
 }
 \arguments{
 \item{orig}{a numeric vector holding original values}
 
 \item{pert}{a numeric vector holding perturbed values}
+
+\item{exclude_zeros}{a scalar logical value; if \code{TRUE} (the default), all only cells
+with counts \code{> 0} are used when computing distances \code{d1}, \code{d2} and \code{d3}. If this
+argument is \code{FALSE}, the complete vector is used.}
 }
 \value{
 a \code{list} containing the following elements:
@@ -42,6 +46,7 @@ in column \code{cat} for the selected distance
 \item \code{false_zero}: number of cells that were perturbed to zero
 \item \code{false_nonzero}: number of cells that were initially zero but
 have been perturbed to a number different from zero
+\item \code{exclude_zeros}: were empty cells exluded from computation or not
 }
 }
 \description{
@@ -49,10 +54,14 @@ This function computes utility/information loss measures
 based on two numeric vectors (original and perturbed)
 }
 \examples{
-orig <- 1:10
+orig <- c(1:10, 0, 0)
 pert <- orig; pert[c(1, 5, 7)] <- c(0, 6, 9)
-ck_cnt_measures(
-  orig = orig,
-  pert = pert
-)
+
+# ignore empty cells when computing measures `d1`, `d2`, `d3`
+ck_cnt_measures(orig = orig, pert = pert, exclude_zeros = TRUE)
+
+# use all cells
+ck_cnt_measures(orig = orig, pert = pert, exclude_zeros = FALSE)
+
+# for an application on a perturbed object, see ?cellkey_pkg
 }

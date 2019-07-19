@@ -190,9 +190,14 @@ test_that("weighted version of ck_perturb() is ok", {
   expect_identical(digest::digest(tab$mod_cnts()), "4f6d21a2b4bdeb4d47f5b2d017ee81ca")
 })
 
-mm <- tab$measures("Total")
-test_that("ck_cnt_measures() is ok", {
-  expect_identical(digest::digest(mm), "0449a9b8753594c85089465a29d5f592")
+mm <- tab$measures_cnts("Total")
+test_that("ck_cnt_measures() [exclude_zeros = TRUE] is ok", {
+  expect_identical(digest::digest(mm), "71603022b3f7401d6b54ba27d47a79c0")
+})
+
+mm <- tab$measures_cnts("Total", exclude_zeros = FALSE)
+test_that("ck_cnt_measures() [exclude_zeros = FALSE] is ok", {
+  expect_identical(digest::digest(mm), "107665adbbaaa01786ed086ee97fb025")
 })
 
 # no weights
@@ -230,12 +235,12 @@ tab$perturb(c("total", "cnt_males", "cnt_highincome"))
 
 test_that("check tabulation of cnt_males is ok", {
   expect_identical(digest::digest(tab$freqtab("cnt_males")), "d9e7311bab76591c1155472db77ddb57")
-  expect_identical(digest::digest(tab$measures("cnt_males")), "94b7636cd5e3429dee64b9e8651b1ee2")
+  expect_identical(digest::digest(tab$measures_cnts("cnt_males")), "f25113b4d2a2ab396c7425d444d6ffc1")
 })
 
 test_that("check tabulation of cnt_highincome is ok", {
   expect_identical(digest::digest(tab$freqtab("cnt_highincome")), "c73f3b9d525f181bd94c45d102237eca")
-  expect_identical(digest::digest(tab$measures("cnt_highincome")), "ea9b68f43524f8ec7e37b69316ef9947")
+  expect_identical(digest::digest(tab$measures_cnts("cnt_highincome")), "43be7d55fdccbcd38325bed49850c406")
 })
 
 test_that("check tabulation of multiple count variables is ok", {
