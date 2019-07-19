@@ -67,7 +67,7 @@ to perturb count variables." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.17</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.17.1</span>
       </span>
     </div>
 
@@ -623,8 +623,8 @@ is available from the respective help-pages of these functions.</p></div>
 #&gt; 89:   male age_group6 cnt_males    423   71.42857
 #&gt; 90:      m age_group6 cnt_males    423   71.42857
 #&gt;        sex        age     vname     wc        pwc</div><div class='input'>
-<span class='co'># utility measures</span>
-<span class='no'>tab</span>$<span class='fu'>measures</span>(<span class='kw'>v</span> <span class='kw'>=</span> <span class='st'>"total"</span>)</div><div class='output co'>#&gt; $overview
+<span class='co'># utility measures for a count variable</span>
+<span class='no'>tab</span>$<span class='fu'>measures_cnts</span>(<span class='kw'>v</span> <span class='kw'>=</span> <span class='st'>"total"</span>, <span class='kw'>exclude_zeros</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; $overview
 #&gt;    noise cnt        pct
 #&gt; 1:    -4   6 0.13333333
 #&gt; 2:    -3   2 0.04444444
@@ -687,6 +687,9 @@ is available from the respective help-pages of these functions.</p></div>
 #&gt; 
 #&gt; $false_nonzero
 #&gt; [1] 0
+#&gt; 
+#&gt; $exclude_zeros
+#&gt; [1] TRUE
 #&gt; </div><div class='input'>
 <span class='co'># modifications for perturbed count variables</span>
 <span class='no'>tab</span>$<span class='fu'>mod_cnts</span>()</div><div class='output co'>#&gt;        sex        age row_nr pert    ckey       countvar
@@ -736,39 +739,39 @@ is available from the respective help-pages of these functions.</p></div>
 #&gt; 
 #&gt; ✔ Variable: 'cnt_males'
 #&gt; 
+#&gt;       what    d1    d2    d3
+#&gt;  1:    Min 0.000 0.000 0.000
+#&gt;  2:    Q10 0.000 0.000 0.000
+#&gt;  3:    Q20 0.000 0.000 0.000
+#&gt;  4:    Q30 0.000 0.000 0.000
+#&gt;  5:    Q40 1.000 0.002 0.021
+#&gt;  6:   Mean 1.333 0.065 0.094
+#&gt;  7: Median 1.000 0.002 0.021
+#&gt;  8:    Q60 2.000 0.002 0.031
+#&gt;  9:    Q70 2.000 0.002 0.031
+#&gt; 10:    Q80 2.000 0.009 0.063
+#&gt; 11:    Q90 2.800 0.235 0.311
+#&gt; 12:    Q95 4.000 0.571 0.671
+#&gt; 13:    Q99 4.000 0.571 0.671
+#&gt; 14:    Max 4.000 0.571 0.671
+#&gt; 
+#&gt; ✔ Variable: 'cnt_highincome'
+#&gt; 
 #&gt;       what  d1    d2    d3
 #&gt;  1:    Min 0.0 0.000 0.000
 #&gt;  2:    Q10 0.0 0.000 0.000
 #&gt;  3:    Q20 0.0 0.000 0.000
 #&gt;  4:    Q30 0.0 0.000 0.000
 #&gt;  5:    Q40 0.0 0.000 0.000
-#&gt;  6:   Mean 0.8 0.039 0.056
+#&gt;  6:   Mean 1.1 0.029 0.083
 #&gt;  7: Median 0.0 0.000 0.000
-#&gt;  8:    Q60 0.4 0.001 0.008
-#&gt;  9:    Q70 1.0 0.002 0.021
-#&gt; 10:    Q80 2.0 0.002 0.031
-#&gt; 11:    Q90 2.0 0.010 0.071
-#&gt; 12:    Q95 3.6 0.459 0.551
-#&gt; 13:    Q99 4.0 0.571 0.671
-#&gt; 14:    Max 4.0 0.571 0.671
-#&gt; 
-#&gt; ✔ Variable: 'cnt_highincome'
-#&gt; 
-#&gt;       what    d1    d2    d3
-#&gt;  1:    Min 0.000 0.000 0.000
-#&gt;  2:    Q10 0.000 0.000 0.000
-#&gt;  3:    Q20 0.000 0.000 0.000
-#&gt;  4:    Q30 0.000 0.000 0.000
-#&gt;  5:    Q40 0.000 0.000 0.000
-#&gt;  6:   Mean 0.978 0.026 0.073
-#&gt;  7: Median 0.000 0.000 0.000
-#&gt;  8:    Q60 0.400 0.002 0.013
-#&gt;  9:    Q70 1.000 0.018 0.066
-#&gt; 10:    Q80 1.400 0.028 0.105
-#&gt; 11:    Q90 4.000 0.076 0.268
-#&gt; 12:    Q95 4.000 0.188 0.401
-#&gt; 13:    Q99 4.000 0.213 0.437
-#&gt; 14:    Max 4.000 0.214 0.437
+#&gt;  8:    Q60 1.0 0.008 0.042
+#&gt;  9:    Q70 1.0 0.018 0.066
+#&gt; 10:    Q80 3.2 0.044 0.213
+#&gt; 11:    Q90 4.0 0.098 0.305
+#&gt; 12:    Q95 4.0 0.211 0.426
+#&gt; 13:    Q99 4.0 0.213 0.437
+#&gt; 14:    Max 4.0 0.214 0.437
 #&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

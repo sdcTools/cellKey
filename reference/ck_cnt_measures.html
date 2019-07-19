@@ -67,7 +67,7 @@ based on two numeric vectors (original and perturbed)" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.17</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.17.1</span>
       </span>
     </div>
 
@@ -126,7 +126,7 @@ based on two numeric vectors (original and perturbed)</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>ck_cnt_measures</span>(<span class='no'>orig</span>, <span class='no'>pert</span>)</pre>
+    <pre class="usage"><span class='fu'>ck_cnt_measures</span>(<span class='no'>orig</span>, <span class='no'>pert</span>, <span class='kw'>exclude_zeros</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -138,6 +138,12 @@ based on two numeric vectors (original and perturbed)</p>
     <tr>
       <th>pert</th>
       <td><p>a numeric vector holding perturbed values</p></td>
+    </tr>
+    <tr>
+      <th>exclude_zeros</th>
+      <td><p>a scalar logical value; if <code>TRUE</code> (the default), all only cells
+with counts <code>&gt; 0</code> are used when computing distances <code>d1</code>, <code>d2</code> and <code>d3</code>. If this
+argument is <code>FALSE</code>, the complete vector is used.</p></td>
     </tr>
     </table>
     
@@ -169,74 +175,141 @@ in column <code>cat</code> for the selected distance</p></li>
 <li><p><code>false_zero</code>: number of cells that were perturbed to zero</p></li>
 <li><p><code>false_nonzero</code>: number of cells that were initially zero but
 have been perturbed to a number different from zero</p></li>
+<li><p><code>exclude_zeros</code>: were empty cells exluded from computation or not</p></li>
 </ul>
 
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>orig</span> <span class='kw'>&lt;-</span> <span class='fl'>1</span>:<span class='fl'>10</span>
+    <pre class="examples"><div class='input'><span class='no'>orig</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>:<span class='fl'>10</span>, <span class='fl'>0</span>, <span class='fl'>0</span>)
 <span class='no'>pert</span> <span class='kw'>&lt;-</span> <span class='no'>orig</span>; <span class='no'>pert</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>5</span>, <span class='fl'>7</span>)] <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>6</span>, <span class='fl'>9</span>)
-<span class='fu'>ck_cnt_measures</span>(
-  <span class='kw'>orig</span> <span class='kw'>=</span> <span class='no'>orig</span>,
-  <span class='kw'>pert</span> <span class='kw'>=</span> <span class='no'>pert</span>
-)</div><div class='output co'>#&gt; $overview
-#&gt;    noise cnt pct
-#&gt; 1:    -2   1 0.1
-#&gt; 2:    -1   1 0.1
-#&gt; 3:     0   7 0.7
-#&gt; 4:     1   1 0.1
+
+<span class='co'># ignore empty cells when computing measures `d1`, `d2`, `d3`</span>
+<span class='fu'>ck_cnt_measures</span>(<span class='kw'>orig</span> <span class='kw'>=</span> <span class='no'>orig</span>, <span class='kw'>pert</span> <span class='kw'>=</span> <span class='no'>pert</span>, <span class='kw'>exclude_zeros</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; $overview
+#&gt;    noise cnt        pct
+#&gt; 1:    -2   1 0.08333333
+#&gt; 2:    -1   1 0.08333333
+#&gt; 3:     0   9 0.75000000
+#&gt; 4:     1   1 0.08333333
 #&gt; 
 #&gt; $measures
-#&gt;       what   d1    d2    d3
-#&gt;  1:    Min 0.00 0.000 0.000
-#&gt;  2:    Q10 0.00 0.000 0.000
-#&gt;  3:    Q20 0.00 0.000 0.000
-#&gt;  4:    Q30 0.00 0.000 0.000
-#&gt;  5:    Q40 0.00 0.000 0.000
-#&gt;  6:   Mean 0.40 0.149 0.157
-#&gt;  7: Median 0.00 0.000 0.000
-#&gt;  8:    Q60 0.00 0.000 0.000
-#&gt;  9:    Q70 0.30 0.060 0.064
-#&gt; 10:    Q80 1.00 0.217 0.242
-#&gt; 11:    Q90 1.10 0.357 0.419
-#&gt; 12:    Q95 1.55 0.679 0.709
-#&gt; 13:    Q99 1.91 0.936 0.942
-#&gt; 14:    Max 2.00 1.000 1.000
+#&gt;       what    d1    d2    d3
+#&gt;  1:    Min 0.000 0.000 0.000
+#&gt;  2:    Q10 0.000 0.000 0.000
+#&gt;  3:    Q20 0.000 0.000 0.000
+#&gt;  4:    Q30 0.000 0.000 0.000
+#&gt;  5:    Q40 0.000 0.000 0.000
+#&gt;  6:   Mean 0.333 0.054 0.063
+#&gt;  7: Median 0.000 0.000 0.000
+#&gt;  8:    Q60 0.000 0.000 0.000
+#&gt;  9:    Q70 0.000 0.000 0.000
+#&gt; 10:    Q80 0.400 0.080 0.085
+#&gt; 11:    Q90 1.200 0.217 0.242
+#&gt; 12:    Q95 1.600 0.251 0.298
+#&gt; 13:    Q99 1.920 0.279 0.343
+#&gt; 14:    Max 2.000 0.286 0.354
 #&gt; 
 #&gt; $cumdistr_d1
-#&gt;    cat cnt pct
-#&gt; 1:   0   7 0.7
-#&gt; 2:   1   9 0.9
-#&gt; 3:   2  10 1.0
+#&gt;    cat cnt       pct
+#&gt; 1:   0   7 0.7777778
+#&gt; 2:   1   8 0.8888889
+#&gt; 3:   2   9 1.0000000
 #&gt; 
 #&gt; $cumdistr_d2
-#&gt;            cat cnt pct
-#&gt; 1:    [0,0.02]   7 0.7
-#&gt; 2: (0.02,0.05]   7 0.7
-#&gt; 3:  (0.05,0.1]   7 0.7
-#&gt; 4:   (0.1,0.2]   8 0.8
-#&gt; 5:   (0.2,0.3]   9 0.9
-#&gt; 6:   (0.3,0.4]   9 0.9
-#&gt; 7:   (0.4,0.5]   9 0.9
-#&gt; 8:   (0.5,Inf]  10 1.0
+#&gt;            cat cnt       pct
+#&gt; 1:    [0,0.02]   7 0.7777778
+#&gt; 2: (0.02,0.05]   7 0.7777778
+#&gt; 3:  (0.05,0.1]   7 0.7777778
+#&gt; 4:   (0.1,0.2]   8 0.8888889
+#&gt; 5:   (0.2,0.3]   9 1.0000000
+#&gt; 6:   (0.3,0.4]   9 1.0000000
+#&gt; 7:   (0.4,0.5]   9 1.0000000
+#&gt; 8:   (0.5,Inf]   9 1.0000000
 #&gt; 
 #&gt; $cumdistr_d3
-#&gt;            cat cnt pct
-#&gt; 1:    [0,0.02]   7 0.7
-#&gt; 2: (0.02,0.05]   7 0.7
-#&gt; 3:  (0.05,0.1]   7 0.7
-#&gt; 4:   (0.1,0.2]   7 0.7
-#&gt; 5:   (0.2,0.3]   8 0.8
-#&gt; 6:   (0.3,0.4]   9 0.9
-#&gt; 7:   (0.4,0.5]   9 0.9
-#&gt; 8:   (0.5,Inf]  10 1.0
+#&gt;            cat cnt       pct
+#&gt; 1:    [0,0.02]   7 0.7777778
+#&gt; 2: (0.02,0.05]   7 0.7777778
+#&gt; 3:  (0.05,0.1]   7 0.7777778
+#&gt; 4:   (0.1,0.2]   7 0.7777778
+#&gt; 5:   (0.2,0.3]   8 0.8888889
+#&gt; 6:   (0.3,0.4]   9 1.0000000
+#&gt; 7:   (0.4,0.5]   9 1.0000000
+#&gt; 8:   (0.5,Inf]   9 1.0000000
 #&gt; 
 #&gt; $false_zero
 #&gt; [1] 1
 #&gt; 
 #&gt; $false_nonzero
 #&gt; [1] 0
-#&gt; </div></pre>
+#&gt; 
+#&gt; $exclude_zeros
+#&gt; [1] TRUE
+#&gt; </div><div class='input'>
+<span class='co'># use all cells</span>
+<span class='fu'>ck_cnt_measures</span>(<span class='kw'>orig</span> <span class='kw'>=</span> <span class='no'>orig</span>, <span class='kw'>pert</span> <span class='kw'>=</span> <span class='no'>pert</span>, <span class='kw'>exclude_zeros</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; $overview
+#&gt;    noise cnt        pct
+#&gt; 1:    -2   1 0.08333333
+#&gt; 2:    -1   1 0.08333333
+#&gt; 3:     0   9 0.75000000
+#&gt; 4:     1   1 0.08333333
+#&gt; 
+#&gt; $measures
+#&gt;       what    d1    d2    d3
+#&gt;  1:    Min 0.000 0.000 0.000
+#&gt;  2:    Q10 0.000 0.000 0.000
+#&gt;  3:    Q20 0.000 0.000 0.000
+#&gt;  4:    Q30 0.000 0.000 0.000
+#&gt;  5:    Q40 0.000 0.000 0.000
+#&gt;  6:   Mean 0.333 0.124 0.131
+#&gt;  7: Median 0.000 0.000 0.000
+#&gt;  8:    Q60 0.000 0.000 0.000
+#&gt;  9:    Q70 0.000 0.000 0.000
+#&gt; 10:    Q80 0.800 0.160 0.171
+#&gt; 11:    Q90 1.000 0.277 0.340
+#&gt; 12:    Q95 1.450 0.607 0.645
+#&gt; 13:    Q99 1.890 0.921 0.929
+#&gt; 14:    Max 2.000 1.000 1.000
+#&gt; 
+#&gt; $cumdistr_d1
+#&gt;    cat cnt       pct
+#&gt; 1:   0   9 0.7500000
+#&gt; 2:   1  11 0.9166667
+#&gt; 3:   2  12 1.0000000
+#&gt; 
+#&gt; $cumdistr_d2
+#&gt;            cat cnt       pct
+#&gt; 1:    [0,0.02]   9 0.7500000
+#&gt; 2: (0.02,0.05]   9 0.7500000
+#&gt; 3:  (0.05,0.1]   9 0.7500000
+#&gt; 4:   (0.1,0.2]  10 0.8333333
+#&gt; 5:   (0.2,0.3]  11 0.9166667
+#&gt; 6:   (0.3,0.4]  11 0.9166667
+#&gt; 7:   (0.4,0.5]  11 0.9166667
+#&gt; 8:   (0.5,Inf]  12 1.0000000
+#&gt; 
+#&gt; $cumdistr_d3
+#&gt;            cat cnt       pct
+#&gt; 1:    [0,0.02]   9 0.7500000
+#&gt; 2: (0.02,0.05]   9 0.7500000
+#&gt; 3:  (0.05,0.1]   9 0.7500000
+#&gt; 4:   (0.1,0.2]   9 0.7500000
+#&gt; 5:   (0.2,0.3]  10 0.8333333
+#&gt; 6:   (0.3,0.4]  11 0.9166667
+#&gt; 7:   (0.4,0.5]  11 0.9166667
+#&gt; 8:   (0.5,Inf]  12 1.0000000
+#&gt; 
+#&gt; $false_zero
+#&gt; [1] 1
+#&gt; 
+#&gt; $false_nonzero
+#&gt; [1] 0
+#&gt; 
+#&gt; $exclude_zeros
+#&gt; [1] FALSE
+#&gt; </div><div class='input'>
+# for an application on a perturbed object, see ?cellkey_pkg
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
