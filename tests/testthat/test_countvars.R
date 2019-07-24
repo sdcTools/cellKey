@@ -70,8 +70,7 @@ test_that("ck_setup() fails with invalid inputs", {
       rkey = "rec_key",
       dims = dims,
       w = w,
-      countvars = countvars,
-      params_cnts = params_cnts
+      countvars = countvars
     )
   )
 
@@ -150,9 +149,12 @@ tab <- ck_setup(
   rkey = "rec_key",
   dims = dims,
   w = w,
-  countvars = countvars,
-  params_cnts = params_cnts
+  countvars = countvars
 )
+
+
+# set perturbation parameters for all variables
+tab$params_cnts_set(val = params_cnts, v = NULL)
 
 expect_message(tab$perturb("total"))
 expect_message(tab$perturb("total"), "Variable 'total' was already perturbed!")
@@ -171,10 +173,11 @@ tab <- ck_setup(
   rkey = 7,
   dims = dims,
   w = w,
-  countvars = countvars,
-  params_cnts = params_cnts
+  countvars = countvars
 )
 
+expect_error(tab$perturb("total"))
+tab$params_cnts_set(val = params_cnts, v = "total")
 expect_message(tab$perturb("total"), "Count variable 'total' was perturbed.")
 expect_message(tab$perturb("total"), "Variable 'total' was already perturbed!")
 expect_message(tab$freqtab())
@@ -206,9 +209,11 @@ tab <- ck_setup(
   rkey = 7,
   dims = dims,
   w = NULL,
-  countvars = countvars,
-  params_cnts = params_cnts
+  countvars = countvars
 )
+
+# set params
+tab$params_cnts_set(params_cnts, v = NULL)
 
 tab$perturb("total")
 freqtab <- tab$freqtab("total")
@@ -228,9 +233,11 @@ tab <- ck_setup(
   rkey = 7,
   dims = dims,
   w = w,
-  countvars = countvars,
-  params_cnts = params_cnts
-)
+  countvars = countvars)
+
+# set params
+tab$params_cnts_set(params_cnts, v = NULL)
+
 tab$perturb(c("total", "cnt_males", "cnt_highincome"))
 
 test_that("check tabulation of cnt_males is ok", {

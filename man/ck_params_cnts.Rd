@@ -59,45 +59,41 @@ w <- "sampling_weight"
 countvars <- c("cnt_females", "cnt_males", "cnt_highincome")
 rkey <- "rkey"
 
-# perturbation parameters for count variables
-params_cnts <- ck_params_cnts(
-  D = 5,
-  V = 3,
-  js = 2,
-  pstay = 0.5,
-  optim = 1,
-  mono = TRUE
-)
-
 # define the cell key object
 tab <- ck_setup(
   x = x,
   rkey = 5,
   dims = dims,
   w = w,
-  countvars = countvars,
-  params_cnts = params_cnts
-)
+  countvars = countvars)
 
 # show some information about this table instance
 print(tab) # identical with tab$print()
 
-# perturb a single variable
-tab$perturb(v = "total")
+# add perturbation parameters for "total" variable
+p_cnts1 <- ck_params_cnts(
+  D = 5,
+  V = 3,
+  js = 2,
+  pstay = 0.5,
+  optim = 1,
+  mono = TRUE)
+tab$params_cnts_set(val = p_cnts1, v = "total")
 
-# modify the perturbation parameters
 # create alternative perturbation parameters
-params_cnts_alt <- ck_params_cnts(
+p_cnts2 <- ck_params_cnts(
   D = 8,
   V = 3,
   js = 2,
   pstay = 0.5,
   optim = 1,
-  mono = TRUE
-)
-# we creplace the current parameters with the alternatives
-# they will be used from now on
-tab$params_cnts(params_cnts_alt)
+  mono = TRUE)
+
+# use it for the remaining variables#'
+tab$params_cnts_set(val = p_cnts2, v = countvars)
+
+# perturb a variable
+tab$perturb(v = "total")
 
 # multiple variables can be perturbed as well
 tab$perturb(v = c("cnt_males", "cnt_highincome"))

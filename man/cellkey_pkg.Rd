@@ -6,7 +6,7 @@
 \title{cellKey - an post-tabular perturbation method}
 \format{\link[R6:R6Class]{R6::R6Class} object.}
 \usage{
-ck_setup(x, rkey, dims, w, countvars = NULL, params_cnts)
+ck_setup(x, rkey, dims, w, countvars = NULL, numvars = NULL)
 }
 \arguments{
 \item{x}{an object coercible to a \code{data.frame}}
@@ -72,9 +72,15 @@ This method returns a \code{list} containing a set of utility measures based on 
 For a detailed description of the computed measures, see \code{\link[=ck_cnt_measures]{ck_cnt_measures()}}
 }
 \item \strong{\code{mod_cnts()}}: returns a \code{data.table} containing modifications applied to count variables
-\item \strong{\code{params_cnts(val)}}: returns or modifies perturbation parameters used for count variables. If
-\code{val} is not provided, the current perturbation object is returned, otherwise the current perturbation
-parameters are replaced with the ones provided (which need to be created using (\code{\link[=ck_params_cnts]{ck_params_cnts()}})
+\item \strong{\code{params_cnts_get()}}: returns a named list in which each list-element contains the active perturbation parameters for the
+specific variable defined by the list-name.
+\item \strong{\code{params_cnts_set(val, v = NULL)}}: allows to set perturbation parameters for count variables. The following arguments
+are expected:
+\itemize{
+\item \code{val}: a perturbation object created with \code{\link[=ck_params_cnts]{ck_params_cnts()}}
+\item \code{v}: a character vector (or \code{NULL}). If \code{NULL (the default)}, the perturbation parameters provided in \code{val} are set for
+all count variables; otherwise one may specify the names of the count variables for which the parameters should be set.
+}
 }
 }
 
@@ -106,45 +112,41 @@ w <- "sampling_weight"
 countvars <- c("cnt_females", "cnt_males", "cnt_highincome")
 rkey <- "rkey"
 
-# perturbation parameters for count variables
-params_cnts <- ck_params_cnts(
-  D = 5,
-  V = 3,
-  js = 2,
-  pstay = 0.5,
-  optim = 1,
-  mono = TRUE
-)
-
 # define the cell key object
 tab <- ck_setup(
   x = x,
   rkey = 5,
   dims = dims,
   w = w,
-  countvars = countvars,
-  params_cnts = params_cnts
-)
+  countvars = countvars)
 
 # show some information about this table instance
 print(tab) # identical with tab$print()
 
-# perturb a single variable
-tab$perturb(v = "total")
+# add perturbation parameters for "total" variable
+p_cnts1 <- ck_params_cnts(
+  D = 5,
+  V = 3,
+  js = 2,
+  pstay = 0.5,
+  optim = 1,
+  mono = TRUE)
+tab$params_cnts_set(val = p_cnts1, v = "total")
 
-# modify the perturbation parameters
 # create alternative perturbation parameters
-params_cnts_alt <- ck_params_cnts(
+p_cnts2 <- ck_params_cnts(
   D = 8,
   V = 3,
   js = 2,
   pstay = 0.5,
   optim = 1,
-  mono = TRUE
-)
-# we creplace the current parameters with the alternatives
-# they will be used from now on
-tab$params_cnts(params_cnts_alt)
+  mono = TRUE)
+
+# use it for the remaining variables#'
+tab$params_cnts_set(val = p_cnts2, v = countvars)
+
+# perturb a variable
+tab$perturb(v = "total")
 
 # multiple variables can be perturbed as well
 tab$perturb(v = c("cnt_males", "cnt_highincome"))
