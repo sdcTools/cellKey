@@ -57,3 +57,20 @@ get_distr_vals <- function(dd) {
 .tmpvarname <- function(type, what = "tabulation") {
   paste0("tmp", type, "for", what, collapse = "")
 }
+
+.ck_debug <- function() {
+  Sys.getenv("cellkey_debug") == TRUE
+}
+
+
+.ck_debug_on <- function() {
+  Sys.setenv("cellkey_debug" = TRUE)
+}
+.ck_debug_off <- function() {
+  Sys.setenv("cellkey_debug" = FALSE)
+}
+ck_log <- function(..., br = TRUE) {
+  if (.ck_debug()) {
+    message(...,  appendLF = br)
+  }
+}

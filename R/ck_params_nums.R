@@ -31,8 +31,8 @@ gen_stab <- function(D = 3, l = 0.5) {
 #' This function allows to define perturbation parameters used to
 #' perturb cells in magnitude tables.
 #'
-#' @param P a character value defining the way to identify the `magnifier`,
-#' e.g which contributions/values in a cell should be the used  in the
+#' @param type a character value defining the way to identify the `magnifier`,
+#' e.g which contributions/values in a cell should be the used in the
 #' perturbation procedure. Possible choices are:
 #' - `top_contr`: the `k` largest contributions are used. In this case,
 #' it is also required to specify argument `top_k`
@@ -40,41 +40,77 @@ gen_stab <- function(D = 3, l = 0.5) {
 #' - `range`: the difference between largest and smallest contribution
 #' is used.
 #' - `sum`: the (weighted) cellvalue itself is used as starting point
-#' @param top_k it is ignored if `P` is different from `top_contr`. Otherwise,
+#' @param top_k it is ignored if `variant` is different from `top_contr`. Otherwise,
 #' @param D maximum perturbation value
 #' @param l stepwidth parameter for computation of perturbation tables
 #' a integerish number >= 1 specifying the number of top contributions whose
 #' values should be perturbed.
+#' @param mult_params an object derived by either [ck_gridparams()] or [ck_flexparams()]
+#' that specified parameters for the computation of the multiplier.
+#' @param mu_c extra protection amount (`>= 0)` applied to first noise component; default 0
 #' @param same_key (logical) should original cell key (`TRUE`) used for
 #' for finding perturbation values of the largest contributor to a
 #' cell or should a perturbation of the cellkey itself (`FALSE`) take place.
 #' @param use_zero_rkeys (logical) skalar defining if record keys of
 #' units not contributing to a specific numeric variables should be
 #' used (`TRUE`) or ignored (`FALSE`) when computing cell keys.
-#' @return an object suitable as input to [ck_setup()] for the perturbation
-#' of magnitude tables
+#' @return an object suitable as input to method `$params_nums_set()` for the perturbation
+#' of continous variables.
 #' @export
+#' @seealso [ck_gridparams()], [ck_flexparams()]
 #' @md
 #' @examples
-#' ck_params_nums(D = 3, l = 0.5, P = "top_contr", top_k = 3)
-#' ck_params_nums(D = 10, l = .5, P = "mean")
+#' ck_params_nums(
+#'   D = 3,
+#'   l = 0.5,
+#'   type = "top_contr",
+#'   top_k = 3,
+#'   mu_c = 2,
+#'   mult_params = ck_flexparams(
+#'     flexpoint = 1000,
+#'     m_small = 0.20,
+#'     m_large = 0.03,
+#'     fixed_noise_variance = NULL,
+#'     q = 2
+#'   )
+#' )
+#' ck_params_nums(
+#'   D = 10,
+#'   l = .5,
+#'   type = "mean",
+#'   mu_c = 0,
+#'   mult_params = ck_gridparams(
+#'     grid = c(0, 10, 100, 10000),
+#'     pcts = c(0.25, 0.20, 0.10, 0.05)
+#'   )
+#' )
 ck_params_nums <-
-  function(P = "top_contr",
+  function(type = "top_contr",
            top_k = NULL,
            D,
            l,
+           mult_params,
+           mu_c = 0,
            same_key = TRUE,
            use_zero_rkeys = FALSE) {
-
 
   stopifnot(is_scalar_integerish(D))
   stopifnot(is_scalar_double(l), l > 0, l < 1)
 
-  if (!is_scalar_character(P)) {
-    stop("`P` needs to be a scalar character", call. = FALSE)
+  if (!is_scalar_character(type)) {
+    stop("`type` needs to be a scalar character", call. = FALSE)
   }
-  if (!P %in% c("top_contr", "mean", "range", "sum")) {
-    stop("invalid value in `P` detected.", call. = FALSE)
+  if (!type %in% c("top_contr", "mean", "range", "sum")) {
+    stop("invalid value in `type` detected.", call. = FALSE)
+  }
+  if (!rlang::is_scalar_double(mu_c)) {
+    stop("Argument `mu_c` is not a number.", call = FALSE)
+  }
+  if (mu_c < 0) {
+    stop("Argument `mu_c` is not >= 0.", call = FALSE)
+  }
+  if (!inherits(mult_params, "params_m_grid") & !inherits(mult_params, "params_m_flex")) {
+    stop("Argument `mult_params` needs to be created via `ck_gridparams()` or `ck_flexparams()`", call. = FALSE)
   }
 
   if (!is_scalar_logical(same_key)) {
@@ -84,7 +120,7 @@ ck_params_nums <-
     stop("`use_zero_rkeys` needs to be a scalar logical", call. = FALSE)
   }
 
-  if (P == "top_contr") {
+  if (type == "top_contr") {
     if (is.null(top_k)) {
       stop("please provide a value for `top_k`", call. = FALSE)
     }
@@ -101,15 +137,136 @@ ck_params_nums <-
   stab <- gen_stab(D = D, l = l)
   out <- list(
     params = list(
-      P = P,
+      type = type,
       top_k = top_k,
       stab = stab,
+      mu_c = mu_c,
+      mult_params = mult_params,
       same_key = same_key,
       use_zero_rkeys = use_zero_rkeys
     ),
     type = "nums"
   )
   class(out) <- "ck_params"
+  out
+}
+
+#' Define parameters for numeric perturbation magnitudes using a fixed grid
+#'
+#' [ck_gridparams()] allows to define a grid that is used to lookup perturbation
+#' magnitudes (percentages) used when perturbing continuous variables.
+#'
+#' @details details about the grid function can be found in Deliverable D4.2, Part I in
+#' SGA *"Open Source tools for perturbative confidentiality methods"*
+#'
+#' @param grid a numeric vector (ascending order) defining the bounds for which
+#' a specific percentage (defined in `pcts`) needs to be applied
+#' @param pcts a numeric vector defining percentages (between `0` and `1`)
+#'
+#' @return an object suitable as input for [ck_params_nums()].
+#' @export
+#' @inherit cellkey_pkg examples
+#' @seealso [ck_params_nums()], [ck_flexparams()]
+#' @md
+ck_gridparams <- function(grid, pcts) {
+  if (!is.numeric(grid)) {
+    stop("Argument `grid` is not numeric.", call = FALSE)
+  }
+  if (!is.numeric(pcts)) {
+    stop("Argument `pcts` is not numeric.", call = FALSE)
+  }
+  if (length(pcts) != length(grid)) {
+    stop("Arguments `pcts` and `grid` differ in length.", call = FALSE)
+  }
+
+  if (any(grid != sort(grid))) {
+    stop("Argument `grid` is not in ascending order.", call. = FALSE)
+  }
+  if (any(pcts != sort(pcts, decreasing = TRUE))) {
+    stop("Argument `pcts` is not in decreasing order.", call. = FALSE)
+  }
+
+  if (min(pcts) <= 0) {
+    stop("Argument `pcts` must contain values > 0", call. = FALSE)
+  }
+
+  if (min(pcts) <= 0) {
+    stop("Argument `pcts` must contain values > 0", call. = FALSE)
+  }
+  if (max(pcts) > 1) {
+    stop("Argument `pcts` must contain values <= 1", call. = FALSE)
+  }
+  out <- list(
+    grid = grid,
+    pcts = pcts
+  )
+  class(out) <- "params_m_grid"
+  out
+}
+
+
+#' Define parameters for numeric perturbation magnitudes using a flex function
+#'
+#' [ck_gridparams()] allows to define a flex function that is used to lookup perturbation
+#' magnitudes (percentages) used when perturbing continuous variables.
+#'
+#' @details details about the grid function can be found in Deliverable D4.2, Part I in
+#' SGA *"Open Source tools for perturbative confidentiality methods"*
+#' @param flexpoint (numeric scalar); at which point should the noise coefficient
+#' function reaches its desired maximum (defined by `m_small`)
+#' @param m_small (numeric scalar); the desired maximum percentage for the function (for small values)
+#' @param m_large (numeric scalar); the desired noise percentage for larger values
+#' @param m_fixed_sq (numeric scalar); fixed noise variance for very small values
+#' @param q (numeric scalar); Parameter of the function; `q` needs to be `>= 1`
+#'
+#' @return an object suitable as input for [ck_params_nums()].
+#' @export
+#' @inherit cellkey_pkg examples
+#' @seealso [ck_params_nums()], [ck_gridparams()]
+#' @md
+ck_flexparams <- function(flexpoint, m_small = 0.25, m_large = 0.05, m_fixed_sq = NULL, q = 3) {
+  if (!rlang::is_scalar_double(flexpoint)) {
+    stop("Argument `flexpoint` is not a number.", call = FALSE)
+  }
+  if (flexpoint <= 0) {
+    stop("Argument `flexpoint` must be positive.", call. = FALSE)
+  }
+  if (!rlang::is_scalar_double(m_small)) {
+    stop("Argument `m_small` is not a number.", call = FALSE)
+  }
+  if (m_small <= 0 | m_small > 1) {
+    stop("Argument `m_small` must be > 0 and <= 1.", call. = FALSE)
+  }
+  if (!rlang::is_scalar_double(m_large)) {
+    stop("Argument `m_large` is not a number.", call = FALSE)
+  }
+  if (m_large <= 0 | m_large > 1) {
+    stop("Argument `m_large` must be > 0 and <= 1.", call. = FALSE)
+  }
+  if (!rlang::is_scalar_double(q)) {
+    stop("Argument `q` is not a number.", call = FALSE)
+  }
+  if (q < 1) {
+    stop("Argument `q` needs to be >= 1", call. = FALSE)
+  }
+
+  if (!is.null(m_fixed_sq)) {
+    if (!rlang::is_scalar_double(m_fixed_sq)) {
+      stop("Argument `m_fixed_sq` is not a number.", call = FALSE)
+    }
+    if (m_fixed_sq <= 0) {
+      stop("Argument `m_fixed_sq` must be positive.", call. = FALSE)
+    }
+  }
+
+  out <- list(
+    flexpoint = flexpoint,
+    m_small = m_small,
+    m_large = m_large,
+    m_fixed_sq = m_fixed_sq,
+    q = q
+  )
+  class(out) <- "params_m_flex"
   out
 }
 
@@ -123,7 +280,6 @@ stab_paper1 <- function() {
   dt$kum_p_o <- c(1,  0.18078,  0.30867,  0.80867,  0.87267,  0.91795,  0.94997,  0.97263,  0.98866,  1,  0.00850,  0.02570,  0.05629,  0.10417,  0.17010,  0.25000,  0.75000,  0.82990,  0.89583,  0.94371,0.97430,0.99150,1)
   dt
 }
-
 
 # example stab for even/odd numbers
 stab_paper2 <- function() {

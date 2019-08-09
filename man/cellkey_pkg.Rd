@@ -26,15 +26,15 @@ weights. If \code{w} is \code{NULL} (the default), all weights are assumed to be
 variables withing \code{x} that should be included in the problem instance.
 These variables can later be perturbed.}
 
-\item{params_cnts}{an object containing perturbation parameters for count variables that needs
-to be created with \code{\link[=ck_params_cnts]{ck_params_cnts()}}}
+\item{numvars}{(character) an optional vector of numerical variables that can later be tabulated.}
 }
 \description{
 This class allows to define statistical tables and perturb both
 count and numerical variables.
 }
 \section{Usage}{
- For usage details see the \strong{Methods} and \strong{Examples} sections.
+ For usage details of the implemented methods, see the \strong{Methods} and
+\strong{Examples} sections.
 }
 
 \section{Methods}{
@@ -42,6 +42,8 @@ count and numerical variables.
 \itemize{
 \item \strong{\code{print()}}: prints information about the current table
 \item \strong{\code{summary()}}: some aggregated summary statistics about perturbed variables
+\item \strong{\code{cntvars()}}: returns a character vector of available count variables.
+\item \strong{\code{numvars()}}: returns a character vector of available numeric variables.
 \item \strong{\code{perturb(v)}}: Perturb a count- or magnitude variable. The method has the following arguments:
 \itemize{
 \item \code{v}: name(s) of count or magnitude variables that should be perturbed.
@@ -72,14 +74,25 @@ This method returns a \code{list} containing a set of utility measures based on 
 For a detailed description of the computed measures, see \code{\link[=ck_cnt_measures]{ck_cnt_measures()}}
 }
 \item \strong{\code{mod_cnts()}}: returns a \code{data.table} containing modifications applied to count variables
-\item \strong{\code{params_cnts_get()}}: returns a named list in which each list-element contains the active perturbation parameters for the
-specific variable defined by the list-name.
-\item \strong{\code{params_cnts_set(val, v = NULL)}}: allows to set perturbation parameters for count variables. The following arguments
-are expected:
+\item \strong{\code{params_cnts_get()}}: returns a named list in which each list-element contains the
+active perturbation parameters for the specific count variable defined by the list-name.
+\item \strong{\code{params_cnts_set(val, v = NULL)}}: allows to set perturbation parameters for count variables.
+The following arguments are expected:
 \itemize{
 \item \code{val}: a perturbation object created with \code{\link[=ck_params_cnts]{ck_params_cnts()}}
-\item \code{v}: a character vector (or \code{NULL}). If \code{NULL (the default)}, the perturbation parameters provided in \code{val} are set for
-all count variables; otherwise one may specify the names of the count variables for which the parameters should be set.
+\item \code{v}: a character vector (or \code{NULL}). If \code{NULL} (the default), the perturbation parameters
+provided in \code{val} are set for all count variables; otherwise one may specify the names of
+the count variables for which the parameters should be set.
+}
+\item \strong{\code{params_nums_get()}}: returns a named list in which each list-element contains the
+active perturbation parameters for the specific continuous variable defined by the list-name.
+\item \strong{\code{params_nums_set(val, v = NULL)}}: allows to set perturbation parameters for continuous variables.
+The following arguments are expected:
+\itemize{
+\item \code{val}: a perturbation object created with \code{\link[=ck_params_nums]{ck_params_nums()}}
+\item \code{v}: a character vector (or \code{NULL}). If \code{NULL} (the default), the perturbation parameters
+provided in \code{val} are set for all continuous variables; otherwise one may specify the names of
+the numeric variables for which the parameters should be set.
 }
 }
 }
@@ -110,6 +123,7 @@ d_age <- hier_add(d_age, root = "age_group2", "ag2a")
 dims <- list(sex = d_sex, age = d_age)
 w <- "sampling_weight"
 countvars <- c("cnt_females", "cnt_males", "cnt_highincome")
+numvars <- c("expend", "income", "savings")
 rkey <- "rkey"
 
 # define the cell key object
@@ -118,10 +132,21 @@ tab <- ck_setup(
   rkey = 5,
   dims = dims,
   w = w,
-  countvars = countvars)
+  countvars = countvars,
+  numvars = numvars)
 
 # show some information about this table instance
-print(tab) # identical with tab$print()
+tab$print() # identical with print(tab)
+
+# a summary method is provided, too
+tab$summary()
+
+# what variables have been defined?
+# count-variables
+tab$cntvars()
+
+# continuous variables
+tab$numvars()
 
 # add perturbation parameters for "total" variable
 p_cnts1 <- ck_params_cnts(
@@ -142,7 +167,7 @@ p_cnts2 <- ck_params_cnts(
   optim = 1,
   mono = TRUE)
 
-# use it for the remaining variables#'
+# use it for the remaining variables
 tab$params_cnts_set(val = p_cnts2, v = countvars)
 
 # perturb a variable
@@ -156,6 +181,43 @@ tab$freqtab(v = c("total", "cnt_males"))
 
 # only unweighted and perturbed unweighted counts
 tab$freqtab(v = c("total", "cnt_males"), type = "unweighted")
+
+# numerical variables
+p_nums1 <- ck_params_nums(
+  D = 10,
+  l = 0.5,
+  type = "top_contr",
+  top_k = 3,
+  mult_params = ck_flexparams(
+    flexpoint = 1000,
+    m_fixed_sq = 2
+  )
+)
+
+# another set of parameters, using a grid
+p_nums2 <- ck_params_nums(
+  D = 10,
+  l = .5,
+  type = "mean",
+  mult_params = ck_gridparams(
+    grid = c(0, 10, 100, 10000),
+    pcts = c(0.25, 0.20, 0.10, 0.05)
+  )
+)
+
+# use `p_nums1` for all variables
+tab$params_nums_set(p_nums1)
+
+# use different parameters for variable `savings`
+tab$params_nums_set(p_nums2, v = "savings")
+
+# perturb variables
+tab$perturb(v = c("income", "savings"))
+
+# extract results
+tab$numtab("income", mean_before_sum = TRUE)
+tab$numtab("income", mean_before_sum = FALSE)
+tab$numtab("savings")
 
 # write to a file "outtab.csv" (.csv is automatically added to the path)
 \dontrun{

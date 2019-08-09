@@ -3,28 +3,10 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     #initialize=function(x, rkey, dims, w, countvars = NULL, numvars = NULL, params_cnts, params_nums = NULL) {
     initialize=function(x, rkey, dims, w, countvars = NULL, numvars = NULL) {
       type <- is_perturbed <- NULL
-      params_nums <- numvars <- NULL
 
       if (!inherits(x, "data.frame")) {
         stop("an object coercible to a `data.frame` must be provided in `x`.", call. = FALSE)
       }
-
-      # if (!inherits(params_cnts, "ck_params")) {
-      #   e <- "Please create argument `params_cnts` using `ck_params_cnts()`"
-      #   stop(e, call. = FALSE)
-      # }
-      #
-      # if (!is.null(params_nums)) {
-      #   if (!inherits(params_nums, "ck_params")) {
-      #     e <- "Please create argument `params_nums` using `ck_params_nums()`"
-      #     stop(e, call. = FALSE)
-      #   }
-      # }
-
-      # if (!is.null(numvars) & is.null(params_nums)) {
-      #   e <- "Argument `numvars` was specified. Please also specify `params_num`."
-      #   stop(e, call. = FALSE)
-      # }
 
       x <- as.data.table(x)
 
@@ -206,11 +188,24 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
           top_k <- min(top_k, nrow(xx))
           for (v in nv) {
             setorderv(xx, v, order = -1L)
-            out[[v]]$ids <- xx$.tmpid[1:top_k]
-            out[[v]]$vals <- xx[[v]][1:top_k]
-            out[[v]]$spread <- diff(range(xx[[v]], na.rm = TRUE))
-            out[[v]]$wsum <- sum(xx[[v]] * xx[[wvar]], na.rm = TRUE)
-            out[[v]]$wmean <- out[[v]]$wsum / sum(xx[[wvar]], na.rm = TRUE)
+
+            # unweighted
+            out[[v]]$uw_ids <- xx$.tmpid[1:top_k]
+            out[[v]]$uw_vals <- xx[[v]][1:top_k]
+            out[[v]]$uw_spread <- diff(range(xx[[v]], na.rm = TRUE))
+            out[[v]]$uw_sum <- sum(xx[[v]], na.rm = TRUE)
+            out[[v]]$uw_mean <- out[[v]]$uw_sum / nrow(xx)
+
+            # weighted
+            xx$xw <- xx[[v]] * xx[[wvar]]
+            setorderv(xx, "xw", order = -1L)
+
+            out[[v]]$w_ids <- xx$.tmpid[1:top_k]
+            out[[v]]$w_vals <- xx$xw[1:top_k]
+            out[[v]]$w_cell
+            out[[v]]$w_spread <- diff(range(xx[[v]], na.rm = TRUE))
+            out[[v]]$w_sum <- sum(xx$xw, na.rm = TRUE)
+            out[[v]]$w_mean <- out[[v]]$w_sum / sum(xx[[wvar]], na.rm = TRUE)
           }
           res[[i]] <- out
         }
@@ -219,7 +214,6 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
       # top_k is hardcoded to 6;
       # this is the maximum allowed value for top_k, also in params_nums()
-      message("TODO: compute contributions by variable!")
       max_contributions <- .get_max_contributions(
         indices = contr_indices,
         microdat = microdat,
@@ -309,18 +303,10 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       varsdt[type %in% c("countvars", "numvars"), is_perturbed := FALSE]
       varsdt$vname <- tolower(varsdt$vname)
 
-      # modifications
+      # modifications and perturbation parameters
       mods <- pert_params <- list(
         cnts = NULL,
         nums = NULL
-      )
-
-      # perturbation parameters
-      pert_params <- list(
-        #cnts = params_cnts,
-        #nums = params_nums
-        cnts = list(),
-        nums = list()
       )
 
       private$.prob <- prob
@@ -342,8 +328,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       v <- tolower(v)
 
       # important variables
-      countvars <- private$.ck_vars("countvars")
-      numvars <- private$.ck_vars("numvars")
+      countvars <- self$cntvars()
+      numvars <- self$numvars()
       avail <- c(countvars, numvars)
       if (!all(v %in% avail)) {
         e <- c(
@@ -402,7 +388,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       }
 
       # return a table for a single perturbed count variable
-      .onevar_tab <- function(results, vname, type, modifications = NULL) {
+      .onevar_tab_freq <- function(results, vname, type, modifications = NULL) {
         debug <- ifelse(is.null(modifications), FALSE, TRUE)
 
         dt1 <-  results$dims
@@ -439,7 +425,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       }
       results <- copy(private$.results)
       res <- rbindlist(lapply(v, function(x) {
-        .onevar_tab(results = results, vname = x, type = type, modifications = modifications)
+        .onevar_tab_freq(results = results, vname = x, type = type, modifications = modifications)
       }))
 
       if (!is.null(path)) {
@@ -453,18 +439,15 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       return(res)
     },
     # return a table for perturbed numeric variables
-    numtab=function(v = NULL, mean_before_sum = FALSE, path = NULL, type = "both") {
-      stop("TODO: implement method `numtab()`.", call = FALSE)
-      if (!is_scalar_character(type)) {
-        stop("Argument `type` must be a scalar character.", call. = FALSE)
-      }
-      if (!type %in% c("both", "weighted", "unweighted")) {
-        stop("Argument `type` must be either `both`, `weighted` or `unweighted`.", call. = FALSE)
-      }
+    numtab=function(v = NULL, mean_before_sum = FALSE, path = NULL) {
       if (!is.null(path)) {
         if (!is_scalar_character(path)) {
           stop("Argument `path` must be a scalar character.", call. = FALSE)
         }
+      }
+
+      if (!rlang::is_scalar_logical(mean_before_sum)) {
+        stop("Argument `mean_before_sum` needs to be a logical scalar.", call. = FALSE)
       }
 
       avail <- private$.ck_perturbed_vars(what = "numvars")
@@ -477,7 +460,6 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         message(paste("  -->", shQuote(avail), collapse = "\n"))
         return(invisible(NULL))
       }
-
       if (!is.character(v)) {
         stop("Argument `v` must be a character vector specifying variable names.", call. = FALSE)
       }
@@ -487,6 +469,21 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         e <- "Some provided variable(s) in `v` are not valid, already perturbed numerical variables."
         stop(e, call. = FALSE)
       }
+
+      tab <- rbindlist(lapply(v, function(x) {
+        tmp <- private$.results[[x]]
+        tmp$vname <- x
+        tmp <- tmp[, c(7, 3:4, 6)]
+        setnames(tmp, c("vname", "uws", "ws", "pws"))
+        cbind(private$.results$dims, tmp)[, -1]
+      }))
+
+
+      if (mean_before_sum) {
+        ck_log("applying correction based on argument `mean_before_sum`")
+        tab$pws <- tab$pws * (tab$pws / tab$ws)
+      }
+      tab
     },
 
     # compute distance-based utility measures
@@ -522,6 +519,14 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       stop("TODO: implement method `measures_nums()`.", call = FALSE)
     },
 
+    # return names of cnt-/numerical variables
+    cntvars=function() {
+      private$.ck_vars("countvars")
+    },
+    numvars=function() {
+      private$.ck_vars("numvars")
+    },
+
     # return actual modifications
     mod_cnts=function() {
       private$modifications(type = "cnts")
@@ -542,7 +547,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         stop("Please create the input using `ck_params_cnts()`", call. = FALSE)
       }
 
-      cv <- private$.ck_vars("countvars")
+      cv <- self$cntvars()
       if (is.null(v)) {
         v <- cv
       } else {
@@ -556,12 +561,16 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
       ex_params <- private$.pert_params$cnts
       for (curvar in v) {
-        if (curvar %in% names(ex_params)) {
-          message("--> replacing perturbation parameters for variable ", shQuote(curvar))
+        if (private$.is_perturbed_countvar(curvar)) {
+          message("--> Variable ", shQuote(curvar), " was already perturbed: parameters are not updated.")
         } else {
-          message("--> setting perturbation parameters for variable ", shQuote(curvar))
+          if (curvar %in% names(ex_params)) {
+            message("--> replacing perturbation parameters for variable ", shQuote(curvar))
+          } else {
+            message("--> setting perturbation parameters for variable ", shQuote(curvar))
+          }
+          ex_params[[curvar]] <- val
         }
-        ex_params[[curvar]] <- val
       }
       private$.pert_params$cnts <- ex_params
       return(invisible(self))
@@ -572,6 +581,12 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       return(private$.pert_params$nums)
     },
     params_nums_set=function(val, v = NULL) {
+      nv <- self$numvars()
+      if (length(nv) == 0) {
+        message("no numeric variables are available!")
+        return(invisible(NULL))
+      }
+
       if (!inherits(val, "ck_params")) {
         stop("Please create the input using `ck_params_nums()`", call. = FALSE)
       }
@@ -579,7 +594,6 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         stop("Please create the input using `ck_params_nums()`", call. = FALSE)
       }
 
-      nv <- private$.ck_vars("numvars")
       if (is.null(v)) {
         v <- nv
       } else {
@@ -590,15 +604,18 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
           stop("Please specify only valid numvars in argument `v`.", call. = FALSE)
         }
       }
-
       ex_params <- private$.pert_params$nums
       for (curvar in v) {
-        if (curvar %in% names(ex_params)) {
-          message("--> replacing perturbation parameters for variable ", shQuote(curvar))
+        if (private$.is_perturbed_numvar(curvar)) {
+          message("--> Variable ", shQuote(curvar), " was already perturbed: parameters are not updated.")
         } else {
-          message("--> setting perturbation parameters for variable ", shQuote(curvar))
+          if (curvar %in% names(ex_params)) {
+            message("--> replacing perturbation parameters for variable ", shQuote(curvar))
+          } else {
+            message("--> setting perturbation parameters for variable ", shQuote(curvar))
+          }
+          ex_params[[curvar]] <- val
         }
-        ex_params[[curvar]] <- val
       }
       private$.pert_params$nums <- ex_params
       return(invisible(self))
@@ -679,20 +696,15 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         }
       }
 
-      numvars_available <- FALSE
-      if (numvars_available) {
+      numvars <- private$.varsdt[type == "numvars"]
+      if (nrow(numvars) > 0) {
         cli::cat_rule("Tabulated / Perturbed numvars")
-        numvars <- private$.varsdt[type == "numvars"]
-        if (nrow(numvars) == 0) {
-          cli::cat_line(cli::symbol$cross, " no continuous variables available")
-        } else {
-          for (i in 1:nrow(numvars)) {
-            v <- numvars$vname[i]
-            if (numvars$is_perturbed[i]) {
-              cli::cat_line(cli::symbol$checkbox_on, " ", shQuote(v), " (perturbed)")
-            } else {
-              cli::cat_line(cli::symbol$checkbox_off, " ", shQuote(v))
-            }
+        for (i in 1:nrow(numvars)) {
+          v <- numvars$vname[i]
+          if (numvars$is_perturbed[i]) {
+            cli::cat_line(cli::symbol$checkbox_on, " ", shQuote(v), " (perturbed)")
+          } else {
+            cli::cat_line(cli::symbol$checkbox_off, " ", shQuote(v))
           }
         }
       }
@@ -765,6 +777,11 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         )
       }
 
+      if (private$.is_perturbed_countvar(v)) {
+        message("Variable ", shQuote(v),  " was already perturbed!")
+        return(invisible(self))
+      }
+
       countvars <- private$.ck_vars("countvars")
       numvars <- private$.ck_vars("numvars")
       rkeyvar <- private$.ck_vars("rkeyvar")
@@ -784,11 +801,6 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       newtab <- copy(private$.results[[v]])
       # compute average weights
       col_wcavg <- gen_vnames(v, prefix = "wcavg")
-      if (col_wcavg %in% colnames(newtab)) {
-        message("Variable ", shQuote(v),  " was already perturbed!")
-        return(invisible(self))
-      }
-
       col_n <- gen_vnames(v, prefix = "uwc")
       col_wc <- gen_vnames(v, prefix = "wc")
       wcavg <- newtab[[col_wc]] / newtab[[col_n]]
@@ -808,6 +820,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         cellvals = newtab[[col_n]]
       )
       mods$countvar <- v
+
       mods <- cbind(private$.results$dims[, dimvars, with = FALSE], mods)
       newtab[[col_pert]] <- mods$pert
       modifications <- rbind(private$.modifications$cnts, mods)
@@ -840,7 +853,247 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     },
     # actually perturb continuous variables
     .ck_perturb_nums=function(v) {
-      stop("perturbation of magnitude tables not yet supported", call. = FALSE)
+      if (private$.is_perturbed_numvar(v)) {
+        message("Variable ", shQuote(v),  " was already perturbed!")
+        return(invisible(self))
+      }
+
+      # parameters
+      params <- private$.pert_params$nums[[v]]$params
+      ck_log("parameters:")
+      ck_log("--> type: ", shQuote(params$type))
+      ck_log("--> top_k: ", params$top_k)
+      ck_log("--> same_key: ", params$same_key)
+      ck_log("--> use_zero_rkeys: ", params$use_zero_rkeys)
+
+      mult_params <- params$mult_params
+      do_grid <- inherits(mult_params, "params_m_grid")
+      if (do_grid) {
+        ck_log("--> multiplicator: ", shQuote("grid"))
+      } else {
+        ck_log("--> multiplicator: ", shQuote("flex"))
+      }
+
+      ck_log("--> todo: parameter `mu_c`")
+      #message("--> mu_c: ", params$mu_c)
+
+      # get maximum contributions for each cell and variable!
+      # restrict to current variable
+      max_contr <- lapply(private$.max_contributions, function(x) {
+        x[[v]]
+      })
+
+      # compute x_j values that are required input for the computation of
+      # the perturbation magnitutes m_j
+      w_sums <- lapply(max_contr, function(x) x$w_sum)
+      if (params$type == "top_contr") {
+        # we may get NAs -> need to ignore them later
+        x_vals <- lapply(max_contr, function(x) x$w_vals[1:params$top_k])
+      } else if (params$type == "mean") {
+        x_vals <- lapply(max_contr, function(x) x$w_mean)
+      } else if (params$type == "range") {
+        x_vals <- lapply(max_contr, function(x) x$w_spread)
+      } else if (params$type == "sum") {
+        x_vals <- w_sums
+      }
+
+      # the table with cell_keys (non-zero cellkeys and weighted and unweighted sums)
+      newtab <- copy(private$.results[[v]])
+      dim_dt <- private$.results[["dims"]]
+
+      # compute multiplication parameters m_j (x) * x
+      .get_multipliers <- function(params, x, top_k) {
+        UseMethod(".get_multipliers", params)
+      }
+      .get_multipliers.default <- function(params, x, top_k) {
+        stop("invalid input in .get_multipliers.default() detected!", call. = FALSE)
+      }
+      .get_multipliers.params_m_flex <- function(params, x, top_k) {
+        # by default: perturbation for small cells -> highest pctg
+        m <- rep(params$m_small, length(x))
+        fp <- params$flexpoint
+
+        ind_lg <- which(x > fp)
+        if (length(ind_lg) > 0) {
+          x_lg <- x[ind_lg]
+
+          f1 <- ((params$m_small * x_lg) - (params$m_large * fp)) / (params$m_large * fp)
+          f2 <- (2 * fp) / (fp + x_lg)
+          m[ind_lg] <- params$m_large * (1 + (f1 * f2 ^ params$q))
+        }
+
+        # fixed variance for very small observations
+        if (!is.null(params$m_fixed_sq)) {
+          # compute g1 (formula 2.3 on p.9)
+          g1 <- sqrt(params$m_fixed_sq) / (sqrt(top_k) * params$m_large)
+          # very small values
+          ind_vs <- which(x < g1)
+          if (length(ind_vs) > 0) {
+            m[ind_vs] <- sqrt(m_fixed_sq)
+            x[ind_vs] <- 1
+          }
+        }
+        #list(x = x, m = m, x_times_m = x * m)
+        x * m # x_delta!
+      }
+      .get_multipliers.params_m_grid <- function(params, x, top_k) {
+        m <- rep(NA, length(x))
+        rr <- lapply(x, function(y) y <= params$grid)
+
+        # smallest cells, highest perturbation
+        ind_sm <- sapply(rr, function(x) all(x == TRUE))
+        m[ind_sm] <- params$pcts[1]
+
+        # largest cells, smallest perturbation
+        ind_lg <- sapply(rr, function(x) all(x == FALSE))
+        m[ind_lg] <- tail(params$pcts, 1)
+
+        ind_mid <- is.na(m)
+        m[ind_mid] <- sapply(rr[ind_mid], function(x) {
+          params$pcts[min(which(x == TRUE))]
+        })
+        #list(x = x, m = m, x_times_m = x * m)
+        x * m
+      }
+
+      # we return x_j * m_j
+      # reason: in case of fixed_variance for very small cells, x_j is changed to 1!
+      # corresponds to x_delta computation!
+      x_delta <- lapply(x_vals, function(x) {
+        .get_multipliers(params = params$mult_params, x = x, top_k = params$top_k)
+      })
+
+      stab <- params$stab
+
+      ck_log("selecting cell keys based on choice of argument `use_zero_rkey`")
+      if (params$use_zero_rkeys) {
+        cellkeys <- newtab[[paste0("ck_nz_", v)]]
+      } else {
+        cellkeys <- newtab[[paste0("ck_", v)]]
+      }
+      cellvals <- newtab[[paste0("ws_", v)]]
+
+      # required for argument `same_key`
+      .scramble_ckeys <- function(ck, top_k, same_key) {
+        beg <- substr(ck, 1, 2)
+        res <- rep(NA, top_k)
+
+        len <- nchar(ck)
+
+        if (!same_key) {
+          res[1] <- paste0(beg, substr(ck, 4, len), substr(ck, 3, 3))
+        } else {
+          res[1] <- ck
+        }
+
+        if (top_k == 1) {
+          return(as.numeric(res))
+        }
+
+        for (i in 2:top_k) {
+          res[i] <- paste0(beg, substr(res[i - 1], 4, len), substr(res[i- 1], 3, 3))
+        }
+        as.numeric(res)
+      }
+
+      ck_log("scrambing cell keys depending on argument `same_key`")
+      # we compute top_k scambled cell keys
+
+      cellkeys <- lapply(cellkeys, function(x) {
+        .scramble_ckeys(x, top_k = params$top_k, same_key = params$same_key)
+      })
+
+      ck_log("computing actual perturbation values")
+
+      # ignore dups for now
+      names(cellkeys) <- dim_dt$strID
+      index_nondup <- !duplicated(cellkeys)
+      cellkeys <- cellkeys[index_nondup]
+      cellvals <- cellvals[index_nondup]
+
+      .lookup_v <- function(stab, cellkeys, x_delta, cell_sum) {
+        d <- max(stab$i) # parameter `D`
+
+        v <- rep(NA, length(cellkeys))
+        a <- cell_sum / x_delta
+        a[a > d] <- d # we cut at the maximum value!
+
+        ind_exact <- which(a %in% unique(stab$i))
+        if (length(ind_exact) > 0) {
+          v[ind_exact] <- sapply(ind_exact, function(x) {
+            stab$diff[min(which(cellkeys[x] < stab$kum_p_o & stab$i == d))]
+          })
+        }
+
+        ind_comb <- which(a < d)
+        if (length(ind_comb) > 0) {
+          v[ind_comb] <- sapply(ind_comb, function(x) {
+            poss <- sort(unique(stab$i))
+            a0 <- poss[which(x < poss) - 1]
+            a1 <- poss[max(which(x > poss)) + 1]
+
+            lambda <- (x - a0) / (a1 - a0)
+
+            # perturbation_value (low)
+            v0 <- stab$diff[min(which(cellkeys[x] < stab$kum_p_o & stab$i == a0))]
+
+            # perturbation_value (up)
+            v1 <- stab$diff[min(which(cellkeys[x] < stab$kum_p_o & stab$i == a1))]
+
+            # combine to get final perturbation value
+            (1 - lambda) * v0 + lambda * v1
+          })
+        }
+        v
+      }
+      pvals <- lapply(1:length(cellkeys), function(x) {
+        .lookup_v(
+          stab = stab,
+          cellkeys = cellkeys[[x]],
+          x_delta = x_delta[[x]],
+          cell_sum = cellvals[x])
+      })
+      names(pvals) <- names(cellkeys)
+
+      # actual perturbation for cells are sum(pvals * x_delta)
+      # these values are added to the weighted cell total to get final perturbed cell values
+
+      # we add some more variables here that we need for the mods-table (for debugging purposes)
+      ck_log("compute perturbation values and final perturbed cell values for each cells")
+      pert_result <- rbindlist(lapply(names(pvals), function(x) {
+        pert <- sum(pvals[[x]] * x_delta[[x]])
+        cell_value_pert = w_sums[[x]] + pert
+        data.table(
+          str_id = x,
+          cv = w_sums[[x]],
+          pert = pert,
+          cv_pert = cell_value_pert,
+          ckey  = cellkeys[[x]][1])
+      }))
+
+      ck_log("add rows for duplicated cells!")
+      pert_result <- merge(dim_dt, pert_result, by.x = "strID", by.y = "str_id", all.x = TRUE)
+
+      ck_log("update private$.results")
+      newtab <- private$.results[[v]]
+      newtab$pert_total <- pert_result$pert
+      newtab[[gen_vnames(v, prefix = "pws")]] <- pert_result$cv_per
+      private$.results[[v]] <- newtab
+
+      ck_log("compute and add modifications")
+      # note: `ckey`: the first cell key (all others were scrambled)
+      mods <- copy(pert_result)
+      mods$strID <- mods$cv <- mods$cv_pert <- NULL
+      mods$numvar <- v
+      private$.modifications$cnts <- rbind(private$.modifications$nums, mods)
+
+      # update vars
+      varsdt <- private$.varsdt
+      varsdt$is_perturbed[varsdt$vname == v] <- TRUE
+      private$.varsdt <- varsdt
+      private$.validate()
+      message("Numeric variable ", shQuote(v), " was perturbed.")
+      return(invisible(self))
     },
     # utility measures for count variables
     .ck_utility_cnts=function(v, exclude_zeros) {
@@ -907,19 +1160,21 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' @param countvars (character) an optional vector containing names of binary (0/1 coded)
 #' variables withing `x` that should be included in the problem instance.
 #' These variables can later be perturbed.
-# @param numvars (character) an optional vector of numerical variables that can later be tabulated.
-#' @param params_cnts an object containing perturbation parameters for count variables that needs
-#' to be created with [ck_params_cnts()]
-# @param params_nums if not `NULL`, an object containing perturbation parameters for continuous variables
-# that must be created with [ck_params_nums()]. This argument needs to be provided if `numvars` is
-# not `NULL`.
+#' @param numvars (character) an optional vector of numerical variables that can later be tabulated.
 #' @format [R6::R6Class] object.
-#' @section Usage: For usage details see the **Methods** and **Examples** sections.
+#' @section Usage: For usage details of the implemented methods, see the **Methods** and
+#' **Examples** sections.
 #' @section Methods: The following methods are available and can be used:
 #' - **`print()`**: prints information about the current table
 #' - **`summary()`**: some aggregated summary statistics about perturbed variables
+#'
+#' - **`cntvars()`**: returns a character vector of available count variables.
+#'
+#' - **`numvars()`**: returns a character vector of available numeric variables.
+#'
 #' - **`perturb(v)`**: Perturb a count- or magnitude variable. The method has the following arguments:
 #'    * `v`: name(s) of count or magnitude variables that should be perturbed.
+#'
 #' - **`freqtab(v)`**: get results from already perturbed count variables as a `data.table`. The required arguments are:
 #'    * `v`: a vector of variable names for already perturbed count variables
 #'    * `type`: a scalar character depending what variables should be available in the output. Allowed
@@ -942,13 +1197,25 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'
 #' - **`mod_cnts()`**: returns a `data.table` containing modifications applied to count variables
 #'
-#' - **`params_cnts_get()`**: returns a named list in which each list-element contains the active perturbation parameters for the
-#' specific variable defined by the list-name.
-#' - **`params_cnts_set(val, v = NULL)`**: allows to set perturbation parameters for count variables. The following arguments
-#' are expected:
+#' - **`params_cnts_get()`**: returns a named list in which each list-element contains the
+#' active perturbation parameters for the specific count variable defined by the list-name.
+#'
+#' - **`params_cnts_set(val, v = NULL)`**: allows to set perturbation parameters for count variables.
+#' The following arguments are expected:
 #'    * `val`: a perturbation object created with [ck_params_cnts()]
-#'    * `v`: a character vector (or `NULL`). If `NULL (the default)`, the perturbation parameters provided in `val` are set for
-#'    all count variables; otherwise one may specify the names of the count variables for which the parameters should be set.
+#'    * `v`: a character vector (or `NULL`). If `NULL` (the default), the perturbation parameters
+#'    provided in `val` are set for all count variables; otherwise one may specify the names of
+#'    the count variables for which the parameters should be set.
+#'
+#' - **`params_nums_get()`**: returns a named list in which each list-element contains the
+#' active perturbation parameters for the specific continuous variable defined by the list-name.
+#'
+#' - **`params_nums_set(val, v = NULL)`**: allows to set perturbation parameters for continuous variables.
+#' The following arguments are expected:
+#'    * `val`: a perturbation object created with [ck_params_nums()]
+#'    * `v`: a character vector (or `NULL`). If `NULL` (the default), the perturbation parameters
+#'    provided in `val` are set for all continuous variables; otherwise one may specify the names of
+#'    the numeric variables for which the parameters should be set.
 #' @export
 #' @examples
 #' x <- ck_create_testdata()
@@ -976,6 +1243,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' dims <- list(sex = d_sex, age = d_age)
 #' w <- "sampling_weight"
 #' countvars <- c("cnt_females", "cnt_males", "cnt_highincome")
+#' numvars <- c("expend", "income", "savings")
 #' rkey <- "rkey"
 #'
 #' # define the cell key object
@@ -984,10 +1252,21 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'   rkey = 5,
 #'   dims = dims,
 #'   w = w,
-#'   countvars = countvars)
+#'   countvars = countvars,
+#'   numvars = numvars)
 #'
 #' # show some information about this table instance
-#' print(tab) # identical with tab$print()
+#' tab$print() # identical with print(tab)
+#'
+#' # a summary method is provided, too
+#' tab$summary()
+#'
+#' # what variables have been defined?
+#' # count-variables
+#' tab$cntvars()
+#'
+#' # continuous variables
+#' tab$numvars()
 #'
 #' # add perturbation parameters for "total" variable
 #' p_cnts1 <- ck_params_cnts(
@@ -1008,7 +1287,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'   optim = 1,
 #'   mono = TRUE)
 #'
-#' # use it for the remaining variables#'
+#' # use it for the remaining variables
 #' tab$params_cnts_set(val = p_cnts2, v = countvars)
 #'
 #' # perturb a variable
@@ -1022,6 +1301,43 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'
 #' # only unweighted and perturbed unweighted counts
 #' tab$freqtab(v = c("total", "cnt_males"), type = "unweighted")
+#'
+#' # numerical variables
+#' p_nums1 <- ck_params_nums(
+#'   D = 10,
+#'   l = 0.5,
+#'   type = "top_contr",
+#'   top_k = 3,
+#'   mult_params = ck_flexparams(
+#'     flexpoint = 1000,
+#'     m_fixed_sq = 2
+#'   )
+#' )
+#'
+#' # another set of parameters, using a grid
+#' p_nums2 <- ck_params_nums(
+#'   D = 10,
+#'   l = .5,
+#'   type = "mean",
+#'   mult_params = ck_gridparams(
+#'     grid = c(0, 10, 100, 10000),
+#'     pcts = c(0.25, 0.20, 0.10, 0.05)
+#'   )
+#' )
+#'
+#' # use `p_nums1` for all variables
+#' tab$params_nums_set(p_nums1)
+#'
+#' # use different parameters for variable `savings`
+#' tab$params_nums_set(p_nums2, v = "savings")
+#'
+#' # perturb variables
+#' tab$perturb(v = c("income", "savings"))
+#'
+#' # extract results
+#' tab$numtab("income", mean_before_sum = TRUE)
+#' tab$numtab("income", mean_before_sum = FALSE)
+#' tab$numtab("savings")
 #'
 #' # write to a file "outtab.csv" (.csv is automatically added to the path)
 #' \dontrun{
@@ -1040,16 +1356,11 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' # display a summary about utility measures
 #' tab$summary()
 ck_setup <- function(x, rkey, dims, w, countvars = NULL, numvars = NULL) {
-  numvars <- NULL
-  params_nums <- NULL
   cellkey_obj_class$new(
     x = x,
     rkey = rkey,
     dims = dims,
     w = w,
     countvars = countvars,
-    numvars = numvars#,
-    #params_cnts = params_cnts,
-    #params_nums = params_nums
-  )
+    numvars = numvars)
 }

@@ -4,12 +4,12 @@
 \alias{ck_params_nums}
 \title{Create perturbation parameters for continuous variables}
 \usage{
-ck_params_nums(P = "top_contr", top_k = NULL, D, l, same_key = TRUE,
-  use_zero_rkeys = FALSE)
+ck_params_nums(type = "top_contr", top_k = NULL, D, l, mult_params,
+  mu_c = 0, same_key = TRUE, use_zero_rkeys = FALSE)
 }
 \arguments{
-\item{P}{a character value defining the way to identify the \code{magnifier},
-e.g which contributions/values in a cell should be the used  in the
+\item{type}{a character value defining the way to identify the \code{magnifier},
+e.g which contributions/values in a cell should be the used in the
 perturbation procedure. Possible choices are:
 \itemize{
 \item \code{top_contr}: the \code{k} largest contributions are used. In this case,
@@ -20,13 +20,18 @@ is used.
 \item \code{sum}: the (weighted) cellvalue itself is used as starting point
 }}
 
-\item{top_k}{it is ignored if \code{P} is different from \code{top_contr}. Otherwise,}
+\item{top_k}{it is ignored if \code{variant} is different from \code{top_contr}. Otherwise,}
 
 \item{D}{maximum perturbation value}
 
 \item{l}{stepwidth parameter for computation of perturbation tables
 a integerish number >= 1 specifying the number of top contributions whose
 values should be perturbed.}
+
+\item{mult_params}{an object derived by either \code{\link[=ck_gridparams]{ck_gridparams()}} or \code{\link[=ck_flexparams]{ck_flexparams()}}
+that specified parameters for the computation of the multiplier.}
+
+\item{mu_c}{extra protection amount (\code{>= 0)} applied to first noise component; default 0}
 
 \item{same_key}{(logical) should original cell key (\code{TRUE}) used for
 for finding perturbation values of the largest contributor to a
@@ -37,14 +42,39 @@ units not contributing to a specific numeric variables should be
 used (\code{TRUE}) or ignored (\code{FALSE}) when computing cell keys.}
 }
 \value{
-an object suitable as input to \code{\link[=ck_setup]{ck_setup()}} for the perturbation
-of magnitude tables
+an object suitable as input to method \code{$params_nums_set()} for the perturbation
+of continous variables.
 }
 \description{
 This function allows to define perturbation parameters used to
 perturb cells in magnitude tables.
 }
 \examples{
-ck_params_nums(D = 3, l = 0.5, P = "top_contr", top_k = 3)
-ck_params_nums(D = 10, l = .5, P = "mean")
+ck_params_nums(
+  D = 3,
+  l = 0.5,
+  type = "top_contr",
+  top_k = 3,
+  mu_c = 2,
+  mult_params = ck_flexparams(
+    flexpoint = 1000,
+    m_small = 0.20,
+    m_large = 0.03,
+    fixed_noise_variance = NULL,
+    q = 2
+  )
+)
+ck_params_nums(
+  D = 10,
+  l = .5,
+  type = "mean",
+  mu_c = 0,
+  mult_params = ck_gridparams(
+    grid = c(0, 10, 100, 10000),
+    pcts = c(0.25, 0.20, 0.10, 0.05)
+  )
+)
+}
+\seealso{
+\code{\link[=ck_gridparams]{ck_gridparams()}}, \code{\link[=ck_flexparams]{ck_flexparams()}}
 }
