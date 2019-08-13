@@ -158,7 +158,6 @@ tab$params_cnts_set(val = params_cnts, v = NULL)
 
 expect_message(tab$perturb("total"))
 expect_message(tab$perturb("total"), "Variable 'total' was already perturbed!")
-expect_message(tab$freqtab())
 
 test_that("check ck_define_table() with already existing rec-keys", {
   expect_is(tab, "cellkey_obj")
@@ -180,7 +179,6 @@ expect_error(tab$perturb("total"))
 tab$params_cnts_set(val = params_cnts, v = "total")
 expect_message(tab$perturb("total"), "Count variable 'total' was perturbed.")
 expect_message(tab$perturb("total"), "Variable 'total' was already perturbed!")
-expect_message(tab$freqtab())
 
 test_that("ck_define_table() with new record keys is ok", {
   expect_is(tab, "cellkey_obj")

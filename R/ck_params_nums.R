@@ -70,7 +70,7 @@ gen_stab <- function(D = 3, l = 0.5) {
 #'     flexpoint = 1000,
 #'     m_small = 0.20,
 #'     m_large = 0.03,
-#'     fixed_noise_variance = NULL,
+#'     m_fixed_sq = NULL,
 #'     q = 2
 #'   )
 #' )

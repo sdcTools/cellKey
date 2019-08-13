@@ -369,9 +369,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       }
 
       if (is.null(v)) {
-        message("The following variables have been perturbed using the frequency-approach:")
-        message(paste("  -->", shQuote(avail), collapse = "\n"))
-        return(invisible(NULL))
+        v <- avail
       }
 
       if (!is.character(v)) {
@@ -456,9 +454,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       }
 
       if (is.null(v)) {
-        message("The following numerical variables have been perturbed:")
-        message(paste("  -->", shQuote(avail), collapse = "\n"))
-        return(invisible(NULL))
+        v <- avail
       }
       if (!is.character(v)) {
         stop("Argument `v` must be a character vector specifying variable names.", call. = FALSE)
@@ -1085,7 +1081,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       mods <- copy(pert_result)
       mods$strID <- mods$cv <- mods$cv_pert <- NULL
       mods$numvar <- v
-      private$.modifications$cnts <- rbind(private$.modifications$nums, mods)
+      private$.modifications$nums <- rbind(private$.modifications$nums, mods)
 
       # update vars
       varsdt <- private$.varsdt
@@ -1176,7 +1172,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'    * `v`: name(s) of count or magnitude variables that should be perturbed.
 #'
 #' - **`freqtab(v)`**: get results from already perturbed count variables as a `data.table`. The required arguments are:
-#'    * `v`: a vector of variable names for already perturbed count variables
+#'    * `v`: a vector of variable names for already perturbed count variables. If `NULL` (the default), the results
+#'    are returned for all perturbed count variables.
 #'    * `type`: a scalar character depending what variables should be available in the output. Allowed
 #'    values are `"both"` (the default), `"weighted"` and `"unweighted"`
 #'    * `path`: if not `NULL`, a scalar character defining a (relative or absolute) path to which the result table
@@ -1189,6 +1186,24 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'    * `wc`: weighted counts (if `type` is `"both"` or `"weighted"`)
 #'    * `puwc`: perturbed unweighted counts (if `type` is `"both"` or `"unweighted"`)
 #'    * `pwc`: perturbed weighted counts (if `type` is `"both"` or `"weighted"`)
+#'
+#' - **`numtab(v)`**: get results from already perturbed continuous variables as a `data.table`. The required arguments are:
+#'    * `v`: a vector of variable names for already perturbed count variables. If `NULL` (the default), the results
+#'    are returned for all perturbed numeric variables.
+#'    * `mean_before_sum`: (logical); if `TRUE`, the perturbed values are adjusted by a factor `((n+p))⁄n` with `n`
+#'    being the original weighted cellvalue and `p` the perturbed cell value. This makes sense if the the
+#'    accuracy of the variable mean is considered more important than accuracy of sums of the variable. The default value
+#'    is `FALSE` (no adjustment is done)
+#'    * `path`: if not `NULL`, a scalar character defining a (relative or absolute) path to which the result table
+#'    should be written. A `csv` file will be generated and `.csv` will be appended to the value provided.
+#'
+#'    This method returns a `data.table` containing all combinations of the dimensional variables in
+#' the first n columns. Additionally, the following columns are shown:
+#'    * `vname`: name of the perturbed variable
+#'    * `uws`: unweighted sum of the given variable
+#'    * `ws`: weighted cellsum
+#'    * `pws`: perturbed weighted sum of the given cell
+#'
 #' - **`measures_cnts(v, exclude_zeros = TRUE)`**: utility measures for perturbed count variables. The required arguments are:
 #'    * `v`: name of a count variable for which utility measures should be computed.
 #'    * `exclude_zeros`: should empty (zero) cells in the original values be excluded when computing distance measures
@@ -1239,27 +1254,19 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' d_age <- hier_add(d_age, root = "age_group1", "ag1a")
 #' d_age <- hier_add(d_age, root = "age_group2", "ag2a")
 #'
-#' # create a named list
-#' dims <- list(sex = d_sex, age = d_age)
-#' w <- "sampling_weight"
+#' # define the cell key object
 #' countvars <- c("cnt_females", "cnt_males", "cnt_highincome")
 #' numvars <- c("expend", "income", "savings")
-#' rkey <- "rkey"
-#'
-#' # define the cell key object
 #' tab <- ck_setup(
 #'   x = x,
-#'   rkey = 5,
-#'   dims = dims,
-#'   w = w,
+#'   rkey = "rkey",
+#'   dims = list(sex = d_sex, age = d_age),
+#'   w = "sampling_weight",
 #'   countvars = countvars,
 #'   numvars = numvars)
 #'
 #' # show some information about this table instance
 #' tab$print() # identical with print(tab)
-#'
-#' # a summary method is provided, too
-#' tab$summary()
 #'
 #' # what variables have been defined?
 #' # count-variables

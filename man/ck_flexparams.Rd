@@ -52,27 +52,19 @@ d_age <- hier_create(root = "Total", nodes = paste0("age_group", 1:6))
 d_age <- hier_add(d_age, root = "age_group1", "ag1a")
 d_age <- hier_add(d_age, root = "age_group2", "ag2a")
 
-# create a named list
-dims <- list(sex = d_sex, age = d_age)
-w <- "sampling_weight"
+# define the cell key object
 countvars <- c("cnt_females", "cnt_males", "cnt_highincome")
 numvars <- c("expend", "income", "savings")
-rkey <- "rkey"
-
-# define the cell key object
 tab <- ck_setup(
   x = x,
-  rkey = 5,
-  dims = dims,
-  w = w,
+  rkey = "rkey",
+  dims = list(sex = d_sex, age = d_age),
+  w = "sampling_weight",
   countvars = countvars,
   numvars = numvars)
 
 # show some information about this table instance
 tab$print() # identical with print(tab)
-
-# a summary method is provided, too
-tab$summary()
 
 # what variables have been defined?
 # count-variables

@@ -60,7 +60,7 @@ ck_params_nums(
     flexpoint = 1000,
     m_small = 0.20,
     m_large = 0.03,
-    fixed_noise_variance = NULL,
+    m_fixed_sq = NULL,
     q = 2
   )
 )

@@ -50,7 +50,8 @@ count and numerical variables.
 }
 \item \strong{\code{freqtab(v)}}: get results from already perturbed count variables as a \code{data.table}. The required arguments are:
 \itemize{
-\item \code{v}: a vector of variable names for already perturbed count variables
+\item \code{v}: a vector of variable names for already perturbed count variables. If \code{NULL} (the default), the results
+are returned for all perturbed count variables.
 \item \code{type}: a scalar character depending what variables should be available in the output. Allowed
 values are \code{"both"} (the default), \code{"weighted"} and \code{"unweighted"}
 \item \code{path}: if not \code{NULL}, a scalar character defining a (relative or absolute) path to which the result table
@@ -65,6 +66,26 @@ the first n columns. Additionally, the following columns are shown:
 \item \code{wc}: weighted counts (if \code{type} is \code{"both"} or \code{"weighted"})
 \item \code{puwc}: perturbed unweighted counts (if \code{type} is \code{"both"} or \code{"unweighted"})
 \item \code{pwc}: perturbed weighted counts (if \code{type} is \code{"both"} or \code{"weighted"})
+}
+\item \strong{\code{numtab(v)}}: get results from already perturbed continuous variables as a \code{data.table}. The required arguments are:
+\itemize{
+\item \code{v}: a vector of variable names for already perturbed count variables. If \code{NULL} (the default), the results
+are returned for all perturbed numeric variables.
+\item \code{mean_before_sum}: (logical); if \code{TRUE}, the perturbed values are adjusted by a factor \code{((n+p))⁄n} with \code{n}
+being the original weighted cellvalue and \code{p} the perturbed cell value. This makes sense if the the
+accuracy of the variable mean is considered more important than accuracy of sums of the variable. The default value
+is \code{FALSE} (no adjustment is done)
+\item \code{path}: if not \code{NULL}, a scalar character defining a (relative or absolute) path to which the result table
+should be written. A \code{csv} file will be generated and \code{.csv} will be appended to the value provided.
+}
+
+This method returns a \code{data.table} containing all combinations of the dimensional variables in
+the first n columns. Additionally, the following columns are shown:
+\itemize{
+\item \code{vname}: name of the perturbed variable
+\item \code{uws}: unweighted sum of the given variable
+\item \code{ws}: weighted cellsum
+\item \code{pws}: perturbed weighted sum of the given cell
 }
 \item \strong{\code{measures_cnts(v, exclude_zeros = TRUE)}}: utility measures for perturbed count variables. The required arguments are:
 \itemize{
@@ -119,27 +140,19 @@ d_age <- hier_create(root = "Total", nodes = paste0("age_group", 1:6))
 d_age <- hier_add(d_age, root = "age_group1", "ag1a")
 d_age <- hier_add(d_age, root = "age_group2", "ag2a")
 
-# create a named list
-dims <- list(sex = d_sex, age = d_age)
-w <- "sampling_weight"
+# define the cell key object
 countvars <- c("cnt_females", "cnt_males", "cnt_highincome")
 numvars <- c("expend", "income", "savings")
-rkey <- "rkey"
-
-# define the cell key object
 tab <- ck_setup(
   x = x,
-  rkey = 5,
-  dims = dims,
-  w = w,
+  rkey = "rkey",
+  dims = list(sex = d_sex, age = d_age),
+  w = "sampling_weight",
   countvars = countvars,
   numvars = numvars)
 
 # show some information about this table instance
 tab$print() # identical with print(tab)
-
-# a summary method is provided, too
-tab$summary()
 
 # what variables have been defined?
 # count-variables

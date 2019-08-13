@@ -2,7 +2,9 @@
 
 export(ck_cnt_measures)
 export(ck_create_testdata)
+export(ck_flexparams)
 export(ck_generate_rkeys)
+export(ck_gridparams)
 export(ck_params_cnts)
 export(ck_params_nums)
 export(ck_setup)
