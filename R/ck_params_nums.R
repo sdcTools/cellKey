@@ -47,7 +47,9 @@ gen_stab <- function(D = 3, l = 0.5) {
 #' values should be perturbed.
 #' @param mult_params an object derived by either [ck_gridparams()] or [ck_flexparams()]
 #' that specified parameters for the computation of the multiplier.
-#' @param mu_c extra protection amount (`>= 0)` applied to first noise component; default 0
+#' @param mu_c fixed extra protection amount (`>= 0)` applied to the absolute of the
+#' perturbation value of the first (largest) noise component; defaults to
+#' `0` (no additional protection)
 #' @param same_key (logical) should original cell key (`TRUE`) used for
 #' for finding perturbation values of the largest contributor to a
 #' cell or should a perturbation of the cellkey itself (`FALSE`) take place.
@@ -104,10 +106,10 @@ ck_params_nums <-
     stop("invalid value in `type` detected.", call. = FALSE)
   }
   if (!rlang::is_scalar_double(mu_c)) {
-    stop("Argument `mu_c` is not a number.", call = FALSE)
+    stop("Argument `mu_c` is not a number.", call. = FALSE)
   }
   if (mu_c < 0) {
-    stop("Argument `mu_c` is not >= 0.", call = FALSE)
+    stop("Argument `mu_c` is not >= 0.", call. = FALSE)
   }
   if (!inherits(mult_params, "params_m_grid") & !inherits(mult_params, "params_m_flex")) {
     stop("Argument `mult_params` needs to be created via `ck_gridparams()` or `ck_flexparams()`", call. = FALSE)
@@ -125,7 +127,7 @@ ck_params_nums <-
       stop("please provide a value for `top_k`", call. = FALSE)
     }
     if (!is_integerish(top_k) | top_k < 1 | top_k > 6) {
-      stop("`top_k` must be an integer(ish) number >= 1 and <= 6")
+      stop("`top_k` must be an integer(ish) number >= 1 and <= 6", call. = FALSE)
     }
   } else {
     if (!is.null(top_k)) {

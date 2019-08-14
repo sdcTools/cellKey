@@ -31,7 +31,9 @@ values should be perturbed.}
 \item{mult_params}{an object derived by either \code{\link[=ck_gridparams]{ck_gridparams()}} or \code{\link[=ck_flexparams]{ck_flexparams()}}
 that specified parameters for the computation of the multiplier.}
 
-\item{mu_c}{extra protection amount (\code{>= 0)} applied to first noise component; default 0}
+\item{mu_c}{fixed extra protection amount (\code{>= 0)} applied to the absolute of the
+perturbation value of the first (largest) noise component; defaults to
+\code{0} (no additional protection)}
 
 \item{same_key}{(logical) should original cell key (\code{TRUE}) used for
 for finding perturbation values of the largest contributor to a
