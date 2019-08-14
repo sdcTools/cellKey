@@ -26,7 +26,7 @@ gen_stab <- function(D = 3, l = 0.5) {
   dt
 }
 
-#' Create perturbation parameters for continuous variables
+#' Set perturbation parameters for continuous variables
 #'
 #' This function allows to define perturbation parameters used to
 #' perturb cells in magnitude tables.
@@ -56,6 +56,16 @@ gen_stab <- function(D = 3, l = 0.5) {
 #' @param use_zero_rkeys (logical) skalar defining if record keys of
 #' units not contributing to a specific numeric variables should be
 #' used (`TRUE`) or ignored (`FALSE`) when computing cell keys.
+#' @param pos_neg_var a number defining the strategy to look up perturbation values in case
+#' the observations can take positive and negative values. This setting is ignored if the variable
+#' has no negative values. The possible settings for parameter `pos_neg_var` are:
+#' - `1`: the perturbation value is always selected from the block of perturbation
+#' values referring to the symmetric case (`i` equals `D` in the perturbation table) independent
+#' of the actual value of the observation
+#' - `2`: the lookup of a perturbation value `v` for a value `x` is done like in the case
+#' where variables only take positive values using `abs(x)` to find the relevant block
+#' in the perturbation table. The perturbed value is then computed as `sign(x) * (abs(x) + v)`.
+#' - `3`:	use variant `2` for all `x != 0` and apply `1` for `x == 0`
 #' @return an object suitable as input to method `$params_nums_set()` for the perturbation
 #' of continous variables.
 #' @export
@@ -74,7 +84,9 @@ gen_stab <- function(D = 3, l = 0.5) {
 #'     m_large = 0.03,
 #'     m_fixed_sq = NULL,
 #'     q = 2
-#'   )
+#'   ),
+#'   mu_c = 3,
+#'   pos_neg_var = 2
 #' )
 #' ck_params_nums(
 #'   D = 10,
@@ -84,7 +96,9 @@ gen_stab <- function(D = 3, l = 0.5) {
 #'   mult_params = ck_gridparams(
 #'     grid = c(0, 10, 100, 10000),
 #'     pcts = c(0.25, 0.20, 0.10, 0.05)
-#'   )
+#'   ),
+#'   mu_c = 5,
+#'   pos_neg_var = 3
 #' )
 ck_params_nums <-
   function(type = "top_contr",
@@ -94,7 +108,8 @@ ck_params_nums <-
            mult_params,
            mu_c = 0,
            same_key = TRUE,
-           use_zero_rkeys = FALSE) {
+           use_zero_rkeys = FALSE,
+           pos_neg_var = 1) {
 
   stopifnot(is_scalar_integerish(D))
   stopifnot(is_scalar_double(l), l > 0, l < 1)
@@ -122,6 +137,13 @@ ck_params_nums <-
     stop("`use_zero_rkeys` needs to be a scalar logical", call. = FALSE)
   }
 
+  if (!is_scalar_integerish(pos_neg_var)) {
+    stop("`pos_neg_var` needs to be an integer(ish) number", call. = FALSE)
+  }
+  if (!pos_neg_var %in% 1:3) {
+    stop("Argument `pos_neg_var` needs to be `1`, `2` or `3`.", call. = FALSE)
+  }
+
   if (type == "top_contr") {
     if (is.null(top_k)) {
       stop("please provide a value for `top_k`", call. = FALSE)
@@ -145,7 +167,8 @@ ck_params_nums <-
       mu_c = mu_c,
       mult_params = mult_params,
       same_key = same_key,
-      use_zero_rkeys = use_zero_rkeys
+      use_zero_rkeys = use_zero_rkeys,
+      pos_neg_var = pos_neg_var
     ),
     type = "nums"
   )

@@ -2,10 +2,11 @@
 % Please edit documentation in R/ck_params_nums.R
 \name{ck_params_nums}
 \alias{ck_params_nums}
-\title{Create perturbation parameters for continuous variables}
+\title{Set perturbation parameters for continuous variables}
 \usage{
 ck_params_nums(type = "top_contr", top_k = NULL, D, l, mult_params,
-  mu_c = 0, same_key = TRUE, use_zero_rkeys = FALSE)
+  mu_c = 0, same_key = TRUE, use_zero_rkeys = FALSE,
+  pos_neg_var = 1)
 }
 \arguments{
 \item{type}{a character value defining the way to identify the \code{magnifier},
@@ -42,6 +43,19 @@ cell or should a perturbation of the cellkey itself (\code{FALSE}) take place.}
 \item{use_zero_rkeys}{(logical) skalar defining if record keys of
 units not contributing to a specific numeric variables should be
 used (\code{TRUE}) or ignored (\code{FALSE}) when computing cell keys.}
+
+\item{pos_neg_var}{a number defining the strategy to look up perturbation values in case
+the observations can take positive and negative values. This setting is ignored if the variable
+has no negative values. The possible settings for parameter \code{pos_neg_var} are:
+\itemize{
+\item \code{1}: the perturbation value is always selected from the block of perturbation
+values referring to the symmetric case (\code{i} equals \code{D} in the perturbation table) independent
+of the actual value of the observation
+\item \code{2}: the lookup of a perturbation value \code{v} for a value \code{x} is done like in the case
+where variables only take positive values using \code{abs(x)} to find the relevant block
+in the perturbation table. The perturbed value is then computed as \code{sign(x) * (abs(x) + v)}.
+\item \code{3}:    use variant \code{2} for all \code{x != 0} and apply \code{1} for \code{x == 0}
+}}
 }
 \value{
 an object suitable as input to method \code{$params_nums_set()} for the perturbation
@@ -64,7 +78,8 @@ ck_params_nums(
     m_large = 0.03,
     m_fixed_sq = NULL,
     q = 2
-  )
+  ),
+  pos_neg_var = 2
 )
 ck_params_nums(
   D = 10,
@@ -74,7 +89,8 @@ ck_params_nums(
   mult_params = ck_gridparams(
     grid = c(0, 10, 100, 10000),
     pcts = c(0.25, 0.20, 0.10, 0.05)
-  )
+  ),
+  pos_neg_var = 3
 )
 }
 \seealso{
