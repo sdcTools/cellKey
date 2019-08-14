@@ -97,6 +97,7 @@ This method returns a \code{list} containing a set of utility measures based on 
 For a detailed description of the computed measures, see \code{\link[=ck_cnt_measures]{ck_cnt_measures()}}
 }
 \item \strong{\code{mod_cnts()}}: returns a \code{data.table} containing modifications applied to count variables
+\item \strong{\code{mod_nums()}}: returns a \code{data.table} containing modifications applied to numerical variables
 \item \strong{\code{params_cnts_get()}}: returns a named list in which each list-element contains the
 active perturbation parameters for the specific count variable defined by the list-name.
 \item \strong{\code{params_cnts_set(val, v = NULL)}}: allows to set perturbation parameters for count variables.

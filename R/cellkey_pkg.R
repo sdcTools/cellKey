@@ -1273,6 +1273,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'    For a detailed description of the computed measures, see [ck_cnt_measures()]
 #'
 #' - **`mod_cnts()`**: returns a `data.table` containing modifications applied to count variables
+#' - **`mod_nums()`**: returns a `data.table` containing modifications applied to numerical variables
 #'
 #' - **`params_cnts_get()`**: returns a named list in which each list-element contains the
 #' active perturbation parameters for the specific count variable defined by the list-name.
