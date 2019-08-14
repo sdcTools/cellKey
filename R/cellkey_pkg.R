@@ -331,14 +331,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       countvars <- self$cntvars()
       numvars <- self$numvars()
       avail <- c(countvars, numvars)
-      if (!all(v %in% avail)) {
-        e <- c(
-          "Invalid variables specified in `v`. Possible choices are:\n",
-          paste(shQuote(avail), collapse ="; ")
-        )
-        stop(paste(e, collapse = " "), call. = FALSE)
-      }
-
+      .check_avail(v = v, avail = avail, msg = "Invalid variables specified in `v`:")
       for (i in 1:length(v)) {
         vname <- v[i]
         if (vname %in% countvars) {
@@ -493,14 +486,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       v <- tolower(v)
       if (private$.is_perturbed_countvar(v)) {
         return(private$.ck_utility_cnts(v, exclude_zeros = exclude_zeros))
-      } else if (private$.is_perturbed_numvar(v)) {
-        return(private$.ck_utility_nums(v))
       } else {
-        avail_cnts <- private$.ck_perturbed_vars("countvars")
-        # not yet
-        #avail_nums <- private$.ck_perturbed_vars("numvars")
-
-        avail <- c(avail_cnts)
+        avail <- private$.ck_perturbed_vars("countvars")
         e <- c(
           "Variable `v` is neither a perturbed count ",
           "nor a perturbed numeric variable. Possible choices are:\n",
@@ -576,6 +563,51 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       }
       private$.pert_params$cnts <- ex_params
       return(invisible(self))
+    },
+
+    # reset perturbation and perturbation parameters
+    # of the given variables
+    reset_cntvars=function(v = NULL) {
+      avail <- private$.ck_perturbed_vars(what = "countvars")
+      if (length(avail) == 0) {
+        message("No perturbed count variables available.")
+        return(invisible(self))
+      }
+      if (is.null(v)) {
+        v <- avail
+      } else {
+        if (!is.character(v)) {
+          stop("Argument `v` needs to be a character vector.", call. = FALSE)
+        }
+        .check_avail(v = v, avail = avail, msg = "Invalid variables specified in `v`:")
+      }
+      private$.reset_vars(vars = v)
+      return(invisible(self))
+    },
+    reset_numvars=function(v = NULL) {
+      avail <- private$.ck_perturbed_vars(what = "numvars")
+      if (length(avail) == 0) {
+        message("No perturbed numerical variables available.")
+        return(invisible(self))
+      }
+      if (is.null(v)) {
+        v <- avail
+      } else {
+        if (!is.character(v)) {
+          stop("Argument `v` needs to be a character vector.", call. = FALSE)
+        }
+        .check_avail(v = v, avail = avail, msg = "Invalid variables specified in `v`:")
+      }
+      private$.reset_vars(vars = v)
+      return(invisible(self))
+    },
+    reset_allvars=function() {
+      avail <- c(private$.ck_perturbed_vars(what = "countvars"), private$.ck_perturbed_vars(what = "numvars"))
+      if (length(avail) == 0) {
+        message("No perturbed variables available.")
+        return(invisible(self))
+      }
+      private$.reset_vars(vars = avail)
     },
 
     # get/set parameters for num-vars
@@ -1127,6 +1159,21 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       stopifnot(is_scalar_character(v))
       v %in% private$.ck_perturbed_vars("numvars")
     },
+    # resets perturbed variables
+    .reset_vars=function(vars) {
+      for (v in vars) {
+        ck_log("removing perturbation results and parameters for ", shQuote(v))
+        private$.results[[v]] <- private$.results[[v]][, 1:4]
+        if (private$.is_perturbed_countvar(v)) {
+          private$.modifications$cnts <- private$.modifications$cnts[countvar != v]
+          private$.pert_params$cnts[[v]] <- NULL
+        } else {
+          private$.modifications$nums <- private$.modifications$nums[numvar != v]
+          private$.pert_params$nums[[v]] <- NULL
+        }
+        private$.varsdt[vname == v, is_perturbed := FALSE]
+      }
+    },
     # returns modification slot
     modifications=function(type = NULL) {
       if (is.null(type)) {
@@ -1246,6 +1293,14 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'    * `v`: a character vector (or `NULL`). If `NULL` (the default), the perturbation parameters
 #'    provided in `val` are set for all continuous variables; otherwise one may specify the names of
 #'    the numeric variables for which the parameters should be set.
+#'
+#' - **`reset_cntvars(v = NULL)`**: allows to reset results and parameters for already perturbed count
+#' variables specified in `v`. If `v` equals `NULL` (the default), the results are reset for all perturbed
+#' count variables.
+#' - **`reset_numvars(v = NULL)`**: allows to reset results and parameters for already perturbed numerical
+#' variables specified in `v`. If `v` equals `NULL` (the default), the results are reset for all perturbed
+#' numerical variables.
+#' - **`reset_allvars()`**: allows to reset results and parameters for all already perturbed variables.
 #' @export
 #' @examples
 #' x <- ck_create_testdata()
@@ -1362,6 +1417,13 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' tab$numtab("income", mean_before_sum = TRUE)
 #' tab$numtab("income", mean_before_sum = FALSE)
 #' tab$numtab("savings")
+#'
+#' # results can be resetted, too
+#' tab$reset_cntvars(v = "cnt_males")
+#'
+#' # we can then set other parameters and perturb again
+#' tab$params_cnts_set(val = p_cnts1, v = "cnt_males")
+#' tab$perturb(v = "cnt_males")
 #'
 #' # write to a file "outtab.csv" (.csv is automatically added to the path)
 #' \dontrun{

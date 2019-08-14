@@ -58,11 +58,24 @@ get_distr_vals <- function(dd) {
   paste0("tmp", type, "for", what, collapse = "")
 }
 
+# checks if all values in `v` exist in `avail` and
+# returns a nice error message in case this is not true
+.check_avail <- function(v, avail, msg = "Invalid variables specified:") {
+  if (!all(v %in% avail)) {
+    e <- c(
+      msg,
+      "Possible choices are:\n",
+      paste(shQuote(avail), collapse ="; ")
+    )
+    stop(paste(e, collapse = " "), call. = FALSE)
+  }
+  invisible(TRUE)
+}
+
+# debugging
 .ck_debug <- function() {
   Sys.getenv("cellkey_debug") == TRUE
 }
-
-
 .ck_debug_on <- function() {
   Sys.setenv("cellkey_debug" = TRUE)
 }

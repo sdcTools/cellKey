@@ -139,6 +139,13 @@ tab$numtab("income", mean_before_sum = TRUE)
 tab$numtab("income", mean_before_sum = FALSE)
 tab$numtab("savings")
 
+# results can be resetted, too
+tab$reset_cntvars(v = "cnt_males")
+
+# we can then set other parameters and perturb again
+tab$params_cnts_set(val = p_cnts1, v = "cnt_males")
+tab$perturb(v = "cnt_males")
+
 # write to a file "outtab.csv" (.csv is automatically added to the path)
 \dontrun{
 tab$freqtab(v = c("total", "cnt_males"), path = "outtab")

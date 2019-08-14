@@ -117,6 +117,13 @@ The following arguments are expected:
 provided in \code{val} are set for all continuous variables; otherwise one may specify the names of
 the numeric variables for which the parameters should be set.
 }
+\item \strong{\code{reset_cntvars(v = NULL)}}: allows to reset results and parameters for already perturbed count
+variables specified in \code{v}. If \code{v} equals \code{NULL} (the default), the results are reset for all perturbed
+count variables.
+\item \strong{\code{reset_numvars(v = NULL)}}: allows to reset results and parameters for already perturbed numerical
+variables specified in \code{v}. If \code{v} equals \code{NULL} (the default), the results are reset for all perturbed
+numerical variables.
+\item \strong{\code{reset_allvars()}}: allows to reset results and parameters for all already perturbed variables.
 }
 }
 
@@ -235,6 +242,13 @@ tab$perturb(v = c("income", "savings"))
 tab$numtab("income", mean_before_sum = TRUE)
 tab$numtab("income", mean_before_sum = FALSE)
 tab$numtab("savings")
+
+# results can be resetted, too
+tab$reset_cntvars(v = "cnt_males")
+
+# we can then set other parameters and perturb again
+tab$params_cnts_set(val = p_cnts1, v = "cnt_males")
+tab$perturb(v = "cnt_males")
 
 # write to a file "outtab.csv" (.csv is automatically added to the path)
 \dontrun{
