@@ -66,7 +66,9 @@ tab <- ck_setup(
 # show some information about this table instance
 tab$print() # identical with print(tab)
 
-# what variables have been defined?
+# which variables have been defined?
+tab$allvars()
+
 # count-variables
 tab$cntvars()
 

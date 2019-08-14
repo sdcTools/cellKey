@@ -515,7 +515,13 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       stop("TODO: implement method `measures_nums()`.", call = FALSE)
     },
 
-    # return names of cnt-/numerical variables
+    # return names of all-, cnt- or numerical variables
+    allvars=function() {
+      list(
+        cntvars = self$cntvars(),
+        numvars = self$numvars()
+      )
+    },
     cntvars=function() {
       private$.ck_vars("countvars")
     },
@@ -1164,6 +1170,9 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' - **`print()`**: prints information about the current table
 #' - **`summary()`**: some aggregated summary statistics about perturbed variables
 #'
+#' - **`allvars()`**: a list with elements `cntvars` and `numvars` with each being a character
+#' vector containing the pre-defined count- and continuous variables in the current instance.
+#'
 #' - **`cntvars()`**: returns a character vector of available count variables.
 #'
 #' - **`numvars()`**: returns a character vector of available numeric variables.
@@ -1268,7 +1277,9 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' # show some information about this table instance
 #' tab$print() # identical with print(tab)
 #'
-#' # what variables have been defined?
+#' # which variables have been defined?
+#' tab$allvars()
+#'
 #' # count-variables
 #' tab$cntvars()
 #'

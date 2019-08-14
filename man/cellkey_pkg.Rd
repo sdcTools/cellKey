@@ -42,6 +42,8 @@ count and numerical variables.
 \itemize{
 \item \strong{\code{print()}}: prints information about the current table
 \item \strong{\code{summary()}}: some aggregated summary statistics about perturbed variables
+\item \strong{\code{allvars()}}: a list with elements \code{cntvars} and \code{numvars} with each being a character
+vector containing the pre-defined count- and continuous variables in the current instance.
 \item \strong{\code{cntvars()}}: returns a character vector of available count variables.
 \item \strong{\code{numvars()}}: returns a character vector of available numeric variables.
 \item \strong{\code{perturb(v)}}: Perturb a count- or magnitude variable. The method has the following arguments:
@@ -154,7 +156,9 @@ tab <- ck_setup(
 # show some information about this table instance
 tab$print() # identical with print(tab)
 
-# what variables have been defined?
+# which variables have been defined?
+tab$allvars()
+
 # count-variables
 tab$cntvars()
 
