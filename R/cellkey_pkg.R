@@ -876,8 +876,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         ck_log("--> multiplicator: ", shQuote("flex"))
       }
 
-      ck_log("--> todo: parameter `mu_c`")
-      #message("--> mu_c: ", params$mu_c)
+      ck_log("--> mu_c: ", params$mu_c)
 
       # get maximum contributions for each cell and variable!
       # restrict to current variable
@@ -975,6 +974,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       }
       cellvals <- newtab[[paste0("ws_", v)]]
 
+      # we compute top_k-scrambled cell keys
       # required for argument `same_key`
       .scramble_ckeys <- function(ck, top_k, same_key) {
         beg <- substr(ck, 1, 2)
@@ -997,17 +997,14 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         }
         as.numeric(res)
       }
-
-      ck_log("scrambing cell keys depending on argument `same_key`")
-      # we compute top_k scambled cell keys
-
+      ck_log("scrambling cell keys depending on argument `same_key`")
       cellkeys <- lapply(cellkeys, function(x) {
         .scramble_ckeys(x, top_k = params$top_k, same_key = params$same_key)
       })
 
       ck_log("computing actual perturbation values")
 
-      # ignore dups for now
+      # we remove duplicated cells for now and add them later!
       names(cellkeys) <- dim_dt$strID
       index_nondup <- !duplicated(cellkeys)
       cellkeys <- cellkeys[index_nondup]
@@ -1048,12 +1045,21 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         }
         v
       }
+
+      # additional perturbation
+      mu_c <- rep(0, params$top_k)
+      mu_c[1] <- params$mu_c
       pvals <- lapply(1:length(cellkeys), function(x) {
-        .lookup_v(
+        p <- .lookup_v(
           stab = stab,
           cellkeys = cellkeys[[x]],
           x_delta = x_delta[[x]],
           cell_sum = cellvals[x])
+
+        # we add extra perturbation for largest contributor
+        # according to formula 2.1, page 5.
+        signs <- ifelse(p >= 0, 1, -1)
+        (abs(p) + mu_c[1:length(p)]) * signs
       })
       names(pvals) <- names(cellkeys)
 
