@@ -1,3 +1,26 @@
+# cellKey 0.18.0
+- allow to save perturbation-schemes for different variables in `$params_cnts_set()` and `$params_nums_set()`
+- allow return current active perturbation-schemes for variables with `params_cnts_get()` and `params_nums_get()`
+- new methods `$numvars()` and `$cntvars()` returning variable names eligable for perturbation
+- do not allow to change parameters once a variable has been perturbed
+- new method `$params_nums()` that allow to query and set perturbation parameters for magnitude variables
+- added maximum value of `6` in `params_num()` for parameter `top_k`
+- compute cell keys for both variants (all units and all units contributing to a given numerical key variable)
+- use environment variable `cellkey_debug` for debugging: internally we have `.ck_debug_off()`, `.ck_debug_on()` and can use `ck_log()`
+- export and document (helper)functions `ck_gridparams()` and `ck_flexparams()`
+- implement and document method `$numtab()` to extract numerical tables
+- added parameter `mean_before_sum` in `$numtab()`
+- new convinience method `$allvars()` returning a list form `$numvars()` and `$cntvars()`
+- new method `ck_params_nums()` to define perturbation parameters for continuous variables
+- add `mu_c` to `ck_params_nums()`
+- make use of `mu_c` in `$perturb()`
+- updated method `$print()` to include information about perturbed continuous variables
+- new methods `$reset_cntvars()`, `$reset_numvars()` and `$reset_allvars()` to remove perturbation results and provided perturbation parameters
+- implemented method `$mod_nums()` returning modifications to numerical variables
+- added argument `pos_neg_var` to `ck_params_nums()`
+- use parameter `pos_neg_var` in `$perturb()` for continuous variables
+- implemented special requirements for positive variables
+
 # cellKey 0.17.1
 - adding parameter `exclude_zero_cells` to `ck_cnt_measures()`
 - updated documentation
