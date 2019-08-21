@@ -1,6 +1,5 @@
 cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
   public=list(
-    #initialize=function(x, rkey, dims, w, countvars = NULL, numvars = NULL, params_cnts, params_nums = NULL) {
     initialize=function(x, rkey, dims, w, countvars = NULL, numvars = NULL) {
       type <- is_perturbed <- NULL
 
@@ -187,7 +186,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
           xx <- microdat[.tmpid %in% indices[[i]]]
           top_k <- min(top_k, nrow(xx))
           for (v in nv) {
-            setorderv(xx, v, order = -1L)
+            xx$.tmpordervar <- abs(xx[[v]])
+            setorderv(xx, ".tmpordervar", order = -1L)
 
             # unweighted
             out[[v]]$uw_ids <- xx$.tmpid[1:top_k]
@@ -198,11 +198,11 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
             # weighted
             xx$xw <- xx[[v]] * xx[[wvar]]
-            setorderv(xx, "xw", order = -1L)
+            xx$tmp2 <- abs(xx$xw)
+            setorderv(xx, "tmp2", order = -1L)
 
             out[[v]]$w_ids <- xx$.tmpid[1:top_k]
             out[[v]]$w_vals <- xx$xw[1:top_k]
-            out[[v]]$w_cell
             out[[v]]$w_spread <- diff(range(xx[[v]], na.rm = TRUE))
             out[[v]]$w_sum <- sum(xx$xw, na.rm = TRUE)
             out[[v]]$w_mean <- out[[v]]$w_sum / sum(xx[[wvar]], na.rm = TRUE)
@@ -643,6 +643,21 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         if (private$.is_perturbed_numvar(curvar)) {
           message("--> Variable ", shQuote(curvar), " was already perturbed: parameters are not updated.")
         } else {
+          if (val$params$pos_neg_var == 0 & min(private$.prob@dataObj@rawData[[curvar]], na.rm = TRUE) < 0) {
+            e <- c(
+              "Argument `pos_neg_var` equals `0` which defines a strictly positive variable but",
+              "variable ", shQuote(curvar), " contains negative values."
+            )
+            stop(paste(e, sep = " "), call. = FALSE)
+          }
+
+          if (val$params$pos_neg_var > 0 & min(private$.prob@dataObj@rawData[[curvar]], na.rm = TRUE) >= 0) {
+            e <- c(
+              "Argument `pos_neg_var` is != `0`. The value defines how to deal with a variable containing positive ",
+              "and negative values. Variable ", shQuote(curvar), " contains however only positive values."
+            )
+            stop(paste(e, sep = " "), call. = FALSE)
+          }
           if (curvar %in% names(ex_params)) {
             message("--> replacing perturbation parameters for variable ", shQuote(curvar))
           } else {
@@ -899,6 +914,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       ck_log("--> top_k: ", params$top_k)
       ck_log("--> same_key: ", params$same_key)
       ck_log("--> use_zero_rkeys: ", params$use_zero_rkeys)
+      ck_log("--> pos_neg_var: ", params$pos_neg_var)
 
       mult_params <- params$mult_params
       do_grid <- inherits(mult_params, "params_m_grid")
@@ -934,66 +950,14 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       newtab <- copy(private$.results[[v]])
       dim_dt <- private$.results[["dims"]]
 
-      # compute multiplication parameters m_j (x) * x
-      .get_multipliers <- function(params, x, top_k) {
-        UseMethod(".get_multipliers", params)
-      }
-      .get_multipliers.default <- function(params, x, top_k) {
-        stop("invalid input in .get_multipliers.default() detected!", call. = FALSE)
-      }
-      .get_multipliers.params_m_flex <- function(params, x, top_k) {
-        # by default: perturbation for small cells -> highest pctg
-        m <- rep(params$m_small, length(x))
-        fp <- params$flexpoint
-
-        ind_lg <- which(x > fp)
-        if (length(ind_lg) > 0) {
-          x_lg <- x[ind_lg]
-
-          f1 <- ((params$m_small * x_lg) - (params$m_large * fp)) / (params$m_large * fp)
-          f2 <- (2 * fp) / (fp + x_lg)
-          m[ind_lg] <- params$m_large * (1 + (f1 * f2 ^ params$q))
-        }
-
-        # fixed variance for very small observations
-        if (!is.null(params$m_fixed_sq)) {
-          # compute g1 (formula 2.3 on p.9)
-          g1 <- sqrt(params$m_fixed_sq) / (sqrt(top_k) * params$m_large)
-          # very small values
-          ind_vs <- which(x < g1)
-          if (length(ind_vs) > 0) {
-            m[ind_vs] <- sqrt(m_fixed_sq)
-            x[ind_vs] <- 1
-          }
-        }
-        #list(x = x, m = m, x_times_m = x * m)
-        x * m # x_delta!
-      }
-      .get_multipliers.params_m_grid <- function(params, x, top_k) {
-        m <- rep(NA, length(x))
-        rr <- lapply(x, function(y) y <= params$grid)
-
-        # smallest cells, highest perturbation
-        ind_sm <- sapply(rr, function(x) all(x == TRUE))
-        m[ind_sm] <- params$pcts[1]
-
-        # largest cells, smallest perturbation
-        ind_lg <- sapply(rr, function(x) all(x == FALSE))
-        m[ind_lg] <- tail(params$pcts, 1)
-
-        ind_mid <- is.na(m)
-        m[ind_mid] <- sapply(rr[ind_mid], function(x) {
-          params$pcts[min(which(x == TRUE))]
-        })
-        #list(x = x, m = m, x_times_m = x * m)
-        x * m
-      }
-
-      # we return x_j * m_j
+      # compute x_delta: multiplication parameters m_j (x) * x
       # reason: in case of fixed_variance for very small cells, x_j is changed to 1!
-      # corresponds to x_delta computation!
       x_delta <- lapply(x_vals, function(x) {
-        .get_multipliers(params = params$mult_params, x = x, top_k = params$top_k)
+        .get_x_delta(
+          params = params$mult_params,
+          x = x,
+          top_k = params$top_k,
+          m_fixed_sq = params$m_fixed_sq)
       })
 
       stab <- params$stab
@@ -1008,30 +972,12 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
       # we compute top_k-scrambled cell keys
       # required for argument `same_key`
-      .scramble_ckeys <- function(ck, top_k, same_key) {
-        beg <- substr(ck, 1, 2)
-        res <- rep(NA, top_k)
-
-        len <- nchar(ck)
-
-        if (!same_key) {
-          res[1] <- paste0(beg, substr(ck, 4, len), substr(ck, 3, 3))
-        } else {
-          res[1] <- ck
-        }
-
-        if (top_k == 1) {
-          return(as.numeric(res))
-        }
-
-        for (i in 2:top_k) {
-          res[i] <- paste0(beg, substr(res[i - 1], 4, len), substr(res[i- 1], 3, 3))
-        }
-        as.numeric(res)
-      }
       ck_log("scrambling cell keys depending on argument `same_key`")
       cellkeys <- lapply(cellkeys, function(x) {
-        .scramble_ckeys(x, top_k = params$top_k, same_key = params$same_key)
+        .scramble_ckeys(
+          ck = x,
+          top_k = params$top_k,
+          same_key = params$same_key)
       })
 
       ck_log("computing actual perturbation values")
@@ -1042,51 +988,17 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       cellkeys <- cellkeys[index_nondup]
       cellvals <- cellvals[index_nondup]
 
-      .lookup_v <- function(stab, cellkeys, x_delta, cell_sum) {
-        d <- max(stab$i) # parameter `D`
-
-        v <- rep(NA, length(cellkeys))
-        a <- cell_sum / x_delta
-        a[a > d] <- d # we cut at the maximum value!
-
-        ind_exact <- which(a %in% unique(stab$i))
-        if (length(ind_exact) > 0) {
-          v[ind_exact] <- sapply(ind_exact, function(x) {
-            stab$diff[min(which(cellkeys[x] < stab$kum_p_o & stab$i == d))]
-          })
-        }
-
-        ind_comb <- which(a < d)
-        if (length(ind_comb) > 0) {
-          v[ind_comb] <- sapply(ind_comb, function(x) {
-            poss <- sort(unique(stab$i))
-            a0 <- poss[which(x < poss) - 1]
-            a1 <- poss[max(which(x > poss)) + 1]
-
-            lambda <- (x - a0) / (a1 - a0)
-
-            # perturbation_value (low)
-            v0 <- stab$diff[min(which(cellkeys[x] < stab$kum_p_o & stab$i == a0))]
-
-            # perturbation_value (up)
-            v1 <- stab$diff[min(which(cellkeys[x] < stab$kum_p_o & stab$i == a1))]
-
-            # combine to get final perturbation value
-            (1 - lambda) * v0 + lambda * v1
-          })
-        }
-        v
-      }
-
       # additional perturbation
       mu_c <- rep(0, params$top_k)
       mu_c[1] <- params$mu_c
+
       pvals <- lapply(1:length(cellkeys), function(x) {
         p <- .lookup_v(
           stab = stab,
           cellkeys = cellkeys[[x]],
           x_delta = x_delta[[x]],
-          cell_sum = cellvals[x])
+          cell_sum = cellvals[x],
+          pos_neg_var = params$pos_neg_var)
 
         # we add extra perturbation for largest contributor
         # according to formula 2.1, page 5.
@@ -1100,9 +1012,13 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
       # we add some more variables here that we need for the mods-table (for debugging purposes)
       ck_log("compute perturbation values and final perturbed cell values for each cells")
+      ck_log("todo: check with tobias if dealing with positiv-only variables is ok!")
       pert_result <- rbindlist(lapply(names(pvals), function(x) {
         pert <- sum(pvals[[x]] * x_delta[[x]])
         cell_value_pert = w_sums[[x]] + pert
+        if (params$pos_neg_var == 0) {
+          cell_value_pert <- max(0, cell_value_pert)
+        }
         data.table(
           str_id = x,
           cv = w_sums[[x]],
@@ -1310,6 +1226,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' x[, cnt_females := ifelse(sex == "male", 0, 1)]
 #' x[, cnt_males := ifelse(sex == "male", 1, 0)]
 #' x[, cnt_highincome := ifelse(income >= 9000, 1, 0)]
+#' # a variable with positive and negative contributions
+#' x[, mixed := sample(-10:10, nrow(x), replace = TRUE)]
 #'
 #' # create record keys
 #' x$rkey <- ck_generate_rkeys(dat = x)
@@ -1327,7 +1245,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'
 #' # define the cell key object
 #' countvars <- c("cnt_females", "cnt_males", "cnt_highincome")
-#' numvars <- c("expend", "income", "savings")
+#' numvars <- c("expend", "income", "savings", "mixed")
 #' tab <- ck_setup(
 #'   x = x,
 #'   rkey = "rkey",
@@ -1382,19 +1300,24 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' # only unweighted and perturbed unweighted counts
 #' tab$freqtab(v = c("total", "cnt_males"), type = "unweighted")
 #'
-#' # numerical variables
+#' # numerical variables (positive variables using flex-function)
 #' p_nums1 <- ck_params_nums(
 #'   D = 10,
 #'   l = 0.5,
 #'   type = "top_contr",
 #'   top_k = 3,
+#'   m_fixed_sq = 2,
 #'   mult_params = ck_flexparams(
 #'     flexpoint = 1000,
-#'     m_fixed_sq = 2
-#'   )
+#'     m_small = 0.30,
+#'     m_large = 0.03,
+#'     q = 3
+#'   ),
+#'   pos_neg_var = 0
 #' )
 #'
 #' # another set of parameters, using a grid
+#' # for variables with positive and negative values
 #' p_nums2 <- ck_params_nums(
 #'   D = 10,
 #'   l = .5,
@@ -1402,14 +1325,18 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'   mult_params = ck_gridparams(
 #'     grid = c(0, 10, 100, 10000),
 #'     pcts = c(0.25, 0.20, 0.10, 0.05)
-#'   )
+#'   ),
+#'   same_key = FALSE,
+#'   use_zero_rkeys = TRUE,
+#'   m_fixed_sq = 4,
+#'   pos_neg_var = 2
 #' )
 #'
 #' # use `p_nums1` for all variables
-#' tab$params_nums_set(p_nums1)
+#' tab$params_nums_set(p_nums1, c("savings", "income", "expend"))
 #'
 #' # use different parameters for variable `savings`
-#' tab$params_nums_set(p_nums2, v = "savings")
+#' tab$params_nums_set(p_nums2, v = "mixed")
 #'
 #' # perturb variables
 #' tab$perturb(v = c("income", "savings"))

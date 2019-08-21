@@ -56,9 +56,11 @@ gen_stab <- function(D = 3, l = 0.5) {
 #' @param use_zero_rkeys (logical) skalar defining if record keys of
 #' units not contributing to a specific numeric variables should be
 #' used (`TRUE`) or ignored (`FALSE`) when computing cell keys.
+#' @param m_fixed_sq (numeric scalar); fixed noise variance for very small values
 #' @param pos_neg_var a number defining the strategy to look up perturbation values in case
 #' the observations can take positive and negative values. This setting is ignored if the variable
 #' has no negative values. The possible settings for parameter `pos_neg_var` are:
+#' - `0`: the variable must be strictly positive
 #' - `1`: the perturbation value is always selected from the block of perturbation
 #' values referring to the symmetric case (`i` equals `D` in the perturbation table) independent
 #' of the actual value of the observation
@@ -77,14 +79,14 @@ gen_stab <- function(D = 3, l = 0.5) {
 #'   l = 0.5,
 #'   type = "top_contr",
 #'   top_k = 3,
-#'   mu_c = 2,
 #'   mult_params = ck_flexparams(
 #'     flexpoint = 1000,
 #'     m_small = 0.20,
 #'     m_large = 0.03,
-#'     m_fixed_sq = NULL,
 #'     q = 2
 #'   ),
+#'   use_zero_rkeys = TRUE,
+#'   m_fixed_sq = 2,
 #'   mu_c = 3,
 #'   pos_neg_var = 2
 #' )
@@ -92,11 +94,12 @@ gen_stab <- function(D = 3, l = 0.5) {
 #'   D = 10,
 #'   l = .5,
 #'   type = "mean",
-#'   mu_c = 0,
 #'   mult_params = ck_gridparams(
 #'     grid = c(0, 10, 100, 10000),
 #'     pcts = c(0.25, 0.20, 0.10, 0.05)
 #'   ),
+#'   use_zero_rkeys = FALSE,
+#'   m_fixed_sq = 4,
 #'   mu_c = 5,
 #'   pos_neg_var = 3
 #' )
@@ -109,6 +112,7 @@ ck_params_nums <-
            mu_c = 0,
            same_key = TRUE,
            use_zero_rkeys = FALSE,
+           m_fixed_sq = NULL,
            pos_neg_var = 1) {
 
   stopifnot(is_scalar_integerish(D))
@@ -140,8 +144,8 @@ ck_params_nums <-
   if (!is_scalar_integerish(pos_neg_var)) {
     stop("`pos_neg_var` needs to be an integer(ish) number", call. = FALSE)
   }
-  if (!pos_neg_var %in% 1:3) {
-    stop("Argument `pos_neg_var` needs to be `1`, `2` or `3`.", call. = FALSE)
+  if (!pos_neg_var %in% 0:3) {
+    stop("Argument `pos_neg_var` needs to be `0`, 1`, `2` or `3`.", call. = FALSE)
   }
 
   if (type == "top_contr") {
@@ -158,6 +162,15 @@ ck_params_nums <-
     top_k <- 1
   }
 
+  if (!is.null(m_fixed_sq)) {
+    if (!rlang::is_scalar_double(m_fixed_sq)) {
+      stop("Argument `m_fixed_sq` is not a number.", call = FALSE)
+    }
+    if (m_fixed_sq <= 0) {
+      stop("Argument `m_fixed_sq` must be positive.", call. = FALSE)
+    }
+  }
+
   stab <- gen_stab(D = D, l = l)
   out <- list(
     params = list(
@@ -165,6 +178,7 @@ ck_params_nums <-
       top_k = top_k,
       stab = stab,
       mu_c = mu_c,
+      m_fixed_sq = m_fixed_sq,
       mult_params = mult_params,
       same_key = same_key,
       use_zero_rkeys = use_zero_rkeys,
@@ -184,6 +198,7 @@ ck_params_nums <-
 #' @details details about the grid function can be found in Deliverable D4.2, Part I in
 #' SGA *"Open Source tools for perturbative confidentiality methods"*
 #'
+#' @inheritParams ck_flexparams
 #' @param grid a numeric vector (ascending order) defining the bounds for which
 #' a specific percentage (defined in `pcts`) needs to be applied
 #' @param pcts a numeric vector defining percentages (between `0` and `1`)
@@ -241,7 +256,6 @@ ck_gridparams <- function(grid, pcts) {
 #' function reaches its desired maximum (defined by `m_small`)
 #' @param m_small (numeric scalar); the desired maximum percentage for the function (for small values)
 #' @param m_large (numeric scalar); the desired noise percentage for larger values
-#' @param m_fixed_sq (numeric scalar); fixed noise variance for very small values
 #' @param q (numeric scalar); Parameter of the function; `q` needs to be `>= 1`
 #'
 #' @return an object suitable as input for [ck_params_nums()].
@@ -249,7 +263,7 @@ ck_gridparams <- function(grid, pcts) {
 #' @inherit cellkey_pkg examples
 #' @seealso [ck_params_nums()], [ck_gridparams()]
 #' @md
-ck_flexparams <- function(flexpoint, m_small = 0.25, m_large = 0.05, m_fixed_sq = NULL, q = 3) {
+ck_flexparams <- function(flexpoint, m_small = 0.25, m_large = 0.05, q = 3) {
   if (!rlang::is_scalar_double(flexpoint)) {
     stop("Argument `flexpoint` is not a number.", call = FALSE)
   }
@@ -274,21 +288,10 @@ ck_flexparams <- function(flexpoint, m_small = 0.25, m_large = 0.05, m_fixed_sq 
   if (q < 1) {
     stop("Argument `q` needs to be >= 1", call. = FALSE)
   }
-
-  if (!is.null(m_fixed_sq)) {
-    if (!rlang::is_scalar_double(m_fixed_sq)) {
-      stop("Argument `m_fixed_sq` is not a number.", call = FALSE)
-    }
-    if (m_fixed_sq <= 0) {
-      stop("Argument `m_fixed_sq` must be positive.", call. = FALSE)
-    }
-  }
-
   out <- list(
     flexpoint = flexpoint,
     m_small = m_small,
     m_large = m_large,
-    m_fixed_sq = m_fixed_sq,
     q = q
   )
   class(out) <- "params_m_flex"

@@ -6,7 +6,7 @@
 \usage{
 ck_params_nums(type = "top_contr", top_k = NULL, D, l, mult_params,
   mu_c = 0, same_key = TRUE, use_zero_rkeys = FALSE,
-  pos_neg_var = 1)
+  m_fixed_sq = NULL, pos_neg_var = 1)
 }
 \arguments{
 \item{type}{a character value defining the way to identify the \code{magnifier},
@@ -44,10 +44,13 @@ cell or should a perturbation of the cellkey itself (\code{FALSE}) take place.}
 units not contributing to a specific numeric variables should be
 used (\code{TRUE}) or ignored (\code{FALSE}) when computing cell keys.}
 
+\item{m_fixed_sq}{(numeric scalar); fixed noise variance for very small values}
+
 \item{pos_neg_var}{a number defining the strategy to look up perturbation values in case
 the observations can take positive and negative values. This setting is ignored if the variable
 has no negative values. The possible settings for parameter \code{pos_neg_var} are:
 \itemize{
+\item \code{0}: the variable must be strictly positive
 \item \code{1}: the perturbation value is always selected from the block of perturbation
 values referring to the symmetric case (\code{i} equals \code{D} in the perturbation table) independent
 of the actual value of the observation
@@ -71,25 +74,28 @@ ck_params_nums(
   l = 0.5,
   type = "top_contr",
   top_k = 3,
-  mu_c = 2,
   mult_params = ck_flexparams(
     flexpoint = 1000,
     m_small = 0.20,
     m_large = 0.03,
-    m_fixed_sq = NULL,
     q = 2
   ),
+  use_zero_rkeys = TRUE,
+  m_fixed_sq = 2,
+  mu_c = 3,
   pos_neg_var = 2
 )
 ck_params_nums(
   D = 10,
   l = .5,
   type = "mean",
-  mu_c = 0,
   mult_params = ck_gridparams(
     grid = c(0, 10, 100, 10000),
     pcts = c(0.25, 0.20, 0.10, 0.05)
   ),
+  use_zero_rkeys = FALSE,
+  m_fixed_sq = 4,
+  mu_c = 5,
   pos_neg_var = 3
 )
 }

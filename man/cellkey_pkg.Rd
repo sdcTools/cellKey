@@ -135,6 +135,8 @@ x <- ck_create_testdata()
 x[, cnt_females := ifelse(sex == "male", 0, 1)]
 x[, cnt_males := ifelse(sex == "male", 1, 0)]
 x[, cnt_highincome := ifelse(income >= 9000, 1, 0)]
+# a variable with positive and negative contributions
+x[, mixed := sample(-10:10, nrow(x), replace = TRUE)]
 
 # create record keys
 x$rkey <- ck_generate_rkeys(dat = x)
@@ -152,7 +154,7 @@ d_age <- hier_add(d_age, root = "age_group2", "ag2a")
 
 # define the cell key object
 countvars <- c("cnt_females", "cnt_males", "cnt_highincome")
-numvars <- c("expend", "income", "savings")
+numvars <- c("expend", "income", "savings", "mixed")
 tab <- ck_setup(
   x = x,
   rkey = "rkey",
@@ -207,19 +209,24 @@ tab$freqtab(v = c("total", "cnt_males"))
 # only unweighted and perturbed unweighted counts
 tab$freqtab(v = c("total", "cnt_males"), type = "unweighted")
 
-# numerical variables
+# numerical variables (positive variables using flex-function)
 p_nums1 <- ck_params_nums(
   D = 10,
   l = 0.5,
   type = "top_contr",
   top_k = 3,
+  m_fixed_sq = 2,
   mult_params = ck_flexparams(
     flexpoint = 1000,
-    m_fixed_sq = 2
-  )
+    m_small = 0.30,
+    m_large = 0.03,
+    q = 3
+  ),
+  pos_neg_var = 0
 )
 
 # another set of parameters, using a grid
+# for variables with positive and negative values
 p_nums2 <- ck_params_nums(
   D = 10,
   l = .5,
@@ -227,14 +234,18 @@ p_nums2 <- ck_params_nums(
   mult_params = ck_gridparams(
     grid = c(0, 10, 100, 10000),
     pcts = c(0.25, 0.20, 0.10, 0.05)
-  )
+  ),
+  same_key = FALSE,
+  use_zero_rkeys = TRUE,
+  m_fixed_sq = 4,
+  pos_neg_var = 2
 )
 
 # use `p_nums1` for all variables
-tab$params_nums_set(p_nums1)
+tab$params_nums_set(p_nums1, c("savings", "income", "expend"))
 
 # use different parameters for variable `savings`
-tab$params_nums_set(p_nums2, v = "savings")
+tab$params_nums_set(p_nums2, v = "mixed")
 
 # perturb variables
 tab$perturb(v = c("income", "savings"))
