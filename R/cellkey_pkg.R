@@ -993,6 +993,9 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       mu_c[1] <- params$mu_c
 
       pvals <- lapply(1:length(cellkeys), function(x) {
+        if (params$pos_neg_var == 0) {
+          x_delta[[x]] <- pmin(x_delta[[x]], max_contr[[x]]$w_sum)
+        }
         p <- .lookup_v(
           stab = stab,
           cellkeys = cellkeys[[x]],
@@ -1003,21 +1006,27 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         # we add extra perturbation for largest contributor
         # according to formula 2.1, page 5.
         signs <- ifelse(p >= 0, 1, -1)
-        (abs(p) + mu_c[1:length(p)]) * signs
+        p <- (abs(p) + mu_c[1:length(p)]) * signs
+        p
       })
       names(pvals) <- names(cellkeys)
 
       # actual perturbation for cells are sum(pvals * x_delta)
       # these values are added to the weighted cell total to get final perturbed cell values
-
-      # we add some more variables here that we need for the mods-table (for debugging purposes)
+      # in case we want to ensure positivity (see section 2.5.1 in D4.2), we apply the formula listed there
+      # also, we add some more variables here that we need for the mods-table (for debugging purposes)
       ck_log("compute perturbation values and final perturbed cell values for each cells")
-      ck_log("todo: check with tobias if dealing with positiv-only variables is ok!")
       pert_result <- rbindlist(lapply(names(pvals), function(x) {
-        pert <- sum(pvals[[x]] * x_delta[[x]])
-        cell_value_pert = w_sums[[x]] + pert
         if (params$pos_neg_var == 0) {
-          cell_value_pert <- max(0, cell_value_pert)
+          cell_value_pert <- w_sums[[x]]
+          pertvals <- pvals[[x]] * x_delta[[x]]
+          for (k in 1:length(pvals[[x]])) {
+            cell_value_pert <- max(cell_value_pert + pertvals[k], 0)
+          }
+          pert <- w_sums[[x]]  - cell_value_pert
+        } else {
+          pert <- sum(pvals[[x]] * x_delta[[x]])
+          cell_value_pert <- w_sums[[x]] + pert
         }
         data.table(
           str_id = x,
