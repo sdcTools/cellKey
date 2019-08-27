@@ -922,6 +922,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         ck_log("--> multiplicator: ", shQuote("grid"))
       } else {
         ck_log("--> multiplicator: ", shQuote("flex"))
+        ck_log("--> epsilon: ", paste(params$mult_params$epsilon, collapse = ", "))
+        ck_log("--> scaling: ", params$mult_params$scaling)
       }
 
       ck_log("--> mu_c: ", params$mu_c)
@@ -1315,13 +1317,16 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'   l = 0.5,
 #'   type = "top_contr",
 #'   top_k = 3,
-#'   m_fixed_sq = 2,
 #'   mult_params = ck_flexparams(
 #'     flexpoint = 1000,
 #'     m_small = 0.30,
 #'     m_large = 0.03,
+#'     epsilon = c(1, 0.5, 0.2),
 #'     q = 3
 #'   ),
+#'   mu_c = 2,
+#'   m_fixed_sq = 4,
+#'   same_key = FALSE,
 #'   pos_neg_var = 0
 #' )
 #'
@@ -1335,6 +1340,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'     grid = c(0, 10, 100, 10000),
 #'     pcts = c(0.25, 0.20, 0.10, 0.05)
 #'   ),
+#'   mu_c = 4,
 #'   same_key = FALSE,
 #'   use_zero_rkeys = TRUE,
 #'   m_fixed_sq = 4,

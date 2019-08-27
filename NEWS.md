@@ -19,7 +19,9 @@
 - implemented method `$mod_nums()` returning modifications to numerical variables
 - added argument `pos_neg_var` to `ck_params_nums()`
 - use parameter `pos_neg_var` in `$perturb()` for continuous variables
-- implemented special requirements for positive variables
+- implemented special requirements for positive variables according to section 2.5.1
+- update flex-function use logical argument `scaling`
+- magnitutes of perturbation depend on argument `epsilon` in `ck_flexparams()`
 
 # cellKey 0.17.1
 - adding parameter `exclude_zero_cells` to `ck_cnt_measures()`

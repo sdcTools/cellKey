@@ -21,6 +21,11 @@
   as.numeric(res)
 }
 
+# g1 value (section 2.3.1 in deliverable 4.2)
+.g1 <- function(m_fixed_sq, top_k, m_large) {
+  sqrt(m_fixed_sq) / (sqrt(top_k) * m_large)
+}
+
 # compute x_delta  multiplication parameters m_j (x) * x
 .get_x_delta <- function(params, x, top_k, m_fixed_sq) {
   UseMethod(".get_x_delta", params)
@@ -29,23 +34,41 @@
   stop("invalid input in `.get_x_delta()` detected!", call. = FALSE)
 }
 .get_x_delta.params_m_flex <- function(params, x, top_k, m_fixed_sq) {
+  params$scaling <- TRUE
+
   # by default: perturbation for small cells -> highest pctg
-  m <- rep(params$m_small, length(x))
   fp <- params$flexpoint
 
-  ind_lg <- which(x > fp)
-  if (length(ind_lg) > 0) {
-    x_lg <- x[ind_lg]
+  g1 <- .g1(
+    m_fixed_sq = m_fixed_sq,
+    top_k = top_k,
+    m_large = params$m_large)
 
-    f1 <- ((params$m_small * x_lg) - (params$m_large * fp)) / (params$m_large * fp)
-    f2 <- (2 * fp) / (fp + x_lg)
-    m[ind_lg] <- params$m_large * (1 + (f1 * f2 ^ params$q))
+  if (!params$scaling) {
+    m <- rep(1, length(x))
+
+    # for details, see scaling.docx (from pp)
+    ind_lg <-  which(x > g1)
+    if (length(ind_lg) > 0) {
+      m[ind_lg] <- params$m_large * params$epsilon[ind_lg]
+    }
+  } else {
+    m <- rep(params$m_small, length(x))
+    ind_lg <- which(x > fp)
+    if (length(ind_lg) > 0) {
+      x_lg <- x[ind_lg]
+
+      m_lg <- params$m_large * params$epsilon[ind_lg]
+      m_sm <- params$m_small * params$epsilon[ind_lg]
+
+      f1 <- ((m_sm * x_lg) - (m_lg * fp)) / (m_lg * fp)
+      f2 <- (2 * fp) / (fp + x_lg)
+      m[ind_lg] <- m_lg * (1 + (f1 * f2 ^ params$q))
+    }
   }
 
   # fixed variance for very small observations
   if (!is.null(m_fixed_sq)) {
-    # compute g1 (formula 2.3 on p.9)
-    g1 <- sqrt(m_fixed_sq) / (sqrt(top_k) * params$m_large)
     # very small values
     ind_vs <- which(x < g1)
     if (length(ind_vs) > 0) {
@@ -87,9 +110,6 @@
   }
   x * m
 }
-
-# .get_x_delta(params = ck_flexparams(flexpoint = 100), x = c(100, 20), top_k = 3, m_fixed_sq = 2)
-# .get_x_delta(params = ck_flexparams(flexpoint = 100), x = c(-100, 20), top_k = 3, m_fixed_sq = 2)
 
 # returning perturbation values from `stab` based on cellkeys, x_delta (x * m), the weighted cell-value and
 # pos_neg_var (defined in `ck_parmams_nums()`)

@@ -78,6 +78,8 @@ ck_params_nums(
     flexpoint = 1000,
     m_small = 0.20,
     m_large = 0.03,
+    scaling = FALSE,
+    epsilon = c(1, 0.5, 0.2),
     q = 2
   ),
   use_zero_rkeys = TRUE,

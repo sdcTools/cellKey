@@ -83,6 +83,8 @@ gen_stab <- function(D = 3, l = 0.5) {
 #'     flexpoint = 1000,
 #'     m_small = 0.20,
 #'     m_large = 0.03,
+#'     scaling = FALSE,
+#'     epsilon = c(1, 0.5, 0.2),
 #'     q = 2
 #'   ),
 #'   use_zero_rkeys = TRUE,
@@ -160,6 +162,12 @@ ck_params_nums <-
       message("ignoring argument `top_k`")
     }
     top_k <- 1
+  }
+
+  if (inherits(mult_params, "params_m_flex")) {
+    if (length(mult_params$epsilon) != top_k) {
+      stop("Invalid length or argument `epsilon` in `mult_params` detected.", call. = FALSE)
+    }
   }
 
   if (!is.null(m_fixed_sq)) {
@@ -257,13 +265,20 @@ ck_gridparams <- function(grid, pcts) {
 #' @param m_small (numeric scalar); the desired maximum percentage for the function (for small values)
 #' @param m_large (numeric scalar); the desired noise percentage for larger values
 #' @param q (numeric scalar); Parameter of the function; `q` needs to be `>= 1`
-#'
+#' @param epsilon a numeric vector in descending order with all values `>= 0` and `<= 1` with the first
+#' element forced to equal 1. The length of this vector must correspond with the number `topK`
+#' specified in [ck_params_nums()] when creating parameters for `type == "top_contr"` which is
+#' checked at runtime. This setting allows to use different flex-functions for the largest `top_k` contributors.
+#' @param scaling (logical scalar); if `TRUE`, the magnitude parameter is computed as described in
+#' deliverable 4.2 (section `2.3.1`); otherwise a simpler approach is taken where the perturbation magnitudes
+#' are proportional to `epsilon` times `m_large` for sufficient large values.
 #' @return an object suitable as input for [ck_params_nums()].
+
 #' @export
 #' @inherit cellkey_pkg examples
 #' @seealso [ck_params_nums()], [ck_gridparams()]
 #' @md
-ck_flexparams <- function(flexpoint, m_small = 0.25, m_large = 0.05, q = 3) {
+ck_flexparams <- function(flexpoint, m_small = 0.25, m_large = 0.05, epsilon = 1, scaling = TRUE, q = 3) {
   if (!rlang::is_scalar_double(flexpoint)) {
     stop("Argument `flexpoint` is not a number.", call = FALSE)
   }
@@ -288,10 +303,33 @@ ck_flexparams <- function(flexpoint, m_small = 0.25, m_large = 0.05, q = 3) {
   if (q < 1) {
     stop("Argument `q` needs to be >= 1", call. = FALSE)
   }
+
+  if (!is.numeric(epsilon)) {
+    stop("Argument `epsilon` must be a numeric vector", call. = FALSE)
+  }
+  if (any(epsilon < 0)) {
+    stop("Argument `epsilon` must contain only numbers >= 0", call. = FALSE)
+  }
+  if (any(epsilon > 1)) {
+    stop("Argument `epsilon` must contain only numbers <= 1", call. = FALSE)
+  }
+  if (epsilon[1] != 1) {
+    stop("The first element of `epsilon` must equal 1", call. = FALSE)
+  }
+  if (length(epsilon) > 1) {
+    if (any(diff(epsilon) > 0)) {
+      stop("Argument `epsilon` must contain numbers in descending order", call. = FALSE)
+    }
+  }
+  if (!rlang::is_scalar_logical(scaling)) {
+    stop("Argument `scaling` is not a logical scalar", call = FALSE)
+  }
   out <- list(
     flexpoint = flexpoint,
     m_small = m_small,
     m_large = m_large,
+    epsilon = epsilon,
+    scaling = scaling,
     q = q
   )
   class(out) <- "params_m_flex"
