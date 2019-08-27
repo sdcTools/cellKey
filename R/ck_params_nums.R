@@ -46,7 +46,10 @@ gen_stab <- function(D = 3, l = 0.5) {
 #' a integerish number >= 1 specifying the number of top contributions whose
 #' values should be perturbed.
 #' @param mult_params an object derived by either [ck_gridparams()] or [ck_flexparams()]
-#' that specified parameters for the computation of the multiplier.
+#' that specified parameters for the computation of the multiplier. In case the input
+#' was created using [ck_gridparams()], it is also possible to specify a list (with `top_k`
+#' elements with each being the output from [ck_gridparams()]. Thus, it is possible to
+#' use different grids for each `top_k` largest contributors.
 #' @param mu_c fixed extra protection amount (`>= 0)` applied to the absolute of the
 #' perturbation value of the first (largest) noise component; defaults to
 #' `0` (no additional protection)
@@ -132,9 +135,6 @@ ck_params_nums <-
   if (mu_c < 0) {
     stop("Argument `mu_c` is not >= 0.", call. = FALSE)
   }
-  if (!inherits(mult_params, "params_m_grid") & !inherits(mult_params, "params_m_flex")) {
-    stop("Argument `mult_params` needs to be created via `ck_gridparams()` or `ck_flexparams()`", call. = FALSE)
-  }
 
   if (!is_scalar_logical(same_key)) {
     stop("`same_key` needs to be a scalar logical", call. = FALSE)
@@ -164,11 +164,33 @@ ck_params_nums <-
     top_k <- 1
   }
 
+  if (!inherits(mult_params, "params_m_grid") & !inherits(mult_params, "params_m_flex")) {
+    cl <- sapply(mult_params, class)
+    if (!all(cl == "params_m_grid")) {
+      stop("Not all elements in `mult_params` were generated using `ck_gridparams()`", call. = FALSE)
+    }
+    if (length(cl) != top_k) {
+      stop("The number of elements provided in `mult_params` is different from `top_k`", call. = FALSE)
+    }
+
+    # create a list for grid-input (with the same parameters!)
+    if (length(mult_params) == 1) {
+      tmp <- vector("list", top_k)
+      for (i in 1:top_k) {
+        tmp[[i]] <- mult_params
+      }
+      mult_params <- tmp
+    }
+    class(mult_params) <- "params_m_grid"
+  }
+
   if (inherits(mult_params, "params_m_flex")) {
     if (length(mult_params$epsilon) != top_k) {
       stop("Invalid length or argument `epsilon` in `mult_params` detected.", call. = FALSE)
     }
   }
+
+
 
   if (!is.null(m_fixed_sq)) {
     if (!rlang::is_scalar_double(m_fixed_sq)) {

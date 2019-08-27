@@ -22,6 +22,9 @@
 - implemented special requirements for positive variables according to section 2.5.1
 - update flex-function use logical argument `scaling`
 - magnitutes of perturbation depend on argument `epsilon` in `ck_flexparams()`
+- allow grid inputs as list for each top_k value
+
+  
 
 # cellKey 0.17.1
 - adding parameter `exclude_zero_cells` to `ck_cnt_measures()`

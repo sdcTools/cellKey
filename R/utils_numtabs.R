@@ -79,28 +79,37 @@
   x * m
 }
 .get_x_delta.params_m_grid <- function(params, x, top_k, m_fixed_sq) {
+  # params is a list of parameters of length top_k
   m <- rep(NA, length(x))
 
   # footnote 3, page 7 -> if x < 0 -> use abs(x)
-  rr <- lapply(abs(x), function(y) y <= params$grid)
+  rr <- lapply(1:length(x), function(i) {
+    abs(x[i]) <= params[[i]]$grid
+  })
 
   # smallest cells, highest perturbation
   ind_sm <- sapply(rr, function(x) all(x == TRUE))
-  m[ind_sm] <- params$pcts[1]
+  m[ind_sm] <- sapply(params[1:length(x)], function(x) x$pcts[1])
 
   # largest cells, smallest perturbation
   ind_lg <- sapply(rr, function(x) all(x == FALSE))
-  m[ind_lg] <- utils::tail(params$pcts, 1)
+  m[ind_lg] <- sapply(params[1:length(x)], function(x) utils::tail(x$pcts, 1))
 
-  ind_mid <- is.na(m)
-  m[ind_mid] <- sapply(rr[ind_mid], function(x) {
-    params$pcts[min(which(x == TRUE))]
-  })
+  ind_mid <- which(is.na(m))
+  if (length(ind_mid) > 0) {
+    m[ind_mid] <- sapply(ind_mid, function(x) {
+      params[[x]]$pcts[min(which(rr[[x]] == TRUE))]
+    })
+  }
 
   # fixed variance for very small observations
   if (!is.null(m_fixed_sq)) {
     # compute g1 (formula 2.3 on p.9)
-    g1 <- sqrt(m_fixed_sq) / (sqrt(top_k) * params$pcts[1])
+    g1 <- .g1(
+      m_fixed_sq = m_fixed_sq,
+      top_k = top_k,
+      m_large = params[[1]]$pcts[1])
+
     # very small (absolute) values
     ind_vs <- which(abs(x) < g1)
     if (length(ind_vs) > 0) {

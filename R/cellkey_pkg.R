@@ -954,6 +954,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
       # compute x_delta: multiplication parameters m_j (x) * x
       # reason: in case of fixed_variance for very small cells, x_j is changed to 1!
+      message("todo: check in grid-case if g_1  depends on j or not; for now it depends on first element in list!")
       x_delta <- lapply(x_vals, function(x) {
         .get_x_delta(
           params = params$mult_params,

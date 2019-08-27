@@ -30,7 +30,10 @@ a integerish number >= 1 specifying the number of top contributions whose
 values should be perturbed.}
 
 \item{mult_params}{an object derived by either \code{\link[=ck_gridparams]{ck_gridparams()}} or \code{\link[=ck_flexparams]{ck_flexparams()}}
-that specified parameters for the computation of the multiplier.}
+that specified parameters for the computation of the multiplier. In case the input
+was created using \code{\link[=ck_gridparams]{ck_gridparams()}}, it is also possible to specify a list (with \code{top_k}
+elements with each being the output from \code{\link[=ck_gridparams]{ck_gridparams()}}. Thus, it is possible to
+use different grids for each \code{top_k} largest contributors.}
 
 \item{mu_c}{fixed extra protection amount (\code{>= 0)} applied to the absolute of the
 perturbation value of the first (largest) noise component; defaults to
