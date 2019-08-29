@@ -21,64 +21,20 @@
   as.numeric(res)
 }
 
-# g1 value (section 2.3.1 in deliverable 4.2)
-.g1 <- function(m_fixed_sq, top_k, m_large) {
-  sqrt(m_fixed_sq) / (sqrt(top_k) * m_large)
+# g1 value (section 2.3.1 in deliverable 4.2);
+# modified according to "correction.docx" from 28.8.19
+.g1 <- function(m_fixed_sq, E, m_large) {
+  # in case m_fixed_sq is NULL (no separation) -> g1 is set to 0
+  if (is.null(m_fixed_sq)) {
+    return(0)
+  }
+  sqrt(m_fixed_sq) / (sqrt(E) * m_large)
 }
 
 # compute x_delta  multiplication parameters m_j (x) * x
-.get_x_delta <- function(params, x, top_k, m_fixed_sq) {
-  UseMethod(".get_x_delta", params)
-}
-.get_x_delta.default <- function(params, x, top_k, m_fixed_sq) {
-  stop("invalid input in `.get_x_delta()` detected!", call. = FALSE)
-}
-.get_x_delta.params_m_flex <- function(params, x, top_k, m_fixed_sq) {
-  params$scaling <- TRUE
-
-  # by default: perturbation for small cells -> highest pctg
-  fp <- params$flexpoint
-
-  g1 <- .g1(
-    m_fixed_sq = m_fixed_sq,
-    top_k = top_k,
-    m_large = params$m_large)
-
-  if (!params$scaling) {
-    m <- rep(1, length(x))
-
-    # for details, see scaling.docx (from pp)
-    ind_lg <-  which(x > g1)
-    if (length(ind_lg) > 0) {
-      m[ind_lg] <- params$m_large * params$epsilon[ind_lg]
-    }
-  } else {
-    m <- rep(params$m_small, length(x))
-    ind_lg <- which(x > fp)
-    if (length(ind_lg) > 0) {
-      x_lg <- x[ind_lg]
-
-      m_lg <- params$m_large * params$epsilon[ind_lg]
-      m_sm <- params$m_small * params$epsilon[ind_lg]
-
-      f1 <- ((m_sm * x_lg) - (m_lg * fp)) / (m_lg * fp)
-      f2 <- (2 * fp) / (fp + x_lg)
-      m[ind_lg] <- m_lg * (1 + (f1 * f2 ^ params$q))
-    }
-  }
-
-  # fixed variance for very small observations
-  if (!is.null(m_fixed_sq)) {
-    # very small values
-    ind_vs <- which(x < g1)
-    if (length(ind_vs) > 0) {
-      m[ind_vs] <- sqrt(m_fixed_sq)
-      x[ind_vs] <- 1
-    }
-  }
-  x * m
-}
-.get_x_delta.params_m_grid <- function(params, x, top_k, m_fixed_sq) {
+# not yet supported
+.x_delta_grid <- function(params, x, top_k, m_fixed_sq) {
+  stop("grids will be available in a future version!", call. = FALSE)
   # params is a list of parameters of length top_k
   m <- rep(NA, length(x))
 
@@ -104,10 +60,11 @@
 
   # fixed variance for very small observations
   if (!is.null(m_fixed_sq)) {
-    # compute g1 (formula 2.3 on p.9)
+    # compute g1 ("correction.docx" from sarah, 28.8.19)
+    # modified formula 2.3 on p.9)
     g1 <- .g1(
       m_fixed_sq = m_fixed_sq,
-      top_k = top_k,
+      E = top_k,
       m_large = params[[1]]$pcts[1])
 
     # very small (absolute) values
@@ -118,6 +75,61 @@
     }
   }
   x * m
+}
+
+# returns a list with the x_delta values (x * m) and
+# where to look in the ptable (all_cells or small_cells)
+.x_delta_flex <- function(params, x, m_fixed_sq) {
+  params$scaling <- TRUE
+  fp <- params$flexpoint
+
+  E <- sum(params$epsilon^2)
+  separation <- !is.null(m_fixed_sq)
+
+  lookup <- rep("all", length(x))
+
+  # g1 is 0 in case m_fixed_sq was not specified
+  g1 <- .g1(
+    m_fixed_sq = m_fixed_sq,
+    E = E,
+    m_large = params$m_large)
+
+  # by default: perturbation for small cells -> highest pctg
+  if (!params$scaling) {
+    m <- rep(1, length(x))
+
+    # for details, see scaling.docx (from pp)
+    ind_lg <-  which(abs(x) > g1)
+    if (length(ind_lg) > 0) {
+      m[ind_lg] <- params$m_large * params$epsilon[ind_lg]
+    }
+  } else {
+    m <- rep(params$m_small, length(x))
+    ind_lg <- which(abs(x) > fp)
+    if (length(ind_lg) > 0) {
+      x_lg <- x[ind_lg]
+
+      m_lg <- params$m_large * params$epsilon[ind_lg]
+      m_sm <- params$m_small * params$epsilon[ind_lg]
+
+      f1 <- ((m_sm * x_lg) - (m_lg * fp)) / (m_lg * fp)
+      f2 <- (2 * fp) / (fp + x_lg)
+      m[ind_lg] <- m_lg * (1 + (f1 * f2 ^ params$q))
+    }
+
+    # fixed variance for very small observations
+    # very small values
+    ind_vs <- which(x < g1)
+    if (length(ind_vs) > 0) {
+      m[ind_vs] <- (sqrt(m_fixed_sq) * params$epsilon[ind_vs]) / sqrt(E)
+      x[ind_vs] <- 1
+      lookup[ind_vs] <- "small_cells"
+    }
+  }
+  list(
+    x_delta = x * m,
+    lookup = lookup
+  )
 }
 
 # returning perturbation values from `stab` based on cellkeys, x_delta (x * m), the weighted cell-value and

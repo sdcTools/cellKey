@@ -16,15 +16,16 @@
 - make use of `mu_c` in `$perturb()`
 - updated method `$print()` to include information about perturbed continuous variables
 - new methods `$reset_cntvars()`, `$reset_numvars()` and `$reset_allvars()` to remove perturbation results and provided perturbation parameters
-- implemented method `$mod_nums()` returning modifications to numerical variables
-- added argument `pos_neg_var` to `ck_params_nums()`
-- use parameter `pos_neg_var` in `$perturb()` for continuous variables
+- implemented method `$mod_nums()` returning modifications for numerical variables (for each `top_k` values)
+- added argument `pos_neg_var` to `ck_params_nums()` and use it in `$perturb()` for continuous variables
 - implemented special requirements for positive variables according to section 2.5.1
 - update flex-function use logical argument `scaling`
 - magnitutes of perturbation depend on argument `epsilon` in `ck_flexparams()`
-- allow grid inputs as list for each top_k value
-
-  
+- implemented grid inputs as list for each `top_k` value but removed it from being accessible
+- changed (internal) format of ptable for magnitude tables
+    * added column `type` with values `all` or `small_cells`
+- modified flex-function to implement concept of "proportional flexing"
+- setting `m_fixed_sq != NULL` triggers lookup in extra block of provided perturbation table (`type == "small_cells"`)
 
 # cellKey 0.17.1
 - adding parameter `exclude_zero_cells` to `ck_cnt_measures()`

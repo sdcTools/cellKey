@@ -29,11 +29,8 @@ is used.
 a integerish number >= 1 specifying the number of top contributions whose
 values should be perturbed.}
 
-\item{mult_params}{an object derived by either \code{\link[=ck_gridparams]{ck_gridparams()}} or \code{\link[=ck_flexparams]{ck_flexparams()}}
-that specified parameters for the computation of the multiplier. In case the input
-was created using \code{\link[=ck_gridparams]{ck_gridparams()}}, it is also possible to specify a list (with \code{top_k}
-elements with each being the output from \code{\link[=ck_gridparams]{ck_gridparams()}}. Thus, it is possible to
-use different grids for each \code{top_k} largest contributors.}
+\item{mult_params}{an object derived with \code{\link[=ck_flexparams]{ck_flexparams()}}
+that specified parameters for the computation of the multiplier using a flex function.}
 
 \item{mu_c}{fixed extra protection amount (\code{>= 0)} applied to the absolute of the
 perturbation value of the first (largest) noise component; defaults to
@@ -90,20 +87,7 @@ ck_params_nums(
   mu_c = 3,
   pos_neg_var = 2
 )
-ck_params_nums(
-  D = 10,
-  l = .5,
-  type = "mean",
-  mult_params = ck_gridparams(
-    grid = c(0, 10, 100, 10000),
-    pcts = c(0.25, 0.20, 0.10, 0.05)
-  ),
-  use_zero_rkeys = FALSE,
-  m_fixed_sq = 4,
-  mu_c = 5,
-  pos_neg_var = 3
-)
 }
 \seealso{
-\code{\link[=ck_gridparams]{ck_gridparams()}}, \code{\link[=ck_flexparams]{ck_flexparams()}}
+\code{\link[=ck_flexparams]{ck_flexparams()}}
 }

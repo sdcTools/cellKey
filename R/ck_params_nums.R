@@ -1,4 +1,4 @@
-gen_stab <- function(D = 3, l = 0.5) {
+gen_stab <- function(D = 3, l = 0.5, add_small_cells = TRUE) {
   .gen <- function(i, min_d, max_d, l) {
     pval <- seq(min_d, max_d, by = l)
     x <- data.table(
@@ -23,6 +23,18 @@ gen_stab <- function(D = 3, l = 0.5) {
   # i == D
   dt_b <- .gen(i = D, min_d = -D, max_d = D, l = l)
   dt <- rbind(dt, dt_a, dt_b)
+  dt$type <- "all"
+
+  if (add_small_cells) {
+    dt_small <- data.table(i = 0, j = 0, p = 1, kum_p_u = 0, kum_p_o = 1, diff = 0)
+    # i:=1
+    dt_a <- .gen(i = 1, min_d = -1, max_d = D, l = l)
+    # i == D
+    dt_b <- .gen(i = D, min_d = -D, max_d = D, l = l)
+    dt_small <- rbind(dt_small, dt_a, dt_b)
+    dt_small$type <- "small_cells"
+    dt <- rbind(dt, dt_small)
+  }
   dt
 }
 
@@ -45,11 +57,8 @@ gen_stab <- function(D = 3, l = 0.5) {
 #' @param l stepwidth parameter for computation of perturbation tables
 #' a integerish number >= 1 specifying the number of top contributions whose
 #' values should be perturbed.
-#' @param mult_params an object derived by either [ck_gridparams()] or [ck_flexparams()]
-#' that specified parameters for the computation of the multiplier. In case the input
-#' was created using [ck_gridparams()], it is also possible to specify a list (with `top_k`
-#' elements with each being the output from [ck_gridparams()]. Thus, it is possible to
-#' use different grids for each `top_k` largest contributors.
+#' @param mult_params an object derived with [ck_flexparams()]
+#' that specified parameters for the computation of the multiplier using a flex function.
 #' @param mu_c fixed extra protection amount (`>= 0)` applied to the absolute of the
 #' perturbation value of the first (largest) noise component; defaults to
 #' `0` (no additional protection)
@@ -74,7 +83,7 @@ gen_stab <- function(D = 3, l = 0.5) {
 #' @return an object suitable as input to method `$params_nums_set()` for the perturbation
 #' of continous variables.
 #' @export
-#' @seealso [ck_gridparams()], [ck_flexparams()]
+#' @seealso [ck_flexparams()]
 #' @md
 #' @examples
 #' ck_params_nums(
@@ -94,19 +103,6 @@ gen_stab <- function(D = 3, l = 0.5) {
 #'   m_fixed_sq = 2,
 #'   mu_c = 3,
 #'   pos_neg_var = 2
-#' )
-#' ck_params_nums(
-#'   D = 10,
-#'   l = .5,
-#'   type = "mean",
-#'   mult_params = ck_gridparams(
-#'     grid = c(0, 10, 100, 10000),
-#'     pcts = c(0.25, 0.20, 0.10, 0.05)
-#'   ),
-#'   use_zero_rkeys = FALSE,
-#'   m_fixed_sq = 4,
-#'   mu_c = 5,
-#'   pos_neg_var = 3
 #' )
 ck_params_nums <-
   function(type = "top_contr",
@@ -164,33 +160,13 @@ ck_params_nums <-
     top_k <- 1
   }
 
-  if (!inherits(mult_params, "params_m_grid") & !inherits(mult_params, "params_m_flex")) {
-    cl <- sapply(mult_params, class)
-    if (!all(cl == "params_m_grid")) {
-      stop("Not all elements in `mult_params` were generated using `ck_gridparams()`", call. = FALSE)
-    }
-    if (length(cl) != top_k) {
-      stop("The number of elements provided in `mult_params` is different from `top_k`", call. = FALSE)
-    }
-
-    # create a list for grid-input (with the same parameters!)
-    if (length(mult_params) == 1) {
-      tmp <- vector("list", top_k)
-      for (i in 1:top_k) {
-        tmp[[i]] <- mult_params
-      }
-      mult_params <- tmp
-    }
-    class(mult_params) <- "params_m_grid"
+  if (!inherits(mult_params, "params_m_flex")) {
+    stop("Please create the input for argument `mult_params` with ck_flexparams()", call. = FALSE)
   }
 
-  if (inherits(mult_params, "params_m_flex")) {
-    if (length(mult_params$epsilon) != top_k) {
-      stop("Invalid length or argument `epsilon` in `mult_params` detected.", call. = FALSE)
-    }
+  if (length(mult_params$epsilon) != top_k) {
+    stop("Invalid length or argument `epsilon` in `mult_params` detected.", call. = FALSE)
   }
-
-
 
   if (!is.null(m_fixed_sq)) {
     if (!rlang::is_scalar_double(m_fixed_sq)) {
@@ -202,6 +178,15 @@ ck_params_nums <-
   }
 
   stab <- gen_stab(D = D, l = l)
+
+  if (!is.null(m_fixed_sq)) {
+    # we need a second block in the ptable
+    if (length(stab$type == "small_cells") == 0) {
+      e <- "`m_fixed_sq` was specified but no rows with `type == 'small_cells'` found in ptable."
+      stop(e, call. = FALSE)
+    }
+  }
+
   out <- list(
     params = list(
       type = type,
@@ -234,9 +219,9 @@ ck_params_nums <-
 #' @param pcts a numeric vector defining percentages (between `0` and `1`)
 #'
 #' @return an object suitable as input for [ck_params_nums()].
-#' @export
 #' @inherit cellkey_pkg examples
 #' @seealso [ck_params_nums()], [ck_flexparams()]
+#' @keywords internal
 #' @md
 ck_gridparams <- function(grid, pcts) {
   if (!is.numeric(grid)) {
@@ -277,7 +262,7 @@ ck_gridparams <- function(grid, pcts) {
 
 #' Define parameters for numeric perturbation magnitudes using a flex function
 #'
-#' [ck_gridparams()] allows to define a flex function that is used to lookup perturbation
+#' [ck_flexparams()] allows to define a flex function that is used to lookup perturbation
 #' magnitudes (percentages) used when perturbing continuous variables.
 #'
 #' @details details about the grid function can be found in Deliverable D4.2, Part I in
@@ -298,7 +283,7 @@ ck_gridparams <- function(grid, pcts) {
 
 #' @export
 #' @inherit cellkey_pkg examples
-#' @seealso [ck_params_nums()], [ck_gridparams()]
+#' @seealso [ck_params_nums()]
 #' @md
 ck_flexparams <- function(flexpoint, m_small = 0.25, m_large = 0.05, epsilon = 1, scaling = TRUE, q = 3) {
   if (!rlang::is_scalar_double(flexpoint)) {

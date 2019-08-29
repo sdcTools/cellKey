@@ -4,7 +4,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       type <- is_perturbed <- NULL
 
       if (!inherits(x, "data.frame")) {
-        stop("an object coercible to a `data.frame` must be provided in `x`.", call. = FALSE)
+        stop("`x` is not coercible to a `data.frame`.", call. = FALSE)
       }
 
       x <- as.data.table(x)
@@ -21,7 +21,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         x[[rkeyvar]] <- rkeys
       } else if (is_scalar_integerish(rkey)) {
         if (rkey < 5) {
-          stop("number of digits for record keys must be at least `5`!", call. = FALSE)
+          stop("number of digits for record keys must be >= 5!", call. = FALSE)
         }
         x[[rkeyvar]] <- ck_generate_rkeys(x, nr_digits = rkey)
       } else {
@@ -156,6 +156,14 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       # with perturbations
       tab <- sdcProb2df(prob, addDups = TRUE, addNumVars = TRUE, dimCodes = "original")
 
+      ck_log("mark duplicated cells")
+      dims <- prob@dimInfo@dimInfo
+      tab$is_bogus <- FALSE
+      for (i in 1:length(dims)) {
+        dd <- dims[[i]]
+        tab$is_bogus[tab[[dd@vName]] %in% dd@dups] <- TRUE
+      }
+
       # duplicated cells (bogus codes) have the same
       # strID as their parent cell!
       strids <- unique(tab$strID)
@@ -219,10 +227,9 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         microdat = microdat,
         nv = numvars,
         wvar = wvar,
-        top_k = 6
-      )
+        top_k = 6)
 
-      res <- tab[, c("strID", "freq", dimvars, nv), with = FALSE]
+      res <- tab[, c("strID", "freq", dimvars, "is_bogus", nv), with = FALSE]
       setnames(res, nv, tolower(nv))
 
       cols_ck <- gen_vnames(c("total", countvars), prefix = "ck")
@@ -251,7 +258,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       cv <- c("total", countvars)
       rescnts <- vector("list", length = length(cv) + 1)
       names(rescnts) <- c("dims", cv)
-      rescnts[[1]] <- res[, c("strID", dimvars), with = FALSE]
+      rescnts[[1]] <- res[, c("strID", dimvars, "is_bogus"), with = FALSE]
 
       for (i in seq_along(cv)) {
         index <- i + 1
@@ -309,6 +316,11 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         nums = NULL
       )
 
+      dupsinfo <- data.table(
+        id = 1:nrow(rescnts[[1]]),
+        is_bogus = rescnts[[1]]$is_bogus)
+      rescnts[[1]]$is_bogus <- NULL
+
       private$.prob <- prob
       private$.max_contributions <- max_contributions
       private$.varsdt <- varsdt
@@ -316,6 +328,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       private$.pert_params <- pert_params
       private$.modifications <- mods
       private$.results <- rescnts
+      private$.dupsinfo <- dupsinfo
       private$.is_initialized <- TRUE
       private$.validate()
       invisible(self)
@@ -771,6 +784,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     .pert_params = list(),
     .modifications = list(),
     .results = list(),
+    .dupsinfo = NULL,
     .is_initialized = FALSE,
 
     # return important variables
@@ -916,16 +930,11 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       ck_log("--> use_zero_rkeys: ", params$use_zero_rkeys)
       ck_log("--> pos_neg_var: ", params$pos_neg_var)
 
+      # for now; only flex-function is allowed as input!
       mult_params <- params$mult_params
-      do_grid <- inherits(mult_params, "params_m_grid")
-      if (do_grid) {
-        ck_log("--> multiplicator: ", shQuote("grid"))
-      } else {
-        ck_log("--> multiplicator: ", shQuote("flex"))
-        ck_log("--> epsilon: ", paste(params$mult_params$epsilon, collapse = ", "))
-        ck_log("--> scaling: ", params$mult_params$scaling)
-      }
-
+      ck_log("--> multiplicator: ", shQuote("flex"))
+      ck_log("--> epsilon: ", paste(params$mult_params$epsilon, collapse = ", "))
+      ck_log("--> scaling: ", params$mult_params$scaling)
       ck_log("--> mu_c: ", params$mu_c)
 
       # get maximum contributions for each cell and variable!
@@ -954,14 +963,16 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
       # compute x_delta: multiplication parameters m_j (x) * x
       # reason: in case of fixed_variance for very small cells, x_j is changed to 1!
-      message("todo: check in grid-case if g_1  depends on j or not; for now it depends on first element in list!")
-      x_delta <- lapply(x_vals, function(x) {
-        .get_x_delta(
+      # for now, only flex-function is supported (no grids)
+      res <- lapply(x_vals, function(x) {
+        .x_delta_flex(
           params = params$mult_params,
           x = x,
-          top_k = params$top_k,
           m_fixed_sq = params$m_fixed_sq)
       })
+
+      x_delta <- lapply(res, function(x) x$x_delta)
+      lookup <- lapply(res, function(x) x$lookup)
 
       stab <- params$stab
 
@@ -987,7 +998,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
       # we remove duplicated cells for now and add them later!
       names(cellkeys) <- dim_dt$strID
-      index_nondup <- !duplicated(cellkeys)
+      index_nondup <- !private$.dupsinfo$is_bogus
       cellkeys <- cellkeys[index_nondup]
       cellvals <- cellvals[index_nondup]
 
@@ -995,16 +1006,39 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       mu_c <- rep(0, params$top_k)
       mu_c[1] <- params$mu_c
 
+      # lookup could be done in different parts of the ptable
+      # object `lookup` tells us, how to restrict the input
+
       pvals <- lapply(1:length(cellkeys), function(x) {
         if (params$pos_neg_var == 0) {
           x_delta[[x]] <- pmin(x_delta[[x]], max_contr[[x]]$w_sum)
         }
-        p <- .lookup_v(
-          stab = stab,
-          cellkeys = cellkeys[[x]],
-          x_delta = x_delta[[x]],
+
+        cellkeys <- cellkeys[[x]]
+        x_delta <- x_delta[[x]]
+        cell_sum <- cellvals[x]
+        lookup <- lookup[[x]]
+        pos_neg_var <- params$pos_neg_var
+
+        p <- rep(NA, length(cellkeys))
+
+        # extract perturbation vals for large-enough cells
+        ind_all <- lookup == "all"
+        p[ind_all] <- .lookup_v(
+          stab = stab[type == "all"],
+          cellkeys = cellkeys[ind_all],
+          x_delta = x_delta[ind_all],
           cell_sum = cellvals[x],
-          pos_neg_var = params$pos_neg_var)
+          pos_neg_var = pos_neg_var)
+
+        # extract perturbation vals for very small cells
+        ind_sc <- lookup == "small_cells"
+        p[ind_sc] <- .lookup_v(
+          stab = stab[type == "small_cells"],
+          cellkeys = cellkeys[ind_sc],
+          x_delta = x_delta[ind_sc],
+          cell_sum = cellvals[x],
+          pos_neg_var = pos_neg_var)
 
         # we add extra perturbation for largest contributor
         # according to formula 2.1, page 5.
@@ -1032,20 +1066,37 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
           cell_value_pert <- w_sums[[x]] + pert
         }
         data.table(
-          str_id = x,
+          cell_id = x,
+          ckey  = cellkeys[[x]],
           cv = w_sums[[x]],
-          pert = pert,
           cv_pert = cell_value_pert,
-          ckey  = cellkeys[[x]][1])
+          pert = pert,
+          x_delta = x_delta[[x]],
+          lookup = lookup[[x]])
       }))
 
       ck_log("add rows for duplicated cells!")
-      pert_result <- merge(dim_dt, pert_result, by.x = "strID", by.y = "str_id", all.x = TRUE)
+      index_nondup <- !private$.dupsinfo$is_bogus
+      pert_result <- merge(
+        x = dim_dt[index_nondup],
+        y = pert_result,
+        by.x = "strID",
+        by.y = "cell_id",
+        all.x = TRUE)
 
       ck_log("update private$.results")
       newtab <- private$.results[[v]]
-      newtab$pert_total <- pert_result$pert
-      newtab[[gen_vnames(v, prefix = "pws")]] <- pert_result$cv_per
+
+      # no duplicates
+      unq <- pert_result[!duplicated(strID), list(strID, pert, cv_pert)]
+      setnames(unq, c("strID", "pert_total", gen_vnames(v, prefix = "pws")))
+
+      # we merge the results back; duplicated cells have identical
+      # perturbation values (pws_{var} and pert_total)
+      # thus, we can easily merge
+      newtab$strID <- dim_dt$strID
+      newtab <- merge(newtab, unq, by = "strID", all.x = TRUE)
+      newtab$strID <- NULL
       private$.results[[v]] <- newtab
 
       ck_log("compute and add modifications")
@@ -1201,7 +1252,14 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'    For a detailed description of the computed measures, see [ck_cnt_measures()]
 #'
 #' - **`mod_cnts()`**: returns a `data.table` containing modifications applied to count variables
-#' - **`mod_nums()`**: returns a `data.table` containing modifications applied to numerical variables
+#' - **`mod_nums()`**: returns a `data.table` containing modifications applied to numerical variables.
+#'    * `id`: cell id
+#'    * `ckey`: cell key used in the lookup step
+#'    * `cv`: original weighted cell value
+#'    * `cv_pert`: perturbed weighted cell value
+#'    * `x_delta`: multiplier used when computing the actual perturbation amount
+#'    * `lookup`: a character vector specifying in which block of the provided
+#'    table the lookup happened.
 #'
 #' - **`params_cnts_get()`**: returns a named list in which each list-element contains the
 #' active perturbation parameters for the specific count variable defined by the list-name.
@@ -1335,17 +1393,21 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' # for variables with positive and negative values
 #' p_nums2 <- ck_params_nums(
 #'   D = 10,
-#'   l = .5,
-#'   type = "mean",
-#'   mult_params = ck_gridparams(
-#'     grid = c(0, 10, 100, 10000),
-#'     pcts = c(0.25, 0.20, 0.10, 0.05)
+#'   l = 0.5,
+#'   type = "top_contr",
+#'   top_k = 3,
+#'   mult_params = ck_flexparams(
+#'     flexpoint = 1000,
+#'     m_small = 0.15,
+#'     m_large = 0.02,
+#'     epsilon = c(1, 0.4, 0.15),
+#'     q = 3,
+#'     scaling = FALSE
 #'   ),
-#'   mu_c = 4,
-#'   same_key = FALSE,
-#'   use_zero_rkeys = TRUE,
+#'   mu_c = 2,
 #'   m_fixed_sq = 4,
-#'   pos_neg_var = 2
+#'   same_key = FALSE,
+#'   pos_neg_var = 1
 #' )
 #'
 #' # use `p_nums1` for all variables

@@ -30,7 +30,7 @@ are proportional to \code{epsilon} times \code{m_large} for sufficient large val
 an object suitable as input for \code{\link[=ck_params_nums]{ck_params_nums()}}.
 }
 \description{
-\code{\link[=ck_gridparams]{ck_gridparams()}} allows to define a flex function that is used to lookup perturbation
+\code{\link[=ck_flexparams]{ck_flexparams()}} allows to define a flex function that is used to lookup perturbation
 magnitudes (percentages) used when perturbing continuous variables.
 }
 \details{
@@ -141,17 +141,21 @@ p_nums1 <- ck_params_nums(
 # for variables with positive and negative values
 p_nums2 <- ck_params_nums(
   D = 10,
-  l = .5,
-  type = "mean",
-  mult_params = ck_gridparams(
-    grid = c(0, 10, 100, 10000),
-    pcts = c(0.25, 0.20, 0.10, 0.05)
+  l = 0.5,
+  type = "top_contr",
+  top_k = 3,
+  mult_params = ck_flexparams(
+    flexpoint = 1000,
+    m_small = 0.15,
+    m_large = 0.02,
+    epsilon = c(1, 0.4, 0.15),
+    q = 3,
+    scaling = FALSE
   ),
-  mu_c = 4,
-  same_key = FALSE,
-  use_zero_rkeys = TRUE,
+  mu_c = 2,
   m_fixed_sq = 4,
-  pos_neg_var = 2
+  same_key = FALSE,
+  pos_neg_var = 1
 )
 
 # use `p_nums1` for all variables
@@ -193,5 +197,5 @@ tab$mod_cnts()
 tab$summary()
 }
 \seealso{
-\code{\link[=ck_params_nums]{ck_params_nums()}}, \code{\link[=ck_gridparams]{ck_gridparams()}}
+\code{\link[=ck_params_nums]{ck_params_nums()}}
 }
