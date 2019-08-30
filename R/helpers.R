@@ -60,7 +60,17 @@ get_distr_vals <- function(dd) {
 
 # checks if all values in `v` exist in `avail` and
 # returns a nice error message in case this is not true
-.check_avail <- function(v, avail, msg = "Invalid variables specified:") {
+.check_avail <- function(v, avail, msg = "Invalid variables specified:", single_v = FALSE) {
+  if (single_v) {
+    if (!rlang::is_scalar_character(v)) {
+      stop("Argument `v` needs to be a scalar character", call. = FALSE)
+    }
+  } else {
+    if (!is_character(v)) {
+      stop("Argument `v` needs to be a character vector.", call. = FALSE)
+    }
+  }
+
   if (!all(v %in% avail)) {
     e <- c(
       msg,

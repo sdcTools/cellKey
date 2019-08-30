@@ -131,7 +131,7 @@ p_nums1 <- ck_params_nums(
   pos_neg_var = 0
 )
 
-# another set of parameters, using a grid
+# another set of parameters
 # for variables with positive and negative values
 p_nums2 <- ck_params_nums(
   D = 10,
@@ -155,7 +155,7 @@ p_nums2 <- ck_params_nums(
 # use `p_nums1` for all variables
 tab$params_nums_set(p_nums1, c("savings", "income", "expend"))
 
-# use different parameters for variable `savings`
+# use different parameters for variable `mixed`
 tab$params_nums_set(p_nums2, v = "mixed")
 
 # perturb variables

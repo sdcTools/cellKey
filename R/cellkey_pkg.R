@@ -170,12 +170,9 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
       # calculate contributing indices
       # we do this in any case!
-      contr_indices <- lapply(1:length(strids), function(x) {
-        sdcTable:::c_contributing_indices(
-          object = prob,
-          input = list(strids[x]))
-      })
-      names(contr_indices) <- strids
+      contr_indices <- sdcTable::contributing_indices(
+        prob = prob,
+        ids = NULL)
 
       # finding top_k contributors for each cell and numerical variable
       microdat <- prob@dataObj@rawData[, c(names(dims), numvars, wvar), with = FALSE]
@@ -286,6 +283,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
           setnames(vv, cn1, gen_vnames(numvars[j], prefix = "ck"))
           setnames(vv, cn2, gen_vnames(numvars[j], prefix = "ck_nz"))
+          vv[["special_protection"]] <- FALSE
           resnums[[j]] <- vv
         }
         rescnts <- append(rescnts, resnums)
@@ -335,16 +333,17 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     },
     # perturb variables
     perturb=function(v) {
-      if (!is_character(v)) {
-        stop("Argument `v` needs to be a character vector.", call. = FALSE)
-      }
-      v <- tolower(v)
-
       # important variables
       countvars <- self$cntvars()
       numvars <- self$numvars()
       avail <- c(countvars, numvars)
-      .check_avail(v = v, avail = avail, msg = "Invalid variables specified in `v`:")
+      .check_avail(
+        v = v,
+        avail = avail,
+        msg = "Invalid variables specified in `v`:",
+        single_v = FALSE)
+      v <- tolower(v)
+
       for (i in 1:length(v)) {
         vname <- v[i]
         if (vname %in% countvars) {
@@ -537,6 +536,120 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       private$modifications(type = "nums")
     },
 
+    # identification of sensitive cells
+    # based on minimal frequencies
+    supp_freq=function(v, n) {
+      .check_avail(
+        v = v,
+        avail = self$numvars(),
+        msg = "Invalid variables specified in `v`:",
+        single_v = FALSE)
+
+      if (!rlang::is_scalar_double(n)) {
+        stop("`n` is not a number.", call. = FALSE)
+      }
+
+      res <- sdcProb2df(private$.prob, addDups = TRUE, addNumVars = TRUE)[[v]]
+      pat <- res <= n
+      private$.update_supps(v = v, pat = pat, rule = "freq-rule")
+      invisible(self)
+    },
+    # p%-rule
+    supp_p=function(v, p) {
+      .check_avail(
+        v = v,
+        avail = self$numvars(),
+        msg = "Invalid variables specified in `v`:",
+        single_v = FALSE)
+
+      if (private$.has_negative_values(v = v)) {
+        stop("dominance rule can only be computed on strictly positive variables.", call. = FALSE)
+      }
+
+      if (!rlang::is_scalar_integerish(p)) {
+        stop("`p` is not an integerish number.", call. = FALSE)
+      }
+      if (p < 1 | p > 99) {
+        stop("`p` must be >= 1 and < 100.", call. = FALSE)
+      }
+
+      res <- sdcTable::primarySuppression(
+        object = private$.prob,
+        type = "p",
+        numVarName = v,
+        p = p)
+      pat <- sdcProb2df(res, addDups = TRUE)$sdcStatus == "u"
+      private$.update_supps(v = v, pat = pat, rule = "p%-rule")
+      invisible(self)
+    },
+    # pq-rule
+    supp_pq=function(v, p, q) {
+      .check_avail(
+        v = v,
+        avail = self$numvars(),
+        msg = "Invalid variables specified in `v`:",
+        single_v = FALSE)
+      if (private$.has_negative_values(v = v)) {
+        stop("dominance rule can only be computed on strictly positive variables.", call. = FALSE)
+      }
+      if (!rlang::is_scalar_integerish(p)) {
+        stop("`p` is not an integerish number.", call. = FALSE)
+      }
+      if (p < 1 | p > 99) {
+        stop("`p` must be >= 1 and < 100.", call. = FALSE)
+      }
+      if (!rlang::is_scalar_integerish(q)) {
+        stop("`q` is not an integerish number.", call. = FALSE)
+      }
+      if (q < 1 | q > 99) {
+        stop("`q` must be >= 1 and < 100.", call. = FALSE)
+      }
+      if (p > q) {
+        stop("Argument `p` must be < than `q`", call. = FALSE)
+      }
+      res <- sdcTable::primarySuppression(
+        object = private$.prob,
+        type = "pq",
+        numVarName = v,
+        p = p,
+        q = q)
+      pat <- sdcProb2df(res, addDups = TRUE)$sdcStatus == "u"
+      private$.update_supps(v = v, pat = pat, rule = "pq-rule")
+      invisible(self)
+    },
+    # nk-dominance rule
+    supp_nk=function(v, n, k) {
+      .check_avail(
+        v = v,
+        avail = self$numvars(),
+        msg = "Invalid variables specified in `v`:",
+        single_v = FALSE)
+      if (private$.has_negative_values(v = v)) {
+        stop("dominance rule can only be computed on strictly positive variables.", call. = FALSE)
+      }
+      if (!rlang::is_scalar_double(n)) {
+        stop("`n` is not a number.", call. = FALSE)
+      }
+      if (n < 2) {
+        stop("`n` must be >= 2", call. = FALSE)
+      }
+      if (!rlang::is_scalar_integerish(k)) {
+        stop("`k` is not an integerish number.", call. = FALSE)
+      }
+      if (k < 1 | k > 99) {
+        stop("`k` must be >= 1 and < 100.", call. = FALSE)
+      }
+      res <- sdcTable::primarySuppression(
+        object = private$.prob,
+        type = "nk",
+        numVarName = v,
+        n = n,
+        k = k)
+      pat <- sdcProb2df(res, addDups = TRUE)$sdcStatus == "u"
+      private$.update_supps(v = v, pat = pat, rule = "nk-rule")
+      invisible(self)
+    },
+
     # get/set parameters for cnt-vars
     params_cnts_get=function() {
       return(private$.pert_params$cnts)
@@ -656,15 +769,15 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         if (private$.is_perturbed_numvar(curvar)) {
           message("--> Variable ", shQuote(curvar), " was already perturbed: parameters are not updated.")
         } else {
-          if (val$params$pos_neg_var == 0 & min(private$.prob@dataObj@rawData[[curvar]], na.rm = TRUE) < 0) {
+          if (val$params$pos_neg_var == 0 & private$.has_negative_values(v = curvar)) {
             e <- c(
-              "Argument `pos_neg_var` equals `0` which defines a strictly positive variable but",
+              "Argument `pos_neg_var` equals `0` which defines a strictly positive variable but ",
               "variable ", shQuote(curvar), " contains negative values."
             )
             stop(paste(e, sep = " "), call. = FALSE)
           }
 
-          if (val$params$pos_neg_var > 0 & min(private$.prob@dataObj@rawData[[curvar]], na.rm = TRUE) >= 0) {
+          if (val$params$pos_neg_var > 0 & !private$.has_negative_values(v = curvar)) {
             e <- c(
               "Argument `pos_neg_var` is != `0`. The value defines how to deal with a variable containing positive ",
               "and negative values. Variable ", shQuote(curvar), " contains however only positive values."
@@ -1001,6 +1114,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       index_nondup <- !private$.dupsinfo$is_bogus
       cellkeys <- cellkeys[index_nondup]
       cellvals <- cellvals[index_nondup]
+      prot_req <- private$.results[[v]]$special_protection[index_nondup]
 
       # additional perturbation
       mu_c <- rep(0, params$top_k)
@@ -1041,9 +1155,11 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
           pos_neg_var = pos_neg_var)
 
         # we add extra perturbation for largest contributor
-        # according to formula 2.1, page 5.
-        signs <- ifelse(p >= 0, 1, -1)
-        p <- (abs(p) + mu_c[1:length(p)]) * signs
+        # according to formula 2.1, page 5 if the cell needs extra protection
+        if (prot_req[x]) {
+          signs <- ifelse(p >= 0, 1, -1)
+          p <- (abs(p) + mu_c[1:length(p)]) * signs
+        }
         p
       })
       names(pvals) <- names(cellkeys)
@@ -1053,6 +1169,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       # in case we want to ensure positivity (see section 2.5.1 in D4.2), we apply the formula listed there
       # also, we add some more variables here that we need for the mods-table (for debugging purposes)
       ck_log("compute perturbation values and final perturbed cell values for each cells")
+
+      names(prot_req) <- names(pvals)
       pert_result <- rbindlist(lapply(names(pvals), function(x) {
         if (params$pos_neg_var == 0) {
           cell_value_pert <- w_sums[[x]]
@@ -1060,7 +1178,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
           for (k in 1:length(pvals[[x]])) {
             cell_value_pert <- max(cell_value_pert + pertvals[k], 0)
           }
-          pert <- w_sums[[x]]  - cell_value_pert
+          pert <- w_sums[[x]] - cell_value_pert
         } else {
           pert <- sum(pvals[[x]] * x_delta[[x]])
           cell_value_pert <- w_sums[[x]] + pert
@@ -1072,7 +1190,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
           cv_pert = cell_value_pert,
           pert = pert,
           x_delta = x_delta[[x]],
-          lookup = lookup[[x]])
+          lookup = lookup[[x]],
+          additional_protection = prot_req[x])
       }))
 
       ck_log("add rows for duplicated cells!")
@@ -1153,7 +1272,25 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         private$.varsdt[vname == v, is_perturbed := FALSE]
       }
     },
+
+    # updates column `special_protection` after applying primary suppression
+    .update_supps=function(v, pat, rule) {
+      nr_ex_supp <- sum(private$.results[[v]]$special_protection)
+      index_new_supps <- which(pat)
+      if (length(index_new_supps) > 0) {
+        private$.results[[v]]$special_protection[index_new_supps] <- TRUE
+      }
+      nr_new_supps <- sum(private$.results[[v]]$special_protection)
+      s <- nr_new_supps - nr_ex_supp
+      ck_log(rule, ": ", s, " new sensitive cells (incl. duplicates) found (total: ", nr_new_supps, ")")
+    },
     # returns modification slot
+
+    # returns TRUE if we have a variable containing negative values
+    .has_negative_values=function(v) {
+      min(private$.prob@dataObj@rawData[[v]], na.rm = TRUE) < 0
+    },
+
     modifications=function(type = NULL) {
       if (is.null(type)) {
         return(private$.modifications)
@@ -1204,10 +1341,27 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'
 #' - **`allvars()`**: a list with elements `cntvars` and `numvars` with each being a character
 #' vector containing the pre-defined count- and continuous variables in the current instance.
-#'
 #' - **`cntvars()`**: returns a character vector of available count variables.
-#'
 #' - **`numvars()`**: returns a character vector of available numeric variables.
+#'
+#' - **`supp_freq(v, n)`**: mark sensitive cells based on a minimal-frequency rule. The required inputs are:
+#'    * `v`: a single variable name of a continuous variable (`numvars()`)
+#'    * `n`: a number defining the threshold. All cells `<= n` are considered as unsafe.
+#' - **`supp_p(v, p)`**: mark sensitive cells based on the p%-rule rule. This rule can only be
+#' applied to positive-only variables and the required inputs are:
+#'    * `v`: a single variable name of a continuous variable (`numvars()`)
+#'    * `p`: a number defining a percentage between `1` and `99`.
+#' - **`supp_pq(v, p, q)`**: mark sensitive cells based on the pq-rule rule. This rule can only be
+#' applied to positive-only variables and the required inputs are:
+#'    * `v`: a single variable name of a continuous variable (`numvars()`)
+#'    * `p`: a number defining a percentage between `1` and `99`.
+#'    * `q`: a number defining a percentage between `1` and `99`. This value must be larger than `p`.
+#' - **`supp_nk(v, n, k)`**: mark sensitive cells based on the nk-dominance rule. This rule can only be
+#' applied to positive-only variables and the required inputs are:
+#'    * `v`: a single variable name of a continuous variable (`numvars()`)
+#'    * `n`: an integerish number `>= 2`.
+#'    * `k`: a number defining a percentage between `1` and `99`. All cells to which the top `n`
+#'    contributers contribute more than `k%` is considered unsafe
 #'
 #' - **`perturb(v)`**: Perturb a count- or magnitude variable. The method has the following arguments:
 #'    * `v`: name(s) of count or magnitude variables that should be perturbed.
@@ -1389,7 +1543,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'   pos_neg_var = 0
 #' )
 #'
-#' # another set of parameters, using a grid
+#' # another set of parameters
 #' # for variables with positive and negative values
 #' p_nums2 <- ck_params_nums(
 #'   D = 10,
@@ -1413,8 +1567,14 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' # use `p_nums1` for all variables
 #' tab$params_nums_set(p_nums1, c("savings", "income", "expend"))
 #'
-#' # use different parameters for variable `savings`
+#' # use different parameters for variable `mixed`
 #' tab$params_nums_set(p_nums2, v = "mixed")
+#'
+#' # identify sensitive cells to which extra protection (`mu_c`) is added.
+#' tab$supp_p(v = "income", p = 85)
+#' tab$supp_pq(v = "income", p = 85, q = 90)
+#' tab$supp_nk(v = "income", n = 2, k = 90)
+#' tab$supp_freq(v = "income", n = 100000)
 #'
 #' # perturb variables
 #' tab$perturb(v = c("income", "savings"))

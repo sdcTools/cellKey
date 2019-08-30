@@ -46,6 +46,32 @@ count and numerical variables.
 vector containing the pre-defined count- and continuous variables in the current instance.
 \item \strong{\code{cntvars()}}: returns a character vector of available count variables.
 \item \strong{\code{numvars()}}: returns a character vector of available numeric variables.
+\item \strong{\code{supp_freq(v, n)}}: mark sensitive cells based on a minimal-frequency rule. The required inputs are:
+\itemize{
+\item \code{v}: a single variable name of a continuous variable (\code{numvars()})
+\item \code{n}: a number defining the threshold. All cells \code{<= n} are considered as unsafe.
+}
+\item \strong{\code{supp_p(v, p)}}: mark sensitive cells based on the p%-rule rule. This rule can only be
+applied to positive-only variables and the required inputs are:
+\itemize{
+\item \code{v}: a single variable name of a continuous variable (\code{numvars()})
+\item \code{p}: a number defining a percentage between \code{1} and \code{99}.
+}
+\item \strong{\code{supp_pq(v, p, q)}}: mark sensitive cells based on the pq-rule rule. This rule can only be
+applied to positive-only variables and the required inputs are:
+\itemize{
+\item \code{v}: a single variable name of a continuous variable (\code{numvars()})
+\item \code{p}: a number defining a percentage between \code{1} and \code{99}.
+\item \code{q}: a number defining a percentage between \code{1} and \code{99}. This value must be larger than \code{p}.
+}
+\item \strong{\code{supp_nk(v, n, k)}}: mark sensitive cells based on the nk-dominance rule. This rule can only be
+applied to positive-only variables and the required inputs are:
+\itemize{
+\item \code{v}: a single variable name of a continuous variable (\code{numvars()})
+\item \code{n}: an integerish number \code{>= 2}.
+\item \code{k}: a number defining a percentage between \code{1} and \code{99}. All cells to which the top \code{n}
+contributers contribute more than \code{k\%} is considered unsafe
+}
 \item \strong{\code{perturb(v)}}: Perturb a count- or magnitude variable. The method has the following arguments:
 \itemize{
 \item \code{v}: name(s) of count or magnitude variables that should be perturbed.
@@ -237,7 +263,7 @@ p_nums1 <- ck_params_nums(
   pos_neg_var = 0
 )
 
-# another set of parameters, using a grid
+# another set of parameters
 # for variables with positive and negative values
 p_nums2 <- ck_params_nums(
   D = 10,
@@ -261,7 +287,7 @@ p_nums2 <- ck_params_nums(
 # use `p_nums1` for all variables
 tab$params_nums_set(p_nums1, c("savings", "income", "expend"))
 
-# use different parameters for variable `savings`
+# use different parameters for variable `mixed`
 tab$params_nums_set(p_nums2, v = "mixed")
 
 # perturb variables
