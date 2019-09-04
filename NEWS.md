@@ -26,6 +26,11 @@
     * added column `type` with values `all` or `small_cells`
 - modified flex-function to implement concept of "proportional flexing"
 - setting `m_fixed_sq != NULL` triggers lookup in extra block of provided perturbation table (`type == "small_cells"`)
+- implemented and document the following methods to identify sensitive cells
+  * `$supp_freq(v, max_n)`
+  * `$supp_nk(v, max_n)`
+  * `$supp_p(v, max_n)`
+  * `$supp_pq(v, max_n)`
 
 # cellKey 0.17.1
 - adding parameter `exclude_zero_cells` to `ck_cnt_measures()`
