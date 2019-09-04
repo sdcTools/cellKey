@@ -703,7 +703,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       newtab[[col_puwc]] <- puwc
 
       # compute perturbed weighted counts
-      pwc <- newtab[[col_puwc]] + newtab[[col_wcavg]]
+      pwc <- newtab[[col_puwc]] * newtab[[col_wcavg]]
       pwc[is.na(pwc) | is.infinite(pwc)] <- 0
       newtab[[col_pwc]] <- pwc
 
