@@ -158,6 +158,12 @@ tab$params_nums_set(p_nums1, c("savings", "income", "expend"))
 # use different parameters for variable `mixed`
 tab$params_nums_set(p_nums2, v = "mixed")
 
+# identify sensitive cells to which extra protection (`mu_c`) is added.
+tab$supp_p(v = "income", p = 85)
+tab$supp_pq(v = "income", p = 85, q = 90)
+tab$supp_nk(v = "income", n = 2, k = 90)
+tab$supp_freq(v = "income", n = 100000)
+
 # perturb variables
 tab$perturb(v = c("income", "savings"))
 

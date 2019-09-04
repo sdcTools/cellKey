@@ -474,7 +474,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       tab <- rbindlist(lapply(v, function(x) {
         tmp <- private$.results[[x]]
         tmp$vname <- x
-        tmp <- tmp[, c(7, 3:4, 6)]
+        tmp <- tmp[, c(8, 3:4, 7)]
         setnames(tmp, c("vname", "uws", "ws", "pws"))
         cbind(private$.results$dims, tmp)[, -1]
       }))
@@ -1382,7 +1382,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'    * `puwc`: perturbed unweighted counts (if `type` is `"both"` or `"unweighted"`)
 #'    * `pwc`: perturbed weighted counts (if `type` is `"both"` or `"weighted"`)
 #'
-#' - **`numtab(v)`**: get results from already perturbed continuous variables as a `data.table`. The required arguments are:
+#' - **`numtab(v, mean_before_sum = FALSE, path = NULL)`**: get results from already perturbed continuous variables as a `data.table`. The required arguments are:
 #'    * `v`: a vector of variable names for already perturbed count variables. If `NULL` (the default), the results
 #'    are returned for all perturbed numeric variables.
 #'    * `mean_before_sum`: (logical); if `TRUE`, the perturbed values are adjusted by a factor `((n+p))⁄n` with `n`
