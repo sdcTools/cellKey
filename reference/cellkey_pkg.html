@@ -8,11 +8,13 @@
 
 <title>cellKey - an post-tabular perturbation method — cellkey_pkg • cellKey</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -32,11 +34,12 @@
 
 
 
-<meta property="og:title" content="cellKey - an post-tabular perturbation method — cellkey_pkg" />
 
+<meta property="og:title" content="cellKey - an post-tabular perturbation method — cellkey_pkg" />
 <meta property="og:description" content="This class allows to define statistical tables and perturb both
 count and numerical variables." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -67,7 +70,7 @@ count and numerical variables." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.17.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.17.3</span>
       </span>
     </div>
 
@@ -98,7 +101,6 @@ count and numerical variables." />
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         
       </ul>
@@ -120,14 +122,12 @@ count and numerical variables." />
     </div>
 
     <div class="ref-description">
-    
     <p>This class allows to define statistical tables and perturb both
 count and numerical variables.</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>ck_setup</span>(<span class='no'>x</span>, <span class='no'>rkey</span>, <span class='no'>dims</span>, <span class='no'>w</span>, <span class='kw'>countvars</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>params_cnts</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -164,15 +164,13 @@ These variables can later be perturbed.</p></td>
 to be created with <code><a href='ck_params_cnts.html'>ck_params_cnts()</a></code></p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
     <p><a href='https://rdrr.io/pkg/R6/man/R6Class.html'>R6::R6Class</a> object.</p>
-    
     <h2 class="hasAnchor" id="usage"><a class="anchor" href="#usage"></a>Usage</h2>
 
     <p>For usage details see the <strong>Methods</strong> and <strong>Examples</strong> sections.</p>
-    
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
 
     <p>The following methods are available and can be used:</p><ul>
@@ -209,7 +207,6 @@ For a detailed description of the computed measures, see <code><a href='ck_cnt_m
 parameters are replaced with the ones provided (which need to be created using (<code><a href='ck_params_cnts.html'>ck_params_cnts()</a></code>)</p></li>
 </ul>
 
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ck_create_testdata.html'>ck_create_testdata</a></span>()
@@ -377,96 +374,96 @@ parameters are replaced with the ones provided (which need to be created using (
 <span class='no'>tab</span>$<span class='fu'>perturb</span>(<span class='kw'>v</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"cnt_males"</span>, <span class='st'>"cnt_highincome"</span>))</div><div class='output co'>#&gt; <span class='message'>Count variable 'cnt_males' was perturbed.</span></div><div class='output co'>#&gt; <span class='message'>Count variable 'cnt_highincome' was perturbed.</span></div><div class='input'>
 <span class='co'># return results (weighted and unweighted)</span>
 <span class='no'>tab</span>$<span class='fu'>freqtab</span>(<span class='kw'>v</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"total"</span>, <span class='st'>"cnt_males"</span>))</div><div class='output co'>#&gt;        sex        age     vname  uwc     wc puwc        pwc
-#&gt;  1:  Total      Total     total 4580 274707 4580 4639.97969
-#&gt;  2:  Total age_group1     total 1969 118802 1969 2029.33621
-#&gt;  3:  Total       ag1a     total 1969 118802 1969 2029.33621
-#&gt;  4:  Total age_group2     total 1143  68583 1143 1203.00262
-#&gt;  5:  Total       ag2a     total 1143  68583 1143 1203.00262
-#&gt;  6:  Total age_group3     total  864  51473  865  924.57523
-#&gt;  7:  Total age_group4     total  423  25121  425  484.38771
-#&gt;  8:  Total age_group5     total  168   9970  170  229.34524
-#&gt;  9:  Total age_group6     total   13    758   13   71.30769
-#&gt; 10: female      Total     total 2284 137362 2284 2344.14098
-#&gt; 11:      f      Total     total 2284 137362 2284 2344.14098
-#&gt; 12: female age_group1     total  954  57468  955 1015.23899
-#&gt; 13:      f age_group1     total  954  57468  955 1015.23899
-#&gt; 14: female       ag1a     total  954  57468  955 1015.23899
-#&gt; 15:      f       ag1a     total  954  57468  955 1015.23899
-#&gt; 16: female age_group2     total  572  34475  572  632.27098
-#&gt; 17:      f age_group2     total  572  34475  572  632.27098
-#&gt; 18: female       ag2a     total  572  34475  572  632.27098
-#&gt; 19:      f       ag2a     total  572  34475  572  632.27098
-#&gt; 20: female age_group3     total  440  26490  445  505.20455
-#&gt; 21:      f age_group3     total  440  26490  445  505.20455
-#&gt; 22: female age_group4     total  228  13373  228  286.65351
-#&gt; 23:      f age_group4     total  228  13373  228  286.65351
-#&gt; 24: female age_group5     total   84   5274   83  145.78571
-#&gt; 25:      f age_group5     total   84   5274   83  145.78571
-#&gt; 26: female age_group6     total    6    282    8   55.00000
-#&gt; 27:      f age_group6     total    6    282    8   55.00000
-#&gt; 28:   male      Total     total 2296 137345 2296 2355.81925
-#&gt; 29:      m      Total     total 2296 137345 2296 2355.81925
-#&gt; 30:   male age_group1     total 1015  61334 1016 1076.42759
-#&gt; 31:      m age_group1     total 1015  61334 1016 1076.42759
-#&gt; 32:   male       ag1a     total 1015  61334 1016 1076.42759
-#&gt; 33:      m       ag1a     total 1015  61334 1016 1076.42759
-#&gt; 34:   male age_group2     total  571  34108  570  629.73380
-#&gt; 35:      m age_group2     total  571  34108  570  629.73380
-#&gt; 36:   male       ag2a     total  571  34108  570  629.73380
-#&gt; 37:      m       ag2a     total  571  34108  570  629.73380
-#&gt; 38:   male age_group3     total  424  24983  425  483.92217
-#&gt; 39:      m age_group3     total  424  24983  425  483.92217
-#&gt; 40:   male age_group4     total  195  11748  195  255.24615
-#&gt; 41:      m age_group4     total  195  11748  195  255.24615
-#&gt; 42:   male age_group5     total   84   4696   84  139.90476
-#&gt; 43:      m age_group5     total   84   4696   84  139.90476
-#&gt; 44:   male age_group6     total    7    476    7   75.00000
-#&gt; 45:      m age_group6     total    7    476    7   75.00000
-#&gt; 46:  Total      Total cnt_males 2296 137345 2296 2355.81925
-#&gt; 47:  Total age_group1 cnt_males 1015  61334 1016 1076.42759
-#&gt; 48:  Total       ag1a cnt_males 1015  61334 1016 1076.42759
-#&gt; 49:  Total age_group2 cnt_males  571  34108  570  629.73380
-#&gt; 50:  Total       ag2a cnt_males  571  34108  570  629.73380
-#&gt; 51:  Total age_group3 cnt_males  424  24983  425  483.92217
-#&gt; 52:  Total age_group4 cnt_males  195  11748  195  255.24615
-#&gt; 53:  Total age_group5 cnt_males   84   4696   84  139.90476
-#&gt; 54:  Total age_group6 cnt_males    7    476    7   75.00000
-#&gt; 55: female      Total cnt_males    0      0    0    0.00000
-#&gt; 56:      f      Total cnt_males    0      0    0    0.00000
-#&gt; 57: female age_group1 cnt_males    0      0    0    0.00000
-#&gt; 58:      f age_group1 cnt_males    0      0    0    0.00000
-#&gt; 59: female       ag1a cnt_males    0      0    0    0.00000
-#&gt; 60:      f       ag1a cnt_males    0      0    0    0.00000
-#&gt; 61: female age_group2 cnt_males    0      0    0    0.00000
-#&gt; 62:      f age_group2 cnt_males    0      0    0    0.00000
-#&gt; 63: female       ag2a cnt_males    0      0    0    0.00000
-#&gt; 64:      f       ag2a cnt_males    0      0    0    0.00000
-#&gt; 65: female age_group3 cnt_males    0      0    0    0.00000
-#&gt; 66:      f age_group3 cnt_males    0      0    0    0.00000
-#&gt; 67: female age_group4 cnt_males    0      0    0    0.00000
-#&gt; 68:      f age_group4 cnt_males    0      0    0    0.00000
-#&gt; 69: female age_group5 cnt_males    0      0    0    0.00000
-#&gt; 70:      f age_group5 cnt_males    0      0    0    0.00000
-#&gt; 71: female age_group6 cnt_males    0      0    0    0.00000
-#&gt; 72:      f age_group6 cnt_males    0      0    0    0.00000
-#&gt; 73:   male      Total cnt_males 2296 137345 2296 2355.81925
-#&gt; 74:      m      Total cnt_males 2296 137345 2296 2355.81925
-#&gt; 75:   male age_group1 cnt_males 1015  61334 1016 1076.42759
-#&gt; 76:      m age_group1 cnt_males 1015  61334 1016 1076.42759
-#&gt; 77:   male       ag1a cnt_males 1015  61334 1016 1076.42759
-#&gt; 78:      m       ag1a cnt_males 1015  61334 1016 1076.42759
-#&gt; 79:   male age_group2 cnt_males  571  34108  570  629.73380
-#&gt; 80:      m age_group2 cnt_males  571  34108  570  629.73380
-#&gt; 81:   male       ag2a cnt_males  571  34108  570  629.73380
-#&gt; 82:      m       ag2a cnt_males  571  34108  570  629.73380
-#&gt; 83:   male age_group3 cnt_males  424  24983  425  483.92217
-#&gt; 84:      m age_group3 cnt_males  424  24983  425  483.92217
-#&gt; 85:   male age_group4 cnt_males  195  11748  195  255.24615
-#&gt; 86:      m age_group4 cnt_males  195  11748  195  255.24615
-#&gt; 87:   male age_group5 cnt_males   84   4696   84  139.90476
-#&gt; 88:      m age_group5 cnt_males   84   4696   84  139.90476
-#&gt; 89:   male age_group6 cnt_males    7    476    7   75.00000
-#&gt; 90:      m age_group6 cnt_males    7    476    7   75.00000
+#&gt;  1:  Total      Total     total 4580 274707 4580 274707.000
+#&gt;  2:  Total age_group1     total 1969 118802 1969 118802.000
+#&gt;  3:  Total       ag1a     total 1969 118802 1969 118802.000
+#&gt;  4:  Total age_group2     total 1143  68583 1143  68583.000
+#&gt;  5:  Total       ag2a     total 1143  68583 1143  68583.000
+#&gt;  6:  Total age_group3     total  864  51473  865  51532.575
+#&gt;  7:  Total age_group4     total  423  25121  425  25239.775
+#&gt;  8:  Total age_group5     total  168   9970  170  10088.690
+#&gt;  9:  Total age_group6     total   13    758   13    758.000
+#&gt; 10: female      Total     total 2284 137362 2284 137362.000
+#&gt; 11:      f      Total     total 2284 137362 2284 137362.000
+#&gt; 12: female age_group1     total  954  57468  955  57528.239
+#&gt; 13:      f age_group1     total  954  57468  955  57528.239
+#&gt; 14: female       ag1a     total  954  57468  955  57528.239
+#&gt; 15:      f       ag1a     total  954  57468  955  57528.239
+#&gt; 16: female age_group2     total  572  34475  572  34475.000
+#&gt; 17:      f age_group2     total  572  34475  572  34475.000
+#&gt; 18: female       ag2a     total  572  34475  572  34475.000
+#&gt; 19:      f       ag2a     total  572  34475  572  34475.000
+#&gt; 20: female age_group3     total  440  26490  445  26791.023
+#&gt; 21:      f age_group3     total  440  26490  445  26791.023
+#&gt; 22: female age_group4     total  228  13373  228  13373.000
+#&gt; 23:      f age_group4     total  228  13373  228  13373.000
+#&gt; 24: female age_group5     total   84   5274   83   5211.214
+#&gt; 25:      f age_group5     total   84   5274   83   5211.214
+#&gt; 26: female age_group6     total    6    282    8    376.000
+#&gt; 27:      f age_group6     total    6    282    8    376.000
+#&gt; 28:   male      Total     total 2296 137345 2296 137345.000
+#&gt; 29:      m      Total     total 2296 137345 2296 137345.000
+#&gt; 30:   male age_group1     total 1015  61334 1016  61394.428
+#&gt; 31:      m age_group1     total 1015  61334 1016  61394.428
+#&gt; 32:   male       ag1a     total 1015  61334 1016  61394.428
+#&gt; 33:      m       ag1a     total 1015  61334 1016  61394.428
+#&gt; 34:   male age_group2     total  571  34108  570  34048.266
+#&gt; 35:      m age_group2     total  571  34108  570  34048.266
+#&gt; 36:   male       ag2a     total  571  34108  570  34048.266
+#&gt; 37:      m       ag2a     total  571  34108  570  34048.266
+#&gt; 38:   male age_group3     total  424  24983  425  25041.922
+#&gt; 39:      m age_group3     total  424  24983  425  25041.922
+#&gt; 40:   male age_group4     total  195  11748  195  11748.000
+#&gt; 41:      m age_group4     total  195  11748  195  11748.000
+#&gt; 42:   male age_group5     total   84   4696   84   4696.000
+#&gt; 43:      m age_group5     total   84   4696   84   4696.000
+#&gt; 44:   male age_group6     total    7    476    7    476.000
+#&gt; 45:      m age_group6     total    7    476    7    476.000
+#&gt; 46:  Total      Total cnt_males 2296 137345 2296 137345.000
+#&gt; 47:  Total age_group1 cnt_males 1015  61334 1016  61394.428
+#&gt; 48:  Total       ag1a cnt_males 1015  61334 1016  61394.428
+#&gt; 49:  Total age_group2 cnt_males  571  34108  570  34048.266
+#&gt; 50:  Total       ag2a cnt_males  571  34108  570  34048.266
+#&gt; 51:  Total age_group3 cnt_males  424  24983  425  25041.922
+#&gt; 52:  Total age_group4 cnt_males  195  11748  195  11748.000
+#&gt; 53:  Total age_group5 cnt_males   84   4696   84   4696.000
+#&gt; 54:  Total age_group6 cnt_males    7    476    7    476.000
+#&gt; 55: female      Total cnt_males    0      0    0      0.000
+#&gt; 56:      f      Total cnt_males    0      0    0      0.000
+#&gt; 57: female age_group1 cnt_males    0      0    0      0.000
+#&gt; 58:      f age_group1 cnt_males    0      0    0      0.000
+#&gt; 59: female       ag1a cnt_males    0      0    0      0.000
+#&gt; 60:      f       ag1a cnt_males    0      0    0      0.000
+#&gt; 61: female age_group2 cnt_males    0      0    0      0.000
+#&gt; 62:      f age_group2 cnt_males    0      0    0      0.000
+#&gt; 63: female       ag2a cnt_males    0      0    0      0.000
+#&gt; 64:      f       ag2a cnt_males    0      0    0      0.000
+#&gt; 65: female age_group3 cnt_males    0      0    0      0.000
+#&gt; 66:      f age_group3 cnt_males    0      0    0      0.000
+#&gt; 67: female age_group4 cnt_males    0      0    0      0.000
+#&gt; 68:      f age_group4 cnt_males    0      0    0      0.000
+#&gt; 69: female age_group5 cnt_males    0      0    0      0.000
+#&gt; 70:      f age_group5 cnt_males    0      0    0      0.000
+#&gt; 71: female age_group6 cnt_males    0      0    0      0.000
+#&gt; 72:      f age_group6 cnt_males    0      0    0      0.000
+#&gt; 73:   male      Total cnt_males 2296 137345 2296 137345.000
+#&gt; 74:      m      Total cnt_males 2296 137345 2296 137345.000
+#&gt; 75:   male age_group1 cnt_males 1015  61334 1016  61394.428
+#&gt; 76:      m age_group1 cnt_males 1015  61334 1016  61394.428
+#&gt; 77:   male       ag1a cnt_males 1015  61334 1016  61394.428
+#&gt; 78:      m       ag1a cnt_males 1015  61334 1016  61394.428
+#&gt; 79:   male age_group2 cnt_males  571  34108  570  34048.266
+#&gt; 80:      m age_group2 cnt_males  571  34108  570  34048.266
+#&gt; 81:   male       ag2a cnt_males  571  34108  570  34048.266
+#&gt; 82:      m       ag2a cnt_males  571  34108  570  34048.266
+#&gt; 83:   male age_group3 cnt_males  424  24983  425  25041.922
+#&gt; 84:      m age_group3 cnt_males  424  24983  425  25041.922
+#&gt; 85:   male age_group4 cnt_males  195  11748  195  11748.000
+#&gt; 86:      m age_group4 cnt_males  195  11748  195  11748.000
+#&gt; 87:   male age_group5 cnt_males   84   4696   84   4696.000
+#&gt; 88:      m age_group5 cnt_males   84   4696   84   4696.000
+#&gt; 89:   male age_group6 cnt_males    7    476    7    476.000
+#&gt; 90:      m age_group6 cnt_males    7    476    7    476.000
 #&gt;        sex        age     vname  uwc     wc puwc        pwc</div><div class='input'>
 <span class='co'># only unweighted and perturbed unweighted counts</span>
 <span class='no'>tab</span>$<span class='fu'>freqtab</span>(<span class='kw'>v</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"total"</span>, <span class='st'>"cnt_males"</span>), <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"unweighted"</span>)</div><div class='output co'>#&gt;        sex        age     vname  uwc puwc
@@ -561,102 +558,103 @@ parameters are replaced with the ones provided (which need to be created using (
 #&gt; 89:   male age_group6 cnt_males    7    7
 #&gt; 90:      m age_group6 cnt_males    7    7
 #&gt;        sex        age     vname  uwc puwc</div><div class='input'>
-# write to a file "outtab.csv" (.csv is automatically added to the path)
-</div><span class='co'># NOT RUN {</span>
+<span class='co'># write to a file "outtab.csv" (.csv is automatically added to the path)</span>
+<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='no'>tab</span>$<span class='fu'>freqtab</span>(<span class='kw'>v</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"total"</span>, <span class='st'>"cnt_males"</span>), <span class='kw'>path</span> <span class='kw'>=</span> <span class='st'>"outtab"</span>)
-<span class='co'># }</span><div class='input'>
+}
+
 <span class='co'># only weighted and perturbed weighted counts</span>
 <span class='no'>tab</span>$<span class='fu'>freqtab</span>(<span class='kw'>v</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"total"</span>, <span class='st'>"cnt_males"</span>), <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"weighted"</span>)</div><div class='output co'>#&gt;        sex        age     vname     wc        pwc
-#&gt;  1:  Total      Total     total 274707 4639.97969
-#&gt;  2:  Total age_group1     total 118802 2029.33621
-#&gt;  3:  Total       ag1a     total 118802 2029.33621
-#&gt;  4:  Total age_group2     total  68583 1203.00262
-#&gt;  5:  Total       ag2a     total  68583 1203.00262
-#&gt;  6:  Total age_group3     total  51473  924.57523
-#&gt;  7:  Total age_group4     total  25121  484.38771
-#&gt;  8:  Total age_group5     total   9970  229.34524
-#&gt;  9:  Total age_group6     total    758   71.30769
-#&gt; 10: female      Total     total 137362 2344.14098
-#&gt; 11:      f      Total     total 137362 2344.14098
-#&gt; 12: female age_group1     total  57468 1015.23899
-#&gt; 13:      f age_group1     total  57468 1015.23899
-#&gt; 14: female       ag1a     total  57468 1015.23899
-#&gt; 15:      f       ag1a     total  57468 1015.23899
-#&gt; 16: female age_group2     total  34475  632.27098
-#&gt; 17:      f age_group2     total  34475  632.27098
-#&gt; 18: female       ag2a     total  34475  632.27098
-#&gt; 19:      f       ag2a     total  34475  632.27098
-#&gt; 20: female age_group3     total  26490  505.20455
-#&gt; 21:      f age_group3     total  26490  505.20455
-#&gt; 22: female age_group4     total  13373  286.65351
-#&gt; 23:      f age_group4     total  13373  286.65351
-#&gt; 24: female age_group5     total   5274  145.78571
-#&gt; 25:      f age_group5     total   5274  145.78571
-#&gt; 26: female age_group6     total    282   55.00000
-#&gt; 27:      f age_group6     total    282   55.00000
-#&gt; 28:   male      Total     total 137345 2355.81925
-#&gt; 29:      m      Total     total 137345 2355.81925
-#&gt; 30:   male age_group1     total  61334 1076.42759
-#&gt; 31:      m age_group1     total  61334 1076.42759
-#&gt; 32:   male       ag1a     total  61334 1076.42759
-#&gt; 33:      m       ag1a     total  61334 1076.42759
-#&gt; 34:   male age_group2     total  34108  629.73380
-#&gt; 35:      m age_group2     total  34108  629.73380
-#&gt; 36:   male       ag2a     total  34108  629.73380
-#&gt; 37:      m       ag2a     total  34108  629.73380
-#&gt; 38:   male age_group3     total  24983  483.92217
-#&gt; 39:      m age_group3     total  24983  483.92217
-#&gt; 40:   male age_group4     total  11748  255.24615
-#&gt; 41:      m age_group4     total  11748  255.24615
-#&gt; 42:   male age_group5     total   4696  139.90476
-#&gt; 43:      m age_group5     total   4696  139.90476
-#&gt; 44:   male age_group6     total    476   75.00000
-#&gt; 45:      m age_group6     total    476   75.00000
-#&gt; 46:  Total      Total cnt_males 137345 2355.81925
-#&gt; 47:  Total age_group1 cnt_males  61334 1076.42759
-#&gt; 48:  Total       ag1a cnt_males  61334 1076.42759
-#&gt; 49:  Total age_group2 cnt_males  34108  629.73380
-#&gt; 50:  Total       ag2a cnt_males  34108  629.73380
-#&gt; 51:  Total age_group3 cnt_males  24983  483.92217
-#&gt; 52:  Total age_group4 cnt_males  11748  255.24615
-#&gt; 53:  Total age_group5 cnt_males   4696  139.90476
-#&gt; 54:  Total age_group6 cnt_males    476   75.00000
-#&gt; 55: female      Total cnt_males      0    0.00000
-#&gt; 56:      f      Total cnt_males      0    0.00000
-#&gt; 57: female age_group1 cnt_males      0    0.00000
-#&gt; 58:      f age_group1 cnt_males      0    0.00000
-#&gt; 59: female       ag1a cnt_males      0    0.00000
-#&gt; 60:      f       ag1a cnt_males      0    0.00000
-#&gt; 61: female age_group2 cnt_males      0    0.00000
-#&gt; 62:      f age_group2 cnt_males      0    0.00000
-#&gt; 63: female       ag2a cnt_males      0    0.00000
-#&gt; 64:      f       ag2a cnt_males      0    0.00000
-#&gt; 65: female age_group3 cnt_males      0    0.00000
-#&gt; 66:      f age_group3 cnt_males      0    0.00000
-#&gt; 67: female age_group4 cnt_males      0    0.00000
-#&gt; 68:      f age_group4 cnt_males      0    0.00000
-#&gt; 69: female age_group5 cnt_males      0    0.00000
-#&gt; 70:      f age_group5 cnt_males      0    0.00000
-#&gt; 71: female age_group6 cnt_males      0    0.00000
-#&gt; 72:      f age_group6 cnt_males      0    0.00000
-#&gt; 73:   male      Total cnt_males 137345 2355.81925
-#&gt; 74:      m      Total cnt_males 137345 2355.81925
-#&gt; 75:   male age_group1 cnt_males  61334 1076.42759
-#&gt; 76:      m age_group1 cnt_males  61334 1076.42759
-#&gt; 77:   male       ag1a cnt_males  61334 1076.42759
-#&gt; 78:      m       ag1a cnt_males  61334 1076.42759
-#&gt; 79:   male age_group2 cnt_males  34108  629.73380
-#&gt; 80:      m age_group2 cnt_males  34108  629.73380
-#&gt; 81:   male       ag2a cnt_males  34108  629.73380
-#&gt; 82:      m       ag2a cnt_males  34108  629.73380
-#&gt; 83:   male age_group3 cnt_males  24983  483.92217
-#&gt; 84:      m age_group3 cnt_males  24983  483.92217
-#&gt; 85:   male age_group4 cnt_males  11748  255.24615
-#&gt; 86:      m age_group4 cnt_males  11748  255.24615
-#&gt; 87:   male age_group5 cnt_males   4696  139.90476
-#&gt; 88:      m age_group5 cnt_males   4696  139.90476
-#&gt; 89:   male age_group6 cnt_males    476   75.00000
-#&gt; 90:      m age_group6 cnt_males    476   75.00000
+#&gt;  1:  Total      Total     total 274707 274707.000
+#&gt;  2:  Total age_group1     total 118802 118802.000
+#&gt;  3:  Total       ag1a     total 118802 118802.000
+#&gt;  4:  Total age_group2     total  68583  68583.000
+#&gt;  5:  Total       ag2a     total  68583  68583.000
+#&gt;  6:  Total age_group3     total  51473  51532.575
+#&gt;  7:  Total age_group4     total  25121  25239.775
+#&gt;  8:  Total age_group5     total   9970  10088.690
+#&gt;  9:  Total age_group6     total    758    758.000
+#&gt; 10: female      Total     total 137362 137362.000
+#&gt; 11:      f      Total     total 137362 137362.000
+#&gt; 12: female age_group1     total  57468  57528.239
+#&gt; 13:      f age_group1     total  57468  57528.239
+#&gt; 14: female       ag1a     total  57468  57528.239
+#&gt; 15:      f       ag1a     total  57468  57528.239
+#&gt; 16: female age_group2     total  34475  34475.000
+#&gt; 17:      f age_group2     total  34475  34475.000
+#&gt; 18: female       ag2a     total  34475  34475.000
+#&gt; 19:      f       ag2a     total  34475  34475.000
+#&gt; 20: female age_group3     total  26490  26791.023
+#&gt; 21:      f age_group3     total  26490  26791.023
+#&gt; 22: female age_group4     total  13373  13373.000
+#&gt; 23:      f age_group4     total  13373  13373.000
+#&gt; 24: female age_group5     total   5274   5211.214
+#&gt; 25:      f age_group5     total   5274   5211.214
+#&gt; 26: female age_group6     total    282    376.000
+#&gt; 27:      f age_group6     total    282    376.000
+#&gt; 28:   male      Total     total 137345 137345.000
+#&gt; 29:      m      Total     total 137345 137345.000
+#&gt; 30:   male age_group1     total  61334  61394.428
+#&gt; 31:      m age_group1     total  61334  61394.428
+#&gt; 32:   male       ag1a     total  61334  61394.428
+#&gt; 33:      m       ag1a     total  61334  61394.428
+#&gt; 34:   male age_group2     total  34108  34048.266
+#&gt; 35:      m age_group2     total  34108  34048.266
+#&gt; 36:   male       ag2a     total  34108  34048.266
+#&gt; 37:      m       ag2a     total  34108  34048.266
+#&gt; 38:   male age_group3     total  24983  25041.922
+#&gt; 39:      m age_group3     total  24983  25041.922
+#&gt; 40:   male age_group4     total  11748  11748.000
+#&gt; 41:      m age_group4     total  11748  11748.000
+#&gt; 42:   male age_group5     total   4696   4696.000
+#&gt; 43:      m age_group5     total   4696   4696.000
+#&gt; 44:   male age_group6     total    476    476.000
+#&gt; 45:      m age_group6     total    476    476.000
+#&gt; 46:  Total      Total cnt_males 137345 137345.000
+#&gt; 47:  Total age_group1 cnt_males  61334  61394.428
+#&gt; 48:  Total       ag1a cnt_males  61334  61394.428
+#&gt; 49:  Total age_group2 cnt_males  34108  34048.266
+#&gt; 50:  Total       ag2a cnt_males  34108  34048.266
+#&gt; 51:  Total age_group3 cnt_males  24983  25041.922
+#&gt; 52:  Total age_group4 cnt_males  11748  11748.000
+#&gt; 53:  Total age_group5 cnt_males   4696   4696.000
+#&gt; 54:  Total age_group6 cnt_males    476    476.000
+#&gt; 55: female      Total cnt_males      0      0.000
+#&gt; 56:      f      Total cnt_males      0      0.000
+#&gt; 57: female age_group1 cnt_males      0      0.000
+#&gt; 58:      f age_group1 cnt_males      0      0.000
+#&gt; 59: female       ag1a cnt_males      0      0.000
+#&gt; 60:      f       ag1a cnt_males      0      0.000
+#&gt; 61: female age_group2 cnt_males      0      0.000
+#&gt; 62:      f age_group2 cnt_males      0      0.000
+#&gt; 63: female       ag2a cnt_males      0      0.000
+#&gt; 64:      f       ag2a cnt_males      0      0.000
+#&gt; 65: female age_group3 cnt_males      0      0.000
+#&gt; 66:      f age_group3 cnt_males      0      0.000
+#&gt; 67: female age_group4 cnt_males      0      0.000
+#&gt; 68:      f age_group4 cnt_males      0      0.000
+#&gt; 69: female age_group5 cnt_males      0      0.000
+#&gt; 70:      f age_group5 cnt_males      0      0.000
+#&gt; 71: female age_group6 cnt_males      0      0.000
+#&gt; 72:      f age_group6 cnt_males      0      0.000
+#&gt; 73:   male      Total cnt_males 137345 137345.000
+#&gt; 74:      m      Total cnt_males 137345 137345.000
+#&gt; 75:   male age_group1 cnt_males  61334  61394.428
+#&gt; 76:      m age_group1 cnt_males  61334  61394.428
+#&gt; 77:   male       ag1a cnt_males  61334  61394.428
+#&gt; 78:      m       ag1a cnt_males  61334  61394.428
+#&gt; 79:   male age_group2 cnt_males  34108  34048.266
+#&gt; 80:      m age_group2 cnt_males  34108  34048.266
+#&gt; 81:   male       ag2a cnt_males  34108  34048.266
+#&gt; 82:      m       ag2a cnt_males  34108  34048.266
+#&gt; 83:   male age_group3 cnt_males  24983  25041.922
+#&gt; 84:      m age_group3 cnt_males  24983  25041.922
+#&gt; 85:   male age_group4 cnt_males  11748  11748.000
+#&gt; 86:      m age_group4 cnt_males  11748  11748.000
+#&gt; 87:   male age_group5 cnt_males   4696   4696.000
+#&gt; 88:      m age_group5 cnt_males   4696   4696.000
+#&gt; 89:   male age_group6 cnt_males    476    476.000
+#&gt; 90:      m age_group6 cnt_males    476    476.000
 #&gt;        sex        age     vname     wc        pwc</div><div class='input'>
 <span class='co'># utility measures for a count variable</span>
 <span class='no'>tab</span>$<span class='fu'>measures_cnts</span>(<span class='kw'>v</span> <span class='kw'>=</span> <span class='st'>"total"</span>, <span class='kw'>exclude_zeros</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; $overview
@@ -805,13 +803,9 @@ parameters are replaced with the ones provided (which need to be created using (
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#format">Format</a></li>
-
       <li><a href="#usage">Usage</a></li>
-
       <li><a href="#methods">Methods</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
@@ -825,7 +819,7 @@ parameters are replaced with the ones provided (which need to be created using (
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9100.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.0.9000.</p>
 </div>
 
       </footer>

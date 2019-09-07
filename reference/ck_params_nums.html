@@ -8,11 +8,13 @@
 
 <title>Create perturbation parameters for continuous variables — ck_params_nums • cellKey</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -32,11 +34,12 @@
 
 
 
-<meta property="og:title" content="Create perturbation parameters for continuous variables — ck_params_nums" />
 
+<meta property="og:title" content="Create perturbation parameters for continuous variables — ck_params_nums" />
 <meta property="og:description" content="This function allows to define perturbation parameters used to
 perturb cells in magnitude tables." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -67,7 +70,7 @@ perturb cells in magnitude tables." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.17.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.17.3</span>
       </span>
     </div>
 
@@ -98,7 +101,6 @@ perturb cells in magnitude tables." />
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         
       </ul>
@@ -120,15 +122,13 @@ perturb cells in magnitude tables." />
     </div>
 
     <div class="ref-description">
-    
     <p>This function allows to define perturbation parameters used to
 perturb cells in magnitude tables.</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>ck_params_nums</span>(<span class='kw'>P</span> <span class='kw'>=</span> <span class='st'>"top_contr"</span>, <span class='kw'>top_k</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>D</span>, <span class='no'>l</span>, <span class='kw'>same_key</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>use_zero_rkeys</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -172,12 +172,11 @@ units not contributing to a specific numeric variables should be
 used (<code>TRUE</code>) or ignored (<code>FALSE</code>) when computing cell keys.</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>an object suitable as input to <code><a href='cellkey_pkg.html'>ck_setup()</a></code> for the perturbation
 of magnitude tables</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>ck_params_nums</span>(<span class='kw'>D</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>l</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='st'>"top_contr"</span>, <span class='kw'>top_k</span> <span class='kw'>=</span> <span class='fl'>3</span>)</div><div class='output co'>#&gt; $params
@@ -318,9 +317,7 @@ of magnitude tables</p>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
@@ -334,7 +331,7 @@ of magnitude tables</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9100.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.0.9000.</p>
 </div>
 
       </footer>

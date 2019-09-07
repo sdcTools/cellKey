@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.17.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.17.3</span>
       </span>
     </div>
 
@@ -78,7 +78,7 @@
       <h1>Introduction to the cellKey-Package</h1>
                         <h4 class="author">Bernhard Meindl</h4>
             
-            <h4 class="date">2019-08-21</h4>
+            <h4 class="date">2019-09-07</h4>
       
       
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -90,7 +90,7 @@
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>This package implements methods to provide perturbation for statistical tables. The implementation if greatly inspired by the the paper <em>Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics</em> (Thompson, Broadfoot, Elazar). This approach however was generalized and a new specification on how record keys are specified and the lookup-tables are defined is used. This package makes usage of perturbation tables that can be defined in the <a href="https://github.com/sdcTools/ptable"><strong>ptable</strong></a> package. This document describes the usage of version <code>0.17.2</code> of the package.</p>
+<p>This package implements methods to provide perturbation for statistical tables. The implementation if greatly inspired by the the paper <em>Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics</em> (Thompson, Broadfoot, Elazar). This approach however was generalized and a new specification on how record keys are specified and the lookup-tables are defined is used. This package makes usage of perturbation tables that can be defined in the <a href="https://github.com/sdcTools/ptable"><strong>ptable</strong></a> package. This document describes the usage of version <code>0.17.3</code> of the package.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -125,7 +125,7 @@
 <a href="#load-the-package" class="anchor"></a>Load the Package</h3>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(cellKey)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/utils/packageDescription.html">packageVersion</a></span>(<span class="st">"cellKey"</span>)</a></code></pre></div>
-<pre><code>## [1] '0.17.2'</code></pre>
+<pre><code>## [1] '0.17.3'</code></pre>
 <p>The first step in this approach is to generate a statistical table, which can be achieved using <code>ck_setup</code>. This function generates an object that contains all the information required to perturb count- (and optionally continuously scaled) variables. There are however a few inputs that <code><a href="../reference/cellkey_pkg.html">ck_setup()</a></code> requires and that need to be generated beforehand. These inputs are:</p>
 <ul>
 <li>
@@ -157,19 +157,19 @@
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">dat<span class="op">$</span>rkeys &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_generate_rkeys.html">ck_generate_rkeys</a></span>(<span class="dt">dat =</span> dat, <span class="dt">nr_digits =</span> <span class="dv">7</span>)</a>
 <a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(dat))</a></code></pre></div>
 <pre><code>##       sex        age savings income sampling_weight cnt_males
-## 1:   male age_group3      12   5780              77         1
-## 2: female age_group3      28   2530              31         0
-## 3:   male age_group1     550   6920              90         1
-## 4:   male age_group1     870   7960              44         1
-## 5:   male age_group4      20   9030              35         1
-## 6: female age_group3     102   3290              63         0
+## 1:   male age_group3      12   5780              58         1
+## 2: female age_group3      28   2530              26         0
+## 3:   male age_group1     550   6920              47         1
+## 4:   male age_group1     870   7960              52         1
+## 5:   male age_group4      20   9030              29         1
+## 6: female age_group3     102   3290              57         0
 ##    cnt_highincome     rkeys
-## 1:              0 0.1506757
-## 2:              0 0.6149214
-## 3:              0 0.0615684
-## 4:              0 0.0361157
-## 5:              1 0.2725888
-## 6:              0 0.7605319</code></pre>
+## 1:              0 0.9262111
+## 2:              0 0.8940695
+## 3:              0 0.2711971
+## 4:              0 0.4035525
+## 5:              1 0.2436682
+## 6:              0 0.8909574</code></pre>
 <p>To ensure that the same record keys are computed each and every time for the same data set, a seed based on the sha1-hash of the input dataset is computed and used before drawing the record keys.</p>
 <p>The goal of this introduction is to create a perturbed table of counts of variables <code>sex</code> by <code>age</code> for all observations as well as for the subgroups in <code>cnt_males</code> and <code>cnt_highincome</code> that are non-zero. We also want to create perturbed tables of continously scaled variables <code>savings</code> and <code>income</code> also giving the hierarchical structure defined by <code>sex</code> by <code>age</code>.</p>
 </div>
@@ -295,52 +295,52 @@
 </ul>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">tab<span class="op">$</span><span class="kw">freqtab</span>(<span class="dt">v =</span> <span class="st">"total"</span>, <span class="dt">type =</span> <span class="st">"both"</span>)</a></code></pre></div>
 <pre><code>##        sex        age vname  uwc     wc puwc        pwc
-##  1:  Total      Total total 4580 275455 4579 4639.14301
-##  2:  Total age_group1 total 1969 118026 1970 2029.94210
-##  3:  Total age_group2 total 1143  68291 1143 1202.74716
-##  4:  Total age_group3 total  864  52350  866  926.59028
-##  5:  Total age_group4 total  423  25565  423  483.43735
-##  6:  Total age_group5 total  168  10587  168  231.01786
-##  7:  Total age_group6 total   13    636   13   61.92308
-##  8: female      Total total 2284 136329 2281 2340.68870
-##  9: female age_group1 total  954  56881  957 1016.62369
-## 10: female age_group2 total  572  34000  572  631.44056
-## 11: female age_group3 total  440  26694  440  500.66818
-## 12: female age_group4 total  228  13160  228  285.71930
-## 13: female age_group5 total   84   5362   85  148.83333
-## 14: female age_group6 total    6    232    7   45.66667
-## 15:   male      Total total 2296 139126 2294 2354.59495
-## 16:   male age_group1 total 1015  61145 1016 1076.24138
-## 17:   male age_group2 total  571  34291  569  629.05429
-## 18:   male age_group3 total  424  25656  424  484.50943
-## 19:   male age_group4 total  195  12405  197  260.61538
-## 20:   male age_group5 total   84   5225   87  149.20238
-## 21:   male age_group6 total    7    404    9   66.71429
+##  1:  Total      Total total 4580 275702 4580 275702.000
+##  2:  Total age_group1 total 1969 119218 1969 119218.000
+##  3:  Total age_group2 total 1143  68750 1143  68750.000
+##  4:  Total age_group3 total  864  51612  866  51731.472
+##  5:  Total age_group4 total  423  25081  423  25081.000
+##  6:  Total age_group5 total  168  10217  163   9912.923
+##  7:  Total age_group6 total   13    824   13    824.000
+##  8: female      Total total 2284 137028 2283 136968.005
+##  9: female age_group1 total  954  57485  954  57485.000
+## 10: female age_group2 total  572  33973  571  33913.607
+## 11: female age_group3 total  440  26572  442  26692.782
+## 12: female age_group4 total  228  13375  226  13257.675
+## 13: female age_group5 total   84   5182   84   5182.000
+## 14: female age_group6 total    6    441    3    220.500
+## 15:   male      Total total 2296 138674 2296 138674.000
+## 16:   male age_group1 total 1015  61733 1015  61733.000
+## 17:   male age_group2 total  571  34777  571  34777.000
+## 18:   male age_group3 total  424  25040  420  24803.774
+## 19:   male age_group4 total  195  11706  195  11706.000
+## 20:   male age_group5 total   84   5035   84   5035.000
+## 21:   male age_group6 total    7    383    7    383.000
 ##        sex        age vname  uwc     wc puwc        pwc</code></pre>
 <p>To query only the weighted unperturbed and perturbed counts for <code>total</code> and <code>cnt_males</code>, one could use the following code:</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">tab<span class="op">$</span><span class="kw">freqtab</span>(<span class="dt">v =</span> <span class="st">"total"</span>, <span class="dt">type =</span> <span class="st">"weighted"</span>)</a></code></pre></div>
 <pre><code>##        sex        age vname     wc        pwc
-##  1:  Total      Total total 275455 4639.14301
-##  2:  Total age_group1 total 118026 2029.94210
-##  3:  Total age_group2 total  68291 1202.74716
-##  4:  Total age_group3 total  52350  926.59028
-##  5:  Total age_group4 total  25565  483.43735
-##  6:  Total age_group5 total  10587  231.01786
-##  7:  Total age_group6 total    636   61.92308
-##  8: female      Total total 136329 2340.68870
-##  9: female age_group1 total  56881 1016.62369
-## 10: female age_group2 total  34000  631.44056
-## 11: female age_group3 total  26694  500.66818
-## 12: female age_group4 total  13160  285.71930
-## 13: female age_group5 total   5362  148.83333
-## 14: female age_group6 total    232   45.66667
-## 15:   male      Total total 139126 2354.59495
-## 16:   male age_group1 total  61145 1076.24138
-## 17:   male age_group2 total  34291  629.05429
-## 18:   male age_group3 total  25656  484.50943
-## 19:   male age_group4 total  12405  260.61538
-## 20:   male age_group5 total   5225  149.20238
-## 21:   male age_group6 total    404   66.71429
+##  1:  Total      Total total 275702 275702.000
+##  2:  Total age_group1 total 119218 119218.000
+##  3:  Total age_group2 total  68750  68750.000
+##  4:  Total age_group3 total  51612  51731.472
+##  5:  Total age_group4 total  25081  25081.000
+##  6:  Total age_group5 total  10217   9912.923
+##  7:  Total age_group6 total    824    824.000
+##  8: female      Total total 137028 136968.005
+##  9: female age_group1 total  57485  57485.000
+## 10: female age_group2 total  33973  33913.607
+## 11: female age_group3 total  26572  26692.782
+## 12: female age_group4 total  13375  13257.675
+## 13: female age_group5 total   5182   5182.000
+## 14: female age_group6 total    441    220.500
+## 15:   male      Total total 138674 138674.000
+## 16:   male age_group1 total  61733  61733.000
+## 17:   male age_group2 total  34777  34777.000
+## 18:   male age_group3 total  25040  24803.774
+## 19:   male age_group4 total  11706  11706.000
+## 20:   male age_group5 total   5035   5035.000
+## 21:   male age_group6 total    383    383.000
 ##        sex        age vname     wc        pwc</code></pre>
 </div>
 <div id="computing-utility-measures-for-count-variables" class="section level3">
@@ -350,13 +350,13 @@
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1">tab<span class="op">$</span><span class="kw">measures_cnts</span>(<span class="dt">v =</span> <span class="st">"total"</span>, <span class="dt">exclude_zeros =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## $overview
 ##    noise cnt        pct
-## 1:    -3   2 0.09523810
-## 2:    -2   3 0.14285714
-## 3:    -1   4 0.19047619
-## 4:     0   8 0.38095238
-## 5:     1   1 0.04761905
-## 6:     2   2 0.09523810
-## 7:     3   1 0.04761905
+## 1:    -2   2 0.09523810
+## 2:     0  13 0.61904762
+## 3:     1   2 0.09523810
+## 4:     2   1 0.04761905
+## 5:     3   1 0.04761905
+## 6:     4   1 0.04761905
+## 7:     5   1 0.04761905
 ## 
 ## $measures
 ##       what    d1    d2    d3
@@ -364,44 +364,46 @@
 ##  2:    Q10 0.000 0.000 0.000
 ##  3:    Q20 0.000 0.000 0.000
 ##  4:    Q30 0.000 0.000 0.000
-##  5:    Q40 1.000 0.000 0.007
-##  6:   Mean 1.143 0.025 0.050
-##  7: Median 1.000 0.001 0.016
-##  8:    Q60 1.000 0.001 0.031
-##  9:    Q70 2.000 0.003 0.042
-## 10:    Q80 2.000 0.010 0.054
-## 11:    Q90 3.000 0.036 0.162
-## 12:    Q95 3.000 0.167 0.196
-## 13:    Q99 3.000 0.262 0.323
-## 14:    Max 3.000 0.286 0.354
+##  5:    Q40 0.000 0.000 0.000
+##  6:   Mean 0.952 0.027 0.057
+##  7: Median 0.000 0.000 0.000
+##  8:    Q60 0.000 0.000 0.000
+##  9:    Q70 1.000 0.002 0.021
+## 10:    Q80 2.000 0.005 0.048
+## 11:    Q90 3.000 0.009 0.097
+## 12:    Q95 4.000 0.030 0.194
+## 13:    Q99 4.800 0.406 0.613
+## 14:    Max 5.000 0.500 0.717
 ## 
 ## $cumdistr_d1
 ##    cat cnt       pct
-## 1:   0   8 0.3809524
-## 2:   1  13 0.6190476
+## 1:   0  13 0.6190476
+## 2:   1  15 0.7142857
 ## 3:   2  18 0.8571429
-## 4:   3  21 1.0000000
+## 4:   3  19 0.9047619
+## 5:   4  20 0.9523810
+## 6:   5  21 1.0000000
 ## 
 ## $cumdistr_d2
 ##            cat cnt       pct
-## 1:    [0,0.02]  18 0.8571429
-## 2: (0.02,0.05]  19 0.9047619
-## 3:  (0.05,0.1]  19 0.9047619
+## 1:    [0,0.02]  19 0.9047619
+## 2: (0.02,0.05]  20 0.9523810
+## 3:  (0.05,0.1]  20 0.9523810
 ## 4:   (0.1,0.2]  20 0.9523810
-## 5:   (0.2,0.3]  21 1.0000000
-## 6:   (0.3,0.4]  21 1.0000000
+## 5:   (0.2,0.3]  20 0.9523810
+## 6:   (0.3,0.4]  20 0.9523810
 ## 7:   (0.4,0.5]  21 1.0000000
 ## 8:   (0.5,Inf]  21 1.0000000
 ## 
 ## $cumdistr_d3
 ##            cat cnt       pct
-## 1:    [0,0.02]  11 0.5238095
-## 2: (0.02,0.05]  16 0.7619048
-## 3:  (0.05,0.1]  18 0.8571429
+## 1:    [0,0.02]  14 0.6666667
+## 2: (0.02,0.05]  17 0.8095238
+## 3:  (0.05,0.1]  19 0.9047619
 ## 4:   (0.1,0.2]  20 0.9523810
 ## 5:   (0.2,0.3]  20 0.9523810
-## 6:   (0.3,0.4]  21 1.0000000
-## 7:   (0.4,0.5]  21 1.0000000
+## 6:   (0.3,0.4]  20 0.9523810
+## 7:   (0.4,0.5]  20 0.9523810
 ## 8:   (0.5,Inf]  21 1.0000000
 ## 
 ## $false_zero
@@ -471,9 +473,9 @@
 ## │Utility measures for perturbed count variables│
 ## └──────────────────────────────────────────────┘
 ## ── Distribution statistics of perturbations ───────────────────────────────
-##     countvar Min Q10 Q20 Q30 Q40  Mean Median Q60 Q70 Q80 Q90 Q95 Q99 Max
-## 1:     total  -3  -2   0   0   0 0.381      0   1   1   2   2   3   3   3
-## 2: cnt_males  -4  -4   0   0   0 0.762      0   0   3   4   4   5   5   5
+##     countvar Min Q10 Q20 Q30 Q40   Mean Median Q60 Q70 Q80 Q90 Q95 Q99 Max
+## 1:     total  -5  -3  -1   0   0 -0.571      0   0   0   0   0   2   2   2
+## 2: cnt_males  -7  -1  -1  -1   0 -0.762      0   0   0   0   1   1   1   1
 ## 
 ## ── Distance-based measures ────────────────────────────────────────────────
 ## ✔ Variable: 'total'
@@ -483,34 +485,34 @@
 ##  2:    Q10 0.000 0.000 0.000
 ##  3:    Q20 0.000 0.000 0.000
 ##  4:    Q30 0.000 0.000 0.000
-##  5:    Q40 1.000 0.000 0.007
-##  6:   Mean 1.143 0.025 0.050
-##  7: Median 1.000 0.001 0.016
-##  8:    Q60 1.000 0.001 0.031
-##  9:    Q70 2.000 0.003 0.042
-## 10:    Q80 2.000 0.010 0.054
-## 11:    Q90 3.000 0.036 0.162
-## 12:    Q95 3.000 0.167 0.196
-## 13:    Q99 3.000 0.262 0.323
-## 14:    Max 3.000 0.286 0.354
+##  5:    Q40 0.000 0.000 0.000
+##  6:   Mean 0.952 0.027 0.057
+##  7: Median 0.000 0.000 0.000
+##  8:    Q60 0.000 0.000 0.000
+##  9:    Q70 1.000 0.002 0.021
+## 10:    Q80 2.000 0.005 0.048
+## 11:    Q90 3.000 0.009 0.097
+## 12:    Q95 4.000 0.030 0.194
+## 13:    Q99 4.800 0.406 0.613
+## 14:    Max 5.000 0.500 0.717
 ## 
 ## ✔ Variable: 'cnt_males'
 ## 
 ##       what    d1    d2    d3
 ##  1:    Min 0.000 0.000 0.000
-##  2:    Q10 0.900 0.001 0.013
-##  3:    Q20 3.000 0.002 0.042
-##  4:    Q30 3.900 0.003 0.047
-##  5:    Q40 4.000 0.004 0.054
-##  6:   Mean 3.429 0.095 0.179
-##  7: Median 4.000 0.007 0.084
-##  8:    Q60 4.000 0.018 0.131
-##  9:    Q70 4.000 0.024 0.155
-## 10:    Q80 4.000 0.060 0.269
-## 11:    Q90 4.700 0.418 0.550
-## 12:    Q95 5.000 0.571 0.671
-## 13:    Q99 5.000 0.571 0.671
-## 14:    Max 5.000 0.571 0.671</code></pre>
+##  2:    Q10 0.300 0.000 0.005
+##  3:    Q20 1.000 0.001 0.016
+##  4:    Q30 1.000 0.002 0.020
+##  5:    Q40 1.000 0.002 0.024
+##  6:   Mean 1.714 0.026 0.069
+##  7: Median 1.000 0.005 0.036
+##  8:    Q60 1.000 0.011 0.051
+##  9:    Q70 1.000 0.012 0.066
+## 10:    Q80 1.000 0.017 0.171
+## 11:    Q90 5.200 0.105 0.179
+## 12:    Q95 7.000 0.143 0.183
+## 13:    Q99 7.000 0.143 0.183
+## 14:    Max 7.000 0.143 0.183</code></pre>
 </div>
 </div>
 <div id="summary" class="section level2">
@@ -522,6 +524,7 @@
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
@@ -547,7 +550,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9100.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.0.9000.</p>
 </div>
 
       </footer>
