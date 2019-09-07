@@ -1,3 +1,6 @@
+# cellKey 0.17.3
+- correctly compute perturbed weighted counts
+
 # cellKey 0.17.2
 - fixed issue in lookup up values for frequency tables
 
