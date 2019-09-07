@@ -160,8 +160,8 @@ expect_message(tab$freqtab())
 
 test_that("check ck_define_table() with already existing rec-keys", {
   expect_is(tab, "cellkey_obj")
-  expect_identical(digest::digest(tab$freqtab("total")), "24801744e36e9843b6affb1b1c939831")
-  expect_identical(digest::digest(tab$freqtab("total", type = "weighted")), "faebd04e46fbc2e02945e0cab03bc541")
+  expect_identical(digest::digest(tab$freqtab("total")), "7bbc19818c87045dc4392795e3cc6d16")
+  expect_identical(digest::digest(tab$freqtab("total", type = "weighted")), "f9c380b7db5c450029f106899dd47edb")
   expect_identical(digest::digest(tab$freqtab("total", type = "unweighted")), "335afdf8d8ce54457cd9d268686ba08b")
 })
 
@@ -181,12 +181,12 @@ expect_message(tab$freqtab())
 
 test_that("ck_define_table() with new record keys is ok", {
   expect_is(tab, "cellkey_obj")
-  expect_identical(digest::digest(tab$freqtab("total")), "24801744e36e9843b6affb1b1c939831")
+  expect_identical(digest::digest(tab$freqtab("total")), "7bbc19818c87045dc4392795e3cc6d16")
 })
 
 freqtab <- tab$freqtab("total")
 test_that("weighted version of ck_perturb() is ok", {
-  expect_identical(digest::digest(freqtab), "24801744e36e9843b6affb1b1c939831")
+  expect_identical(digest::digest(freqtab), "7bbc19818c87045dc4392795e3cc6d16")
   expect_identical(digest::digest(tab$mod_cnts()), "4f6d21a2b4bdeb4d47f5b2d017ee81ca")
 })
 
@@ -214,7 +214,7 @@ tab$perturb("total")
 freqtab <- tab$freqtab("total")
 
 test_that("checking unweighted version of perturb()", {
-  expect_identical(digest::digest(freqtab), "ba9e5450bb0bd31531217dd21c580ea2")
+  expect_identical(digest::digest(freqtab), "2aa7c41f2066dbab737c8e96ed46db7a")
   expect_identical(digest::digest(tab$mod_cnts()), "4f6d21a2b4bdeb4d47f5b2d017ee81ca")
 })
 
@@ -234,16 +234,16 @@ tab <- ck_setup(
 tab$perturb(c("total", "cnt_males", "cnt_highincome"))
 
 test_that("check tabulation of cnt_males is ok", {
-  expect_identical(digest::digest(tab$freqtab("cnt_males")), "d9e7311bab76591c1155472db77ddb57")
+  expect_identical(digest::digest(tab$freqtab("cnt_males")), "a99b7c88e99cdb4147d454d2ad5eee27")
   expect_identical(digest::digest(tab$measures_cnts("cnt_males")), "f25113b4d2a2ab396c7425d444d6ffc1")
 })
 
 test_that("check tabulation of cnt_highincome is ok", {
-  expect_identical(digest::digest(tab$freqtab("cnt_highincome")), "c73f3b9d525f181bd94c45d102237eca")
+  expect_identical(digest::digest(tab$freqtab("cnt_highincome")), "ec941a87f7cf4566cc51f626f5434187")
   expect_identical(digest::digest(tab$measures_cnts("cnt_highincome")), "43be7d55fdccbcd38325bed49850c406")
 })
 
 test_that("check tabulation of multiple count variables is ok", {
   tt <- tab$freqtab(c("total", "cnt_males", "cnt_highincome"))
-  expect_identical(digest::digest(tt), "ed0b0c09ecea37ab05ee13f99a7bfa0f")
+  expect_identical(digest::digest(tt), "5001e20f3bc14991740b4f18a88c4184")
 })
