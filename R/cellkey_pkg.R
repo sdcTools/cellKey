@@ -75,9 +75,10 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         if (!all(countvars %in% names(x))) {
           stop("Some variable names provided in `countvars` don't exist in `x`.", call. = FALSE)
         }
-        chk <- sapply(numvars, function(nv) {
-          !is.numeric(x[[nv]])
+        chk <- sapply(countvars, function(cv) {
+          !is.numeric(x[[cv]])
         })
+
         if (any(chk)) {
           stop("Some elements provided in `countvars` are not numeric.", call. = FALSE)
         }
