@@ -1,12 +1,13 @@
 #' Generate random record keys
 #'
-#' This function allows to create random record keys from a uniform distribution. If no seed is 
+#' This function allows to create random record keys from a uniform distribution. If no seed is
 #' specified, a seed value is computed from the input data set to allow for reproducability depending
 #' on the input data set.
 #'
 #' @param dat microdata used to generated hash for random seed
-#' @param nr_digits maximum number of digits in the record keys.
-#' @param seed if not `NULL`, a number specifying the initial seed value 
+#' @param nr_digits maximum number of digits in the record keys. The default setting (`8`) corresponds
+#' with the default setting of the method in `tau-argus`.
+#' @param seed if not `NULL`, a number specifying the initial seed value
 #' for the random number generator. If `NULL`, a seed is computed from `dat` itself.
 #' @return a numeric vector with `nrow(dat)` record keys
 #' @export
@@ -14,7 +15,7 @@
 #' @examples
 #' dat <- ck_create_testdata()
 #' dat$rkeys <- ck_generate_rkeys(dat = ck_create_testdata(), nr_digits = 6)
-ck_generate_rkeys <- function(dat, nr_digits=10, seed=NULL) {
+ck_generate_rkeys <- function(dat, nr_digits=8, seed=NULL) {
   if (!is.null(seed)) {
     stopifnot(is_scalar_integerish(seed))
   } else {
