@@ -57,8 +57,8 @@ gen_stab <- function(D = 3, l = 0.5, add_small_cells = TRUE) {
 #' @param l stepwidth parameter for computation of perturbation tables
 #' a integerish number >= 1 specifying the number of top contributions whose
 #' values should be perturbed.
-#' @param mult_params an object derived with [ck_flexparams()]
-#' that specified parameters for the computation of the multiplier using a flex function.
+#' @param mult_params an object derived with [ck_flexparams()] or [ck_simpleparams()]
+#' that contain required parameters for the computation of the perturbation multiplier
 #' @param mu_c fixed extra protection amount (`>= 0)` applied to the absolute of the
 #' perturbation value of the first (largest) noise component; defaults to
 #' `0` (no additional protection)
@@ -91,10 +91,9 @@ gen_stab <- function(D = 3, l = 0.5, add_small_cells = TRUE) {
 #'   type = "top_contr",
 #'   top_k = 3,
 #'   mult_params = ck_flexparams(
-#'     flexpoint = 1000,
+#'     fp = 1000,
 #'     m_small = 0.20,
 #'     m_large = 0.03,
-#'     scaling = FALSE,
 #'     epsilon = c(1, 0.5, 0.2),
 #'     q = 2
 #'   ),
@@ -157,8 +156,9 @@ ck_params_nums <-
     top_k <- 1
   }
 
-  if (!inherits(mult_params, "params_m_flex")) {
-    stop("Please create the input for argument `mult_params` with ck_flexparams()", call. = FALSE)
+  if (!class(mult_params) %in% c("params_m_flex", "params_m_simple")) {
+    e <- "`mult_params` needs to be creating with ck_flexparams() or ck_simpleparams()"
+    stop(e, call. = FALSE)
   }
 
   if (length(mult_params$epsilon) != top_k) {
@@ -181,7 +181,7 @@ ck_params_nums <-
       use_zero_rkeys = use_zero_rkeys,
       pos_neg_var = pos_neg_var
     ),
-    type = "nums"
+    type = class(mult_params)
   )
   class(out) <- "ck_params"
   out
@@ -242,14 +242,14 @@ ck_gridparams <- function(grid, pcts) {
 }
 
 
-#' Define parameters for numeric perturbation magnitudes using a flex function
+#' Set parameters required to perturb numeric variables using a flex function
 #'
 #' [ck_flexparams()] allows to define a flex function that is used to lookup perturbation
 #' magnitudes (percentages) used when perturbing continuous variables.
 #'
 #' @details details about the grid function can be found in Deliverable D4.2, Part I in
 #' SGA *"Open Source tools for perturbative confidentiality methods"*
-#' @param flexpoint (numeric scalar); at which point should the noise coefficient
+#' @param fp (numeric scalar); at which point should the noise coefficient
 #' function reaches its desired maximum (defined by `m_small`)
 #' @param m_small (numeric scalar); the desired maximum percentage for the function (for small values)
 #' @param m_large (numeric scalar); the desired noise percentage for larger values
@@ -258,21 +258,17 @@ ck_gridparams <- function(grid, pcts) {
 #' element forced to equal 1. The length of this vector must correspond with the number `topK`
 #' specified in [ck_params_nums()] when creating parameters for `type == "top_contr"` which is
 #' checked at runtime. This setting allows to use different flex-functions for the largest `top_k` contributors.
-#' @param scaling (logical scalar); if `TRUE`, the magnitude parameter is computed as described in
-#' deliverable 4.2 (section `2.3.1`); otherwise a simpler approach is taken where the perturbation magnitudes
-#' are proportional to `epsilon` times `m_large` for sufficient large values.
 #' @return an object suitable as input for [ck_params_nums()].
-
 #' @export
 #' @inherit cellkey_pkg examples
-#' @seealso [ck_params_nums()]
+#' @seealso [ck_simpleparams()], [ck_params_nums()]
 #' @md
-ck_flexparams <- function(flexpoint, m_small = 0.25, m_large = 0.05, epsilon = 1, scaling = TRUE, q = 3) {
-  if (!rlang::is_scalar_double(flexpoint)) {
-    stop("Argument `flexpoint` is not a number.", call = FALSE)
+ck_flexparams <- function(fp, m_small = 0.25, m_large = 0.05, epsilon = 1, q = 3) {
+  if (!rlang::is_scalar_double(fp)) {
+    stop("Argument `fp` is not a number.", call = FALSE)
   }
-  if (flexpoint <= 0) {
-    stop("Argument `flexpoint` must be positive.", call. = FALSE)
+  if (fp <= 0) {
+    stop("Argument `fp` must be positive.", call. = FALSE)
   }
   if (!rlang::is_scalar_double(m_small)) {
     stop("Argument `m_small` is not a number.", call = FALSE)
@@ -310,18 +306,60 @@ ck_flexparams <- function(flexpoint, m_small = 0.25, m_large = 0.05, epsilon = 1
       stop("Argument `epsilon` must contain numbers in descending order", call. = FALSE)
     }
   }
-  if (!rlang::is_scalar_logical(scaling)) {
-    stop("Argument `scaling` is not a logical scalar", call = FALSE)
-  }
   out <- list(
-    flexpoint = flexpoint,
+    fp = fp,
     m_small = m_small,
     m_large = m_large,
     epsilon = epsilon,
-    scaling = scaling,
-    q = q
-  )
+    q = q)
   class(out) <- "params_m_flex"
+  out
+}
+
+#' Set parameters required to perturb numeric variables using a simple approach
+#'
+#' [ck_simpleparams()] allows to define parameters for a simple perturbation
+#' approach based on a single magnitude parameter (`m`). The values of `epsilon`
+#' are used to  `"weight"` parameter `m` in case `type == "top_contr"` is set in
+#' [ck_params_nums()].
+#'
+#' @inherit ck_flexparams details
+#' @inherit ck_flexparams return
+#' @inherit cellkey_pkg examples
+#' @inheritParams ck_flexparams
+#' @param m a percentage value used as magnitude for perturbation
+#' @export
+#' @md
+#' @seealso [ck_flexparams()], [ck_params_nums()]
+ck_simpleparams <- function(m, epsilon = 1) {
+  # basically scaling = FALSE
+  if (!rlang::is_scalar_double(m)) {
+    stop("Argument `m` is not a number.", call = FALSE)
+  }
+  if (m <= 0 | m > 1) {
+    stop("Argument `m` must be > 0 and <= 1.", call. = FALSE)
+  }
+  if (!is.numeric(epsilon)) {
+    stop("Argument `epsilon` must be a numeric vector", call. = FALSE)
+  }
+  if (any(epsilon < 0)) {
+    stop("Argument `epsilon` must contain only numbers >= 0", call. = FALSE)
+  }
+  if (any(epsilon > 1)) {
+    stop("Argument `epsilon` must contain only numbers <= 1", call. = FALSE)
+  }
+  if (epsilon[1] != 1) {
+    stop("The first element of `epsilon` must equal 1", call. = FALSE)
+  }
+  if (length(epsilon) > 1) {
+    if (any(diff(epsilon) > 0)) {
+      stop("Argument `epsilon` must contain numbers in descending order", call. = FALSE)
+    }
+  }
+  out <- list(
+    m = m,
+    epsilon = epsilon)
+  class(out) <- "params_m_simple"
   out
 }
 

@@ -91,8 +91,7 @@
 # returns a list with the x_delta values (x * m) and
 # where to look in the ptable (all_cells or small_cells)
 .x_delta_flex <- function(params, x, m_fixed_sq) {
-  params$scaling <- TRUE
-  fp <- params$flexpoint
+  fp <- params$fp
 
   E <- sum(params$epsilon^2)
   separation <- !is.null(m_fixed_sq)
@@ -105,42 +104,50 @@
     E = E,
     m_large = params$m_large)
 
-  # by default: perturbation for small cells -> highest pctg
-  if (!params$scaling) {
-    m <- rep(1, length(x))
+  m <- rep(params$m_small, length(x))
+  ind_lg <- which(abs(x) > fp)
+  if (length(ind_lg) > 0) {
+    x_lg <- x[ind_lg]
 
-    # for details, see scaling.docx (from pp)
-    ind_lg <-  which(abs(x) > g1)
-    if (length(ind_lg) > 0) {
-      m[ind_lg] <- params$m_large * params$epsilon[ind_lg]
-    }
-  } else {
-    m <- rep(params$m_small, length(x))
-    ind_lg <- which(abs(x) > fp)
-    if (length(ind_lg) > 0) {
-      x_lg <- x[ind_lg]
+    m_lg <- params$m_large * params$epsilon[ind_lg]
+    m_sm <- params$m_small * params$epsilon[ind_lg]
 
-      m_lg <- params$m_large * params$epsilon[ind_lg]
-      m_sm <- params$m_small * params$epsilon[ind_lg]
-
-      f1 <- ((m_sm * x_lg) - (m_lg * fp)) / (m_lg * fp)
-      f2 <- (2 * fp) / (fp + x_lg)
-      m[ind_lg] <- m_lg * (1 + (f1 * f2 ^ params$q))
-    }
-
-    # fixed variance for very small observations
-    # very small values
-    ind_vs <- which(x < g1)
-    if (length(ind_vs) > 0) {
-      m[ind_vs] <- (sqrt(m_fixed_sq) * params$epsilon[ind_vs]) / sqrt(E)
-      x[ind_vs] <- 1
-      lookup[ind_vs] <- "small_cells"
-    }
+    f1 <- ((m_sm * x_lg) - (m_lg * fp)) / (m_lg * fp)
+    f2 <- (2 * fp) / (fp + x_lg)
+    m[ind_lg] <- m_lg * (1 + (f1 * f2 ^ params$q))
   }
-  list(
-    x_delta = x * m,
-    lookup = lookup
-  )
+
+  # fixed variance for very small observations
+  # very small values
+  ind_vs <- which(x < g1)
+  if (length(ind_vs) > 0) {
+    m[ind_vs] <- (sqrt(m_fixed_sq) * params$epsilon[ind_vs]) / sqrt(E)
+    x[ind_vs] <- 1
+    lookup[ind_vs] <- "small_cells"
+  }
+  list(x_delta = x * m, lookup = lookup)
+}
+
+.x_delta_simple <- function(params, x, m_fixed_sq) {
+  p <- params$m # default percentage
+  lookup <- rep("all", length(x))
+
+  # g1 is 0 in case we do not have seperation
+  # meaning no rows in ptable with type == "small_cells"
+  E <- sum(params$epsilon^2)
+  g1 <- .g1(
+    m_fixed_sq = m_fixed_sq,
+    E = E,
+    m_large = p)
+
+  m <- rep(1, length(x))
+
+  # for details, see scaling.docx (from pp)
+  ind_lg <-  which(abs(x) >= g1)
+  if (length(ind_lg) > 0) {
+    m[ind_lg] <- p * params$epsilon[ind_lg]
+  }
+  list(x_delta = x * m, lookup = lookup)
 }
 
 # returning perturbation values from `stab` based on cellkeys, x_delta (x * m), the weighted cell-value and

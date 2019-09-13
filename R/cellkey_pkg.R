@@ -750,7 +750,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       if (!inherits(val, "ck_params")) {
         stop("Please create the input using `ck_params_nums()`", call. = FALSE)
       }
-      if (val$type != "nums") {
+
+      if (!val$type %in% c("params_m_flex", "params_m_simple")) {
         stop("Please create the input using `ck_params_nums()`", call. = FALSE)
       }
 
@@ -1050,12 +1051,20 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
       # for now; only flex-function is allowed as input!
       mult_params <- params$mult_params
-      ck_log("--> multiplicator: ", shQuote("flex"))
       ck_log("--> epsilon: ", paste(params$mult_params$epsilon, collapse = ", "))
-      ck_log("--> scaling: ", params$mult_params$scaling)
       ck_log("--> mu_c: ", params$mu_c)
       ck_log("--> separation: ", !is.na(params$m_fixed_sq))
       ck_log("--> m1_sq: ", params$m_fixed_sq)
+
+      cl <- class(params$mult_params)
+      if (cl == "params_m_simple") {
+        lookup_type <- "simple"
+      } else if (cl == "params_m_flex") {
+        lookup_type <- "flex"
+      } else {
+        stop("invalid perturbation parameters received.", call. = FALSE)
+      }
+      ck_log("--> multiplicator: ", shQuote(lookup_type))
 
       # get maximum contributions for each cell and variable!
       # restrict to current variable
@@ -1085,10 +1094,18 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       # reason: in case of fixed_variance for very small cells, x_j is changed to 1!
       # for now, only flex-function is supported (no grids)
       res <- lapply(x_vals, function(x) {
-        .x_delta_flex(
-          params = params$mult_params,
-          x = x,
-          m_fixed_sq = params$m_fixed_sq)
+        if (lookup_type == "simple") {
+          return(.x_delta_simple(
+            params = params$mult_params,
+            x = x,
+            m_fixed_sq = params$m_fixed_sq))
+        }
+        if (lookup_type == "flex") {
+          return(.x_delta_flex(
+            params = params$mult_params,
+            x = x,
+            m_fixed_sq = params$m_fixed_sq))
+        }
       })
 
       x_delta <- lapply(res, function(x) x$x_delta)
@@ -1209,7 +1226,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         by.y = "cell_id",
         all.x = TRUE)
 
-      ck_log("update private$.results")
+      ck_log("updating results")
       newtab <- private$.results[[v]]
 
       # no duplicates
@@ -1537,16 +1554,14 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'   type = "top_contr",
 #'   top_k = 3,
 #'   mult_params = ck_flexparams(
-#'     flexpoint = 1000,
+#'     fp = 1000,
 #'     m_small = 0.30,
 #'     m_large = 0.03,
 #'     epsilon = c(1, 0.5, 0.2),
-#'     q = 3
-#'   ),
+#'     q = 3),
 #'   mu_c = 2,
 #'   same_key = FALSE,
-#'   pos_neg_var = 0
-#' )
+#'   pos_neg_var = 0)
 #'
 #' # another set of parameters
 #' # for variables with positive and negative values
@@ -1556,17 +1571,28 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'   type = "top_contr",
 #'   top_k = 3,
 #'   mult_params = ck_flexparams(
-#'     flexpoint = 1000,
+#'     fp = 1000,
 #'     m_small = 0.15,
 #'     m_large = 0.02,
 #'     epsilon = c(1, 0.4, 0.15),
-#'     q = 3,
-#'     scaling = FALSE
-#'   ),
+#'     q = 3),
 #'   mu_c = 2,
 #'   same_key = FALSE,
-#'   pos_neg_var = 1
-#' )
+#'   pos_neg_var = 1)
+#'
+#' # simple perturbation parameters (not using the flex-function approach)
+#' p_nums3 <- ck_params_nums(
+#'   D = 10,
+#'   l = 0.5,
+#'   type = "top_contr",
+#'   top_k = 3,
+#'   mult_params = ck_simpleparams(
+#'     m = 0.25,
+#'     epsilon = c(1, 0.6, 0.2)),
+#'   mu_c = 2,
+#'   same_key = FALSE,
+#'   pos_neg_var = 1)
+#'
 #'
 #' # use `p_nums1` for all variables
 #' tab$params_nums_set(p_nums1, c("savings", "income", "expend"))

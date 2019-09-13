@@ -2,13 +2,13 @@
 % Please edit documentation in R/ck_params_nums.R
 \name{ck_flexparams}
 \alias{ck_flexparams}
-\title{Define parameters for numeric perturbation magnitudes using a flex function}
+\title{Set parameters required to perturb numeric variables using a flex function}
 \usage{
-ck_flexparams(flexpoint, m_small = 0.25, m_large = 0.05, epsilon = 1,
-  scaling = TRUE, q = 3)
+ck_flexparams(fp, m_small = 0.25, m_large = 0.05, epsilon = 1,
+  q = 3)
 }
 \arguments{
-\item{flexpoint}{(numeric scalar); at which point should the noise coefficient
+\item{fp}{(numeric scalar); at which point should the noise coefficient
 function reaches its desired maximum (defined by \code{m_small})}
 
 \item{m_small}{(numeric scalar); the desired maximum percentage for the function (for small values)}
@@ -19,10 +19,6 @@ function reaches its desired maximum (defined by \code{m_small})}
 element forced to equal 1. The length of this vector must correspond with the number \code{topK}
 specified in \code{\link[=ck_params_nums]{ck_params_nums()}} when creating parameters for \code{type == "top_contr"} which is
 checked at runtime. This setting allows to use different flex-functions for the largest \code{top_k} contributors.}
-
-\item{scaling}{(logical scalar); if \code{TRUE}, the magnitude parameter is computed as described in
-deliverable 4.2 (section \code{2.3.1}); otherwise a simpler approach is taken where the perturbation magnitudes
-are proportional to \code{epsilon} times \code{m_large} for sufficient large values.}
 
 \item{q}{(numeric scalar); Parameter of the function; \code{q} needs to be \code{>= 1}}
 }
@@ -125,16 +121,14 @@ p_nums1 <- ck_params_nums(
   type = "top_contr",
   top_k = 3,
   mult_params = ck_flexparams(
-    flexpoint = 1000,
+    fp = 1000,
     m_small = 0.30,
     m_large = 0.03,
     epsilon = c(1, 0.5, 0.2),
-    q = 3
-  ),
+    q = 3),
   mu_c = 2,
   same_key = FALSE,
-  pos_neg_var = 0
-)
+  pos_neg_var = 0)
 
 # another set of parameters
 # for variables with positive and negative values
@@ -144,17 +138,28 @@ p_nums2 <- ck_params_nums(
   type = "top_contr",
   top_k = 3,
   mult_params = ck_flexparams(
-    flexpoint = 1000,
+    fp = 1000,
     m_small = 0.15,
     m_large = 0.02,
     epsilon = c(1, 0.4, 0.15),
-    q = 3,
-    scaling = FALSE
-  ),
+    q = 3),
   mu_c = 2,
   same_key = FALSE,
-  pos_neg_var = 1
-)
+  pos_neg_var = 1)
+
+# simple perturbation parameters (not using the flex-function approach)
+p_nums3 <- ck_params_nums(
+  D = 10,
+  l = 0.5,
+  type = "top_contr",
+  top_k = 3,
+  mult_params = ck_simpleparams(
+    m = 0.25,
+    epsilon = c(1, 0.6, 0.2)),
+  mu_c = 2,
+  same_key = FALSE,
+  pos_neg_var = 1)
+
 
 # use `p_nums1` for all variables
 tab$params_nums_set(p_nums1, c("savings", "income", "expend"))
@@ -201,5 +206,5 @@ tab$mod_cnts()
 tab$summary()
 }
 \seealso{
-\code{\link[=ck_params_nums]{ck_params_nums()}}
+\code{\link[=ck_simpleparams]{ck_simpleparams()}}, \code{\link[=ck_params_nums]{ck_params_nums()}}
 }

@@ -119,16 +119,14 @@ p_nums1 <- ck_params_nums(
   type = "top_contr",
   top_k = 3,
   mult_params = ck_flexparams(
-    flexpoint = 1000,
+    fp = 1000,
     m_small = 0.30,
     m_large = 0.03,
     epsilon = c(1, 0.5, 0.2),
-    q = 3
-  ),
+    q = 3),
   mu_c = 2,
   same_key = FALSE,
-  pos_neg_var = 0
-)
+  pos_neg_var = 0)
 
 # another set of parameters
 # for variables with positive and negative values
@@ -138,17 +136,28 @@ p_nums2 <- ck_params_nums(
   type = "top_contr",
   top_k = 3,
   mult_params = ck_flexparams(
-    flexpoint = 1000,
+    fp = 1000,
     m_small = 0.15,
     m_large = 0.02,
     epsilon = c(1, 0.4, 0.15),
-    q = 3,
-    scaling = FALSE
-  ),
+    q = 3),
   mu_c = 2,
   same_key = FALSE,
-  pos_neg_var = 1
-)
+  pos_neg_var = 1)
+
+# simple perturbation parameters (not using the flex-function approach)
+p_nums3 <- ck_params_nums(
+  D = 10,
+  l = 0.5,
+  type = "top_contr",
+  top_k = 3,
+  mult_params = ck_simpleparams(
+    m = 0.25,
+    epsilon = c(1, 0.6, 0.2)),
+  mu_c = 2,
+  same_key = FALSE,
+  pos_neg_var = 1)
+
 
 # use `p_nums1` for all variables
 tab$params_nums_set(p_nums1, c("savings", "income", "expend"))

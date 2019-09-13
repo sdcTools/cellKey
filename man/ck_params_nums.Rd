@@ -29,8 +29,8 @@ is used.
 a integerish number >= 1 specifying the number of top contributions whose
 values should be perturbed.}
 
-\item{mult_params}{an object derived with \code{\link[=ck_flexparams]{ck_flexparams()}}
-that specified parameters for the computation of the multiplier using a flex function.}
+\item{mult_params}{an object derived with \code{\link[=ck_flexparams]{ck_flexparams()}} or \code{\link[=ck_simpleparams]{ck_simpleparams()}}
+that contain required parameters for the computation of the perturbation multiplier}
 
 \item{mu_c}{fixed extra protection amount (\code{>= 0)} applied to the absolute of the
 perturbation value of the first (largest) noise component; defaults to
@@ -73,10 +73,9 @@ ck_params_nums(
   type = "top_contr",
   top_k = 3,
   mult_params = ck_flexparams(
-    flexpoint = 1000,
+    fp = 1000,
     m_small = 0.20,
     m_large = 0.03,
-    scaling = FALSE,
     epsilon = c(1, 0.5, 0.2),
     q = 2
   ),
