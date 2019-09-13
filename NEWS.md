@@ -1,11 +1,3 @@
-# cellKey 0.19.0
-- [todo] allow grids for magnitude tables
-- [todo] allow special requirements for positive cells
-- [todo] magnitude_tables: 
-  * [todo] implement `PARITY`: --> different lookups for even/odd columns
-  * [todo] Parity=Yes does nt make sense with T>1. This should not be allowed.
-  * [todo] implement suitable utility/risk measures
-  
 # cellKey 0.18.0
 - allow to save perturbation-schemes for different variables in `$params_cnts_set()` and `$params_nums_set()`
 - allow return current active perturbation-schemes for variables with `params_cnts_get()` and `params_nums_get()`
@@ -33,22 +25,29 @@
 - changed (internal) format of ptable for magnitude tables
     * added column `type` with values `all` or `small_cells`
 - modified flex-function to implement concept of "proportional flexing"
-- setting `m_fixed_sq != NULL` triggers lookup in extra block of provided perturbation table (`type == "small_cells"`)
+- setting `m_fixed_sq != NA` triggers lookup in extra block of provided perturbation table (`type == "small_cells"`)
 - implemented and document the following methods to identify sensitive cells
   * `$supp_freq(v, max_n)`
   * `$supp_nk(v, max_n)`
   * `$supp_p(v, max_n)`
   * `$supp_pq(v, max_n)`
-- by default; generate recordkeys with 8 digits
+- generate recordkeys with 8 digits and update tests
+- internally compute parameter m1_squared:
+  * new helper function `.compute_m1sq()`
+  * updated `ck_params_nums()` and examples accordingly
+- implement scaling = no using fixed parameters
+    * removed scaling argument from `ck_flexparams()` 
+    * new aux-function `ck_simpleparams()` to be used in `ck_params_nums()`
+    * new aux-function `.x_delta_simle()` for computing x_delta
+- combine parameters `m_small` and `m_large` to `p` in `ck_flexparams()`
+    
 - [todo] create test-case for peter-paul
-- [todo] check correct computation of case <g1 for flex function case (pp-mail)
-- [todo] check record-key generation with 8 digits
-- [todo] implement scaling = no (fixed parameters)
 - [todo] implement magnitude tables
   * [todo] add tests for magitude tables
   * [todo] update method `$summary()` to include values for perturbed magnitude tables
 - [todo] update vignette
 - [todo] remove or re-implement `by`-argument in ck_perturb()
+- [todo] remove method `$everything()` which is only here for debugging purposes
 
 # cellKey 0.17.1
 - adding parameter `exclude_zero_cells` to `ck_cnt_measures()`
