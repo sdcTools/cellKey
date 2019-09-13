@@ -70,7 +70,7 @@
   }
 
   # fixed variance for very small observations
-  if (!is.null(m_fixed_sq)) {
+  if (!is.na(m_fixed_sq)) {
     # compute g1 ("correction.docx" from sarah, 28.8.19)
     # modified formula 2.3 on p.9)
     g1 <- .g1(
