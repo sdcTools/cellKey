@@ -92,8 +92,7 @@ gen_stab <- function(D = 3, l = 0.5, add_small_cells = TRUE) {
 #'   top_k = 3,
 #'   mult_params = ck_flexparams(
 #'     fp = 1000,
-#'     m_small = 0.20,
-#'     m_large = 0.03,
+#'     p = c(0.20, 0.03),
 #'     epsilon = c(1, 0.5, 0.2),
 #'     q = 2
 #'   ),
@@ -241,7 +240,6 @@ ck_gridparams <- function(grid, pcts) {
   out
 }
 
-
 #' Set parameters required to perturb numeric variables using a flex function
 #'
 #' [ck_flexparams()] allows to define a flex function that is used to lookup perturbation
@@ -250,9 +248,12 @@ ck_gridparams <- function(grid, pcts) {
 #' @details details about the grid function can be found in Deliverable D4.2, Part I in
 #' SGA *"Open Source tools for perturbative confidentiality methods"*
 #' @param fp (numeric scalar); at which point should the noise coefficient
-#' function reaches its desired maximum (defined by `m_small`)
-#' @param m_small (numeric scalar); the desired maximum percentage for the function (for small values)
-#' @param m_large (numeric scalar); the desired noise percentage for larger values
+#' function reaches its desired maximum (defined by the first element of `p`)
+#' @param p a numeric vector of length `2` where both elements specify a percentage.
+#' The first value refers to the desired maximum perturbation percentage for small
+#' cells (depending on `fp`) while the second element refers to the desired maximum
+#' perturbation percentage for large cells. Both values must be between `0` and `1` and
+#' need to be in descending order.
 #' @param q (numeric scalar); Parameter of the function; `q` needs to be `>= 1`
 #' @param epsilon a numeric vector in descending order with all values `>= 0` and `<= 1` with the first
 #' element forced to equal 1. The length of this vector must correspond with the number `topK`
@@ -263,28 +264,26 @@ ck_gridparams <- function(grid, pcts) {
 #' @inherit cellkey_pkg examples
 #' @seealso [ck_simpleparams()], [ck_params_nums()]
 #' @md
-ck_flexparams <- function(fp, m_small = 0.25, m_large = 0.05, epsilon = 1, q = 3) {
+ck_flexparams <- function(fp, p = c(0.25, 0.05), epsilon = 1, q = 3) {
   if (!rlang::is_scalar_double(fp)) {
     stop("Argument `fp` is not a number.", call = FALSE)
   }
   if (fp <= 0) {
     stop("Argument `fp` must be positive.", call. = FALSE)
   }
-  if (!rlang::is_scalar_double(m_small)) {
-    stop("Argument `m_small` is not a number.", call = FALSE)
+  if (!is.numeric(p)) {
+    stop("`p` is not a numeric vector.", call. = FALSE)
   }
-  if (m_small <= 0 | m_small > 1) {
-    stop("Argument `m_small` must be > 0 and <= 1.", call. = FALSE)
+  if (length(p) != 2) {
+    stop("`p` does not have 2 elements.", call. = FALSE)
   }
-  if (!rlang::is_scalar_double(m_large)) {
-    stop("Argument `m_large` is not a number.", call = FALSE)
+  if (any(diff(p) > 0)) {
+    stop("Argument `p` must contain numbers in descending order", call. = FALSE)
   }
-  if (m_large <= 0 | m_large > 1) {
-    stop("Argument `m_large` must be > 0 and <= 1.", call. = FALSE)
+  if (max(p) > 1 | min(p) < 0) {
+    stop("values `< 0` or `> 1` are not allowed in argument `p`", call. = FALSE)
   }
-  if (!rlang::is_scalar_double(q)) {
-    stop("Argument `q` is not a number.", call = FALSE)
-  }
+
   if (q < 1) {
     stop("Argument `q` needs to be >= 1", call. = FALSE)
   }
@@ -308,8 +307,8 @@ ck_flexparams <- function(fp, m_small = 0.25, m_large = 0.05, epsilon = 1, q = 3
   }
   out <- list(
     fp = fp,
-    m_small = m_small,
-    m_large = m_large,
+    p_small = p[1],
+    p_large = p[2],
     epsilon = epsilon,
     q = q)
   class(out) <- "params_m_flex"

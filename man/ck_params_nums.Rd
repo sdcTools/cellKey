@@ -74,8 +74,7 @@ ck_params_nums(
   top_k = 3,
   mult_params = ck_flexparams(
     fp = 1000,
-    m_small = 0.20,
-    m_large = 0.03,
+    p = c(0.20, 0.03),
     epsilon = c(1, 0.5, 0.2),
     q = 2
   ),

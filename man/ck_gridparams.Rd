@@ -112,8 +112,7 @@ p_nums1 <- ck_params_nums(
   top_k = 3,
   mult_params = ck_flexparams(
     fp = 1000,
-    m_small = 0.30,
-    m_large = 0.03,
+    p = c(0.30, 0.03),
     epsilon = c(1, 0.5, 0.2),
     q = 3),
   mu_c = 2,
@@ -129,8 +128,7 @@ p_nums2 <- ck_params_nums(
   top_k = 3,
   mult_params = ck_flexparams(
     fp = 1000,
-    m_small = 0.15,
-    m_large = 0.02,
+    p = c(0.15, 0.02),
     epsilon = c(1, 0.4, 0.15),
     q = 3),
   mu_c = 2,

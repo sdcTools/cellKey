@@ -34,12 +34,12 @@
 
 # g1 value (section 2.3.1 in deliverable 4.2);
 # modified according to "correction.docx" from 28.8.19
-.g1 <- function(m_fixed_sq, E, m_large) {
+.g1 <- function(m_fixed_sq, E, p_large) {
   # in case m_fixed_sq is NA (no separation) -> g1 is set to 0
   if (is.na(m_fixed_sq)) {
     return(0)
   }
-  sqrt(m_fixed_sq) / (sqrt(E) * m_large)
+  sqrt(m_fixed_sq) / (sqrt(E) * p_large)
 }
 
 # compute x_delta  multiplication parameters m_j (x) * x
@@ -76,7 +76,7 @@
     g1 <- .g1(
       m_fixed_sq = m_fixed_sq,
       E = top_k,
-      m_large = params[[1]]$pcts[1])
+      p_large = params[[1]]$pcts[1])
 
     # very small (absolute) values
     ind_vs <- which(abs(x) < g1)
@@ -102,15 +102,15 @@
   g1 <- .g1(
     m_fixed_sq = m_fixed_sq,
     E = E,
-    m_large = params$m_large)
+    p_large = params$p_large)
 
-  m <- rep(params$m_small, length(x))
+  m <- rep(params$p_small, length(x))
   ind_lg <- which(abs(x) > fp)
   if (length(ind_lg) > 0) {
     x_lg <- x[ind_lg]
 
-    m_lg <- params$m_large * params$epsilon[ind_lg]
-    m_sm <- params$m_small * params$epsilon[ind_lg]
+    m_lg <- params$p_large * params$epsilon[ind_lg]
+    m_sm <- params$p_small * params$epsilon[ind_lg]
 
     f1 <- ((m_sm * x_lg) - (m_lg * fp)) / (m_lg * fp)
     f2 <- (2 * fp) / (fp + x_lg)
@@ -138,7 +138,7 @@
   g1 <- .g1(
     m_fixed_sq = m_fixed_sq,
     E = E,
-    m_large = p)
+    p_large = p)
 
   m <- rep(1, length(x))
 

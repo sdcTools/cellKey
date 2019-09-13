@@ -4,16 +4,17 @@
 \alias{ck_flexparams}
 \title{Set parameters required to perturb numeric variables using a flex function}
 \usage{
-ck_flexparams(fp, m_small = 0.25, m_large = 0.05, epsilon = 1,
-  q = 3)
+ck_flexparams(fp, p = c(0.25, 0.05), epsilon = 1, q = 3)
 }
 \arguments{
 \item{fp}{(numeric scalar); at which point should the noise coefficient
-function reaches its desired maximum (defined by \code{m_small})}
+function reaches its desired maximum (defined by the first element of \code{p})}
 
-\item{m_small}{(numeric scalar); the desired maximum percentage for the function (for small values)}
-
-\item{m_large}{(numeric scalar); the desired noise percentage for larger values}
+\item{p}{a numeric vector of length \code{2} where both elements specify a percentage.
+The first value refers to the desired maximum perturbation percentage for small
+cells (depending on \code{fp}) while the second element refers to the desired maximum
+perturbation percentage for large cells. Both values must be between \code{0} and \code{1} and
+need to be in descending order.}
 
 \item{epsilon}{a numeric vector in descending order with all values \code{>= 0} and \code{<= 1} with the first
 element forced to equal 1. The length of this vector must correspond with the number \code{topK}
@@ -122,8 +123,7 @@ p_nums1 <- ck_params_nums(
   top_k = 3,
   mult_params = ck_flexparams(
     fp = 1000,
-    m_small = 0.30,
-    m_large = 0.03,
+    p = c(0.30, 0.03),
     epsilon = c(1, 0.5, 0.2),
     q = 3),
   mu_c = 2,
@@ -139,8 +139,7 @@ p_nums2 <- ck_params_nums(
   top_k = 3,
   mult_params = ck_flexparams(
     fp = 1000,
-    m_small = 0.15,
-    m_large = 0.02,
+    p = c(0.15, 0.02),
     epsilon = c(1, 0.4, 0.15),
     q = 3),
   mu_c = 2,
