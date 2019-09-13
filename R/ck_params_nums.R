@@ -68,7 +68,6 @@ gen_stab <- function(D = 3, l = 0.5, add_small_cells = TRUE) {
 #' @param use_zero_rkeys (logical) skalar defining if record keys of
 #' units not contributing to a specific numeric variables should be
 #' used (`TRUE`) or ignored (`FALSE`) when computing cell keys.
-#' @param m_fixed_sq (numeric scalar); fixed noise variance for very small values
 #' @param pos_neg_var a number defining the strategy to look up perturbation values in case
 #' the observations can take positive and negative values. This setting is ignored if the variable
 #' has no negative values. The possible settings for parameter `pos_neg_var` are:
@@ -100,7 +99,6 @@ gen_stab <- function(D = 3, l = 0.5, add_small_cells = TRUE) {
 #'     q = 2
 #'   ),
 #'   use_zero_rkeys = TRUE,
-#'   m_fixed_sq = 2,
 #'   mu_c = 3,
 #'   pos_neg_var = 2
 #' )
@@ -113,7 +111,6 @@ ck_params_nums <-
            mu_c = 0,
            same_key = TRUE,
            use_zero_rkeys = FALSE,
-           m_fixed_sq = NULL,
            pos_neg_var = 1) {
 
   stopifnot(is_scalar_integerish(D))
@@ -168,32 +165,17 @@ ck_params_nums <-
     stop("Invalid length or argument `epsilon` in `mult_params` detected.", call. = FALSE)
   }
 
-  if (!is.null(m_fixed_sq)) {
-    if (!rlang::is_scalar_double(m_fixed_sq)) {
-      stop("Argument `m_fixed_sq` is not a number.", call = FALSE)
-    }
-    if (m_fixed_sq <= 0) {
-      stop("Argument `m_fixed_sq` must be positive.", call. = FALSE)
-    }
-  }
-
+  # needs to come from ptable-package!
   stab <- gen_stab(D = D, l = l)
 
-  if (!is.null(m_fixed_sq)) {
-    # we need a second block in the ptable
-    if (length(stab$type == "small_cells") == 0) {
-      e <- "`m_fixed_sq` was specified but no rows with `type == 'small_cells'` found in ptable."
-      stop(e, call. = FALSE)
-    }
-  }
-
+  # compute parameter m1_squared for large and small cells
   out <- list(
     params = list(
       type = type,
       top_k = top_k,
       stab = stab,
       mu_c = mu_c,
-      m_fixed_sq = m_fixed_sq,
+      m_fixed_sq = .compute_m1sq(ptab = stab),
       mult_params = mult_params,
       same_key = same_key,
       use_zero_rkeys = use_zero_rkeys,

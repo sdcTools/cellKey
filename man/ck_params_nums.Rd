@@ -6,7 +6,7 @@
 \usage{
 ck_params_nums(type = "top_contr", top_k = NULL, D, l, mult_params,
   mu_c = 0, same_key = TRUE, use_zero_rkeys = FALSE,
-  m_fixed_sq = NULL, pos_neg_var = 1)
+  pos_neg_var = 1)
 }
 \arguments{
 \item{type}{a character value defining the way to identify the \code{magnifier},
@@ -43,8 +43,6 @@ cell or should a perturbation of the cellkey itself (\code{FALSE}) take place.}
 \item{use_zero_rkeys}{(logical) skalar defining if record keys of
 units not contributing to a specific numeric variables should be
 used (\code{TRUE}) or ignored (\code{FALSE}) when computing cell keys.}
-
-\item{m_fixed_sq}{(numeric scalar); fixed noise variance for very small values}
 
 \item{pos_neg_var}{a number defining the strategy to look up perturbation values in case
 the observations can take positive and negative values. This setting is ignored if the variable
@@ -83,7 +81,6 @@ ck_params_nums(
     q = 2
   ),
   use_zero_rkeys = TRUE,
-  m_fixed_sq = 2,
   mu_c = 3,
   pos_neg_var = 2
 )

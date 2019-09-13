@@ -151,8 +151,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         freqVarInd = match(freqvar, names(x)),
         numVarInd = match(nv, names(x)),
         weightInd = NULL,
-        sampWeightInd = NULL
-      )
+        sampWeightInd = NULL)
 
       # with perturbations
       tab <- sdcProb2df(prob, addDups = TRUE, addNumVars = TRUE, dimCodes = "original")
@@ -885,10 +884,15 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         }
       }
       return(invisible(NULL))
-    }
+    },
     # to delete
-    #max_contributions=function() { private$.max_contributions },
-    #results=function() { private$.results }
+    everything=function() {
+      list(
+        prob = private$.prob,
+        pert_params = private$.pert_params,
+        results = private$.results,
+        max_contr = private$.max_contributions)
+    }
   ),
   private=list(
     .prob = NULL,
@@ -1050,6 +1054,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       ck_log("--> epsilon: ", paste(params$mult_params$epsilon, collapse = ", "))
       ck_log("--> scaling: ", params$mult_params$scaling)
       ck_log("--> mu_c: ", params$mu_c)
+      ck_log("--> separation: ", !is.na(params$m_fixed_sq))
+      ck_log("--> m1_sq: ", params$m_fixed_sq)
 
       # get maximum contributions for each cell and variable!
       # restrict to current variable
@@ -1170,7 +1176,6 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       # in case we want to ensure positivity (see section 2.5.1 in D4.2), we apply the formula listed there
       # also, we add some more variables here that we need for the mods-table (for debugging purposes)
       ck_log("compute perturbation values and final perturbed cell values for each cells")
-
       names(prot_req) <- names(pvals)
       pert_result <- rbindlist(lapply(names(pvals), function(x) {
         if (params$pos_neg_var == 0) {
@@ -1539,7 +1544,6 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'     q = 3
 #'   ),
 #'   mu_c = 2,
-#'   m_fixed_sq = 4,
 #'   same_key = FALSE,
 #'   pos_neg_var = 0
 #' )
@@ -1560,7 +1564,6 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'     scaling = FALSE
 #'   ),
 #'   mu_c = 2,
-#'   m_fixed_sq = 4,
 #'   same_key = FALSE,
 #'   pos_neg_var = 1
 #' )

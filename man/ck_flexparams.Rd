@@ -132,7 +132,6 @@ p_nums1 <- ck_params_nums(
     q = 3
   ),
   mu_c = 2,
-  m_fixed_sq = 4,
   same_key = FALSE,
   pos_neg_var = 0
 )
@@ -153,7 +152,6 @@ p_nums2 <- ck_params_nums(
     scaling = FALSE
   ),
   mu_c = 2,
-  m_fixed_sq = 4,
   same_key = FALSE,
   pos_neg_var = 1
 )

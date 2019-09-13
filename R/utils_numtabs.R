@@ -21,11 +21,22 @@
   as.numeric(res)
 }
 
+# compute parameter m1^2 from ptable
+# used in `ck_params_nums()`
+.compute_m1sq <- function(ptab) {
+  type <- i <- NULL
+  dt <- ptab[type == "small_cells" & i == max(i)]
+  if (nrow(dt) == 0) {
+    return(NA)
+  }
+  sum((dt$i - dt$j)^2 * dt$p)
+}
+
 # g1 value (section 2.3.1 in deliverable 4.2);
 # modified according to "correction.docx" from 28.8.19
 .g1 <- function(m_fixed_sq, E, m_large) {
-  # in case m_fixed_sq is NULL (no separation) -> g1 is set to 0
-  if (is.null(m_fixed_sq)) {
+  # in case m_fixed_sq is NA (no separation) -> g1 is set to 0
+  if (is.na(m_fixed_sq)) {
     return(0)
   }
   sqrt(m_fixed_sq) / (sqrt(E) * m_large)
