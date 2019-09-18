@@ -4,10 +4,10 @@
 \alias{ck_simpleparams}
 \title{Set parameters required to perturb numeric variables using a simple approach}
 \usage{
-ck_simpleparams(m, epsilon = 1)
+ck_simpleparams(p, epsilon = 1)
 }
 \arguments{
-\item{m}{a percentage value used as magnitude for perturbation}
+\item{p}{a percentage value used as magnitude for perturbation}
 
 \item{epsilon}{a numeric vector in descending order with all values \code{>= 0} and \code{<= 1} with the first
 element forced to equal 1. The length of this vector must correspond with the number \code{topK}
@@ -121,6 +121,9 @@ p_nums1 <- ck_params_nums(
     q = 3),
   mu_c = 2,
   same_key = FALSE,
+  parity = FALSE,
+  separation = TRUE,
+  use_zero_rkeys = FALSE,
   pos_neg_var = 0)
 
 # another set of parameters
@@ -137,21 +140,21 @@ p_nums2 <- ck_params_nums(
     q = 3),
   mu_c = 2,
   same_key = FALSE,
+  separation = FALSE,
+  parity = FALSE,
   pos_neg_var = 1)
 
 # simple perturbation parameters (not using the flex-function approach)
 p_nums3 <- ck_params_nums(
   D = 10,
   l = 0.5,
-  type = "top_contr",
-  top_k = 3,
-  mult_params = ck_simpleparams(
-    m = 0.25,
-    epsilon = c(1, 0.6, 0.2)),
+  type = "mean",
+  mult_params = ck_simpleparams(p = 0.25),
   mu_c = 2,
   same_key = FALSE,
+  separation = FALSE,
+  parity = TRUE,
   pos_neg_var = 1)
-
 
 # use `p_nums1` for all variables
 tab$params_nums_set(p_nums1, c("savings", "income", "expend"))

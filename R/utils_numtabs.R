@@ -21,17 +21,6 @@
   as.numeric(res)
 }
 
-# compute parameter m1^2 from ptable
-# used in `ck_params_nums()`
-.compute_m1sq <- function(ptab) {
-  type <- i <- NULL
-  dt <- ptab[type == "small_cells" & i == max(i)]
-  if (nrow(dt) == 0) {
-    return(NA)
-  }
-  sum((dt$i - dt$j)^2 * dt$p)
-}
-
 # g1 value (section 2.3.1 in deliverable 4.2);
 # modified according to "correction.docx" from 28.8.19
 .g1 <- function(m_fixed_sq, E, p_large) {
@@ -44,28 +33,34 @@
 
 # compute x_delta  multiplication parameters m_j (x) * x
 # not yet supported
-.x_delta_grid <- function(params, x, top_k, m_fixed_sq) {
+.x_delta_grid <- function(x, inp_params) {
   stop("grids will be available in a future version!", call. = FALSE)
+
+  even_odd <- x$even_odd
+  x <- x$x
+  top_k <- inp_params$top_k
+  m_fixed_sq <- inp_params$m_fixed_sq
+
   # params is a list of parameters of length top_k
   m <- rep(NA, length(x))
 
   # footnote 3, page 7 -> if x < 0 -> use abs(x)
   rr <- lapply(1:length(x), function(i) {
-    abs(x[i]) <= params[[i]]$grid
+    abs(x[i]) <= inp_params[[i]]$grid
   })
 
   # smallest cells, highest perturbation
   ind_sm <- sapply(rr, function(x) all(x == TRUE))
-  m[ind_sm] <- sapply(params[1:length(x)], function(x) x$pcts[1])
+  m[ind_sm] <- sapply(inp_params[1:length(x)], function(x) x$pcts[1])
 
   # largest cells, smallest perturbation
   ind_lg <- sapply(rr, function(x) all(x == FALSE))
-  m[ind_lg] <- sapply(params[1:length(x)], function(x) utils::tail(x$pcts, 1))
+  m[ind_lg] <- sapply(inp_params[1:length(x)], function(x) utils::tail(x$pcts, 1))
 
   ind_mid <- which(is.na(m))
   if (length(ind_mid) > 0) {
     m[ind_mid] <- sapply(ind_mid, function(x) {
-      params[[x]]$pcts[min(which(rr[[x]] == TRUE))]
+      inp_params[[x]]$pcts[min(which(rr[[x]] == TRUE))]
     })
   }
 
@@ -76,7 +71,7 @@
     g1 <- .g1(
       m_fixed_sq = m_fixed_sq,
       E = top_k,
-      p_large = params[[1]]$pcts[1])
+      p_large = inp_params[[1]]$pcts[1])
 
     # very small (absolute) values
     ind_vs <- which(abs(x) < g1)
@@ -90,54 +85,67 @@
 
 # returns a list with the x_delta values (x * m) and
 # where to look in the ptable (all_cells or small_cells)
-.x_delta_flex <- function(params, x, m_fixed_sq) {
-  fp <- params$fp
+.x_delta_flex <- function(x, inp_params) {
+  even_odd <- x$even_odd
+  x <- x$x
 
-  E <- sum(params$epsilon^2)
-  separation <- !is.null(m_fixed_sq)
+  m_fixed_sq <- inp_params$m_fixed_sq
+  fp <- inp_params$fp
+  E <- sum(inp_params$epsilon^2)
 
-  lookup <- rep("all", length(x))
+  if (is.na(even_odd)) {
+    lookup <- rep("all", length(x))
+  } else {
+    lookup <- ifelse(even_odd, "even", "odd")
+  }
 
   # g1 is 0 in case m_fixed_sq was not specified
   g1 <- .g1(
     m_fixed_sq = m_fixed_sq,
     E = E,
-    p_large = params$p_large)
+    p_large = inp_params$p_large)
 
-  m <- rep(params$p_small, length(x))
+  m <- rep(inp_params$p_small, length(x))
   ind_lg <- which(abs(x) > fp)
   if (length(ind_lg) > 0) {
     x_lg <- x[ind_lg]
 
-    m_lg <- params$p_large * params$epsilon[ind_lg]
-    m_sm <- params$p_small * params$epsilon[ind_lg]
+    m_lg <- inp_params$p_large * inp_params$epsilon[ind_lg]
+    m_sm <- inp_params$p_small * inp_params$epsilon[ind_lg]
 
     f1 <- ((m_sm * x_lg) - (m_lg * fp)) / (m_lg * fp)
     f2 <- (2 * fp) / (fp + x_lg)
-    m[ind_lg] <- m_lg * (1 + (f1 * f2 ^ params$q))
+    m[ind_lg] <- m_lg * (1 + (f1 * f2 ^ inp_params$q))
   }
 
   # fixed variance for very small observations
   # very small values
-  ind_vs <- which(x < g1)
+  ind_vs <- which(abs(x) < g1)
   if (length(ind_vs) > 0) {
-    m[ind_vs] <- (sqrt(m_fixed_sq) * params$epsilon[ind_vs]) / sqrt(E)
+    m[ind_vs] <- (sqrt(m_fixed_sq) * inp_params$epsilon[ind_vs]) / sqrt(E)
     x[ind_vs] <- 1
     lookup[ind_vs] <- "small_cells"
   }
-  list(x_delta = x * m, lookup = lookup)
+  list(x_delta = abs(x * m), lookup = lookup)
 }
 
 # lookup using the simple, non-grid version
-.x_delta_simple <- function(params, x, m_fixed_sq) {
-  p <- params$p # default percentage
-  lookup <- rep("all", length(x))
+.x_delta_simple <- function(x, inp_params) {
+  even_odd <- x$even_odd
+  x <- x$x
+
+  p <- inp_params$p # default percentage
+  if (is.na(even_odd)) {
+    lookup <- rep("all", length(x))
+  } else {
+    lookup <- ifelse(even_odd, "even", "odd")
+  }
 
   # g1 is 0 in case we do not have seperation
   # meaning no rows in ptable with type == "small_cells"
-  E <- sum(params$epsilon^2)
+  E <- sum(inp_params$epsilon^2)
   g1 <- .g1(
-    m_fixed_sq = m_fixed_sq,
+    m_fixed_sq = inp_params$m_fixed_sq,
     E = E,
     p_large = p)
 
@@ -146,9 +154,9 @@
   # for details, see scaling.docx (from pp)
   ind_lg <-  which(abs(x) >= g1)
   if (length(ind_lg) > 0) {
-    m[ind_lg] <- p * params$epsilon[ind_lg]
+    m[ind_lg] <- p * inp_params$epsilon[ind_lg]
   }
-  list(x_delta = x * m, lookup = lookup)
+  list(x_delta = abs(x * m), lookup = lookup)
 }
 
 # returning perturbation values from `stab` based on cellkeys, x_delta (x * m), the weighted cell-value and

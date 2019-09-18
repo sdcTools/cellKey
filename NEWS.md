@@ -1,3 +1,9 @@
+# cellKey 0.19.0
+- [todo] allow grids for magnitude tables
+- [todo] allow special requirements for positive cells
+- [todo] magnitude_tables: 
+  * [todo] implement suitable utility/risk measures
+  
 # cellKey 0.18.0
 - allow to save perturbation-schemes for different variables in `$params_cnts_set()` and `$params_nums_set()`
 - allow return current active perturbation-schemes for variables with `params_cnts_get()` and `params_nums_get()`
@@ -40,8 +46,12 @@
     * new aux-function `ck_simpleparams()` to be used in `ck_params_nums()`
     * new aux-function `.x_delta_simle()` for computing x_delta
 - combine parameters `m_small` and `m_large` to `p` in `ck_flexparams()`
-    
-- [todo] create test-case for peter-paul
+- created test-cases for peter-paul
+- implement `parity` (different lookups for even/odd columns) based on even/odd number of contributors to a cell
+  * for small-cells: never apply parity
+  * Parity=Yes does not make sense with top_k > 1. This should not be allowed.    
+
+- [todo] check computation of `x_delta`    
 - [todo] implement magnitude tables
   * [todo] add tests for magitude tables
   * [todo] update method `$summary()` to include values for perturbed magnitude tables

@@ -1,4 +1,4 @@
-gen_stab <- function(D = 3, l = 0.5, add_small_cells = TRUE) {
+gen_stab <- function(D = 3, l = 0.5, add_small_cells = TRUE, even_odd = TRUE) {
   .gen <- function(i, min_d, max_d, l) {
     pval <- seq(min_d, max_d, by = l)
     x <- data.table(
@@ -17,13 +17,32 @@ gen_stab <- function(D = 3, l = 0.5, add_small_cells = TRUE) {
     x
   }
 
-  dt <- data.table(i = 0, j = 0, p = 1, kum_p_u = 0, kum_p_o = 1, diff = 0)
-  # i:=1
-  dt_a <- .gen(i = 1, min_d = -1, max_d = D, l = l)
-  # i == D
-  dt_b <- .gen(i = D, min_d = -D, max_d = D, l = l)
-  dt <- rbind(dt, dt_a, dt_b)
-  dt$type <- "all"
+  if (!even_odd) {
+    dt <- data.table(i = 0, j = 0, p = 1, kum_p_u = 0, kum_p_o = 1, diff = 0)
+    # i:=1
+    dt_a <- .gen(i = 1, min_d = -1, max_d = D, l = l)
+    # i == D
+    dt_b <- .gen(i = D, min_d = -D, max_d = D, l = l)
+    dt <- rbind(dt, dt_a, dt_b)
+    dt$type <- "all"
+  } else {
+    dt <- data.table(i = 0, j = 0, p = 1, kum_p_u = 0, kum_p_o = 1, diff = 0)
+    # i:=1
+    dt_a <- .gen(i = 1, min_d = -1, max_d = D, l = l)
+    # i == D
+    dt_b <- .gen(i = D, min_d = -D, max_d = D, l = l)
+    dt_even <- rbind(dt, dt_a, dt_b)
+    dt_even$type <- "even"
+
+    dt <- data.table(i = 0, j = 0, p = 1, kum_p_u = 0, kum_p_o = 1, diff = 0)
+    # i:=1
+    dt_a <- .gen(i = 1, min_d = -1, max_d = D, l = l)
+    # i == D
+    dt_b <- .gen(i = D, min_d = -D, max_d = D, l = l)
+    dt_odd <- rbind(dt, dt_a, dt_b)
+    dt_odd$type <- "odd"
+    dt <- rbind(dt_even, dt_odd)
+  }
 
   if (add_small_cells) {
     dt_small <- data.table(i = 0, j = 0, p = 1, kum_p_u = 0, kum_p_o = 1, diff = 0)
@@ -65,9 +84,14 @@ gen_stab <- function(D = 3, l = 0.5, add_small_cells = TRUE) {
 #' @param same_key (logical) should original cell key (`TRUE`) used for
 #' for finding perturbation values of the largest contributor to a
 #' cell or should a perturbation of the cellkey itself (`FALSE`) take place.
-#' @param use_zero_rkeys (logical) skalar defining if record keys of
+#' @param use_zero_rkeys (logical) scalar defining if record keys of
 #' units not contributing to a specific numeric variables should be
 #' used (`TRUE`) or ignored (`FALSE`) when computing cell keys.
+#' @param separation (logical) scalar defining if very small cell values should
+#' be perturbed like counts (exact lookup). If `TRUE`, the ptable provided must contain
+#' values with value `small_cells` in column `type`.
+#' @param parity (logical) scalar defining if different perturbation tables should be used
+#' for cells with an even or odd number of contributors.
 #' @param pos_neg_var a number defining the strategy to look up perturbation values in case
 #' the observations can take positive and negative values. This setting is ignored if the variable
 #' has no negative values. The possible settings for parameter `pos_neg_var` are:
@@ -109,6 +133,8 @@ ck_params_nums <-
            mu_c = 0,
            same_key = TRUE,
            use_zero_rkeys = FALSE,
+           separation = FALSE,
+           parity = FALSE,
            pos_neg_var = 1) {
 
   stopifnot(is_scalar_integerish(D))
@@ -132,6 +158,14 @@ ck_params_nums <-
   }
   if (!is_scalar_logical(use_zero_rkeys)) {
     stop("`use_zero_rkeys` needs to be a scalar logical", call. = FALSE)
+  }
+
+  if (!is_scalar_logical(separation)) {
+    stop("`separation` needs to be a scalar logical", call. = FALSE)
+  }
+
+  if (!is_scalar_logical(parity)) {
+    stop("`parity` needs to be a scalar logical", call. = FALSE)
   }
 
   if (!is_scalar_integerish(pos_neg_var)) {
@@ -165,21 +199,66 @@ ck_params_nums <-
   }
 
   # needs to come from ptable-package!
-  stab <- gen_stab(D = D, l = l)
+  stab <- gen_stab(
+    D = D,
+    l = l,
+    even_odd = parity,
+    add_small_cells = separation)
 
-  # compute parameter m1_squared for large and small cells
+  # even_odd: different lookups for even/odd unweighted cell values
+  # ~ parameter `parity` in the documents and tau-argus
+  even_odd <- parity
+  if (top_k > 1) {
+    even_odd <- FALSE
+  }
+
+  if (even_odd) {
+    if (nrow(stab[type == "even"])== 0 | nrow(stab[type == "odd"]) == 0) {
+      e <- "argument `parity` is TRUE but 0 cells with `type` being 'even' or `odd` found in ptable."
+      stop(e, call. = FALSE)
+    }
+  } else {
+    if (nrow(stab[type == "all"]) == 0) {
+      e <- "argument `parity` is FALSE but 0 cells with `type == 'all'` found in ptable."
+      stop(e, call. = FALSE)
+    }
+  }
+
+  # separation: treat very small values in magnitude tables
+  # should be treated like counts
+  # if we have a value for `m_fixed_sq`; we have a suitable ptable for small cells
+
+  # compute parameter m1^2 from ptable
+  # used in `ck_params_nums()` in case separation is TRUE
+  .compute_m1sq <- function(ptab) {
+    type <- i <- NULL
+    dt <- ptab[type == "small_cells" & i == max(i)]
+    if (nrow(dt) == 0) {
+      return(stop("invalid ptab found when computing parameter m1sq.", call. = FALSE))
+    }
+    sum((dt$i - dt$j)^2 * dt$p)
+  }
+
+  m_fixed_sq <- NA
+  if (separation) {
+    m_fixed_sq <- .compute_m1sq(stab)
+  } else {
+    stab <- stab[type != "small_cells"]
+  }
+
   out <- list(
     params = list(
       type = type,
       top_k = top_k,
       stab = stab,
       mu_c = mu_c,
-      m_fixed_sq = .compute_m1sq(ptab = stab),
+      m_fixed_sq = m_fixed_sq,
       mult_params = mult_params,
       same_key = same_key,
       use_zero_rkeys = use_zero_rkeys,
-      pos_neg_var = pos_neg_var
-    ),
+      pos_neg_var = pos_neg_var,
+      even_odd = even_odd,
+      separation = separation),
     type = class(mult_params)
   )
   class(out) <- "ck_params"

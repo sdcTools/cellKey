@@ -6,7 +6,7 @@
 \usage{
 ck_params_nums(type = "top_contr", top_k = NULL, D, l, mult_params,
   mu_c = 0, same_key = TRUE, use_zero_rkeys = FALSE,
-  pos_neg_var = 1)
+  separation = FALSE, parity = FALSE, pos_neg_var = 1)
 }
 \arguments{
 \item{type}{a character value defining the way to identify the \code{magnifier},
@@ -40,9 +40,16 @@ perturbation value of the first (largest) noise component; defaults to
 for finding perturbation values of the largest contributor to a
 cell or should a perturbation of the cellkey itself (\code{FALSE}) take place.}
 
-\item{use_zero_rkeys}{(logical) skalar defining if record keys of
+\item{use_zero_rkeys}{(logical) scalar defining if record keys of
 units not contributing to a specific numeric variables should be
 used (\code{TRUE}) or ignored (\code{FALSE}) when computing cell keys.}
+
+\item{separation}{(logical) scalar defining if very small cell values should
+be perturbed like counts (exact lookup). If \code{TRUE}, the ptable provided must contain
+values with value \code{small_cells} in column \code{type}.}
+
+\item{parity}{(logical) scalar defining if different perturbation tables should be used
+for cells with an even or odd number of contributors.}
 
 \item{pos_neg_var}{a number defining the strategy to look up perturbation values in case
 the observations can take positive and negative values. This setting is ignored if the variable

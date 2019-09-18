@@ -201,6 +201,11 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
             out[[v]]$uw_sum <- sum(xx[[v]], na.rm = TRUE)
             out[[v]]$uw_mean <- out[[v]]$uw_sum / nrow(xx)
 
+            # we compute if the number of contributors to the cell
+            # is even or odd. This information can later be used if
+            # we have different ptables (parity-case)
+            out[[v]]$even_contributors <- nrow(xx) %% 2 == 0
+
             # weighted
             xx$xw <- xx[[v]] * xx[[wvar]]
             xx$tmp2 <- abs(xx$xw)
@@ -1053,8 +1058,9 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       mult_params <- params$mult_params
       ck_log("--> epsilon: ", paste(params$mult_params$epsilon, collapse = ", "))
       ck_log("--> mu_c: ", params$mu_c)
-      ck_log("--> separation: ", !is.na(params$m_fixed_sq))
+      ck_log("--> separation: ", params$separation)
       ck_log("--> m1_sq: ", params$m_fixed_sq)
+      ck_log("--> even_odd: ", params$even_odd)
 
       cl <- class(params$mult_params)
       if (cl == "params_m_simple") {
@@ -1077,13 +1083,33 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       w_sums <- lapply(max_contr, function(x) x$w_sum)
       if (params$type == "top_contr") {
         # we may get NAs -> need to ignore them later
-        x_vals <- lapply(max_contr, function(x) x$w_vals[1:params$top_k])
+        x_vals <- lapply(max_contr, function(x) {
+          list(x = x$w_vals[1:params$top_k], even_odd = x$even_contributors)
+        })
       } else if (params$type == "mean") {
-        x_vals <- lapply(max_contr, function(x) x$w_mean)
+        x_vals <- lapply(max_contr, function(x) {
+          list(x = x$w_mean, even_odd = x$even_contributors)
+        })
       } else if (params$type == "range") {
-        x_vals <- lapply(max_contr, function(x) x$w_spread)
+        x_vals <- lapply(max_contr, function(x) {
+          list(x = x$w_spread, even_odd = x$even_contributors)
+        })
       } else if (params$type == "sum") {
-        x_vals <- w_sums
+        eo <- sapply(max_contr, function(x) {
+          x$even_contributors
+        })
+        x_vals <- lapply(names(w_sums), function(x) {
+          list(x = w_sums[[x]], lookup_even = eo[[x]])
+        })
+        names(x_vals) <- names(w_sums)
+      }
+
+      if (!params$even_odd) {
+        # "all"-case
+        x_vals <- lapply(x_vals, function(x) {
+          x$lookup_even <- NA
+          x
+        })
       }
 
       # the table with cell_keys (non-zero cellkeys and weighted and unweighted sums)
@@ -1093,19 +1119,20 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       # compute x_delta: multiplication parameters m_j (x) * x
       # reason: in case of fixed_variance for very small cells, x_j is changed to 1!
       # for now, only flex-function is supported (no grids)
+      inp_params <- params$mult_params
+      inp_params$separation <- params$separation
+      inp_params$m_fixed_sq <- params$m_fixed_sq
+      inp_params$top_k <- params$top_k
       res <- lapply(x_vals, function(x) {
         if (lookup_type == "simple") {
-          return(.x_delta_simple(
-            params = params$mult_params,
-            x = x,
-            m_fixed_sq = params$m_fixed_sq))
+          return(.x_delta_simple(x = x, inp_params = inp_params))
         }
         if (lookup_type == "flex") {
-          return(.x_delta_flex(
-            params = params$mult_params,
-            x = x,
-            m_fixed_sq = params$m_fixed_sq))
+          return(.x_delta_flex(x = x, inp_params = inp_params))
         }
+        #if (lookup_type == "grid") {
+        #  return(.x_delta_grid(x = x, inp_params = inp_params))
+        #}
       })
 
       x_delta <- lapply(res, function(x) x$x_delta)
@@ -1146,9 +1173,9 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
       # lookup could be done in different parts of the ptable
       # object `lookup` tells us, how to restrict the input
-
       pvals <- lapply(1:length(cellkeys), function(x) {
-        if (params$pos_neg_var == 0) {
+        pos_neg_var <- params$pos_neg_var
+        if (pos_neg_var == 0) {
           x_delta[[x]] <- pmin(x_delta[[x]], max_contr[[x]]$w_sum)
         }
 
@@ -1156,27 +1183,19 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         x_delta <- x_delta[[x]]
         cell_sum <- cellvals[x]
         lookup <- lookup[[x]]
-        pos_neg_var <- params$pos_neg_var
 
         p <- rep(NA, length(cellkeys))
 
-        # extract perturbation vals for large-enough cells
-        ind_all <- lookup == "all"
-        p[ind_all] <- .lookup_v(
-          stab = stab[type == "all"],
-          cellkeys = cellkeys[ind_all],
-          x_delta = x_delta[ind_all],
-          cell_sum = cellvals[x],
-          pos_neg_var = pos_neg_var)
-
-        # extract perturbation vals for very small cells
-        ind_sc <- lookup == "small_cells"
-        p[ind_sc] <- .lookup_v(
-          stab = stab[type == "small_cells"],
-          cellkeys = cellkeys[ind_sc],
-          x_delta = x_delta[ind_sc],
-          cell_sum = cellvals[x],
-          pos_neg_var = pos_neg_var)
+        # get perturbation values
+        for (tt in unique(unlist(lookup))) {
+          ii <- lookup == tt
+          p[ii] <- .lookup_v(
+            stab = stab[type == tt],
+            cellkeys = cellkeys[ii],
+            x_delta = x_delta[ii],
+            cell_sum = cellvals[x],
+            pos_neg_var = pos_neg_var)
+        }
 
         # we add extra perturbation for largest contributor
         # according to formula 2.1, page 5 if the cell needs extra protection
@@ -1561,6 +1580,9 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'     q = 3),
 #'   mu_c = 2,
 #'   same_key = FALSE,
+#'   parity = FALSE,
+#'   separation = TRUE,
+#'   use_zero_rkeys = FALSE,
 #'   pos_neg_var = 0)
 #'
 #' # another set of parameters
@@ -1577,21 +1599,21 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'     q = 3),
 #'   mu_c = 2,
 #'   same_key = FALSE,
+#'   separation = FALSE,
+#'   parity = FALSE,
 #'   pos_neg_var = 1)
 #'
 #' # simple perturbation parameters (not using the flex-function approach)
 #' p_nums3 <- ck_params_nums(
 #'   D = 10,
 #'   l = 0.5,
-#'   type = "top_contr",
-#'   top_k = 3,
-#'   mult_params = ck_simpleparams(
-#'     m = 0.25,
-#'     epsilon = c(1, 0.6, 0.2)),
+#'   type = "mean",
+#'   mult_params = ck_simpleparams(p = 0.25),
 #'   mu_c = 2,
 #'   same_key = FALSE,
+#'   separation = FALSE,
+#'   parity = TRUE,
 #'   pos_neg_var = 1)
-#'
 #'
 #' # use `p_nums1` for all variables
 #' tab$params_nums_set(p_nums1, c("savings", "income", "expend"))
