@@ -1284,11 +1284,12 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     .reset_vars=function(vars) {
       for (v in vars) {
         ck_log("removing perturbation results and parameters for ", shQuote(v))
-        private$.results[[v]] <- private$.results[[v]][, 1:4]
         if (private$.is_perturbed_countvar(v)) {
+          private$.results[[v]] <- private$.results[[v]][, 1:4]
           private$.modifications$cnts <- private$.modifications$cnts[countvar != v]
           private$.pert_params$cnts[[v]] <- NULL
         } else {
+          private$.results[[v]] <- private$.results[[v]][, 1:5]
           private$.modifications$nums <- private$.modifications$nums[numvar != v]
           private$.pert_params$nums[[v]] <- NULL
         }
