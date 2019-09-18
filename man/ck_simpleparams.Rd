@@ -123,8 +123,7 @@ p_nums1 <- ck_params_nums(
   same_key = FALSE,
   parity = FALSE,
   separation = TRUE,
-  use_zero_rkeys = FALSE,
-  pos_neg_var = 0)
+  use_zero_rkeys = FALSE)
 
 # another set of parameters
 # for variables with positive and negative values
@@ -141,8 +140,7 @@ p_nums2 <- ck_params_nums(
   mu_c = 2,
   same_key = FALSE,
   separation = FALSE,
-  parity = FALSE,
-  pos_neg_var = 1)
+  parity = FALSE)
 
 # simple perturbation parameters (not using the flex-function approach)
 p_nums3 <- ck_params_nums(
@@ -153,8 +151,7 @@ p_nums3 <- ck_params_nums(
   mu_c = 2,
   same_key = FALSE,
   separation = FALSE,
-  parity = TRUE,
-  pos_neg_var = 1)
+  parity = TRUE)
 
 # use `p_nums1` for all variables
 tab$params_nums_set(p_nums1, c("savings", "income", "expend"))

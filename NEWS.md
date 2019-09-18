@@ -3,6 +3,7 @@
 - [todo] allow special requirements for positive cells
 - [todo] magnitude_tables: 
   * [todo] implement suitable utility/risk measures
+- [todo] add parameter `pos_neg_var` again  
   
 # cellKey 0.18.0
 - allow to save perturbation-schemes for different variables in `$params_cnts_set()` and `$params_nums_set()`
@@ -50,6 +51,12 @@
 - implement `parity` (different lookups for even/odd columns) based on even/odd number of contributors to a cell
   * for small-cells: never apply parity
   * Parity=Yes does not make sense with top_k > 1. This should not be allowed.    
+- removed pos_neg_var argument for now
+
+
+- [todo] bugfix sdcTable:: sdcProb2df -> numvars are not weighted?
+- [todo] check primsupp rules (not weighted?)
+
 
 - [todo] check computation of `x_delta`    
 - [todo] implement magnitude tables
@@ -58,6 +65,9 @@
 - [todo] update vignette
 - [todo] remove or re-implement `by`-argument in ck_perturb()
 - [todo] remove method `$everything()` which is only here for debugging purposes
+
+
+
 
 # cellKey 0.17.1
 - adding parameter `exclude_zero_cells` to `ck_cnt_measures()`

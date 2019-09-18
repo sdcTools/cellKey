@@ -775,21 +775,21 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         if (private$.is_perturbed_numvar(curvar)) {
           message("--> Variable ", shQuote(curvar), " was already perturbed: parameters are not updated.")
         } else {
-          if (val$params$pos_neg_var == 0 & private$.has_negative_values(v = curvar)) {
-            e <- c(
-              "Argument `pos_neg_var` equals `0` which defines a strictly positive variable but ",
-              "variable ", shQuote(curvar), " contains negative values."
-            )
-            stop(paste(e, sep = " "), call. = FALSE)
-          }
+          #if (val$params$pos_neg_var == 0 & private$.has_negative_values(v = curvar)) {
+          #  e <- c(
+          #    "Argument `pos_neg_var` equals `0` which defines a strictly positive variable but ",
+          #    "variable ", shQuote(curvar), " contains negative values."
+          #  )
+          #  stop(paste(e, sep = " "), call. = FALSE)
+          #}
 
-          if (val$params$pos_neg_var > 0 & !private$.has_negative_values(v = curvar)) {
-            e <- c(
-              "Argument `pos_neg_var` is != `0`. The value defines how to deal with a variable containing positive ",
-              "and negative values. Variable ", shQuote(curvar), " contains however only positive values."
-            )
-            stop(paste(e, sep = " "), call. = FALSE)
-          }
+          #if (val$params$pos_neg_var > 0 & !private$.has_negative_values(v = curvar)) {
+          #  e <- c(
+          #    "Argument `pos_neg_var` is != `0`. The value defines how to deal with a variable containing positive ",
+          #    "and negative values. Variable ", shQuote(curvar), " contains however only positive values."
+          #  )
+          #  stop(paste(e, sep = " "), call. = FALSE)
+          #}
           if (curvar %in% names(ex_params)) {
             message("--> replacing perturbation parameters for variable ", shQuote(curvar))
           } else {
@@ -1099,7 +1099,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
           x$even_contributors
         })
         x_vals <- lapply(names(w_sums), function(x) {
-          list(x = w_sums[[x]], lookup_even = eo[[x]])
+          list(x = w_sums[[x]], even_odd = eo[[x]])
         })
         names(x_vals) <- names(w_sums)
       }
@@ -1107,7 +1107,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       if (!params$even_odd) {
         # "all"-case
         x_vals <- lapply(x_vals, function(x) {
-          x$lookup_even <- NA
+          x$even_odd <- NA
           x
         })
       }
@@ -1173,12 +1173,12 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
       # lookup could be done in different parts of the ptable
       # object `lookup` tells us, how to restrict the input
+
+      pos_neg_var <- params$pos_neg_var
       pvals <- lapply(1:length(cellkeys), function(x) {
-        pos_neg_var <- params$pos_neg_var
         if (pos_neg_var == 0) {
           x_delta[[x]] <- pmin(x_delta[[x]], max_contr[[x]]$w_sum)
         }
-
         cellkeys <- cellkeys[[x]]
         x_delta <- x_delta[[x]]
         cell_sum <- cellvals[x]
@@ -1582,8 +1582,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'   same_key = FALSE,
 #'   parity = FALSE,
 #'   separation = TRUE,
-#'   use_zero_rkeys = FALSE,
-#'   pos_neg_var = 0)
+#'   use_zero_rkeys = FALSE)
 #'
 #' # another set of parameters
 #' # for variables with positive and negative values
@@ -1600,8 +1599,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'   mu_c = 2,
 #'   same_key = FALSE,
 #'   separation = FALSE,
-#'   parity = FALSE,
-#'   pos_neg_var = 1)
+#'   parity = FALSE)
 #'
 #' # simple perturbation parameters (not using the flex-function approach)
 #' p_nums3 <- ck_params_nums(
@@ -1612,8 +1610,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'   mu_c = 2,
 #'   same_key = FALSE,
 #'   separation = FALSE,
-#'   parity = TRUE,
-#'   pos_neg_var = 1)
+#'   parity = TRUE)
 #'
 #' # use `p_nums1` for all variables
 #' tab$params_nums_set(p_nums1, c("savings", "income", "expend"))

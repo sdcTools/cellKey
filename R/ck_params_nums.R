@@ -92,17 +92,17 @@ gen_stab <- function(D = 3, l = 0.5, add_small_cells = TRUE, even_odd = TRUE) {
 #' values with value `small_cells` in column `type`.
 #' @param parity (logical) scalar defining if different perturbation tables should be used
 #' for cells with an even or odd number of contributors.
-#' @param pos_neg_var a number defining the strategy to look up perturbation values in case
-#' the observations can take positive and negative values. This setting is ignored if the variable
-#' has no negative values. The possible settings for parameter `pos_neg_var` are:
-#' - `0`: the variable must be strictly positive
-#' - `1`: the perturbation value is always selected from the block of perturbation
-#' values referring to the symmetric case (`i` equals `D` in the perturbation table) independent
-#' of the actual value of the observation
-#' - `2`: the lookup of a perturbation value `v` for a value `x` is done like in the case
-#' where variables only take positive values using `abs(x)` to find the relevant block
-#' in the perturbation table. The perturbed value is then computed as `sign(x) * (abs(x) + v)`.
-#' - `3`:	use variant `2` for all `x != 0` and apply `1` for `x == 0`
+# @param pos_neg_var a number defining the strategy to look up perturbation values in case
+# the observations can take positive and negative values. This setting is ignored if the variable
+# has no negative values. The possible settings for parameter `pos_neg_var` are:
+# - `0`: the variable must be strictly positive
+# - `1`: the perturbation value is always selected from the block of perturbation
+# values referring to the symmetric case (`i` equals `D` in the perturbation table) independent
+# of the actual value of the observation
+# - `2`: the lookup of a perturbation value `v` for a value `x` is done like in the case
+# where variables only take positive values using `abs(x)` to find the relevant block
+# in the perturbation table. The perturbed value is then computed as `sign(x) * (abs(x) + v)`.
+# - `3`:	use variant `2` for all `x != 0` and apply `1` for `x == 0`
 #' @return an object suitable as input to method `$params_nums_set()` for the perturbation
 #' of continous variables.
 #' @export
@@ -121,9 +121,7 @@ gen_stab <- function(D = 3, l = 0.5, add_small_cells = TRUE, even_odd = TRUE) {
 #'     q = 2
 #'   ),
 #'   use_zero_rkeys = TRUE,
-#'   mu_c = 3,
-#'   pos_neg_var = 2
-#' )
+#'   mu_c = 3)
 ck_params_nums <-
   function(type = "top_contr",
            top_k = NULL,
@@ -134,8 +132,9 @@ ck_params_nums <-
            same_key = TRUE,
            use_zero_rkeys = FALSE,
            separation = FALSE,
-           parity = FALSE,
-           pos_neg_var = 1) {
+           parity = FALSE) {
+
+  pos_neg_var <- 2
 
   stopifnot(is_scalar_integerish(D))
   stopifnot(is_scalar_double(l), l > 0, l < 1)
