@@ -326,17 +326,17 @@ ck_flexparams <- function(fp, p = c(0.25, 0.05), epsilon = 1, q = 3) {
 #' @inherit ck_flexparams return
 #' @inherit cellkey_pkg examples
 #' @inheritParams ck_flexparams
-#' @param m a percentage value used as magnitude for perturbation
+#' @param p a percentage value used as magnitude for perturbation
 #' @export
 #' @md
 #' @seealso [ck_flexparams()], [ck_params_nums()]
-ck_simpleparams <- function(m, epsilon = 1) {
+ck_simpleparams <- function(p, epsilon = 1) {
   # basically scaling = FALSE
-  if (!rlang::is_scalar_double(m)) {
-    stop("Argument `m` is not a number.", call = FALSE)
+  if (!rlang::is_scalar_double(p)) {
+    stop("Argument `p` is not a number.", call = FALSE)
   }
-  if (m <= 0 | m > 1) {
-    stop("Argument `m` must be > 0 and <= 1.", call. = FALSE)
+  if (p <= 0 | p > 1) {
+    stop("Argument `p` must be > 0 and <= 1.", call. = FALSE)
   }
   if (!is.numeric(epsilon)) {
     stop("Argument `epsilon` must be a numeric vector", call. = FALSE)
@@ -356,7 +356,7 @@ ck_simpleparams <- function(m, epsilon = 1) {
     }
   }
   out <- list(
-    m = m,
+    p = p,
     epsilon = epsilon)
   class(out) <- "params_m_simple"
   out

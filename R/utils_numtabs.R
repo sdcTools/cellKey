@@ -128,8 +128,9 @@
   list(x_delta = x * m, lookup = lookup)
 }
 
+# lookup using the simple, non-grid version
 .x_delta_simple <- function(params, x, m_fixed_sq) {
-  p <- params$m # default percentage
+  p <- params$p # default percentage
   lookup <- rep("all", length(x))
 
   # g1 is 0 in case we do not have seperation
