@@ -145,9 +145,11 @@ ck_params_nums <-
   if (!type %in% c("top_contr", "mean", "range", "sum")) {
     stop("invalid value in `type` detected.", call. = FALSE)
   }
-  if (!rlang::is_scalar_double(mu_c)) {
-    stop("Argument `mu_c` is not a number.", call. = FALSE)
+
+  if (!is.numeric(mu_c) | !rlang::is_scalar_atomic(mu_c)) {
+    stop("Argument `mu_c` is not a number.", call = FALSE)
   }
+
   if (mu_c < 0) {
     stop("Argument `mu_c` is not >= 0.", call. = FALSE)
   }
@@ -343,7 +345,7 @@ ck_gridparams <- function(grid, pcts) {
 #' @seealso [ck_simpleparams()], [ck_params_nums()]
 #' @md
 ck_flexparams <- function(fp, p = c(0.25, 0.05), epsilon = 1, q = 3) {
-  if (!rlang::is_scalar_double(fp)) {
+  if (!is.numeric(fp) | !rlang::is_scalar_atomic(fp)) {
     stop("Argument `fp` is not a number.", call = FALSE)
   }
   if (fp <= 0) {
