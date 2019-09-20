@@ -145,6 +145,14 @@
 
   v <- rep(NA, length(cellkeys))
   a <- abs(params$x) / abs(params$x_delta)
+
+  # perturbation value should be 0 for all cells below the separation point
+  # (these are the ones with lookup == "small_cells") and j > 1
+  ind_smallcells <- setdiff(which(params$lookup == "small_cells"), 1)
+  if (length(ind_smallcells) > 0) {
+    params$lookup[ind_smallcells] <- "_zero_"
+  }
+
   # this parameter is currently not implemented (see delivarable)
   # it may come back in a later version
 
@@ -169,13 +177,19 @@
   ind_exact <- which(a %in% poss)
   if (length(ind_exact) > 0) {
     v[ind_exact] <- sapply(ind_exact, function(x) {
+      if (params$lookup[x] == "_zero_") {
+        return(0)
+      }
       stab[type == params$lookup[x] & i == a[x] & cellkeys[x] < kum_p_o, diff][1]
     })
   }
 
   ind_comb <- which(a < d)
   if (length(ind_comb) > 0) {
-    v[ind_comb] <- sapply(ind_comb, function(x, poss) {
+    v[ind_comb] <- sapply(ind_comb, function(x) {
+      if (params$lookup[x] == "_zero_") {
+        return(0)
+      }
       a0 <- poss[which(a[x] < poss) - 1]
       a1 <- poss[max(which(a[x] > poss)) + 1]
       lambda <- (a[x] - a0) / (a1 - a0)
@@ -186,7 +200,7 @@
 
       # combine to get final perturbation value
       (1 - lambda) * v_low + lambda * v_up
-    }, poss = poss)
+    })
   }
   v
 }
