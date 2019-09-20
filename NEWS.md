@@ -51,14 +51,11 @@
 - implement `parity` (different lookups for even/odd columns) based on even/odd number of contributors to a cell
   * for small-cells: never apply parity
   * Parity=Yes does not make sense with top_k > 1. This should not be allowed.    
-- removed pos_neg_var argument for now
-
-
+- removed argument `pos_neg_var` for now
+- compute parameter `zs` (which was `g1`) in `ck_params_nums`
+- [todo] check computation of x_deltas using new documents
 - [todo] bugfix sdcTable:: sdcProb2df -> numvars are not weighted?
 - [todo] check primsupp rules (not weighted?)
-
-
-- [todo] check computation of `x_delta`    
 - [todo] implement magnitude tables
   * [todo] add tests for magitude tables
   * [todo] update method `$summary()` to include values for perturbed magnitude tables
