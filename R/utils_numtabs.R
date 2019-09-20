@@ -103,7 +103,8 @@
   # fixed variance for very small observations below separation point
   ind_vs <- which(x < zs)
   if (length(ind_vs) > 0) {
-    m[ind_vs] <- sqrt(m_fixed_sq) * inp_params$epsilon[ind_vs]
+    # formula: correction.docx
+    m[ind_vs] <- sqrt(m_fixed_sq) * (inp_params$E * inp_params$epsilon[ind_vs])
     x[ind_vs] <- 1
     lookup[ind_vs] <- "small_cells"
   }

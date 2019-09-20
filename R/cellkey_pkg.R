@@ -1066,6 +1066,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       ck_log("--> separation: ", params$separation)
       ck_log("--> m1_sq: ", round(params$m_fixed_sq, digits = 8))
       ck_log("--> separation_point: ", round(params$zs, digit = 8))
+      ck_log("--> E: ", round(params$E, digits = 8))
       ck_log("--> even_odd: ", params$even_odd)
 
       cl <- class(params$mult_params)
@@ -1130,6 +1131,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       inp_params$m_fixed_sq <- params$m_fixed_sq
       inp_params$top_k <- params$top_k
       inp_params$zs <- params$zs
+      inp_params$E <- params$E
       res <- lapply(x_vals, function(x) {
         if (lookup_type == "simple") {
           return(.x_delta_simple(x = x, inp_params = inp_params))

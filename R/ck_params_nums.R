@@ -280,6 +280,7 @@ ck_params_nums <-
       mu_c = mu_c,
       m_fixed_sq = m_fixed_sq,
       zs = zs,
+      E = E,
       mult_params = mult_params,
       same_key = same_key,
       use_zero_rkeys = use_zero_rkeys,
