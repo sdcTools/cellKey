@@ -87,7 +87,7 @@
 # where to look in the ptable (all_cells or small_cells)
 .x_delta_flex <- function(x, inp_params) {
   even_odd <- x$even_odd
-  x <- x$x
+  x <- abs(x$x)
 
   m_fixed_sq <- inp_params$m_fixed_sq
   fp <- inp_params$fp
@@ -106,7 +106,7 @@
     p_large = inp_params$p_large)
 
   m <- rep(inp_params$p_small, length(x))
-  ind_lg <- which(abs(x) > fp)
+  ind_lg <- which(x > fp)
   if (length(ind_lg) > 0) {
     x_lg <- x[ind_lg]
 
@@ -120,13 +120,13 @@
 
   # fixed variance for very small observations
   # very small values
-  ind_vs <- which(abs(x) < g1)
+  ind_vs <- which(x < g1)
   if (length(ind_vs) > 0) {
     m[ind_vs] <- (sqrt(m_fixed_sq) * inp_params$epsilon[ind_vs]) / sqrt(E)
     x[ind_vs] <- 1
     lookup[ind_vs] <- "small_cells"
   }
-  list(x_delta = abs(x * m), lookup = lookup)
+  list(x_delta = x * m, lookup = lookup)
 }
 
 # lookup using the simple, non-grid version
