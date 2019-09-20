@@ -1182,28 +1182,22 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
       # lookup could be done in different parts of the ptable
       # object `lookup` tells us, how to restrict the input
-      pos_neg_var <- params$pos_neg_var
+      lookup_params <- list(
+        stab = stab,
+        max_i = max(stab$i))
+
+      #pos_neg_var <- params$pos_neg_var
       pvals <- lapply(1:length(cellkeys), function(x) {
-        if (pos_neg_var == 0) {
-          x_delta[[x]] <- pmin(x_delta[[x]], max_contr[[x]]$w_sum)
-        }
-        cellkeys <- cellkeys[[x]]
-        x_delta <- x_delta[[x]]
-        cell_sum <- cellvals[x]
-        lookup <- lookup[[x]]
-
-        p <- rep(NA, length(cellkeys))
-
+        #if (pos_neg_var == 0) {
+        #  x_delta[[x]] <- pmin(x_delta[[x]], max_contr[[x]]$w_sum)
+        #}
         # get perturbation values
-        for (tt in unique(unlist(lookup))) {
-          ii <- lookup == tt
-          p[ii] <- .lookup_v(
-            stab = stab[type == tt],
-            cellkeys = cellkeys[ii],
-            x_delta = x_delta[ii],
-            cell_sum = cellvals[x],
-            pos_neg_var = pos_neg_var)
-        }
+        lookup_params$x <- x_vals[[x]]$x
+        lookup_params$x_delta <- x_delta[[x]]
+        lookup_params$lookup <- lookup[[x]]
+        p <- .lookup_v(
+          cellkeys = cellkeys[[x]],
+          params = lookup_params)
 
         # we add extra perturbation for largest contributor
         # according to formula 2.1, page 5 if the cell needs extra protection

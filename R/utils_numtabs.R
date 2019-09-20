@@ -136,54 +136,57 @@
   list(x_delta = abs(x * m), lookup = lookup)
 }
 
-# returning perturbation values from `stab` based on cellkeys, x_delta (x * m), the weighted cell-value and
-# pos_neg_var (defined in `ck_parmams_nums()`)
-.lookup_v <- function(stab, cellkeys, x_delta, cell_sum, pos_neg_var) {
-  d <- max(stab$i) # parameter `D`
+# returning perturbation values from `stab` based on cellkeys,
+# x_delta (x * m), the (absolute) values of the highest contributions
+# in future; the lookup may depend on argument `pos_neg_var` that will need
+# to be defined in `ck_parmams_nums()`
+.lookup_v <- function(cellkeys, params) {
+  d <- params$max_i # parameter `D`
 
   v <- rep(NA, length(cellkeys))
-  a <- cell_sum / abs(x_delta)
+  a <- abs(params$x) / abs(params$x_delta)
+  # this parameter is currently not implemented (see delivarable)
+  # it may come back in a later version
 
-  if (pos_neg_var == 1) {
-    # we only search in the symetric block
-    a[1:length(a)] <- d
-  } else if (pos_neg_var == 2) {
-    # we use absolute values
-    a <- abs(a)
-  } else if (pos_neg_var == 3) {
-    # we use absolute values for x_delta != 0 and the
-    # symetric case for x_delta == 0
-    a[a == 0] <- d
-    ii <- a != 0
-    a[ii] <- abs(a[ii])
-  }
+  #if (pos_neg_var == 1) {
+  #  # we only search in the symetric block
+  #  a[1:length(a)] <- d
+  #} else if (pos_neg_var == 2) {
+  #  # we use absolute values
+  #  a <- abs(a)
+  #} else if (pos_neg_var == 3) {
+  #  # we use absolute values for x_delta != 0 and the
+  #  # symetric case for x_delta == 0
+  #  a[a == 0] <- d
+  #  ii <- a != 0
+  #  a[ii] <- abs(a[ii])
+  #}
   a[a > d] <- d # we cut at the maximum value!
 
-  ind_exact <- which(a %in% unique(stab$i))
+  stab <- params$stab
+  poss <- sort(unique(stab$i))
+
+  ind_exact <- which(a %in% poss)
   if (length(ind_exact) > 0) {
     v[ind_exact] <- sapply(ind_exact, function(x) {
-      stab$diff[min(which(cellkeys[x] < stab$kum_p_o & stab$i == d))]
+      stab[type == params$lookup[x] & i == a[x] & cellkeys[x] < kum_p_o, diff][1]
     })
   }
 
   ind_comb <- which(a < d)
   if (length(ind_comb) > 0) {
-    v[ind_comb] <- sapply(ind_comb, function(x) {
-      poss <- sort(unique(stab$i))
-      a0 <- poss[which(x < poss) - 1]
-      a1 <- poss[max(which(x > poss)) + 1]
+    v[ind_comb] <- sapply(ind_comb, function(x, poss) {
+      a0 <- poss[which(a[x] < poss) - 1]
+      a1 <- poss[max(which(a[x] > poss)) + 1]
+      lambda <- (a[x] - a0) / (a1 - a0)
 
-      lambda <- (x - a0) / (a1 - a0)
-
-      # perturbation_value (low)
-      v0 <- stab$diff[min(which(cellkeys[x] < stab$kum_p_o & stab$i == a0))]
-
-      # perturbation_value (up)
-      v1 <- stab$diff[min(which(cellkeys[x] < stab$kum_p_o & stab$i == a1))]
+      # compute two perturbation values
+      v_low <- stab[type == params$lookup[x] & i == a0 & cellkeys[x] < kum_p_o, diff][1]
+      v_up <- stab[type == params$lookup[x] & i == a1 & cellkeys[x] < kum_p_o, diff][1]
 
       # combine to get final perturbation value
-      (1 - lambda) * v0 + lambda * v1
-    })
+      (1 - lambda) * v_low + lambda * v_up
+    }, poss = poss)
   }
   v
 }
