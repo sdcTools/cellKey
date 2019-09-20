@@ -118,8 +118,7 @@ gen_stab <- function(D = 3, l = 0.5, add_small_cells = TRUE, even_odd = TRUE) {
 #'     fp = 1000,
 #'     p = c(0.20, 0.03),
 #'     epsilon = c(1, 0.5, 0.2),
-#'     q = 2
-#'   ),
+#'     q = 2),
 #'   use_zero_rkeys = TRUE,
 #'   mu_c = 3)
 ck_params_nums <-
@@ -247,6 +246,32 @@ ck_params_nums <-
     stab <- stab[type != "small_cells"]
   }
 
+
+  # separation point z_s (previously g1)
+  .separation_point <- function(m_fixed_sq, E, p_large) {
+    if (is.na(m_fixed_sq)) {
+      return(0)
+    }
+    sqrt(m_fixed_sq) / (sqrt(E) * p_large)
+  }
+
+  E <- sum(mult_params$epsilon^2)
+  if (inherits(mult_params, "params_m_flex")) {
+    p_large <- mult_params$p_large
+  } else if (inherits(mult_params, "params_m_simple")) {
+    p_large <- mult_params$p
+  } else if (inherits(mult_params, "params_m_grid")) {
+    E <- top_k
+    p_large <- mult_params[[1]]$pcts[1]
+  } else {
+    stop("invalid input.", call. = FALSE)
+  }
+
+  zs <- .separation_point(
+    m_fixed_sq = m_fixed_sq,
+    E = E,
+    p_large = p_large)
+
   out <- list(
     params = list(
       type = type,
@@ -254,6 +279,7 @@ ck_params_nums <-
       stab = stab,
       mu_c = mu_c,
       m_fixed_sq = m_fixed_sq,
+      zs = zs,
       mult_params = mult_params,
       same_key = same_key,
       use_zero_rkeys = use_zero_rkeys,

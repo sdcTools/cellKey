@@ -1047,6 +1047,11 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
       # parameters
       params <- private$.pert_params$nums[[v]]$params
+      if (is.null(params)) {
+        e <- "Please set perturbation parameters using `$params_nums_set() first.`"
+        stop(e, call. = FALSE)
+      }
+
       ck_log("parameters:")
       ck_log("--> type: ", shQuote(params$type))
       ck_log("--> top_k: ", params$top_k)
@@ -1059,7 +1064,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       ck_log("--> epsilon: ", paste(params$mult_params$epsilon, collapse = ", "))
       ck_log("--> mu_c: ", params$mu_c)
       ck_log("--> separation: ", params$separation)
-      ck_log("--> m1_sq: ", params$m_fixed_sq)
+      ck_log("--> m1_sq: ", round(params$m_fixed_sq, digits = 8))
+      ck_log("--> separation_point: ", round(params$zs, digit = 8))
       ck_log("--> even_odd: ", params$even_odd)
 
       cl <- class(params$mult_params)
@@ -1123,6 +1129,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       inp_params$separation <- params$separation
       inp_params$m_fixed_sq <- params$m_fixed_sq
       inp_params$top_k <- params$top_k
+      inp_params$zs <- params$zs
       res <- lapply(x_vals, function(x) {
         if (lookup_type == "simple") {
           return(.x_delta_simple(x = x, inp_params = inp_params))
@@ -1173,7 +1180,6 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
       # lookup could be done in different parts of the ptable
       # object `lookup` tells us, how to restrict the input
-
       pos_neg_var <- params$pos_neg_var
       pvals <- lapply(1:length(cellkeys), function(x) {
         if (pos_neg_var == 0) {

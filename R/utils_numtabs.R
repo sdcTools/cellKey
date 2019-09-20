@@ -21,16 +21,6 @@
   as.numeric(res)
 }
 
-# g1 value (section 2.3.1 in deliverable 4.2);
-# modified according to "correction.docx" from 28.8.19
-.g1 <- function(m_fixed_sq, E, p_large) {
-  # in case m_fixed_sq is NA (no separation) -> g1 is set to 0
-  if (is.na(m_fixed_sq)) {
-    return(0)
-  }
-  sqrt(m_fixed_sq) / (sqrt(E) * p_large)
-}
-
 # compute x_delta  multiplication parameters m_j (x) * x
 # not yet supported
 .x_delta_grid <- function(x, inp_params) {
@@ -66,15 +56,11 @@
 
   # fixed variance for very small observations
   if (!is.na(m_fixed_sq)) {
-    # compute g1 ("correction.docx" from sarah, 28.8.19)
-    # modified formula 2.3 on p.9)
-    g1 <- .g1(
-      m_fixed_sq = m_fixed_sq,
-      E = top_k,
-      p_large = inp_params[[1]]$pcts[1])
+    # separation point
+    zs <- inp_params$zs
 
     # very small (absolute) values
-    ind_vs <- which(abs(x) < g1)
+    ind_vs <- which(abs(x) < zs)
     if (length(ind_vs) > 0) {
       m[ind_vs] <- sqrt(m_fixed_sq)
       x[ind_vs] <- 1
@@ -90,20 +76,16 @@
   x <- abs(x$x)
 
   m_fixed_sq <- inp_params$m_fixed_sq
+
+  # flexpoint and separation points
   fp <- inp_params$fp
-  E <- sum(inp_params$epsilon^2)
+  zs <- inp_params$zs
 
   if (is.na(even_odd)) {
     lookup <- rep("all", length(x))
   } else {
     lookup <- ifelse(even_odd, "even", "odd")
   }
-
-  # g1 is 0 in case m_fixed_sq was not specified
-  g1 <- .g1(
-    m_fixed_sq = m_fixed_sq,
-    E = E,
-    p_large = inp_params$p_large)
 
   m <- rep(inp_params$p_small, length(x))
   ind_lg <- which(x > fp)
@@ -118,11 +100,10 @@
     m[ind_lg] <- m_lg * (1 + (f1 * f2 ^ inp_params$q))
   }
 
-  # fixed variance for very small observations
-  # very small values
-  ind_vs <- which(x < g1)
+  # fixed variance for very small observations below separation point
+  ind_vs <- which(x < zs)
   if (length(ind_vs) > 0) {
-    m[ind_vs] <- (sqrt(m_fixed_sq) * inp_params$epsilon[ind_vs]) / sqrt(E)
+    m[ind_vs] <- sqrt(m_fixed_sq) * inp_params$epsilon[ind_vs]
     x[ind_vs] <- 1
     lookup[ind_vs] <- "small_cells"
   }
@@ -141,18 +122,13 @@
     lookup <- ifelse(even_odd, "even", "odd")
   }
 
-  # g1 is 0 in case we do not have seperation
-  # meaning no rows in ptable with type == "small_cells"
-  E <- sum(inp_params$epsilon^2)
-  g1 <- .g1(
-    m_fixed_sq = inp_params$m_fixed_sq,
-    E = E,
-    p_large = p)
+  # separation_point
+  zs <- inp_params$zs
 
   m <- rep(1, length(x))
 
   # for details, see scaling.docx (from pp)
-  ind_lg <-  which(abs(x) >= g1)
+  ind_lg <-  which(abs(x) >= zs)
   if (length(ind_lg) > 0) {
     m[ind_lg] <- p * inp_params$epsilon[ind_lg]
   }
@@ -165,7 +141,7 @@
   d <- max(stab$i) # parameter `D`
 
   v <- rep(NA, length(cellkeys))
-  a <- cell_sum / x_delta
+  a <- cell_sum / abs(x_delta)
 
   if (pos_neg_var == 1) {
     # we only search in the symetric block
