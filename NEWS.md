@@ -53,7 +53,14 @@
   * Parity=Yes does not make sense with top_k > 1. This should not be allowed.    
 - removed argument `pos_neg_var` for now
 - compute parameter `zs` (which was `g1`) in `ck_params_nums`
-- [todo] check computation of x_deltas using new documents
+- reparametrisation and bugfixes in the lookup-procedure for numeric variables
+- return a perturbation value of 0 for all cells below the separation point which are not the largest contribution
+- reimplment perturbation based on flex-function according to "confused_doc"
+  * no scaling with epsilons in case x_j < z_s
+  * m_1 = 1 in case x_j < z_s --> x_delta = x_j in case x_j < z_s
+  * v_j = 0 if x_j < z_s and j > 1 --> \hat{X}_j = 0 in this case
+
+
 - [todo] bugfix sdcTable:: sdcProb2df -> numvars are not weighted?
 - [todo] check primsupp rules (not weighted?)
 - [todo] implement magnitude tables

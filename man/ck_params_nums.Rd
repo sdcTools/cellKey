@@ -69,8 +69,7 @@ ck_params_nums(
     fp = 1000,
     p = c(0.20, 0.03),
     epsilon = c(1, 0.5, 0.2),
-    q = 2
-  ),
+    q = 2),
   use_zero_rkeys = TRUE,
   mu_c = 3)
 }

@@ -1123,32 +1123,6 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       newtab <- copy(private$.results[[v]])
       dim_dt <- private$.results[["dims"]]
 
-      # compute x_delta: multiplication parameters m_j (x) * x
-      # reason: in case of fixed_variance for very small cells, x_j is changed to 1!
-      # for now, only flex-function is supported (no grids)
-      inp_params <- params$mult_params
-      inp_params$separation <- params$separation
-      inp_params$m_fixed_sq <- params$m_fixed_sq
-      inp_params$top_k <- params$top_k
-      inp_params$zs <- params$zs
-      inp_params$E <- params$E
-      res <- lapply(x_vals, function(x) {
-        if (lookup_type == "simple") {
-          return(.x_delta_simple(x = x, inp_params = inp_params))
-        }
-        if (lookup_type == "flex") {
-          return(.x_delta_flex(x = x, inp_params = inp_params))
-        }
-        #if (lookup_type == "grid") {
-        #  return(.x_delta_grid(x = x, inp_params = inp_params))
-        #}
-      })
-
-      x_delta <- lapply(res, function(x) x$x_delta)
-      lookup <- lapply(res, function(x) x$lookup)
-
-      stab <- params$stab
-
       ck_log("selecting cell keys based on choice of argument `use_zero_rkey`")
       if (params$use_zero_rkeys) {
         cellkeys <- newtab[[paste0("ck_nz_", v)]]
@@ -1167,8 +1141,6 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
           same_key = params$same_key)
       })
 
-      ck_log("computing actual perturbation values")
-
       # we remove duplicated cells for now and add them later!
       names(cellkeys) <- dim_dt$strID
       index_nondup <- !private$.dupsinfo$is_bogus
@@ -1176,67 +1148,121 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       cellvals <- cellvals[index_nondup]
       prot_req <- private$.results[[v]]$special_protection[index_nondup]
 
-      # additional perturbation
-      mu_c <- rep(0, params$top_k)
-      mu_c[1] <- params$mu_c
-
-      # lookup could be done in different parts of the ptable
-      # object `lookup` tells us, how to restrict the input
-      lookup_params <- list(
-        stab = stab,
-        max_i = max(stab$i))
-
-      #pos_neg_var <- params$pos_neg_var
-      pvals <- lapply(1:length(cellkeys), function(x) {
-        #if (pos_neg_var == 0) {
-        #  x_delta[[x]] <- pmin(x_delta[[x]], max_contr[[x]]$w_sum)
-        #}
-        # get perturbation values
-        lookup_params$x <- x_vals[[x]]$x
-        lookup_params$x_delta <- x_delta[[x]]
-        lookup_params$lookup <- lookup[[x]]
-        p <- .lookup_v(
-          cellkeys = cellkeys[[x]],
-          params = lookup_params)
-
-        # we add extra perturbation for largest contributor
-        # according to formula 2.1, page 5 if the cell needs extra protection
-        if (prot_req[x]) {
-          signs <- ifelse(p >= 0, 1, -1)
-          p <- (abs(p) + mu_c[1:length(p)]) * signs
-        }
-        p
-      })
-      names(pvals) <- names(cellkeys)
-
-      # actual perturbation for cells are sum(pvals * x_delta)
-      # these values are added to the weighted cell total to get final perturbed cell values
-      # in case we want to ensure positivity (see section 2.5.1 in D4.2), we apply the formula listed there
-      # also, we add some more variables here that we need for the mods-table (for debugging purposes)
-      ck_log("compute perturbation values and final perturbed cell values for each cells")
-      names(prot_req) <- names(pvals)
-      pert_result <- rbindlist(lapply(names(pvals), function(x) {
-        if (params$pos_neg_var == 0) {
-          cell_value_pert <- w_sums[[x]]
-          pertvals <- pvals[[x]] * x_delta[[x]]
-          for (k in 1:length(pvals[[x]])) {
-            cell_value_pert <- max(cell_value_pert + pertvals[k], 0)
+      if (lookup_type == "flex") {
+       lookup <- lapply(x_vals, function(x) {
+          if (is.na(x$even_odd)) {
+            return("all")
+          } else if (isTRUE(x$even_odd)) {
+            return("even")
           }
-          pert <- w_sums[[x]] - cell_value_pert
-        } else {
-          pert <- sum(pvals[[x]] * x_delta[[x]])
-          cell_value_pert <- w_sums[[x]] + pert
-        }
-        data.table(
-          cell_id = x,
-          ckey  = cellkeys[[x]],
-          cv = w_sums[[x]],
-          cv_pert = cell_value_pert,
-          pert = pert,
-          x_delta = x_delta[[x]],
-          lookup = lookup[[x]],
-          additional_protection = prot_req[x])
-      }))
+          return("odd")
+        })
+
+       res <- lapply(1:length(x_vals), function(x) {
+         .perturb_cell_flex(
+           cv = cellvals[x],
+           x = x_vals[[x]]$x,
+           ck = cellkeys[[x]],
+           lookup = lookup[[x]],
+           prot_req = prot_req[x],
+           params = params)
+       })
+
+       pert_result <- rbindlist(lapply(1:length(x_vals), function(x) {
+         data.table(
+           cell_id = names(x_vals)[x],
+           ckey  = cellkeys[[x]],
+           cv = res[[x]]$cv,
+           cv_pert = res[[x]]$cv_p,
+           pert = sum(res[[x]]$x_hats),
+           x_delta = res[[x]]$x_delta,
+           lookup = res[[x]]$lookup,
+           additional_protection = prot_req[x])
+       }))
+      } else {
+        # compute x_delta: multiplication parameters m_j (x) * x
+        # reason: in case of fixed_variance for very small cells, x_j is changed to 1!
+        # for now, only flex-function is supported (no grids)
+        inp_params <- params$mult_params
+        inp_params$separation <- params$separation
+        inp_params$m_fixed_sq <- params$m_fixed_sq
+        inp_params$top_k <- params$top_k
+        inp_params$zs <- params$zs
+        inp_params$E <- params$E
+        res <- lapply(x_vals, function(x) {
+          if (lookup_type == "simple") {
+            return(.x_delta_simple(x = x, inp_params = inp_params))
+          }
+          #if (lookup_type == "grid") {
+          #  return(.x_delta_grid(x = x, inp_params = inp_params))
+          #}
+        })
+
+        x_delta <- lapply(res, function(x) x$x_delta)
+        lookup <- lapply(res, function(x) x$lookup)
+
+        stab <- params$stab
+
+        ck_log("computing actual perturbation values")
+        # additional perturbation
+        mu_c <- rep(0, params$top_k)
+        mu_c[1] <- params$mu_c
+
+        # lookup could be done in different parts of the ptable
+        # object `lookup` tells us, how to restrict the input
+        lookup_params <- list(
+          stab = stab,
+          max_i = max(stab$i))
+
+        #pos_neg_var <- params$pos_neg_var
+        pvals <- lapply(1:length(cellkeys), function(x) {
+          # get perturbation values
+          lookup_params$x <- x_vals[[x]]$x
+          lookup_params$x_delta <- x_delta[[x]]
+          lookup_params$lookup <- lookup[[x]]
+          p <- .lookup_v(
+            cellkeys = cellkeys[[x]],
+            params = lookup_params)
+
+          # we add extra perturbation for largest contributor
+          # according to formula 2.1, page 5 if the cell needs extra protection
+          if (prot_req[x]) {
+            signs <- ifelse(p >= 0, 1, -1)
+            p <- (abs(p) + mu_c[1:length(p)]) * signs
+          }
+          p
+        })
+        names(pvals) <- names(cellkeys)
+
+        # actual perturbation for cells are sum(pvals * x_delta)
+        # these values are added to the weighted cell total to get final perturbed cell values
+        # in case we want to ensure positivity (see section 2.5.1 in D4.2), we apply the formula listed there
+        # also, we add some more variables here that we need for the mods-table (for debugging purposes)
+        ck_log("compute perturbation values and final perturbed cell values for each cells")
+        names(prot_req) <- names(pvals)
+        pert_result <- rbindlist(lapply(names(pvals), function(x) {
+          if (params$pos_neg_var == 0) {
+            cell_value_pert <- w_sums[[x]]
+            pertvals <- pvals[[x]] * x_delta[[x]]
+            for (k in 1:length(pvals[[x]])) {
+              cell_value_pert <- max(cell_value_pert + pertvals[k], 0)
+            }
+            pert <- w_sums[[x]] - cell_value_pert
+          } else {
+            pert <- sum(pvals[[x]] * x_delta[[x]])
+            cell_value_pert <- w_sums[[x]] + pert
+          }
+          data.table(
+            cell_id = x,
+            ckey  = cellkeys[[x]],
+            cv = w_sums[[x]],
+            cv_pert = cell_value_pert,
+            pert = pert,
+            x_delta = x_delta[[x]],
+            lookup = lookup[[x]],
+            additional_protection = prot_req[x])
+        }))
+      }
 
       ck_log("add rows for duplicated cells!")
       index_nondup <- !private$.dupsinfo$is_bogus

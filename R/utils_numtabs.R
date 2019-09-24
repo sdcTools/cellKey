@@ -69,46 +69,176 @@
   x * m
 }
 
-# returns a list with the x_delta values (x * m) and
-# where to look in the ptable (all_cells or small_cells)
-.x_delta_flex <- function(x, inp_params) {
-  even_odd <- x$even_odd
-  x <- abs(x$x)
+# returns the value of the flex-function defined by
+# x: value to be checked
+# fp: flexpoint
+# p_lg: percentage of perturbation for large cells
+# p_sm: percentage of perturbation for small cells
+# q: parameter for flex function
+.para_m <- function(x, p_sm, p_lg, fp, q) {
+  f1 <- ((p_sm * x) - (p_lg * fp)) / (p_lg * fp)
+  f2 <- (2 * fp) / (fp + x)
+  p_lg * (1 + (f1 * f2 ^ q))
+}
 
-  m_fixed_sq <- inp_params$m_fixed_sq
+.lookup_v_flex <- function(cellkeys, params) {
+  i <- type <- kum_p_o <- NULL
+  d <- params$max_i # parameter `D`
 
-  # flexpoint and separation points
-  fp <- inp_params$fp
-  zs <- inp_params$zs
+  v <- rep(NA, length(cellkeys))
+  a <- params$a
 
-  if (is.na(even_odd)) {
-    lookup <- rep("all", length(x))
-  } else {
-    lookup <- ifelse(even_odd, "even", "odd")
+  # perturbation value should be 0 for all cells below the separation point
+  # (these are the ones with lookup == "small_cells") and j > 1
+  ind_smallcells <- setdiff(which(params$lookup == "small_cells"), 1)
+  if (length(ind_smallcells) > 0) {
+    params$lookup[ind_smallcells] <- "_zero_"
   }
 
-  m <- rep(inp_params$p_small, length(x))
-  ind_lg <- which(x > fp)
-  if (length(ind_lg) > 0) {
-    x_lg <- x[ind_lg]
+  a[a > d] <- d # we cut at the maximum value!
 
-    m_lg <- inp_params$p_large * inp_params$epsilon[ind_lg]
-    m_sm <- inp_params$p_small * inp_params$epsilon[ind_lg]
+  stab <- params$stab
+  poss <- sort(unique(stab$i))
 
-    f1 <- ((m_sm * x_lg) - (m_lg * fp)) / (m_lg * fp)
-    f2 <- (2 * fp) / (fp + x_lg)
-    m[ind_lg] <- m_lg * (1 + (f1 * f2 ^ inp_params$q))
+  ind_exact <- which(a %in% poss)
+  if (length(ind_exact) > 0) {
+    v[ind_exact] <- sapply(ind_exact, function(x) {
+      if (params$lookup[x] == "_zero_") {
+        return(0)
+      }
+      stab[type == params$lookup[x] & i == a[x] & cellkeys[x] < kum_p_o, diff][1]
+    })
   }
 
-  # fixed variance for very small observations below separation point
-  ind_vs <- which(x < zs)
-  if (length(ind_vs) > 0) {
-    # formula: correction.docx
-    m[ind_vs] <- sqrt(m_fixed_sq) * (inp_params$E * inp_params$epsilon[ind_vs])
-    x[ind_vs] <- 1
-    lookup[ind_vs] <- "small_cells"
+  ind_comb <- which(a < d)
+  if (length(ind_comb) > 0) {
+    v[ind_comb] <- sapply(ind_comb, function(x) {
+      if (params$lookup[x] == "_zero_") {
+        return(0)
+      }
+      a0 <- poss[which(a[x] < poss) - 1]
+      a1 <- poss[max(which(a[x] > poss)) + 1]
+      lambda <- (a[x] - a0) / (a1 - a0)
+
+      # compute two perturbation values
+      v_low <- stab[type == params$lookup[x] & i == a0 & cellkeys[x] < kum_p_o, diff][1]
+      v_up <- stab[type == params$lookup[x] & i == a1 & cellkeys[x] < kum_p_o, diff][1]
+
+      # combine to get final perturbation value
+      (1 - lambda) * v_low + lambda * v_up
+    })
   }
-  list(x_delta = x * m, lookup = lookup)
+  v
+}
+
+# perturb a given cell with the following parameters
+# cv: original cell value
+# x: top_k largest contributors to cell
+# ck: corresponding cell keys
+# prot_req: additional protection required? if TRUE, we use mu_c, else 0
+# lookup: where to look in the perturbation table
+# params: a perturbation parameter object created with `ck_params_nums` and
+#         mult_params need to be of class `params_m_flex`
+.perturb_cell_flex <- function(cv, x, ck, lookup, prot_req, params) {
+  debug <- FALSE
+  fp <- params$mult_params$fp
+  p_lg <- params$mult_params$p_large
+  p_sm <- params$mult_params$p_small
+  q <- params$mult_params$q
+  mu <- ifelse(prot_req, params$mu_c, 0)
+  stab <- params$stab
+  zs <- params$zs
+  deltas <- rep(NA, length(x))
+
+  # lookup
+  lookup_params <- list(
+    stab = stab,
+    max_i = max(stab$i))
+  lookup_params$lookup <- lookup
+
+  xo <- cv
+  sign_xo <- sign(xo)
+  x_hats <- rep(NA, length(x))
+  for (j in 1:length(x)) {
+    zero_pert <- FALSE
+
+    lookup_params$lookup <- lookup
+    if (debug) {
+      message("j:= ", j)
+    }
+
+    xj <- x[j]
+    sign_xj <- sign(xj)
+    abs_xj <- abs(xj)
+
+    if (abs_xj < zs) {
+      x_delta <- 1
+      lookup_params$lookup <- "small_cells"
+    } else {
+      if (abs_xj < fp) {
+        x_delta <- xj * p_sm
+      } else {
+        x_delta <-  xj * .para_m(x = abs_xj, p_sm = p_sm, p_lg = p_lg, fp = fp, q = q)
+      }
+    }
+    abs_xdelta <- abs(x_delta)
+    if (abs(xo) < abs_xdelta) {
+      x_delta <- xo
+      xj <- xo / (p_sm * params$mult_params$epsilon[j])
+      abs_xj <- abs(xj)
+      if (debug) {
+        message("abs_x < abs_xdelta --> rescaling")
+        message("x_delta (new): ", x_delta)
+        message("x (new): ", x)
+      }
+
+      if (abs(abs_xj) < zs) {
+        x_delta <- 1
+        lookup_params$lookup <- "small_cells"
+        if (j > 1) {
+          zero_pert <- TRUE
+        }
+      }
+    }
+
+    deltas[j] <- x_delta
+
+    # compute perturbation value
+    if (!zero_pert) {
+      lookup_params$a <- abs(xj / x_delta)
+      v <- .lookup_v_flex(cellkeys = ck[j], params = lookup_params)
+      if (debug) {
+        message("xj: ", round(xj, digits = 5), " | x_delta: ", round(x_delta, digits = 5), " | a: ", round(lookup_params$a, digits = 5), " | v: ", v)
+      }
+      sign_v <- sign(v)
+
+      x_hats[j] <- sign_xo * abs(x_delta) * (sign_v * (mu + abs(v)))
+      if (sign_v == -1) {
+        if (sign_xo == -1) {
+          x_hats[j] <- min(x_hats[j], -xo)
+        } else if (sign_xo > sign_v) {
+          x_hats[j] <- max(x_hats[j], -xo)
+        }
+      }
+    } else {
+      x_hats[j] <- 0
+    }
+
+    if (debug) {
+      message("updating original value: old: ", xo, "", appendLF = FALSE)
+    }
+    xo <- xo + x_hats[j]
+    sign_xo <- sign(xo)
+    if (debug) {
+      message(" | new: ", xo)
+    }
+  }
+  list(
+    x_hats = x_hats,
+    cv = cv,
+    cv_p = cv + sum(x_hats),
+    lookup = lookup_params$lookup,
+    x_delta = deltas)
 }
 
 # lookup using the simple, non-grid version
@@ -136,11 +266,13 @@
   list(x_delta = abs(x * m), lookup = lookup)
 }
 
+
 # returning perturbation values from `stab` based on cellkeys,
 # x_delta (x * m), the (absolute) values of the highest contributions
 # in future; the lookup may depend on argument `pos_neg_var` that will need
 # to be defined in `ck_parmams_nums()`
 .lookup_v <- function(cellkeys, params) {
+  i <- type <- kum_p_o <- NULL
   d <- params$max_i # parameter `D`
 
   v <- rep(NA, length(cellkeys))
