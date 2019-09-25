@@ -59,9 +59,11 @@
   * no scaling with epsilons in case x_j < z_s
   * m_1 = 1 in case x_j < z_s --> x_delta = x_j in case x_j < z_s
   * v_j = 0 if x_j < z_s and j > 1 --> \hat{X}_j = 0 in this case
+- `.ck_nr_digits()` returns number of digits used for rounding from env-variable `.ck_nr_digits` (default 8)
+- allow to export perturbation inputs (for cnt- and numvars) as yamls in `ck_params_cnts()` and `ck_params_nums()` and read them with `ck_read_yaml()`
 
 
-- [todo] bugfix sdcTable:: sdcProb2df -> numvars are not weighted?
+
 - [todo] check primsupp rules (not weighted?)
 - [todo] implement magnitude tables
   * [todo] add tests for magitude tables
