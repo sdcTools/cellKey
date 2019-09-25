@@ -38,7 +38,7 @@ params_cnts <- ck_params_cnts(
   optim = 1,
   mono = TRUE)
 
-ptab <- params_cnts$params$ptable@pTable
+ptab <- params_cnts$params$ptable
 test_that("ck_params_cnts() is ok", {
   expect_is(params_cnts, "ck_params")
   expect_identical(params_cnts$type, "cnts")
@@ -53,79 +53,13 @@ data("params_cnts", package = "cellKey")
 test_that("checking perturbation parameters for counts", {
   expect_is(params_cnts, "ck_params")
   expect_equal(params_cnts$type, "cnts")
-  expect_is(params_cnts$params$ptable, "ptable")
-  expect_identical(digest::digest(params_cnts), "3cf4a3dcde7ce420a9d9e67907678493")
+  expect_is(params_cnts$params$ptable, "data.table")
+  expect_identical(digest::digest(params_cnts), "1fe9b2228b2b5be3eacfc524b8ea6104")
 })
 
 countvars <- NULL
 w <- "sampling_weight"
 rkey <- "rec_key"
-
-test_that("ck_setup() fails with invalid inputs", {
-  # input must be a data.frame
-  expect_error(tab <- ck_setup(
-    x = 1:5,
-    rkey = "rec_key",
-    dims = dims,
-    w = w,
-    countvars = countvars))
-
-  # params_cnts must be created with ck_params_*()
-  expect_error(tab <- ck_setup(
-    x = dat,
-    rkey = "rec_key",
-    dims = dims,
-    w = w,
-    countvars = countvars,
-    params_cnts = 1:5))
-
-  # invalid record keys
-  expect_error(tab <- ck_setup(
-    x = dat, rkey = "income",
-    dims = dims, w = w,
-    countvars = countvars, numvars = numvars,
-    params_cnts = params_cnts, params_nums = params_nums
-  ))
-
-  # dims is not named
-  expect_error(tab <- ck_setup(
-    x = dat,
-    rkey = "rec_key",
-    dims = 1:5,
-    w = w,
-    countvars = countvars,
-    params_cnts = params_cnts
-  ))
-
-  # dims is not a named list
-  expect_error(tab <- ck_setup(
-    x = dat,
-    rkey = "rec_key",
-    dims = c("a" = 5, "b" = 3),
-    w = w,
-    countvars = countvars,
-    params_cnts = params_cnts
-  ))
-
-  # invalid variable names in `dims`
-  expect_error(tab <- ck_setup(
-    x = dat,
-    rkey = "rec_key",
-    dims = list("a" = 5, "b" = 3),
-    w = w,
-    countvars = countvars,
-    params_cnts = params_cnts
-  ))
-
-  # invalid input in `dims`
-  expect_error(tab <- ck_setup(
-    x = dat, rkey = "rec_key",
-    dims = list("sex" = 5, "age" = 3),
-    w = w,
-    countvars = countvars,
-    params_cnts = params_cnts
-  ))
-})
 
 tab <- ck_setup(
   x = dat,
@@ -225,6 +159,8 @@ test_that("check tabulation of cnt_males is ok", {
 test_that("check tabulation of cnt_highincome is ok", {
   expect_identical(digest::digest(tab$freqtab("cnt_highincome")), "ec941a87f7cf4566cc51f626f5434187")
   expect_identical(digest::digest(tab$measures_cnts("cnt_highincome")), "43be7d55fdccbcd38325bed49850c406")
+  expect_identical(digest::digest(tab$freqtab("cnt_highincome", type = "weighted")), "7d29b5d5005c322ce4d826184b6fc629")
+  expect_identical(digest::digest(tab$freqtab("cnt_highincome", type = "unweighted")), "23b1f9a2b517c494a7865de10c1b837d")
 })
 
 test_that("check tabulation of multiple count variables is ok", {
