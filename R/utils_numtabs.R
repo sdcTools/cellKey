@@ -29,8 +29,8 @@
 # q: parameter for flex function
 .para_m <- function(x, p_sm, p_lg, fp, q) {
   f1 <- ((p_sm * x) - (p_lg * fp)) / (p_lg * fp)
-  f2 <- (2 * fp) / (fp + x)
-  p_lg * (1 + (f1 * f2 ^ q))
+  f2 <- ((2 * fp) / (fp + x))^q
+  p_lg * (1 + (f1 * f2))
 }
 
 .lookup_v_flex <- function(cellkeys, params) {
@@ -94,7 +94,7 @@
 .perturb_cell_flex <- function(cv, x, ck, lookup, prot_req, params) {
   dig <- .ck_digits()
 
-  debug <- FALSE
+  debug <- TRUE
   fp <- params$mult_params$fp
   p_lg <- params$mult_params$p_large
   p_sm <- params$mult_params$p_small
@@ -159,7 +159,7 @@
 
     # compute perturbation value
     if (!zero_pert) {
-      lookup_params$a <- abs(xj / x_delta)
+      lookup_params$a <- abs(xo / x_delta)
       v <- .lookup_v_flex(cellkeys = ck[j], params = lookup_params)
       if (debug) {
         message("xj: ", round(xj, digits = dig), appendLF = FALSE)

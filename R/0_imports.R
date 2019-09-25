@@ -20,4 +20,18 @@ Sys.setenv(".ck_nr_digits" = 8)
   return(d)
 }
 
+# number of cores for parallel processing
+# number of cores to be used when doing parallel computing
+.ck_cores <- function() {
+  available_cores <- parallel::detectCores() - 2
+  chk <- Sys.getenv("_R_CHECK_LIMIT_CORES_", "")
+  if (nzchar(chk) && chk == "TRUE") {
+    # use 2 cores in CRAN/Travis/AppVeyor
+    # see https://stackoverflow.com/a/50571533
+    num_workers <- 1L
+  } else {
+    num_workers <- max(1, available_cores)
+  }
+  min(num_workers, available_cores)
+}
 NULL

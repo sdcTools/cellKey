@@ -192,7 +192,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
           top_k <- min(top_k, nrow(xx))
           for (v in nv) {
             xx$.tmpordervar <- abs(xx[[v]])
-            setorderv(xx, ".tmpordervar", order = -1L)
+            xx$.tmpweightvar <- xx[[v]] * xx[[wvar]]
+            setorderv(xx, c(".tmpordervar", wvar), order = c(-1L, -1L))
 
             # unweighted
             out[[v]]$uw_ids <- xx$.tmpid[1:top_k]
@@ -206,15 +207,10 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
             # we have different ptables (parity-case)
             out[[v]]$even_contributors <- nrow(xx) %% 2 == 0
 
-            # weighted
-            xx$xw <- xx[[v]] * xx[[wvar]]
-            xx$tmp2 <- abs(xx$xw)
-            setorderv(xx, "tmp2", order = -1L)
-
-            out[[v]]$w_ids <- xx$.tmpid[1:top_k]
-            out[[v]]$w_vals <- xx$xw[1:top_k]
+            out[[v]]$w_ids <- out[[v]]$uw_ids
+            out[[v]]$w_vals <- xx$.tmpweightvar[1:top_k]
             out[[v]]$w_spread <- diff(range(xx[[v]], na.rm = TRUE))
-            out[[v]]$w_sum <- sum(xx$xw, na.rm = TRUE)
+            out[[v]]$w_sum <- sum(xx$.tmpweightvar, na.rm = TRUE)
             out[[v]]$w_mean <- out[[v]]$w_sum / sum(xx[[wvar]], na.rm = TRUE)
           }
           res[[i]] <- out
@@ -224,6 +220,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
       # top_k is hardcoded to 6;
       # this is the maximum allowed value for top_k, also in params_nums()
+
       max_contributions <- .get_max_contributions(
         indices = contr_indices,
         microdat = microdat,
@@ -1109,7 +1106,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       dim_dt <- private$.results[["dims"]]
 
       ck_log("selecting cell keys based on choice of argument `use_zero_rkey`")
-      if (params$use_zero_rkeys) {
+      if (!params$use_zero_rkeys) {
         cellkeys <- newtab[[paste0("ck_nz_", v)]]
       } else {
         cellkeys <- newtab[[paste0("ck_", v)]]
@@ -1119,12 +1116,12 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       # we compute top_k-scrambled cell keys
       # required for argument `same_key`
       ck_log("scrambling cell keys depending on argument `same_key`")
-      cellkeys <- lapply(cellkeys, function(x) {
+      cellkeys <- parallel::mclapply(cellkeys, function(x) {
         .scramble_ckeys(
           ck = x,
           top_k = params$top_k,
           same_key = params$same_key)
-      })
+      }, mc.cores = .ck_cores())
 
       # we remove duplicated cells for now and add them later!
       names(cellkeys) <- dim_dt$strID
@@ -1134,26 +1131,26 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       prot_req <- private$.results[[v]]$special_protection[index_nondup]
 
       if (lookup_type == "flex") {
-       lookup <- lapply(x_vals, function(x) {
+        lookup <- parallel::mclapply(x_vals, function(x) {
           if (is.na(x$even_odd)) {
             return("all")
           } else if (isTRUE(x$even_odd)) {
             return("even")
           }
           return("odd")
-        })
+        }, mc.cores = .ck_cores())
 
-       res <- lapply(1:length(x_vals), function(x) {
-         .perturb_cell_flex(
-           cv = cellvals[x],
-           x = x_vals[[x]]$x,
-           ck = cellkeys[[x]],
-           lookup = lookup[[x]],
-           prot_req = prot_req[x],
-           params = params)
-       })
+        res <- parallel::mclapply(1:length(x_vals), function(x) {
+          .perturb_cell_flex(
+            cv = cellvals[x],
+            x = x_vals[[x]]$x,
+            ck = cellkeys[[x]],
+            lookup = lookup[[x]],
+            prot_req = prot_req[x],
+            params = params)
+          }, mc.cores = .ck_cores())
 
-       pert_result <- rbindlist(lapply(1:length(x_vals), function(x) {
+        pert_result <- rbindlist(parallel::mclapply(1:length(x_vals), function(x) {
          data.table(
            cell_id = names(x_vals)[x],
            ckey  = cellkeys[[x]],
@@ -1163,7 +1160,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
            x_delta = res[[x]]$x_delta,
            lookup = res[[x]]$lookup,
            additional_protection = prot_req[x])
-       }))
+       }, mc.cores = .ck_cores()))
       } else {
         # compute x_delta: multiplication parameters m_j (x) * x
         # reason: in case of fixed_variance for very small cells, x_j is changed to 1!
@@ -1174,14 +1171,14 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         inp_params$top_k <- params$top_k
         inp_params$zs <- params$zs
         inp_params$E <- params$E
-        res <- lapply(x_vals, function(x) {
+        res <- parallel::mclapply(x_vals, function(x) {
           if (lookup_type == "simple") {
             return(.x_delta_simple(x = x, inp_params = inp_params))
           }
           #if (lookup_type == "grid") {
           #  return(.x_delta_grid(x = x, inp_params = inp_params))
           #}
-        })
+        }, mc.cores = .ck_cores())
 
         x_delta <- lapply(res, function(x) x$x_delta)
         lookup <- lapply(res, function(x) x$lookup)
@@ -1199,7 +1196,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
           stab = stab,
           max_i = max(stab$i))
 
-        pvals <- lapply(1:length(cellkeys), function(x) {
+        pvals <- parallel::mclapply(1:length(cellkeys), function(x) {
           # get perturbation values
           lookup_params$x <- x_vals[[x]]$x
           lookup_params$x_delta <- x_delta[[x]]
@@ -1215,7 +1212,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
             p <- (abs(p) + mu_c[1:length(p)]) * signs
           }
           p
-        })
+        }, mc.cores = .ck_cores())
         names(pvals) <- names(cellkeys)
 
         # actual perturbation for cells are sum(pvals * x_delta)
@@ -1224,7 +1221,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         # also, we add some more variables here that we need for the mods-table (for debugging purposes)
         ck_log("compute perturbation values and final perturbed cell values for each cells")
         names(prot_req) <- names(pvals)
-        pert_result <- rbindlist(lapply(names(pvals), function(x) {
+        pert_result <- rbindlist(parallel::mclapply(names(pvals), function(x) {
           pert <- sum(pvals[[x]] * x_delta[[x]])
           cell_value_pert <- w_sums[[x]] + pert
           data.table(
@@ -1236,7 +1233,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
             x_delta = x_delta[[x]],
             lookup = lookup[[x]],
             additional_protection = prot_req[x])
-        }))
+        }, mc.cores = .ck_cores()))
       }
 
       ck_log("add rows for duplicated cells!")
