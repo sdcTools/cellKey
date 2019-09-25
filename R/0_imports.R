@@ -9,4 +9,15 @@
 #' @importFrom sdcTable makeProblem sdcProb2df
 #' @importFrom ptable pt_create_pParams pt_create_pTable
 #' @import sdcHierarchies
+#'
+
+Sys.setenv(".ck_nr_digits" = 8)
+.ck_digits <- function(digits = 8) {
+  d <- as.numeric(Sys.getenv(".ck_nr_digits"))
+  if (is.na(d)) {
+    return(digits)
+  }
+  return(d)
+}
+
 NULL
