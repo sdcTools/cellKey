@@ -55,15 +55,11 @@
 - compute parameter `zs` (which was `g1`) in `ck_params_nums`
 - reparametrisation and bugfixes in the lookup-procedure for numeric variables
 - return a perturbation value of 0 for all cells below the separation point which are not the largest contribution
-- reimplment perturbation based on flex-function according to "confused_doc"
-  * no scaling with epsilons in case x_j < z_s
-  * m_1 = 1 in case x_j < z_s --> x_delta = x_j in case x_j < z_s
-  * v_j = 0 if x_j < z_s and j > 1 --> \hat{X}_j = 0 in this case
-- `.ck_nr_digits()` returns number of digits used for rounding from env-variable `.ck_nr_digits` (default 8)
-- allow to export perturbation inputs (for cnt- and numvars) as yamls in `ck_params_cnts()` and `ck_params_nums()` and read them with `ck_read_yaml()`
+- allow to write perturbation parameters as yaml and to read them via `ck_read_yaml()`
+- added tests and improved coverage
+- correctly sort top weighted observations when computing them
 
-
-
+- [todo] check computation of x_deltas using new documents
 - [todo] check primsupp rules (not weighted?)
 - [todo] implement magnitude tables
   * [todo] add tests for magitude tables
@@ -71,9 +67,6 @@
 - [todo] update vignette
 - [todo] remove or re-implement `by`-argument in ck_perturb()
 - [todo] remove method `$everything()` which is only here for debugging purposes
-
-
-
 
 # cellKey 0.17.1
 - adding parameter `exclude_zero_cells` to `ck_cnt_measures()`
