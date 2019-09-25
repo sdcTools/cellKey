@@ -92,17 +92,8 @@ gen_stab <- function(D = 3, l = 0.5, add_small_cells = TRUE, even_odd = TRUE) {
 #' values with value `small_cells` in column `type`.
 #' @param parity (logical) scalar defining if different perturbation tables should be used
 #' for cells with an even or odd number of contributors.
-# @param pos_neg_var a number defining the strategy to look up perturbation values in case
-# the observations can take positive and negative values. This setting is ignored if the variable
-# has no negative values. The possible settings for parameter `pos_neg_var` are:
-# - `0`: the variable must be strictly positive
-# - `1`: the perturbation value is always selected from the block of perturbation
-# values referring to the symmetric case (`i` equals `D` in the perturbation table) independent
-# of the actual value of the observation
-# - `2`: the lookup of a perturbation value `v` for a value `x` is done like in the case
-# where variables only take positive values using `abs(x)` to find the relevant block
-# in the perturbation table. The perturbed value is then computed as `sign(x) * (abs(x) + v)`.
-# - `3`:	use variant `2` for all `x != 0` and apply `1` for `x == 0`
+#' @param path a scalar character specifying a path to which the parameters created with this functions
+#' should be written to (in yaml format)
 #' @return an object suitable as input to method `$params_nums_set()` for the perturbation
 #' of continous variables.
 #' @export
@@ -131,9 +122,8 @@ ck_params_nums <-
            same_key = TRUE,
            use_zero_rkeys = FALSE,
            separation = FALSE,
-           parity = FALSE) {
-
-  pos_neg_var <- 2
+           parity = FALSE,
+           path = NULL) {
 
   stopifnot(is_scalar_integerish(D))
   stopifnot(is_scalar_double(l), l > 0, l < 1)
@@ -168,13 +158,6 @@ ck_params_nums <-
     stop("`parity` needs to be a scalar logical", call. = FALSE)
   }
 
-  if (!is_scalar_integerish(pos_neg_var)) {
-    stop("`pos_neg_var` needs to be an integer(ish) number", call. = FALSE)
-  }
-  if (!pos_neg_var %in% 0:3) {
-    stop("Argument `pos_neg_var` needs to be `0`, 1`, `2` or `3`.", call. = FALSE)
-  }
-
   if (type == "top_contr") {
     if (is.null(top_k)) {
       stop("please provide a value for `top_k`", call. = FALSE)
@@ -189,6 +172,10 @@ ck_params_nums <-
     top_k <- 1
   }
 
+  if (parity & top_k > 1) {
+    stop("`parity` can only be `TRUE` when `top_k` is > 1.", call. = FALSE)
+  }
+
   if (!class(mult_params) %in% c("params_m_flex", "params_m_simple")) {
     e <- "`mult_params` needs to be creating with ck_flexparams() or ck_simpleparams()"
     stop(e, call. = FALSE)
@@ -198,19 +185,16 @@ ck_params_nums <-
     stop("Invalid length or argument `epsilon` in `mult_params` detected.", call. = FALSE)
   }
 
+  # even_odd: different lookups for even/odd unweighted cell values
+  # ~ parameter `parity` in the documents and tau-argus
+  even_odd <- parity
+
   # needs to come from ptable-package!
   stab <- gen_stab(
     D = D,
     l = l,
-    even_odd = parity,
+    even_odd = even_odd,
     add_small_cells = separation)
-
-  # even_odd: different lookups for even/odd unweighted cell values
-  # ~ parameter `parity` in the documents and tau-argus
-  even_odd <- parity
-  if (top_k > 1) {
-    even_odd <- FALSE
-  }
 
   if (even_odd) {
     if (nrow(stab[type == "even"])== 0 | nrow(stab[type == "odd"]) == 0) {
@@ -260,9 +244,9 @@ ck_params_nums <-
     p_large <- mult_params$p_large
   } else if (inherits(mult_params, "params_m_simple")) {
     p_large <- mult_params$p
-  } else if (inherits(mult_params, "params_m_grid")) {
-    E <- top_k
-    p_large <- mult_params[[1]]$pcts[1]
+  #} else if (inherits(mult_params, "params_m_grid")) {
+    #E <- top_k
+    #p_large <- mult_params[[1]]$pcts[1]
   } else {
     stop("invalid input.", call. = FALSE)
   }
@@ -284,66 +268,18 @@ ck_params_nums <-
       mult_params = mult_params,
       same_key = same_key,
       use_zero_rkeys = use_zero_rkeys,
-      pos_neg_var = pos_neg_var,
       even_odd = even_odd,
       separation = separation),
-    type = class(mult_params)
-  )
+    type = class(mult_params))
   class(out) <- "ck_params"
-  out
-}
 
-#' Define parameters for numeric perturbation magnitudes using a fixed grid
-#'
-#' [ck_gridparams()] allows to define a grid that is used to lookup perturbation
-#' magnitudes (percentages) used when perturbing continuous variables.
-#'
-#' @details details about the grid function can be found in Deliverable D4.2, Part I in
-#' SGA *"Open Source tools for perturbative confidentiality methods"*
-#'
-#' @inheritParams ck_flexparams
-#' @param grid a numeric vector (ascending order) defining the bounds for which
-#' a specific percentage (defined in `pcts`) needs to be applied
-#' @param pcts a numeric vector defining percentages (between `0` and `1`)
-#'
-#' @return an object suitable as input for [ck_params_nums()].
-#' @inherit cellkey_pkg examples
-#' @seealso [ck_params_nums()], [ck_flexparams()]
-#' @keywords internal
-#' @md
-ck_gridparams <- function(grid, pcts) {
-  if (!is.numeric(grid)) {
-    stop("Argument `grid` is not numeric.", call = FALSE)
+  if (!is.null(path)) {
+    out$version <- paste(utils::packageVersion("cellKey"), collapse = ".")
+    out$ptype <- "params_nums"
+    .yaml_write(x = out, path = path)
+    message("yaml configuration ", shQuote(path), " successfully written.")
   }
-  if (!is.numeric(pcts)) {
-    stop("Argument `pcts` is not numeric.", call = FALSE)
-  }
-  if (length(pcts) != length(grid)) {
-    stop("Arguments `pcts` and `grid` differ in length.", call = FALSE)
-  }
-
-  if (any(grid != sort(grid))) {
-    stop("Argument `grid` is not in ascending order.", call. = FALSE)
-  }
-  if (any(pcts != sort(pcts, decreasing = TRUE))) {
-    stop("Argument `pcts` is not in decreasing order.", call. = FALSE)
-  }
-
-  if (min(pcts) <= 0) {
-    stop("Argument `pcts` must contain values > 0", call. = FALSE)
-  }
-
-  if (min(pcts) <= 0) {
-    stop("Argument `pcts` must contain values > 0", call. = FALSE)
-  }
-  if (max(pcts) > 1) {
-    stop("Argument `pcts` must contain values <= 1", call. = FALSE)
-  }
-  out <- list(
-    grid = grid,
-    pcts = pcts
-  )
-  class(out) <- "params_m_grid"
+  out$version <- out$ptype <- NULL
   out
 }
 
@@ -352,7 +288,7 @@ ck_gridparams <- function(grid, pcts) {
 #' [ck_flexparams()] allows to define a flex function that is used to lookup perturbation
 #' magnitudes (percentages) used when perturbing continuous variables.
 #'
-#' @details details about the grid function can be found in Deliverable D4.2, Part I in
+#' @details details about the flex function can be found in Deliverable D4.2, Part I in
 #' SGA *"Open Source tools for perturbative confidentiality methods"*
 #' @param fp (numeric scalar); at which point should the noise coefficient
 #' function reaches its desired maximum (defined by the first element of `p`)
@@ -373,7 +309,7 @@ ck_gridparams <- function(grid, pcts) {
 #' @md
 ck_flexparams <- function(fp, p = c(0.25, 0.05), epsilon = 1, q = 3) {
   if (!is.numeric(fp) | !rlang::is_scalar_atomic(fp)) {
-    stop("Argument `fp` is not a number.", call = FALSE)
+    stop("Argument `fp` is not a number.", call. = FALSE)
   }
   if (fp <= 0) {
     stop("Argument `fp` must be positive.", call. = FALSE)
@@ -389,6 +325,10 @@ ck_flexparams <- function(fp, p = c(0.25, 0.05), epsilon = 1, q = 3) {
   }
   if (max(p) > 1 | min(p) < 0) {
     stop("values `< 0` or `> 1` are not allowed in argument `p`", call. = FALSE)
+  }
+
+  if (!(rlang::is_scalar_double(q) | rlang::is_scalar_integer(q))) {
+    stop("Argument `q` is not a number", call. = FALSE)
   }
 
   if (q < 1) {
@@ -467,36 +407,4 @@ ck_simpleparams <- function(p, epsilon = 1) {
     epsilon = epsilon)
   class(out) <- "params_m_simple"
   out
-}
-
-# example stab from destatis paper
-stab_paper1 <- function() {
-  dt <- gen_stab(D = 3, l = 0.5)
-
-  # paper nachvollziehen
-  dt$p <- c(1,0.18078,0.12789,0.50000,0.06400,0.04528,0.03203,0.02266,0.01603,0.01134,0.00850,0.01719,0.03059,0.04788,0.06594,0.07990,0.50000,0.07990,0.06594,0.04788,0.03059,0.01719,0.00850)
-  dt$kum_p_u <- c(0,  0,  0.18078,  0.30867,  0.80867,  0.87267,  0.91795,  0.94997,  0.97263,  0.98866,  0,  0.00850,  0.02570,  0.05629,  0.10417,  0.17010,  0.25000,  0.75000,  0.82990,  0.89583,  0.94371,  0.97430,  0.99150)
-  dt$kum_p_o <- c(1,  0.18078,  0.30867,  0.80867,  0.87267,  0.91795,  0.94997,  0.97263,  0.98866,  1,  0.00850,  0.02570,  0.05629,  0.10417,  0.17010,  0.25000,  0.75000,  0.82990,  0.89583,  0.94371,0.97430,0.99150,1)
-  dt
-}
-
-# example stab for even/odd numbers
-stab_paper2 <- function() {
-  i <- c(0, rep(1, 9), rep(3, 13))
-  j <- c(0, seq(0, 4, by = 0.5), seq(0, 6, by = 0.5))
-  p_even <- c(1,0.18078,0.12789,0.50000,0.06400,0.04528,0.03203,0.02266,0.01603,0.01134,0.00850,0.01719,0.03059,0.04788,0.06594,0.07990,0.50000,0.07990,0.06594,0.04788,0.03059,0.01719,0.00850)
-  kum_p_u_even <- c(0,0,0.18078,0.30867,0.80867,0.87267,0.91795,0.94997,0.97263,0.98866,0,0.00850,0.02570,0.05629,0.10417,0.17010,0.25000,0.75000,0.82990,0.89583,0.94371,0.97430,0.99150)
-  kum_p_o_even <- c(1,0.18078,0.30867,0.80867,0.87267,0.91795,0.94997,0.97263,0.98866,1,0.00850,0.02570,0.05629,0.10417,0.17010,0.25000,0.75000,0.82990,0.89583,0.94371,0.97430,0.99150,1)
-
-  p_odd <- c(1,0.28806,0.22003,0.16309,0.11732,0.08189,0.05548,0.03647,0.02326,0.01440,0.00234,0.00908,0.02756,0.06536,0.12111,0.17536,0.19839,0.17536,0.12111,0.06536,0.02756,0.00908,0.00234)
-  kum_p_u_odd <- c(0,0,0.28806,0.50808,0.67118,0.78850,0.87039,0.92587,0.96233,0.98560,0,0.00234,0.01141,0.03897,0.10433,0.22544,0.40080,0.59920,0.77456,0.89567,0.96103,0.98859,0.99766)
-  kum_p_o_odd <- c(1,0.28806,0.50808,0.67118,0.78850,0.87039,0.92587,0.96233,0.98560,1,0.00234,0.01141,0.03897,0.10433,0.22544,0.40080,0.59920,0.77456,0.89567,0.96103,0.98859,0.99766,1)
-
-  p <- c(0, seq(-1, 3, by = 0.5), seq(-3, 3, by = 0.5))
-  data.table(
-    i = i, j = j,
-    p_even = p_even, kum_p_u_even = kum_p_u_even, kum_p_o_even = kum_p_o_even,
-    p_odd = p_odd, kum_p_u_odd = kum_p_u_odd, kum_p_o_odd = kum_p_o_odd,
-    diff = p
-  )
 }

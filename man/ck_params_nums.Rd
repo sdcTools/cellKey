@@ -6,7 +6,7 @@
 \usage{
 ck_params_nums(type = "top_contr", top_k = NULL, D, l, mult_params,
   mu_c = 0, same_key = TRUE, use_zero_rkeys = FALSE,
-  separation = FALSE, parity = FALSE)
+  separation = FALSE, parity = FALSE, path = NULL)
 }
 \arguments{
 \item{type}{a character value defining the way to identify the \code{magnifier},
@@ -50,6 +50,9 @@ values with value \code{small_cells} in column \code{type}.}
 
 \item{parity}{(logical) scalar defining if different perturbation tables should be used
 for cells with an even or odd number of contributors.}
+
+\item{path}{a scalar character specifying a path to which the parameters created with this functions
+should be written to (in yaml format)}
 }
 \value{
 an object suitable as input to method \code{$params_nums_set()} for the perturbation
