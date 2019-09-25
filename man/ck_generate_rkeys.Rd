@@ -25,5 +25,5 @@ on the input data set.
 }
 \examples{
 dat <- ck_create_testdata()
-dat$rkeys <- ck_generate_rkeys(dat = ck_create_testdata(), nr_digits = 6)
+dat$rkeys <- ck_generate_rkeys(dat = ck_create_testdata(), nr_digits = 8)
 }

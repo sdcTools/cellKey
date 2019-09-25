@@ -24,7 +24,7 @@ are used to  \code{"weight"} parameter \code{m} in case \code{type == "top_contr
 \code{\link[=ck_params_nums]{ck_params_nums()}}.
 }
 \details{
-details about the grid function can be found in Deliverable D4.2, Part I in
+details about the flex function can be found in Deliverable D4.2, Part I in
 SGA \emph{"Open Source tools for perturbative confidentiality methods"}
 }
 \examples{
@@ -74,14 +74,21 @@ tab$cntvars()
 # continuous variables
 tab$numvars()
 
-# add perturbation parameters for "total" variable
+# create perturbation parameters for "total" variable and
+# write to yaml-file
+f_yaml <- tempfile(fileext = ".yaml")
 p_cnts1 <- ck_params_cnts(
   D = 5,
   V = 3,
   js = 2,
   pstay = 0.5,
   optim = 1,
-  mono = TRUE)
+  mono = TRUE,
+  path = f_yaml)
+
+# read parameters from yaml-file and set them for variable `"total"`
+p_cnts1 <- ck_read_yaml(path = f_yaml)
+
 tab$params_cnts_set(val = p_cnts1, v = "total")
 
 # create alternative perturbation parameters
@@ -109,6 +116,8 @@ tab$freqtab(v = c("total", "cnt_males"))
 tab$freqtab(v = c("total", "cnt_males"), type = "unweighted")
 
 # numerical variables (positive variables using flex-function)
+# we also write the config to a yaml file
+f_yaml <- tempfile(fileext = ".yaml")
 p_nums1 <- ck_params_nums(
   D = 10,
   l = 0.5,
@@ -123,7 +132,11 @@ p_nums1 <- ck_params_nums(
   same_key = FALSE,
   parity = FALSE,
   separation = TRUE,
-  use_zero_rkeys = FALSE)
+  use_zero_rkeys = FALSE,
+  path = f_yaml)
+
+# we read the parameters from the yaml-file
+p_nums1 <- ck_read_yaml(path = f_yaml)
 
 # another set of parameters
 # for variables with positive and negative values

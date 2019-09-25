@@ -14,16 +14,28 @@
 #' @md
 #' @examples
 #' dat <- ck_create_testdata()
-#' dat$rkeys <- ck_generate_rkeys(dat = ck_create_testdata(), nr_digits = 6)
-ck_generate_rkeys <- function(dat, nr_digits=8, seed=NULL) {
+#' dat$rkeys <- ck_generate_rkeys(dat = ck_create_testdata(), nr_digits = 8)
+ck_generate_rkeys <- function(dat, nr_digits = 8, seed = NULL) {
+  if (!inherits(dat, "data.frame")) {
+    stop("`dat` is not coercible to a `data.frame`.", call. = FALSE)
+  }
   if (!is.null(seed)) {
     stopifnot(is_scalar_integerish(seed))
   } else {
     seed <- ck_create_seed_from_hash(dat)
   }
 
-  stopifnot(is_scalar_integerish(nr_digits))
-  stopifnot(nr_digits >= 5 & nr_digits <= 20)
+  if (!rlang::is_scalar_integerish(nr_digits)) {
+    stop("`nr_digits` is not an integerish number.", call. = FALSE)
+  }
+  if (nr_digits < 5) {
+    stop("`nr_digits` must be >= 5.", call. = FALSE)
+  }
+  if (nr_digits > 20) {
+    stop("`nr_digits` must be <= 20.", call. = FALSE)
+  }
   set.seed(seed)
-  round(runif(n = nrow(dat), min = 0, max = 1), digits = nr_digits)
+  return(round(
+    x = runif(n = nrow(dat), min = 0, max = 1),
+    digits = nr_digits))
 }

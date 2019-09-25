@@ -742,7 +742,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     },
 
     # get/set parameters for num-vars
-    params_nums_get=function(val) {
+    params_nums_get=function() {
       return(private$.pert_params$nums)
     },
     params_nums_set=function(val, v = NULL) {
@@ -775,21 +775,6 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         if (private$.is_perturbed_numvar(curvar)) {
           message("--> Variable ", shQuote(curvar), " was already perturbed: parameters are not updated.")
         } else {
-          #if (val$params$pos_neg_var == 0 & private$.has_negative_values(v = curvar)) {
-          #  e <- c(
-          #    "Argument `pos_neg_var` equals `0` which defines a strictly positive variable but ",
-          #    "variable ", shQuote(curvar), " contains negative values."
-          #  )
-          #  stop(paste(e, sep = " "), call. = FALSE)
-          #}
-
-          #if (val$params$pos_neg_var > 0 & !private$.has_negative_values(v = curvar)) {
-          #  e <- c(
-          #    "Argument `pos_neg_var` is != `0`. The value defines how to deal with a variable containing positive ",
-          #    "and negative values. Variable ", shQuote(curvar), " contains however only positive values."
-          #  )
-          #  stop(paste(e, sep = " "), call. = FALSE)
-          #}
           if (curvar %in% names(ex_params)) {
             message("--> replacing perturbation parameters for variable ", shQuote(curvar))
           } else {
@@ -1002,7 +987,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
       # lookup perturbation values
       mods <- lookup_freq(
-        ptab = params$params$ptable@pTable,
+        ptab = params$params$ptable,
         cellkeys = newtab[[col_ck]],
         cellvals = newtab[[col_n]]
       )
@@ -1040,6 +1025,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     },
     # actually perturb continuous variables
     .ck_perturb_nums=function(v) {
+      dig <- .ck_digits()
       if (private$.is_perturbed_numvar(v)) {
         message("Variable ", shQuote(v),  " was already perturbed!")
         return(invisible(self))
@@ -1057,16 +1043,15 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       ck_log("--> top_k: ", params$top_k)
       ck_log("--> same_key: ", params$same_key)
       ck_log("--> use_zero_rkeys: ", params$use_zero_rkeys)
-      ck_log("--> pos_neg_var: ", params$pos_neg_var)
 
       # for now; only flex-function is allowed as input!
       mult_params <- params$mult_params
       ck_log("--> epsilon: ", paste(params$mult_params$epsilon, collapse = ", "))
       ck_log("--> mu_c: ", params$mu_c)
       ck_log("--> separation: ", params$separation)
-      ck_log("--> m1_sq: ", round(params$m_fixed_sq, digits = 8))
-      ck_log("--> separation_point: ", round(params$zs, digit = 8))
-      ck_log("--> E: ", round(params$E, digits = 8))
+      ck_log("--> m1_sq: ", round(params$m_fixed_sq, digits = dig))
+      ck_log("--> separation_point: ", round(params$zs, digit = dig))
+      ck_log("--> E: ", round(params$E, digits = dig))
       ck_log("--> even_odd: ", params$even_odd)
 
       cl <- class(params$mult_params)
@@ -1214,7 +1199,6 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
           stab = stab,
           max_i = max(stab$i))
 
-        #pos_neg_var <- params$pos_neg_var
         pvals <- lapply(1:length(cellkeys), function(x) {
           # get perturbation values
           lookup_params$x <- x_vals[[x]]$x
@@ -1241,17 +1225,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         ck_log("compute perturbation values and final perturbed cell values for each cells")
         names(prot_req) <- names(pvals)
         pert_result <- rbindlist(lapply(names(pvals), function(x) {
-          if (params$pos_neg_var == 0) {
-            cell_value_pert <- w_sums[[x]]
-            pertvals <- pvals[[x]] * x_delta[[x]]
-            for (k in 1:length(pvals[[x]])) {
-              cell_value_pert <- max(cell_value_pert + pertvals[k], 0)
-            }
-            pert <- w_sums[[x]] - cell_value_pert
-          } else {
-            pert <- sum(pvals[[x]] * x_delta[[x]])
-            cell_value_pert <- w_sums[[x]] + pert
-          }
+          pert <- sum(pvals[[x]] * x_delta[[x]])
+          cell_value_pert <- w_sums[[x]] + pert
           data.table(
             cell_id = x,
             ckey  = cellkeys[[x]],
@@ -1561,14 +1536,21 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' # continuous variables
 #' tab$numvars()
 #'
-#' # add perturbation parameters for "total" variable
+#' # create perturbation parameters for "total" variable and
+#' # write to yaml-file
+#' f_yaml <- tempfile(fileext = ".yaml")
 #' p_cnts1 <- ck_params_cnts(
 #'   D = 5,
 #'   V = 3,
 #'   js = 2,
 #'   pstay = 0.5,
 #'   optim = 1,
-#'   mono = TRUE)
+#'   mono = TRUE,
+#'   path = f_yaml)
+#'
+#' # read parameters from yaml-file and set them for variable `"total"`
+#' p_cnts1 <- ck_read_yaml(path = f_yaml)
+#'
 #' tab$params_cnts_set(val = p_cnts1, v = "total")
 #'
 #' # create alternative perturbation parameters
@@ -1596,6 +1578,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' tab$freqtab(v = c("total", "cnt_males"), type = "unweighted")
 #'
 #' # numerical variables (positive variables using flex-function)
+#' # we also write the config to a yaml file
+#' f_yaml <- tempfile(fileext = ".yaml")
 #' p_nums1 <- ck_params_nums(
 #'   D = 10,
 #'   l = 0.5,
@@ -1610,7 +1594,11 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'   same_key = FALSE,
 #'   parity = FALSE,
 #'   separation = TRUE,
-#'   use_zero_rkeys = FALSE)
+#'   use_zero_rkeys = FALSE,
+#'   path = f_yaml)
+#'
+#' # we read the parameters from the yaml-file
+#' p_nums1 <- ck_read_yaml(path = f_yaml)
 #'
 #' # another set of parameters
 #' # for variables with positive and negative values

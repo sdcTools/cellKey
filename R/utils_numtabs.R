@@ -21,54 +21,6 @@
   as.numeric(res)
 }
 
-# compute x_delta  multiplication parameters m_j (x) * x
-# not yet supported
-.x_delta_grid <- function(x, inp_params) {
-  stop("grids will be available in a future version!", call. = FALSE)
-
-  even_odd <- x$even_odd
-  x <- x$x
-  top_k <- inp_params$top_k
-  m_fixed_sq <- inp_params$m_fixed_sq
-
-  # params is a list of parameters of length top_k
-  m <- rep(NA, length(x))
-
-  # footnote 3, page 7 -> if x < 0 -> use abs(x)
-  rr <- lapply(1:length(x), function(i) {
-    abs(x[i]) <= inp_params[[i]]$grid
-  })
-
-  # smallest cells, highest perturbation
-  ind_sm <- sapply(rr, function(x) all(x == TRUE))
-  m[ind_sm] <- sapply(inp_params[1:length(x)], function(x) x$pcts[1])
-
-  # largest cells, smallest perturbation
-  ind_lg <- sapply(rr, function(x) all(x == FALSE))
-  m[ind_lg] <- sapply(inp_params[1:length(x)], function(x) utils::tail(x$pcts, 1))
-
-  ind_mid <- which(is.na(m))
-  if (length(ind_mid) > 0) {
-    m[ind_mid] <- sapply(ind_mid, function(x) {
-      inp_params[[x]]$pcts[min(which(rr[[x]] == TRUE))]
-    })
-  }
-
-  # fixed variance for very small observations
-  if (!is.na(m_fixed_sq)) {
-    # separation point
-    zs <- inp_params$zs
-
-    # very small (absolute) values
-    ind_vs <- which(abs(x) < zs)
-    if (length(ind_vs) > 0) {
-      m[ind_vs] <- sqrt(m_fixed_sq)
-      x[ind_vs] <- 1
-    }
-  }
-  x * m
-}
-
 # returns the value of the flex-function defined by
 # x: value to be checked
 # fp: flexpoint
@@ -140,6 +92,8 @@
 # params: a perturbation parameter object created with `ck_params_nums` and
 #         mult_params need to be of class `params_m_flex`
 .perturb_cell_flex <- function(cv, x, ck, lookup, prot_req, params) {
+  dig <- .ck_digits()
+
   debug <- FALSE
   fp <- params$mult_params$fp
   p_lg <- params$mult_params$p_large
@@ -208,7 +162,10 @@
       lookup_params$a <- abs(xj / x_delta)
       v <- .lookup_v_flex(cellkeys = ck[j], params = lookup_params)
       if (debug) {
-        message("xj: ", round(xj, digits = 5), " | x_delta: ", round(x_delta, digits = 5), " | a: ", round(lookup_params$a, digits = 5), " | v: ", v)
+        message("xj: ", round(xj, digits = dig), appendLF = FALSE)
+        message(" | x_delta: ", round(x_delta, digits = dig), appendLF = FALSE)
+        message(" | a: ", round(lookup_params$a, digits = dig), appendLF = FALSE)
+        message(" | v: ", v)
       }
       sign_v <- sign(v)
 
@@ -269,8 +226,6 @@
 
 # returning perturbation values from `stab` based on cellkeys,
 # x_delta (x * m), the (absolute) values of the highest contributions
-# in future; the lookup may depend on argument `pos_neg_var` that will need
-# to be defined in `ck_parmams_nums()`
 .lookup_v <- function(cellkeys, params) {
   i <- type <- kum_p_o <- NULL
   d <- params$max_i # parameter `D`
@@ -285,22 +240,6 @@
     params$lookup[ind_smallcells] <- "_zero_"
   }
 
-  # this parameter is currently not implemented (see delivarable)
-  # it may come back in a later version
-
-  #if (pos_neg_var == 1) {
-  #  # we only search in the symetric block
-  #  a[1:length(a)] <- d
-  #} else if (pos_neg_var == 2) {
-  #  # we use absolute values
-  #  a <- abs(a)
-  #} else if (pos_neg_var == 3) {
-  #  # we use absolute values for x_delta != 0 and the
-  #  # symetric case for x_delta == 0
-  #  a[a == 0] <- d
-  #  ii <- a != 0
-  #  a[ii] <- abs(a[ii])
-  #}
   a[a > d] <- d # we cut at the maximum value!
 
   stab <- params$stab
