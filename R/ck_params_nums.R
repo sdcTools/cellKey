@@ -301,7 +301,7 @@ ck_params_nums <-
 #' need to be in descending order.
 #' @param q (numeric scalar); Parameter of the function; `q` needs to be `>= 1`
 #' @param epsilon a numeric vector in descending order with all values `>= 0` and `<= 1` with the first
-#' element forced to equal 1. The length of this vector must correspond with the number `topK`
+#' element forced to equal 1. The length of this vector must correspond with the number `top_k`
 #' specified in [ck_params_nums()] when creating parameters for `type == "top_contr"` which is
 #' checked at runtime. This setting allows to use different flex-functions for the largest `top_k` contributors.
 #' @return an object suitable as input for [ck_params_nums()].
