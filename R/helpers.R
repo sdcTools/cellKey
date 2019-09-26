@@ -114,11 +114,7 @@ ck_log <- function(..., br = TRUE) {
   }
 
   ptab <- ptab@pTable
-  if (type == "nums") {
-    setnames(ptab, c("i", "j", "v", "p", "lb", "ub", "type"))
-  }
-  if (type == "cnts") {
-    setnames(ptab, c("i", "j", "p", "v", "lb", "ub", "type"))
-  }
+  setnames(ptab, "p_int_lb", "lb")
+  setnames(ptab, "p_int_ub", "ub")
   ptab
 }
