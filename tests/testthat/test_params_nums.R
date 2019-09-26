@@ -131,7 +131,7 @@ test_that("top_contr works with flex_params", {
   expect_identical(p$params$mu_c, 2)
   expect_equal(p$params$m_fixed_sq, NA)
   expect_equal(p$params$zs, 0)
-  expect_identical(digest::sha1(unlist(p$params)), "419342ab40cf1449c0f27e999f96e1eaf6452170")
+  expect_identical(digest::sha1(unlist(p$params)), "8c4cd4e67ccecdcdad9e2205582479ddf18825e4")
 })
 file.remove(f_yaml)
 
@@ -155,7 +155,7 @@ test_that("top_contr works with single flex", {
   expect_identical(p$params$mu_c, 2.5)
   expect_equal(p$params$m_fixed_sq, NA)
   expect_equal(p$params$zs, 0)
-  expect_identical(digest::sha1(unlist(p$params)), "f9a20c2e8499aaa0c582317e3a08efef2e8393b5")
+  expect_identical(digest::sha1(unlist(p$params)), "0228be4b6268b29ca87eca59706cf2d10f2c0bd0")
 })
 file.remove(f_yaml)
 
@@ -179,6 +179,6 @@ test_that("top_contr works with simple", {
   expect_identical(p$params$mu_c, 2.5)
   expect_equal(p$params$m_fixed_sq, NA)
   expect_equal(p$params$zs, 0)
-  expect_identical(digest::sha1(unlist(p$params)), "d0bd008ac61ea166bbee6c2372b8a5bdecea99af")
+  expect_identical(digest::sha1(unlist(p$params)), "70f0e641ae75903f9480b61f6254a84c433fa782")
 })
 file.remove(f_yaml)

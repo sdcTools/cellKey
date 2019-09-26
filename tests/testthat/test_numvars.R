@@ -72,7 +72,7 @@ p2 <- ck_params_nums(
 test_that("checking perturbation parameters", {
   expect_is(p1, "ck_params")
   expect_equal(p1$type, "params_m_flex")
-  expect_identical(digest::digest(p1), "5537f6d56254e32e93780733a9330995")
+  expect_identical(digest::digest(p1), "403dac26eeb37f1473b2f00cde43f6fc")
 })
 
 # set up problem
@@ -101,8 +101,8 @@ expect_message(tab$perturb("income"), "Numeric variable 'income' was perturbed."
 expect_message(tab$perturb("savings"), "Numeric variable 'savings' was perturbed.")
 
 test_that("variable was correctly perturbed", {
-  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = FALSE)), "a3b1f842f0d60414e5f2f67701103b7584e41956")
-  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = FALSE)), "f0f7e189a494630697f33eefa8d563819c9461a8")
-  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = TRUE)), "fe179636b6a5d00a0d1fb47b2aed0fc5f14813f1")
-  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = TRUE)), "121aa132aec7b11232797e4ca853042fac83af7b")
+  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = FALSE)), "2d058d624448d3e8375b59472f452ce37ebf2b07")
+  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = FALSE)), "8ddb7dae8c68ac729c507c8fbac26b890855cd1d")
+  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = TRUE)), "6e30ff3955b679e9f7b58c1e2531479f02bfa8d1")
+  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = TRUE)), "64fc784d8fe93c2d5e1838629c34f5010bee672d")
 })
