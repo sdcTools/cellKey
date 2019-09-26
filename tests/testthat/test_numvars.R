@@ -97,8 +97,8 @@ expect_message(tab$perturb("income"), "Numeric variable 'income' was perturbed."
 expect_message(tab$perturb("savings"), "Numeric variable 'savings' was perturbed.")
 
 test_that("variable was correctly perturbed", {
-  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = FALSE)), "95d346e4649fd813d1175c2e952638b6822bbb10")
-  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = FALSE)), "c96e3b0d1be6e470df6a278c4a52d45eca0c436e")
-  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = TRUE)), "74432ca0c5d8faa55fdaa881513981571e3785e3")
-  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = TRUE)), "6661a7d300043ea68fb4dca7ee69aa05406a91d2")
+  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = FALSE)), "097bb37641f137327fd168de66ab53b8b8a9465c")
+  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = FALSE)), "79f076ffaf29c24e54a8b6ae6ccc3676d572c78b")
+  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = TRUE)), "4fae1bbbac3ac96e1ecf7943838eea8b3cbacae3")
+  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = TRUE)), "15f00c769b9de52cc2f86729a375d8c664fdb41d")
 })
