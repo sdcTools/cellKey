@@ -46,28 +46,40 @@ count and numerical variables.
 vector containing the pre-defined count- and continuous variables in the current instance.
 \item \strong{\code{cntvars()}}: returns a character vector of available count variables.
 \item \strong{\code{numvars()}}: returns a character vector of available numeric variables.
-\item \strong{\code{supp_freq(v, n)}}: mark sensitive cells based on a minimal-frequency rule. The required inputs are:
+\item \strong{\code{supp_freq(v, n, weighted = TRUE)}}: mark sensitive cells based on a minimal-frequency
+rule that refers to the (weighted or unweighted) number of contributors to a given cell. The
+required inputs are:
 \itemize{
-\item \code{v}: a single variable name of a continuous variable (\code{numvars()})
+\item \code{v}: a single variable name of a continuous variable (\code{see method numvars()})
 \item \code{n}: a number defining the threshold. All cells \code{<= n} are considered as unsafe.
+\item \code{weighted}: if \code{TRUE}, the weighted number of contributors to a cell are compared to
+the threshold specified in \code{n} (default); else the unweighted number of contributors is used.
+}
+\item \strong{\code{supp_val(v, n, weighted = TRUE)}}: mark sensitive cells based on (weighted
+or unweighted) cell values that are below the given threshold \code{n}. The required inputs are:
+\itemize{
+\item \code{v}: a single variable name of a continuous variable (\code{see method numvars()})
+\item \code{n}: a number defining the threshold. All cells \code{<= n} are considered as unsafe.
+\item \code{weighted}: if \code{TRUE}, the weighted cell value of variable \code{v} is compared to
+the threshold specified in \code{n} (default); else the unweighted number is used.
 }
 \item \strong{\code{supp_p(v, p)}}: mark sensitive cells based on the p%-rule rule. This rule can only be
 applied to positive-only variables and the required inputs are:
 \itemize{
-\item \code{v}: a single variable name of a continuous variable (\code{numvars()})
+\item \code{v}: a single variable name of a continuous variable (\code{see method numvars()})
 \item \code{p}: a number defining a percentage between \code{1} and \code{99}.
 }
 \item \strong{\code{supp_pq(v, p, q)}}: mark sensitive cells based on the pq-rule rule. This rule can only be
 applied to positive-only variables and the required inputs are:
 \itemize{
-\item \code{v}: a single variable name of a continuous variable (\code{numvars()})
+\item \code{v}: a single variable name of a continuous variable (\code{see method numvars()})
 \item \code{p}: a number defining a percentage between \code{1} and \code{99}.
 \item \code{q}: a number defining a percentage between \code{1} and \code{99}. This value must be larger than \code{p}.
 }
 \item \strong{\code{supp_nk(v, n, k)}}: mark sensitive cells based on the nk-dominance rule. This rule can only be
 applied to positive-only variables and the required inputs are:
 \itemize{
-\item \code{v}: a single variable name of a continuous variable (\code{numvars()})
+\item \code{v}: a single variable name of a continuous variable (\code{see method numvars()})
 \item \code{n}: an integerish number \code{>= 2}.
 \item \code{k}: a number defining a percentage between \code{1} and \code{99}. All cells to which the top \code{n}
 contributers contribute more than \code{k\%} is considered unsafe
@@ -312,7 +324,8 @@ tab$params_nums_set(p_nums2, v = "mixed")
 tab$supp_p(v = "income", p = 85)
 tab$supp_pq(v = "income", p = 85, q = 90)
 tab$supp_nk(v = "income", n = 2, k = 90)
-tab$supp_freq(v = "income", n = 100000)
+tab$supp_freq(v = "income", n = 14, weighted = FALSE)
+tab$supp_val(v = "income", n = 10000, weighted = TRUE)
 
 # perturb variables
 tab$perturb(v = c("income", "savings"))

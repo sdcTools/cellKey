@@ -539,21 +539,54 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     },
 
     # identification of sensitive cells
-    # based on minimal frequencies
-    supp_freq=function(v, n) {
+    # based on number of (weighted) contributing units
+    supp_freq=function(v, n, weighted = TRUE) {
+      if (!rlang::is_scalar_logical(weighted)) {
+        stop("argument `weighted` is not a logical value.", call. = FALSE)
+      }
       .check_avail(
         v = v,
         avail = self$numvars(),
-        msg = "Invalid variables specified in `v`:",
-        single_v = FALSE)
+        msg = "Invalid variable specified in `v`:",
+        single_v = TRUE)
 
       if (!rlang::is_scalar_double(n)) {
         stop("`n` is not a number.", call. = FALSE)
       }
 
-      res <- sdcProb2df(private$.prob, addDups = TRUE, addNumVars = TRUE)[[v]]
+      if (weighted) {
+        testv <- "freq"
+      } else {
+        testv <- "tmpweightvarfortabulation"
+      }
+      res <- sdcProb2df(private$.prob, addDups = TRUE, addNumVars = TRUE)[[testv]]
       pat <- res <= n
       private$.update_supps(v = v, pat = pat, rule = "freq-rule")
+      invisible(self)
+    },
+    # based on (weighted) cell values
+    supp_val=function(v, n, weighted = TRUE) {
+      if (!rlang::is_scalar_logical(weighted)) {
+        stop("argument `weighted` is not a logical value.", call. = FALSE)
+      }
+      .check_avail(
+        v = v,
+        avail = self$numvars(),
+        msg = "Invalid variable specified in `v`:",
+        single_v = TRUE)
+
+      if (!rlang::is_scalar_double(n)) {
+        stop("`n` is not a number.", call. = FALSE)
+      }
+
+      if (weighted) {
+        testv <- paste0("ws_", v)
+      } else {
+        testv <- v
+      }
+      res <- sdcProb2df(private$.prob, addDups = TRUE, addNumVars = TRUE)[[testv]]
+      pat <- res <= n
+      private$.update_supps(v = v, pat = pat, rule = "val-rule")
       invisible(self)
     },
     # p%-rule
@@ -561,8 +594,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       .check_avail(
         v = v,
         avail = self$numvars(),
-        msg = "Invalid variables specified in `v`:",
-        single_v = FALSE)
+        msg = "Invalid variable specified in `v`:",
+        single_v = TRUE)
 
       if (private$.has_negative_values(v = v)) {
         stop("dominance rule can only be computed on strictly positive variables.", call. = FALSE)
@@ -589,8 +622,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       .check_avail(
         v = v,
         avail = self$numvars(),
-        msg = "Invalid variables specified in `v`:",
-        single_v = FALSE)
+        msg = "Invalid variable specified in `v`:",
+        single_v = TRUE)
       if (private$.has_negative_values(v = v)) {
         stop("dominance rule can only be computed on strictly positive variables.", call. = FALSE)
       }
@@ -624,8 +657,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       .check_avail(
         v = v,
         avail = self$numvars(),
-        msg = "Invalid variables specified in `v`:",
-        single_v = FALSE)
+        msg = "Invalid variable specified in `v`:",
+        single_v = TRUE)
       if (private$.has_negative_values(v = v)) {
         stop("dominance rule can only be computed on strictly positive variables.", call. = FALSE)
       }
@@ -1387,21 +1420,31 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' - **`cntvars()`**: returns a character vector of available count variables.
 #' - **`numvars()`**: returns a character vector of available numeric variables.
 #'
-#' - **`supp_freq(v, n)`**: mark sensitive cells based on a minimal-frequency rule. The required inputs are:
-#'    * `v`: a single variable name of a continuous variable (`numvars()`)
+#' - **`supp_freq(v, n, weighted = TRUE)`**: mark sensitive cells based on a minimal-frequency
+#' rule that refers to the (weighted or unweighted) number of contributors to a given cell. The
+#' required inputs are:
+#'    * `v`: a single variable name of a continuous variable (`see method numvars()`)
 #'    * `n`: a number defining the threshold. All cells `<= n` are considered as unsafe.
+#'    * `weighted`: if `TRUE`, the weighted number of contributors to a cell are compared to
+#'    the threshold specified in `n` (default); else the unweighted number of contributors is used.
+#' - **`supp_val(v, n, weighted = TRUE)`**: mark sensitive cells based on (weighted
+#' or unweighted) cell values that are below the given threshold `n`. The required inputs are:
+#'    * `v`: a single variable name of a continuous variable (`see method numvars()`)
+#'    * `n`: a number defining the threshold. All cells `<= n` are considered as unsafe.
+#'    * `weighted`: if `TRUE`, the weighted cell value of variable `v` is compared to
+#'    the threshold specified in `n` (default); else the unweighted number is used.
 #' - **`supp_p(v, p)`**: mark sensitive cells based on the p%-rule rule. This rule can only be
 #' applied to positive-only variables and the required inputs are:
-#'    * `v`: a single variable name of a continuous variable (`numvars()`)
+#'    * `v`: a single variable name of a continuous variable (`see method numvars()`)
 #'    * `p`: a number defining a percentage between `1` and `99`.
 #' - **`supp_pq(v, p, q)`**: mark sensitive cells based on the pq-rule rule. This rule can only be
 #' applied to positive-only variables and the required inputs are:
-#'    * `v`: a single variable name of a continuous variable (`numvars()`)
+#'    * `v`: a single variable name of a continuous variable (`see method numvars()`)
 #'    * `p`: a number defining a percentage between `1` and `99`.
 #'    * `q`: a number defining a percentage between `1` and `99`. This value must be larger than `p`.
 #' - **`supp_nk(v, n, k)`**: mark sensitive cells based on the nk-dominance rule. This rule can only be
 #' applied to positive-only variables and the required inputs are:
-#'    * `v`: a single variable name of a continuous variable (`numvars()`)
+#'    * `v`: a single variable name of a continuous variable (`see method numvars()`)
 #'    * `n`: an integerish number `>= 2`.
 #'    * `k`: a number defining a percentage between `1` and `99`. All cells to which the top `n`
 #'    contributers contribute more than `k%` is considered unsafe
@@ -1635,7 +1678,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' tab$supp_p(v = "income", p = 85)
 #' tab$supp_pq(v = "income", p = 85, q = 90)
 #' tab$supp_nk(v = "income", n = 2, k = 90)
-#' tab$supp_freq(v = "income", n = 100000)
+#' tab$supp_freq(v = "income", n = 14, weighted = FALSE)
+#' tab$supp_val(v = "income", n = 10000, weighted = TRUE)
 #'
 #' # perturb variables
 #' tab$perturb(v = c("income", "savings"))

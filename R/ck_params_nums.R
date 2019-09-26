@@ -79,8 +79,10 @@ gen_stab <- function(D = 3, l = 0.5, add_small_cells = TRUE, even_odd = TRUE) {
 #' @param mult_params an object derived with [ck_flexparams()] or [ck_simpleparams()]
 #' that contain required parameters for the computation of the perturbation multiplier
 #' @param mu_c fixed extra protection amount (`>= 0)` applied to the absolute of the
-#' perturbation value of the first (largest) noise component; defaults to
-#' `0` (no additional protection)
+#' perturbation value of the first (largest) noise component if the cell is sensitive.
+#' This value defaults to `0` (no additional protection). Please note that sensitive cells
+#' can be defined according using the `supp_freq()`, `supp_val`, `supp_p()`, `supp_nk()`
+#' and `supp_pq()` methods. An examples is given in `?cellkey_pkg`.
 #' @param same_key (logical) should original cell key (`TRUE`) used for
 #' for finding perturbation values of the largest contributor to a
 #' cell or should a perturbation of the cellkey itself (`FALSE`) take place.

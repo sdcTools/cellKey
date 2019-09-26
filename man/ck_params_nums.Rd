@@ -33,8 +33,10 @@ values should be perturbed.}
 that contain required parameters for the computation of the perturbation multiplier}
 
 \item{mu_c}{fixed extra protection amount (\code{>= 0)} applied to the absolute of the
-perturbation value of the first (largest) noise component; defaults to
-\code{0} (no additional protection)}
+perturbation value of the first (largest) noise component if the cell is sensitive.
+This value defaults to \code{0} (no additional protection). Please note that sensitive cells
+can be defined according using the \code{supp_freq()}, \code{supp_val}, \code{supp_p()}, \code{supp_nk()}
+and \code{supp_pq()} methods. An examples is given in \code{?cellkey_pkg}.}
 
 \item{same_key}{(logical) should original cell key (\code{TRUE}) used for
 for finding perturbation values of the largest contributor to a

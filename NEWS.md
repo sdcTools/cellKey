@@ -58,9 +58,9 @@
 - allow to write perturbation parameters as yaml and to read them via `ck_read_yaml()`
 - added tests and improved coverage
 - correctly sort top weighted observations when computing them
+- update primsupp rules, adding `rule_val()` and adding `weighted` arguments to `rule_freq()`
 
 - [todo] check computation of x_deltas using new documents
-- [todo] check primsupp rules (not weighted?)
 - [todo] implement magnitude tables
   * [todo] add tests for magitude tables
   * [todo] update method `$summary()` to include values for perturbed magnitude tables
