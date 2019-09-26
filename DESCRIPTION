@@ -3,7 +3,7 @@ Type: Package
 Date: 2019-09-26
 Title: Implementing ABS cell-key method for adding noise to frequency
         and continous tables
-Version: 0.17.135
+Version: 0.17.140
 Authors@R: c(
   person(
     given="Bernhard", 
@@ -30,7 +30,7 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-Remotes: bernhard-da/ptable
+Remotes: tenderle/ptable@exp
 NeedsCompilation: no
 Author: Bernhard Meindl [aut, cre]
 Maintainer: Bernhard Meindl <bernhard.meindl@statistik.gv.at>
