@@ -59,10 +59,12 @@
 - added tests and improved coverage
 - correctly sort top weighted observations when computing them
 - update primsupp rules, adding `rule_val()` and adding `weighted` arguments to `rule_freq()`
+- use ptables from ptable-pkg
+- [todo] add example with parity using the ptable inputs
+- [todo] example with only i = 1 in a ptab! no combination!
 
 - [todo] check computation of x_deltas using new documents
 - [todo] implement magnitude tables
-  * [todo] add tests for magitude tables
   * [todo] update method `$summary()` to include values for perturbed magnitude tables
 - [todo] update vignette
 - [todo] remove or re-implement `by`-argument in ck_perturb()
