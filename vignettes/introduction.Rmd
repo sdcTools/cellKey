@@ -135,26 +135,22 @@ print(tab)
 ```
 
 ### Define perturbation parameters for count variables
-The next task is to define parameters that are used to perturb count variables which can be archieved using function `ck_params_cnts`. This function wraps `pt_create_pTable` from the [**ptable**](https://github.com/sdcTools/ptable) package, so for the parameters have a look at the help page for this function. A typical application is shown below:
+The next task is to define parameters that are used to perturb count variables which can be achieved with `ck_params_cnts`. This function requires as input the result of function `pt_create_pTable` from the [**ptable**](https://github.com/sdcTools/ptable) package. Please refer also to the documentation of this package for information on the required parameters. A typical application is shown below:
+
+```{r, message=FALSE}
+# two different perturbation parameter sets from the ptable-pkg
+para1 <- ptable::pt_create_pParams(D = 5L, V = 3, js = 2, pstay = 0.5, optim = 1, mono = TRUE)
+ptab1 <- ptable::pt_create_pTable(para1)
+
+para2 <- ptable::pt_create_pParams(D = 8, V = 3, js = 2, pstay = 0.5, optim = 1, mono = TRUE)
+ptab2 <- ptable::pt_create_pTable(para2)
+```
+
+Then we need to create the required inputs for the cellKey package.
 
 ```{r}
-# two different perturbation parameter sets
-p_cnts1 <- ck_params_cnts(
-  D = 5,
-  V = 3,
-  js = 2,
-  pstay = 0.5,
-  optim = 1,
-  mono = TRUE)
-
-# create alternative perturbation parameters
-p_cnts2 <- ck_params_cnts(
-  D = 8,
-  V = 3,
-  js = 2,
-  pstay = 0.5,
-  optim = 1,
-  mono = TRUE)
+p_cnts1 <- ck_params_cnts(ptab = ptab1)
+p_cnts2 <- ck_params_cnts(ptab = ptab2)
 ```
 
 `ck_params_cnts()` returns objects that can be used as inputs in method `params_cnts_set()`. In argument `v` one may specify count variables for which the supplied perturbation parameters should be used. If `v` is not specified, the perturbation parameters are used for all count variables. 
@@ -187,7 +183,6 @@ The underlying framework on how to perturb continuous tables differs from the pr
 - `p`: numeric vector of length `2` with `p[1] > p[2]` where both elements specify a percentage. The first value refers to the desired maximum perturbation percentage for small cells (depending on fp) while the second element refers to the desired maximum perturbation percentage for large cells.
 - `epsilon`: a numeric vector in descending order with all values in `[0; 1]` and with the first element forced to equal `1`. The length of this parameter must correspond with the number of `top_k` specified in `ck_params_nums()` (which will be discussed later). 
 
-
 ```{r}
 # parameters for the flex-function
 mult_flex <- ck_flexparams(
@@ -196,20 +191,41 @@ mult_flex <- ck_flexparams(
   epsilon = c(1, 0.5, 0.2))
 ```
 
+In the [**cellKey**](https://github.com/sdcTools/cellKey) package it is possible to select the underlying data that form the base for the perturbation differently. In `ck_params_nums()` the specific approach can be selected in argument `type`. The valid choices for this argument are:
 
+- `"top_contr"`: the `k` largest contributions to each cell are used in the perturbation procedure with the number `k` required to be specified in argument `top_k`
+- `"mean"`: weighted cellmeans are used as starting points
+- `"range"`: the difference between largest and smallest unweighted contributions for each cell are used as base for the perturbation procedure
+- `"sum"`: weighted cellvalues are used as starting points for the perturbation
 
+Further important parameters are:
+
+- `mu_c`: an extra amount of perturbation applied to sensitive cells (restricted to the first of `top_k` noise components). In the following example we demonstrate how to identify sensitive cells for numeric variables.
+- `same_key`: a logical value specifying if the original cell key (`TRUE`) should be used for the lookup of the largest contributor of a cell or if a perturbation of the cellkey itself (`FALSE`) should take place.
+- `parity`: should cells with an even/odd number of contributors perturbed using different ptables.
 
 ```{r}
+# create a ptable using the ptable-pkg
+para <- ptable::pt_create_pParams(
+  D = 5,
+  V = 1,
+  table = "nums",
+  step = 0.2,
+  icat = c(1, 5),
+  type = "all")
+ptab <- ptable::pt_create_pTable(para)
+
 p_nums1 <- ck_params_nums(
   type = "top_contr",
   top_k = 3,
-  D = 5,
-  l = 0.2,
+  ptab = ptab,
   mult_params = mult_flex,
   mu_c = 2,
-  same_key = FALSE,
-  separation = TRUE)
+  same_key = FALSE)
 ```
+
+
+## Todo: describe separation case
 
 Such parameters can be attached to continuous variables using the `params_nums_set()`-method as shown below:
 
@@ -217,6 +233,8 @@ Such parameters can be attached to continuous variables using the `params_nums_s
 tab$params_nums_set(v = c("income", "savings"), val = p_nums1)
 ```
 
+
+Setting sensitive cells: 
 Parameter `mu_c` in `ck_params_nums()` ... 
 
 ```{r, eval = FALSE}
@@ -224,11 +242,8 @@ tab$supp_p(v = "income", p = 85)
 tab$supp_pq(v = "income", p = 85, q = 90)
 tab$supp_nk(v = "income", n = 2, k = 90)
 tab$supp_freq(v = "income", n = 5)
+tab$supp_val(v = "income", n = 1000)
 ```
-
-
-
-
 
 ### Compute perturbed tables
 It is now possible to finally perturbed variables using the `perturb()`-method. As `tab` - the object created with `ck_setup()` - already contains all possible data, the only required input is the name of a variable that should be perturbed.
