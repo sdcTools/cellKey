@@ -118,7 +118,7 @@
 
     lookup_params$lookup <- lookup
     if (debug) {
-      message("j:= ", j)
+      message("j:= ", j, " | ck: ", ck[j])
     }
 
     xj <- x[j]
@@ -132,7 +132,8 @@
       if (abs_xj < fp) {
         x_delta <- xj * p_sm
       } else {
-        x_delta <-  xj * .para_m(x = abs_xj, p_sm = p_sm, p_lg = p_lg, fp = fp, q = q)
+        m <- .para_m(x = abs_xj, p_sm = p_sm, p_lg = p_lg, fp = fp, q = q)
+        x_delta <-  xj * m * params$mult_params$epsilon[j]
       }
     }
     abs_xdelta <- abs(x_delta)
@@ -182,6 +183,7 @@
     }
 
     if (debug) {
+      message("x_hat: ", x_hats[j])
       message("updating original value: old: ", xo, "", appendLF = FALSE)
     }
     xo <- xo + x_hats[j]
