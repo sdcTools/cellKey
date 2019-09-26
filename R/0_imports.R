@@ -32,6 +32,6 @@ Sys.setenv(".ck_nr_digits" = 8)
   } else {
     num_workers <- max(1, available_cores)
   }
-  min(num_workers, available_cores)
+  max(1, min(num_workers, available_cores))
 }
 NULL
