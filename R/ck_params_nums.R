@@ -84,7 +84,7 @@ ck_params_nums <-
   ptab <- .chk_ptab(ptab, type = "nums")
   if (!is.null(ptab_sc)) {
     ptab_sc <- .chk_ptab(ptab_sc, type = "nums")
-    if (!all(ptab_sc) == "all") {
+    if (!all(ptab_sc$type == "all")) {
       stop("invalid format of ptable `ptab_sc` detected.", call. = FALSE)
     }
     ptab_sc$type <- "small_cells"
