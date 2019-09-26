@@ -97,3 +97,28 @@ ck_log <- function(..., br = TRUE) {
     message(...,  appendLF = br)
   }
 }
+
+# check validity of ptab-inputs from ptable-pkg
+.chk_ptab <- function(ptab, type = "nums") {
+  if (!inherits(ptab, "ptable")) {
+    stop("argument `ptab` was not created using ptable::pt_create_pTable()", call. = FALSE)
+  }
+
+  if (slot(ptab, "table") != type) {
+    if (type == "nums") {
+      e <- "argument `ptab` is not a perturbation table suitable for numeric variables."
+    } else {
+      e <- "argument `ptab` is not a perturbation table suitable for counts."
+    }
+    stop(e, call. = FALSE)
+  }
+
+  ptab <- ptab@pTable
+  if (type == "nums") {
+    setnames(ptab, c("i", "j", "v", "p", "lb", "ub", "type"))
+  }
+  if (type == "cnts") {
+    setnames(ptab, c("i", "j", "p", "v", "lb", "ub", "type"))
+  }
+  ptab
+}

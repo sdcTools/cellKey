@@ -18,7 +18,7 @@ ck_read_yaml <- function(path) {
     cfg
   }
   .yaml_nums <- function(cfg) {
-    cfg$params$stab <- as.data.table(cfg$params$stab, stringsAsFactors = FALSE)
+    cfg$params$ptab <- as.data.table(cfg$params$ptab, stringsAsFactors = FALSE)
     class(cfg$params$mult_params) <- cfg$type
     cfg
   }

@@ -34,7 +34,7 @@
 }
 
 .lookup_v_flex <- function(cellkeys, params) {
-  i <- type <- kum_p_o <- NULL
+  i <- type <- ub <- NULL
   d <- params$max_i # parameter `D`
 
   v <- rep(NA, length(cellkeys))
@@ -49,8 +49,8 @@
 
   a[a > d] <- d # we cut at the maximum value!
 
-  stab <- params$stab
-  poss <- sort(unique(stab$i))
+  ptab <- params$ptab
+  poss <- sort(unique(ptab$i))
 
   ind_exact <- which(a %in% poss)
   if (length(ind_exact) > 0) {
@@ -58,7 +58,7 @@
       if (params$lookup[x] == "_zero_") {
         return(0)
       }
-      stab[type == params$lookup[x] & i == a[x] & cellkeys[x] < kum_p_o, diff][1]
+      ptab[type == params$lookup[x] & i == a[x] & cellkeys[x] < ub, v][1]
     })
   }
 
@@ -73,8 +73,8 @@
       lambda <- (a[x] - a0) / (a1 - a0)
 
       # compute two perturbation values
-      v_low <- stab[type == params$lookup[x] & i == a0 & cellkeys[x] < kum_p_o, diff][1]
-      v_up <- stab[type == params$lookup[x] & i == a1 & cellkeys[x] < kum_p_o, diff][1]
+      v_low <- ptab[type == params$lookup[x] & i == a0 & cellkeys[x] < ub, v][1]
+      v_up <- ptab[type == params$lookup[x] & i == a1 & cellkeys[x] < ub, v][1]
 
       # combine to get final perturbation value
       (1 - lambda) * v_low + lambda * v_up
@@ -100,14 +100,14 @@
   p_sm <- params$mult_params$p_small
   q <- params$mult_params$q
   mu <- ifelse(prot_req, params$mu_c, 0)
-  stab <- params$stab
+  ptab <- params$ptab
   zs <- params$zs
   deltas <- rep(NA, length(x))
 
   # lookup
   lookup_params <- list(
-    stab = stab,
-    max_i = max(stab$i))
+    ptab = ptab,
+    max_i = max(ptab$i))
   lookup_params$lookup <- lookup
 
   xo <- cv
@@ -224,10 +224,10 @@
 }
 
 
-# returning perturbation values from `stab` based on cellkeys,
+# returning perturbation values from `ptab` based on cellkeys,
 # x_delta (x * m), the (absolute) values of the highest contributions
 .lookup_v <- function(cellkeys, params) {
-  i <- type <- kum_p_o <- NULL
+  i <- type <- ub <- NULL
   d <- params$max_i # parameter `D`
 
   v <- rep(NA, length(cellkeys))
@@ -242,8 +242,8 @@
 
   a[a > d] <- d # we cut at the maximum value!
 
-  stab <- params$stab
-  poss <- sort(unique(stab$i))
+  ptab <- params$ptab
+  poss <- sort(unique(ptab$i))
 
   ind_exact <- which(a %in% poss)
   if (length(ind_exact) > 0) {
@@ -251,7 +251,7 @@
       if (params$lookup[x] == "_zero_") {
         return(0)
       }
-      stab[type == params$lookup[x] & i == a[x] & cellkeys[x] < kum_p_o, diff][1]
+      ptab[type == params$lookup[x] & i == a[x] & cellkeys[x] < ub, v][1]
     })
   }
 
@@ -266,8 +266,8 @@
       lambda <- (a[x] - a0) / (a1 - a0)
 
       # compute two perturbation values
-      v_low <- stab[type == params$lookup[x] & i == a0 & cellkeys[x] < kum_p_o, diff][1]
-      v_up <- stab[type == params$lookup[x] & i == a1 & cellkeys[x] < kum_p_o, diff][1]
+      v_low <- ptab[type == params$lookup[x] & i == a0 & cellkeys[x] < ub, v][1]
+      v_up <- ptab[type == params$lookup[x] & i == a1 & cellkeys[x] < ub, v][1]
 
       # combine to get final perturbation value
       (1 - lambda) * v_low + lambda * v_up

@@ -19,7 +19,6 @@ x$income[3503] <- x$income[3503] * 25
 
 x$sampling_weight <- sample(1:5, nrow(x), replace = TRUE)
 
-
 dim_sex <- hier_create(root = "Total", nodes = c("male", "female"))
 dim_age <- hier_create(root = "Total", paste0("age_group", 1:6))
 dims <- list(sex = dim_sex, age = dim_age)
@@ -40,27 +39,32 @@ flex <-  ck_flexparams(
   p = c(0.20, 0.03),
   epsilon = ep,
   q = 2)
+
+para <- ptable::pt_create_pParams(
+  D = 7,
+  V = 1,
+  step = 0.2,
+  icat = c(1, 5, 10),
+  table = "nums")
+ptab <- ptable::pt_create_pTable(para)
+
 p1 <- ck_params_nums(
   type = "top_contr",
   top_k = 3,
-  D = 7,
-  l = 0.2,
+  ptab = ptab,
   mult_params = flex,
   mu_c = 2.5,
   same_key = FALSE,
-  separation = TRUE,
   use_zero_rkeys = TRUE,
   parity = FALSE)
 
 p2 <- ck_params_nums(
   type = "mean",
   top_k = 3,
-  D = 7,
-  l = 0.2,
+  ptab = ptab,
   mult_params = ck_simpleparams(p = 0.1, epsilon = 1),
   mu_c = 2.5,
   same_key = TRUE,
-  separation = TRUE,
   use_zero_rkeys = FALSE,
   parity = FALSE)
 
@@ -68,7 +72,7 @@ p2 <- ck_params_nums(
 test_that("checking perturbation parameters", {
   expect_is(p1, "ck_params")
   expect_equal(p1$type, "params_m_flex")
-  expect_identical(digest::digest(p1), "4c61633dadae010488b705e74f043c69")
+  expect_identical(digest::digest(p1), "5537f6d56254e32e93780733a9330995")
 })
 
 # set up problem
@@ -97,8 +101,8 @@ expect_message(tab$perturb("income"), "Numeric variable 'income' was perturbed."
 expect_message(tab$perturb("savings"), "Numeric variable 'savings' was perturbed.")
 
 test_that("variable was correctly perturbed", {
-  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = FALSE)), "097bb37641f137327fd168de66ab53b8b8a9465c")
-  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = FALSE)), "79f076ffaf29c24e54a8b6ae6ccc3676d572c78b")
-  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = TRUE)), "4fae1bbbac3ac96e1ecf7943838eea8b3cbacae3")
-  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = TRUE)), "15f00c769b9de52cc2f86729a375d8c664fdb41d")
+  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = FALSE)), "a3b1f842f0d60414e5f2f67701103b7584e41956")
+  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = FALSE)), "f0f7e189a494630697f33eefa8d563819c9461a8")
+  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = TRUE)), "fe179636b6a5d00a0d1fb47b2aed0fc5f14813f1")
+  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = TRUE)), "121aa132aec7b11232797e4ca853042fac83af7b")
 })

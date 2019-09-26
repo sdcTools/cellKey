@@ -30,7 +30,8 @@ test_that("checking dimension and structure of generated testdata is ok", {
 })
 
 ## perturbation parameters for count variables
-params_cnts <- ck_params_cnts(
+set.seed(100)
+para <- ptable::pt_create_pParams(
   D = 5,
   V = 3,
   js = 2,
@@ -38,23 +39,22 @@ params_cnts <- ck_params_cnts(
   optim = 1,
   mono = TRUE)
 
+params_cnts <- ck_params_cnts(ptab = ptable::pt_create_pTable(para))
 ptab <- params_cnts$params$ptable
 test_that("ck_params_cnts() is ok", {
   expect_is(params_cnts, "ck_params")
   expect_identical(params_cnts$type, "cnts")
-  expect_identical(dim(ptab), c(66L, 6L))
-  expect_identical(max(ptab$i), 8L)
+  expect_identical(dim(ptab), c(66L, 7L))
+  expect_identical(max(ptab$i), 8)
 })
 
 # we need to load a custom data set because otherwise, the
 # digest based checks don't work
-rm(params_cnts)
-data("params_cnts", package = "cellKey")
 test_that("checking perturbation parameters for counts", {
   expect_is(params_cnts, "ck_params")
   expect_equal(params_cnts$type, "cnts")
   expect_is(params_cnts$params$ptable, "data.table")
-  expect_identical(digest::digest(params_cnts), "1fe9b2228b2b5be3eacfc524b8ea6104")
+  expect_identical(digest::digest(params_cnts), "7426d7da34a57b19b625d35413c1abdf")
 })
 
 countvars <- NULL

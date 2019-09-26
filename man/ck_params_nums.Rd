@@ -4,9 +4,9 @@
 \alias{ck_params_nums}
 \title{Set perturbation parameters for continuous variables}
 \usage{
-ck_params_nums(type = "top_contr", top_k = NULL, D, l, mult_params,
-  mu_c = 0, same_key = TRUE, use_zero_rkeys = FALSE,
-  separation = FALSE, parity = FALSE, path = NULL)
+ck_params_nums(type = "top_contr", top_k = NULL, ptab,
+  ptab_sc = NULL, mult_params, mu_c = 0, same_key = TRUE,
+  use_zero_rkeys = FALSE, parity = FALSE, path = NULL)
 }
 \arguments{
 \item{type}{a character value defining the way to identify the \code{magnifier},
@@ -23,11 +23,10 @@ is used.
 
 \item{top_k}{it is ignored if \code{variant} is different from \code{top_contr}. Otherwise,}
 
-\item{D}{maximum perturbation value}
+\item{ptab}{a perturbation-table object created with \code{\link[ptable:pt_create_pTable]{ptable::pt_create_pTable()}}}
 
-\item{l}{stepwidth parameter for computation of perturbation tables
-a integerish number >= 1 specifying the number of top contributions whose
-values should be perturbed.}
+\item{ptab_sc}{a perturbation-table for small cells created
+with \code{\link[ptable:pt_create_pTable]{ptable::pt_create_pTable()}}}
 
 \item{mult_params}{an object derived with \code{\link[=ck_flexparams]{ck_flexparams()}} or \code{\link[=ck_simpleparams]{ck_simpleparams()}}
 that contain required parameters for the computation of the perturbation multiplier}
@@ -46,10 +45,6 @@ cell or should a perturbation of the cellkey itself (\code{FALSE}) take place.}
 units not contributing to a specific numeric variables should be
 used (\code{TRUE}) or ignored (\code{FALSE}) when computing cell keys.}
 
-\item{separation}{(logical) scalar defining if very small cell values should
-be perturbed like counts (exact lookup). If \code{TRUE}, the ptable provided must contain
-values with value \code{small_cells} in column \code{type}.}
-
 \item{parity}{(logical) scalar defining if different perturbation tables should be used
 for cells with an even or odd number of contributors.}
 
@@ -65,11 +60,21 @@ This function allows to define perturbation parameters used to
 perturb cells in magnitude tables.
 }
 \examples{
+# create a perturbation table using
+# functionality from ptable-pkg; see help(pa = "ptable")
+para <- ptable::pt_create_pParams(
+  D = 4,
+  V = 1,
+  table = "nums",
+  step = 0.2,
+  icat = c(1, 5),
+  type = "all")
+ptab <- ptable::pt_create_pTable(para)
+
 ck_params_nums(
-  D = 3,
-  l = 0.5,
   type = "top_contr",
   top_k = 3,
+  ptab = ptab,
   mult_params = ck_flexparams(
     fp = 1000,
     p = c(0.20, 0.03),

@@ -1,62 +1,3 @@
-gen_stab <- function(D = 3, l = 0.5, add_small_cells = TRUE, even_odd = TRUE) {
-  .gen <- function(i, min_d, max_d, l) {
-    pval <- seq(min_d, max_d, by = l)
-    x <- data.table(
-      i = i,
-      j = pval - min(pval),
-      p = NA_real_,
-      kum_p_u = NA_real_,
-      kum_p_o = NA_real_,
-      diff = pval
-    )
-
-    x$p <- diff(sort(runif(nrow(x) + 1)))
-    cs <- cumsum(x$p)
-    x$kum_p_u <- c(0, cs)[1:nrow(x)]
-    x$kum_p_o <- c(cs[1:(nrow(x) - 1)], 1)
-    x
-  }
-
-  if (!even_odd) {
-    dt <- data.table(i = 0, j = 0, p = 1, kum_p_u = 0, kum_p_o = 1, diff = 0)
-    # i:=1
-    dt_a <- .gen(i = 1, min_d = -1, max_d = D, l = l)
-    # i == D
-    dt_b <- .gen(i = D, min_d = -D, max_d = D, l = l)
-    dt <- rbind(dt, dt_a, dt_b)
-    dt$type <- "all"
-  } else {
-    dt <- data.table(i = 0, j = 0, p = 1, kum_p_u = 0, kum_p_o = 1, diff = 0)
-    # i:=1
-    dt_a <- .gen(i = 1, min_d = -1, max_d = D, l = l)
-    # i == D
-    dt_b <- .gen(i = D, min_d = -D, max_d = D, l = l)
-    dt_even <- rbind(dt, dt_a, dt_b)
-    dt_even$type <- "even"
-
-    dt <- data.table(i = 0, j = 0, p = 1, kum_p_u = 0, kum_p_o = 1, diff = 0)
-    # i:=1
-    dt_a <- .gen(i = 1, min_d = -1, max_d = D, l = l)
-    # i == D
-    dt_b <- .gen(i = D, min_d = -D, max_d = D, l = l)
-    dt_odd <- rbind(dt, dt_a, dt_b)
-    dt_odd$type <- "odd"
-    dt <- rbind(dt_even, dt_odd)
-  }
-
-  if (add_small_cells) {
-    dt_small <- data.table(i = 0, j = 0, p = 1, kum_p_u = 0, kum_p_o = 1, diff = 0)
-    # i:=1
-    dt_a <- .gen(i = 1, min_d = -1, max_d = D, l = l)
-    # i == D
-    dt_b <- .gen(i = D, min_d = -D, max_d = D, l = l)
-    dt_small <- rbind(dt_small, dt_a, dt_b)
-    dt_small$type <- "small_cells"
-    dt <- rbind(dt, dt_small)
-  }
-  dt
-}
-
 #' Set perturbation parameters for continuous variables
 #'
 #' This function allows to define perturbation parameters used to
@@ -72,10 +13,9 @@ gen_stab <- function(D = 3, l = 0.5, add_small_cells = TRUE, even_odd = TRUE) {
 #' is used.
 #' - `sum`: the (weighted) cellvalue itself is used as starting point
 #' @param top_k it is ignored if `variant` is different from `top_contr`. Otherwise,
-#' @param D maximum perturbation value
-#' @param l stepwidth parameter for computation of perturbation tables
-#' a integerish number >= 1 specifying the number of top contributions whose
-#' values should be perturbed.
+#' @param ptab a perturbation-table object created with [ptable::pt_create_pTable()]
+#' @param ptab_sc a perturbation-table for small cells created
+#' with [ptable::pt_create_pTable()]
 #' @param mult_params an object derived with [ck_flexparams()] or [ck_simpleparams()]
 #' that contain required parameters for the computation of the perturbation multiplier
 #' @param mu_c fixed extra protection amount (`>= 0)` applied to the absolute of the
@@ -89,9 +29,6 @@ gen_stab <- function(D = 3, l = 0.5, add_small_cells = TRUE, even_odd = TRUE) {
 #' @param use_zero_rkeys (logical) scalar defining if record keys of
 #' units not contributing to a specific numeric variables should be
 #' used (`TRUE`) or ignored (`FALSE`) when computing cell keys.
-#' @param separation (logical) scalar defining if very small cell values should
-#' be perturbed like counts (exact lookup). If `TRUE`, the ptable provided must contain
-#' values with value `small_cells` in column `type`.
 #' @param parity (logical) scalar defining if different perturbation tables should be used
 #' for cells with an even or odd number of contributors.
 #' @param path a scalar character specifying a path to which the parameters created with this functions
@@ -102,11 +39,21 @@ gen_stab <- function(D = 3, l = 0.5, add_small_cells = TRUE, even_odd = TRUE) {
 #' @seealso [ck_flexparams()]
 #' @md
 #' @examples
+#' # create a perturbation table using
+#' # functionality from ptable-pkg; see help(pa = "ptable")
+#' para <- ptable::pt_create_pParams(
+#'   D = 4,
+#'   V = 1,
+#'   table = "nums",
+#'   step = 0.2,
+#'   icat = c(1, 5),
+#'   type = "all")
+#' ptab <- ptable::pt_create_pTable(para)
+#'
 #' ck_params_nums(
-#'   D = 3,
-#'   l = 0.5,
 #'   type = "top_contr",
 #'   top_k = 3,
+#'   ptab = ptab,
 #'   mult_params = ck_flexparams(
 #'     fp = 1000,
 #'     p = c(0.20, 0.03),
@@ -117,24 +64,32 @@ gen_stab <- function(D = 3, l = 0.5, add_small_cells = TRUE, even_odd = TRUE) {
 ck_params_nums <-
   function(type = "top_contr",
            top_k = NULL,
-           D,
-           l,
+           ptab,
+           ptab_sc = NULL,
            mult_params,
            mu_c = 0,
            same_key = TRUE,
            use_zero_rkeys = FALSE,
-           separation = FALSE,
            parity = FALSE,
            path = NULL) {
-
-  stopifnot(is_scalar_integerish(D))
-  stopifnot(is_scalar_double(l), l > 0, l < 1)
 
   if (!is_scalar_character(type)) {
     stop("`type` needs to be a scalar character", call. = FALSE)
   }
   if (!type %in% c("top_contr", "mean", "range", "sum")) {
     stop("invalid value in `type` detected.", call. = FALSE)
+  }
+
+  separation <- FALSE
+  ptab <- .chk_ptab(ptab, type = "nums")
+  if (!is.null(ptab_sc)) {
+    ptab_sc <- .chk_ptab(ptab_sc, type = "nums")
+    if (!all(ptab_sc) == "all") {
+      stop("invalid format of ptable `ptab_sc` detected.", call. = FALSE)
+    }
+    ptab_sc$type <- "small_cells"
+    ptab <- rbind(ptab, ptab_sc)
+    separation <- TRUE
   }
 
   if (!is.numeric(mu_c) | !rlang::is_scalar_atomic(mu_c)) {
@@ -150,10 +105,6 @@ ck_params_nums <-
   }
   if (!is_scalar_logical(use_zero_rkeys)) {
     stop("`use_zero_rkeys` needs to be a scalar logical", call. = FALSE)
-  }
-
-  if (!is_scalar_logical(separation)) {
-    stop("`separation` needs to be a scalar logical", call. = FALSE)
   }
 
   if (!is_scalar_logical(parity)) {
@@ -191,20 +142,13 @@ ck_params_nums <-
   # ~ parameter `parity` in the documents and tau-argus
   even_odd <- parity
 
-  # needs to come from ptable-package!
-  stab <- gen_stab(
-    D = D,
-    l = l,
-    even_odd = even_odd,
-    add_small_cells = separation)
-
   if (even_odd) {
-    if (nrow(stab[type == "even"])== 0 | nrow(stab[type == "odd"]) == 0) {
+    if (nrow(ptab[type == "even"])== 0 | nrow(ptab[type == "odd"]) == 0) {
       e <- "argument `parity` is TRUE but 0 cells with `type` being 'even' or `odd` found in ptable."
       stop(e, call. = FALSE)
     }
   } else {
-    if (nrow(stab[type == "all"]) == 0) {
+    if (nrow(ptab[type == "all"]) == 0) {
       e <- "argument `parity` is FALSE but 0 cells with `type == 'all'` found in ptable."
       stop(e, call. = FALSE)
     }
@@ -227,11 +171,10 @@ ck_params_nums <-
 
   m_fixed_sq <- NA
   if (separation) {
-    m_fixed_sq <- .compute_m1sq(stab)
+    m_fixed_sq <- .compute_m1sq(ptab)
   } else {
-    stab <- stab[type != "small_cells"]
+    ptab <- ptab[type != "small_cells"]
   }
-
 
   # separation point z_s (previously g1)
   .separation_point <- function(m_fixed_sq, E, p_large) {
@@ -246,9 +189,6 @@ ck_params_nums <-
     p_large <- mult_params$p_large
   } else if (inherits(mult_params, "params_m_simple")) {
     p_large <- mult_params$p
-  #} else if (inherits(mult_params, "params_m_grid")) {
-    #E <- top_k
-    #p_large <- mult_params[[1]]$pcts[1]
   } else {
     stop("invalid input.", call. = FALSE)
   }
@@ -262,7 +202,7 @@ ck_params_nums <-
     params = list(
       type = type,
       top_k = top_k,
-      stab = stab,
+      ptab = ptab,
       mu_c = mu_c,
       m_fixed_sq = m_fixed_sq,
       zs = zs,

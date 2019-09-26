@@ -224,14 +224,16 @@ tab$numvars()
 
 # create perturbation parameters for "total" variable and
 # write to yaml-file
+
+# create a ptable using functionality
+# from the ptable-pkg
+para1 <- ptable::pt_create_pParams(
+  D = 5, V = 1, table = "cnts")
+
+# create suitable parameter inputs
 f_yaml <- tempfile(fileext = ".yaml")
 p_cnts1 <- ck_params_cnts(
-  D = 5,
-  V = 3,
-  js = 2,
-  pstay = 0.5,
-  optim = 1,
-  mono = TRUE,
+  ptab = ptable::pt_create_pTable(para1),
   path = f_yaml)
 
 # read parameters from yaml-file and set them for variable `"total"`
@@ -240,13 +242,11 @@ p_cnts1 <- ck_read_yaml(path = f_yaml)
 tab$params_cnts_set(val = p_cnts1, v = "total")
 
 # create alternative perturbation parameters
+para2 <- ptable::pt_create_pParams(
+  D = 8, V = 3, js = 2, table = "cnts")
+
 p_cnts2 <- ck_params_cnts(
-  D = 8,
-  V = 3,
-  js = 2,
-  pstay = 0.5,
-  optim = 1,
-  mono = TRUE)
+  ptab = ptable::pt_create_pTable(para1))
 
 # use it for the remaining variables
 tab$params_cnts_set(val = p_cnts2, v = countvars)
@@ -266,9 +266,20 @@ tab$freqtab(v = c("total", "cnt_males"), type = "unweighted")
 # numerical variables (positive variables using flex-function)
 # we also write the config to a yaml file
 f_yaml <- tempfile(fileext = ".yaml")
+
+# create a ptable using functionality
+# from the ptable-pkg
+para <- ptable::pt_create_pParams(
+  D = 5,
+  V = 1,
+  table = "nums",
+  step = 0.2,
+  icat = c(1, 5),
+  type = "all")
+ptab <- ptable::pt_create_pTable(para)
+
 p_nums1 <- ck_params_nums(
-  D = 10,
-  l = 0.5,
+  ptab = ptab,
   type = "top_contr",
   top_k = 3,
   mult_params = ck_flexparams(
@@ -279,7 +290,6 @@ p_nums1 <- ck_params_nums(
   mu_c = 2,
   same_key = FALSE,
   parity = FALSE,
-  separation = TRUE,
   use_zero_rkeys = FALSE,
   path = f_yaml)
 
@@ -287,10 +297,18 @@ p_nums1 <- ck_params_nums(
 p_nums1 <- ck_read_yaml(path = f_yaml)
 
 # another set of parameters
+para <- ptable::pt_create_pParams(
+  D = 10,
+  V = 1,
+  table = "nums",
+  step = 0.5,
+  icat = c(1, 5, 10),
+  type = "all")
+ptab <- ptable::pt_create_pTable(para)
+
 # for variables with positive and negative values
 p_nums2 <- ck_params_nums(
-  D = 10,
-  l = 0.5,
+  ptab = ptab,
   type = "top_contr",
   top_k = 3,
   mult_params = ck_flexparams(
@@ -300,19 +318,16 @@ p_nums2 <- ck_params_nums(
     q = 3),
   mu_c = 2,
   same_key = FALSE,
-  separation = FALSE,
   parity = FALSE)
 
 # simple perturbation parameters (not using the flex-function approach)
 p_nums3 <- ck_params_nums(
-  D = 10,
-  l = 0.5,
+  ptab = ptab,
   type = "mean",
   mult_params = ck_simpleparams(p = 0.25),
   mu_c = 2,
   same_key = FALSE,
-  separation = FALSE,
-  parity = TRUE)
+  parity = FALSE)
 
 # use `p_nums1` for all variables
 tab$params_nums_set(p_nums1, c("savings", "income", "expend"))
