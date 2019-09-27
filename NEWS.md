@@ -3,12 +3,15 @@
 - [todo] implement suitable utility/risk measures for count variables
 - [todo] add parameter `pos_neg_var` again  
 - update `summary()` for numtabs
+- [todo] implement `method measures_nums()`
 - [todo] remove or re-implement `by`-argument in ck_perturb()
 
 # cellKey 0.18.1
 - [todo] bugfixes
 - [todo] add method `$zs()` to return the separation point
 - [todo] `freqtab()` and `numtab()` work for non-perturbed variables
+- [todo] improve vignette
+- [todo] add tests with parity/separation
 
 # cellKey 0.18.0
 - allow to save perturbation-schemes for different variables in `$params_cnts_set()` and `$params_nums_set()`
@@ -68,9 +71,9 @@
 - check computation of x_deltas using new documents
 - remove method `$everything()` [allowing for debugging]
 - removed argument `type` from method `$freqtab()`
-- [todo] update vignette
-  * [todo] add example with parity using the ptable inputs
-  * [todo] example with only i = 1 in a ptab! no combination!
+- add example with parity using the ptable inputs in vignette
+- very simple summary statistics for continuous variables in vignette
+- update vignette
 
 # cellKey 0.17.1
 - adding parameter `exclude_zero_cells` to `ck_cnt_measures()`
