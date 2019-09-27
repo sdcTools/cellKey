@@ -1583,11 +1583,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' # multiple variables can be perturbed as well
 #' tab$perturb(v = c("cnt_males", "cnt_highincome"))
 #'
-#' # return results (weighted and unweighted)
+#' # return weighted and unweighted results
 #' tab$freqtab(v = c("total", "cnt_males"))
-#'
-#' # only unweighted and perturbed unweighted counts
-#' tab$freqtab(v = c("total", "cnt_males"), type = "unweighted")
 #'
 #' # numerical variables (positive variables using flex-function)
 #' # we also write the config to a yaml file

@@ -76,7 +76,6 @@ The testdata set we are using in this example contains information on person-lev
 ```{r}
 dat <- ck_create_testdata()
 dat <- dat[, c("sex", "age", "savings", "income", "sampling_weight")]
-dat[, cnt_males := ifelse(sex == "male", 1, 0)]
 dat[, cnt_highincome := ifelse(income >= 9000, 1, 0)]
 ```
 
@@ -89,7 +88,7 @@ print(head(dat))
 
 To ensure that the same record keys are computed each and every time for the same data set, a seed based on the sha1-hash of the input dataset is computed by default in `ck_generate_rkeys`. This seed is used before sampling the record keys and may be overwritten using the `seed` argument.
 
-The goal of this introduction is to create a perturbed table of counts of variables `sex` by `age` for all observations as well as for the subgroups given by  `cnt_males` and `cnt_highincome` that are non-zero. We also want to create perturbed tables of continously scaled variables `savings` and `income` also giving the hierarchical structure defined by `sex` by `age`.
+The goal of this introduction is to create a perturbed table of counts of variables `sex` by `age` for all observations as well as for the subgroups given by `cnt_highincome` that are non-zero. We also want to create perturbed tables of continously scaled variables `savings` and `income` also giving the hierarchical structure defined by `sex` by `age`.
 
 ### Specifying dimensions
 It is required to define hierarchies for each of the classifying variables of the desired table. There are two ways how the hierarchical structure of these variables (including sub-totals) can be specified. One way is to use `"@; value` format as (also) used in [**sdcTable**](ttps://cran.r-project.org/package=sdcTable). We would suggest however, to use the second alternative which is using functionality from package [**sdcHierarchies**](ttps://cran.r-project.org/package=sdcHierarchies). In this vignette, we only show the preferred way to generate hierarchies for categorical variables `age` and `sex` below:
@@ -122,7 +121,7 @@ tab <- ck_setup(
   rkey = "rkeys",
   dims = dims,
   w = "sampling_weight",
-  countvars = c("cnt_males", "cnt_highincome"),
+  countvars = "cnt_highincome",
   numvars = c("income", "savings"))
 ```
 
@@ -159,25 +158,20 @@ p_cnts2 <- ck_params_cnts(ptab = ptab2)
 # use `p_cnts1` for variable "total" (which always exists)
 tab$params_cnts_set(val = p_cnts1, v = "total")
 
-# use `p_cnts2` for all other variables
-tab$params_cnts_set(val = p_cnts2, v = c("cnt_males", "cnt_highincome"))
+# use `p_cnts2` for "cnt_highincome"
+tab$params_cnts_set(val = p_cnts2, v = "cnt_highincome")
 ```
 
 It is therefore entirely possible to use different parameter sets for different variables. Modifying perturbation parameters for some variables is easy, too. It is only required to apply the `params_cnts_set()`-method again which will replace any previously defined parameters.
 
-```{r}
-tab$params_cnts_set(val = p_cnts1, v = "cnt_highincome")
-```
-
 ### Define perturbation parameters for continuous variables
 Setting and defining perturbation parameters for continuous variables works similarily. The required functions are `ck_params_num()` to create input objects that can be set with the `params_nums_set` method.  Please note that it is possibly by specifying the `path` argument in both `ck_params_nums()` and `ck_params_cnts()` to save the parameters additionally as yaml-file. Using `ck_read_yaml()`, these files can later be imported again. This feature is useful for re-using parameter settings.
-
 
 ```{r, echo = FALSE}
 warning("find a suitable reference to the D4.2 deliverable")
 ```
 
-The underlying framework on how to perturb continuous tables differs from the proposed method from `ABS`. One possible approach is based on a *"flex function"*. This approach allowed to apply different magnitude of noise to larger and smaller cells. Users can define the required parameters for the flex-approach with function `ck_flexparams()`. The required inputs are:
+The underlying framework on how to perturb continuous tables differs from the proposed method from `ABS`. One possible approach is based on a *"flex function"*. This approach (which is described in deliverable `D4.2` in the project [perturbative confidentiality methods](https://ec.europa.eu/eurostat/cros/content/perturbative-confidentiality-methods_en) allowes to apply different magnitude of noise to larger and smaller cells. Users can define the required parameters for the flex-approach with function `ck_flexparams()`. The required inputs are:
 
 - `fp`: the flexpoint defining at which point should the underlying noise coefficient function reach its desired maximum (which is defined by the first element of `p`)
 - `p`: numeric vector of length `2` with `p[1] > p[2]` where both elements specify a percentage. The first value refers to the desired maximum perturbation percentage for small cells (depending on fp) while the second element refers to the desired maximum perturbation percentage for large cells.
@@ -257,7 +251,7 @@ tab$perturb(v = "total")
 After this call, object `tab` is updated and contains now also perturbed values for variable `total`. We note that no explicit assignment is required.
 
 ```{r}
-tab$perturb(v = "cnt_males")
+tab$perturb(v = "cnt_highincome")
 ```
 
 A `data.table` containing original and perturbed values can now be extracted using the `freqtab()`-method as discussed next.
@@ -271,13 +265,13 @@ Applying the `freqtab()`-methods to one ore more already perturbed variables ret
 The method returns a `data.table` with all combinations of the dimensional variables in the first $n$ colums and after those, all (or some) of the following columns:
 
 - `vname`: name of the perturbed variable (always included)
-- `uwc`: unweighted counts (if `type` is `"both"` or `"unweighted"`)
-- `wc`: weighted counts (if `type` is `"both"` or `"weighted"`)
-- `puwc`: perturbed unweighted counts (if `type` is `"both"` or `"unweighted"`)
-- `pwc`: perturbed weighted counts (if `type` is `"both"` or `"weighted"`)
+- `uwc`: unweighted counts
+- `wc`: weighted counts
+- `puwc`: perturbed unweighted counts
+- `pwc`: perturbed weighted counts
 
 ```{r}
-tab$freqtab(v = c("total", "cnt_males"))
+tab$freqtab(v = c("total", "cnt_highincome"))
 ```
 
 ### Computing utility measures for count variables
