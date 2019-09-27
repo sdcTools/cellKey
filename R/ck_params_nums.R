@@ -156,7 +156,8 @@ ck_params_nums <-
   # used in `ck_params_nums()` in case separation is TRUE
   .compute_m1sq <- function(ptab) {
     type <- i <- NULL
-    dt <- ptab[type == "small_cells" & i == max(i)]
+    dt <- ptab[type == "small_cells"]
+    dt <- dt[i == max(i)]
     if (nrow(dt) == 0) {
       return(stop("invalid ptab found when computing parameter m1sq.", call. = FALSE))
     }
