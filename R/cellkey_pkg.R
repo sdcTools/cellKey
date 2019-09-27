@@ -905,15 +905,15 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         }
       }
       return(invisible(NULL))
-    },
+    }#,
     # to delete
-    everything=function() {
-      list(
-        prob = private$.prob,
-        pert_params = private$.pert_params,
-        results = private$.results,
-        max_contr = private$.max_contributions)
-    }
+    #everything=function() {
+    #  list(
+    #    prob = private$.prob,
+    #    pert_params = private$.pert_params,
+    #    results = private$.results,
+    #    max_contr = private$.max_contributions)
+    #}
   ),
   private=list(
     .prob = NULL,

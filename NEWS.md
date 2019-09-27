@@ -7,6 +7,7 @@
 
 # cellKey 0.18.1
 - [todo] bugfixes
+- [todo] add method `$zs()` to return the separation point
 
 # cellKey 0.18.0
 - allow to save perturbation-schemes for different variables in `$params_cnts_set()` and `$params_nums_set()`
@@ -64,11 +65,11 @@
 - update primsupp rules, adding `rule_val()` and adding `weighted` arguments to `rule_freq()`
 - use ptables from ptable-pkg
 - check computation of x_deltas using new documents
+- remove method `$everything()` [allowing for debugging]
 
-- [todo] add example with parity using the ptable inputs
-- [todo] example with only i = 1 in a ptab! no combination!
 - [todo] update vignette
-- [todo] remove method `$everything()` which is only here for debugging purposes
+  * [todo] add example with parity using the ptable inputs
+  * [todo] example with only i = 1 in a ptab! no combination!
 
 # cellKey 0.17.1
 - adding parameter `exclude_zero_cells` to `ck_cnt_measures()`
