@@ -489,7 +489,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
     # compute measures for continuous variables
     measures_nums=function(v) {
-      stop("TODO: implement method `measures_nums()`.", call = FALSE)
+      stop("No utility measures for continuous variables are available yet.", call. = FALSE)
     },
 
     # return names of all-, cnt- or numerical variables
@@ -821,20 +821,18 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         }
       }
 
-      numvars_available <- FALSE
+      numvars_available <- TRUE
       if (numvars_available) {
         cli::cat_line(cli::boxx("Utility measures for perturbed numerical variables", padding = 0))
         nv <- private$.ck_perturbed_vars("numvars")
         if (length(nv) == 0) {
           cli::cat_line(cli::symbol$cross, " no numerical variables have been perturbed")
         } else {
-          # info_nums <- mod_numvars(object)
-          # num_info <- num_ratios <- NULL
-          # if (nrow(info_nums) > 0) {
-          #   num_info <- info_nums[, as.list(get_distr_vals(vals.pert)), by = "numVar"]
-          #   cat("\nPerturbation statistics on numerical variables:\n")
-          #   print(num_info)
-          # }
+          cli::cat_rule("Distribution statistics of perturbations")
+          rr <- self$numtab()
+          rr$pert_total <- rr$pws - rr$ws
+          num_info <- rr[, as.list(get_distr_vals(pert_total)), by = "vname"]
+          print(num_info)
         }
       }
       return(invisible(NULL))
