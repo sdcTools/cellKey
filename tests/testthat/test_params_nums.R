@@ -81,9 +81,6 @@ test_that("invalid inputs are caught", {
   # use_zero_rkeys is not logical
   expect_error(ck_params_nums(ptab = ptab, type = "top_contr", top_k = 3, mult_params = flex, use_zero_rkeys = 1))
 
-  # parity is not logical
-  expect_error(ck_params_nums(ptab = ptab, type = "top_contr", top_k = 3, mult_params = flex, parity = 1))
-
   # additional_checks for type == "top_contr"
   # top_k must be provided
   expect_error(ck_params_nums(ptab = ptab, type = "top_contr", mult_params = flex))
@@ -104,9 +101,6 @@ test_that("invalid inputs are caught", {
 
   # converting top_k to 1
   expect_message(ck_params_nums(ptab = ptab, type = "mean", top_k = 4, mult_params = flex_single), "ignoring argument `top_k`")
-
-  # parity can't be true if top_k > 1
-  expect_error(ck_params_nums(ptab = ptab, type = "top_contr", top_k = 3, mult_params = flex, parity = TRUE))
 })
 
 set.seed(100)
@@ -118,7 +112,6 @@ p <- ck_params_nums(
   mult_params = flex,
   mu_c = 2,
   same_key = FALSE,
-  parity = FALSE,
   path = f_yaml)
 p_yaml <- ck_read_yaml(path = f_yaml)
 
@@ -144,7 +137,6 @@ p <- ck_params_nums(
   mult_params = flex_single,
   mu_c = 2.5,
   same_key = FALSE,
-  parity = FALSE,
   path = f_yaml)
 p_yaml <- ck_read_yaml(path = f_yaml)
 test_that("top_contr works with single flex", {
@@ -168,7 +160,6 @@ p <- ck_params_nums(
   mult_params = simple,
   mu_c = 2.5,
   same_key = FALSE,
-  parity = FALSE,
   path = f_yaml)
 p_yaml <- ck_read_yaml(path = f_yaml)
 test_that("top_contr works with simple", {

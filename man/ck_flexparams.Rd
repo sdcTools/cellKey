@@ -148,7 +148,6 @@ p_nums1 <- ck_params_nums(
     q = 3),
   mu_c = 2,
   same_key = FALSE,
-  parity = FALSE,
   use_zero_rkeys = FALSE,
   path = f_yaml)
 
@@ -176,8 +175,7 @@ p_nums2 <- ck_params_nums(
     epsilon = c(1, 0.4, 0.15),
     q = 3),
   mu_c = 2,
-  same_key = FALSE,
-  parity = FALSE)
+  same_key = FALSE)
 
 # simple perturbation parameters (not using the flex-function approach)
 p_nums3 <- ck_params_nums(
@@ -185,8 +183,7 @@ p_nums3 <- ck_params_nums(
   type = "mean",
   mult_params = ck_simpleparams(p = 0.25),
   mu_c = 2,
-  same_key = FALSE,
-  parity = FALSE)
+  same_key = FALSE)
 
 # use `p_nums1` for all variables
 tab$params_nums_set(p_nums1, c("savings", "income", "expend"))

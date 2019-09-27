@@ -100,20 +100,62 @@ ck_log <- function(..., br = TRUE) {
 
 # check validity of ptab-inputs from ptable-pkg
 .chk_ptab <- function(ptab, type = "nums") {
-  if (!inherits(ptab, "ptable")) {
-    stop("argument `ptab` was not created using ptable::pt_create_pTable()", call. = FALSE)
-  }
-
-  if (slot(ptab, "table") != type) {
-    if (type == "nums") {
-      e <- "argument `ptab` is not a perturbation table suitable for numeric variables."
-    } else {
-      e <- "argument `ptab` is not a perturbation table suitable for counts."
+  .is_ptab <- function(x, arg = "ptab") {
+    if (!inherits(x, "ptable")) {
+      e <- paste("argument", shQuote(arg), "was not created using ptable::pt_create_pTable()")
+      stop(e, call. = FALSE)
     }
-    stop(e, call. = FALSE)
   }
 
-  ptab <- ptab@pTable
+  .is_cntptab <- function(x, arg = "ptab") {
+    .is_ptab(x, arg = arg)
+    if (slot(x, "table") != "cnts") {
+      e <- paste("argument", arg, "is not a perturbation table suitable for counts.")
+      stop(e, call. = FALSE)
+    }
+  }
+
+  .is_numptab <- function(x, arg = "ptab") {
+    .is_ptab(x, arg = arg)
+    if (slot(x, "table") != "nums") {
+      e <- paste("argument", arg, "is not a perturbation table suitable for numeric variables.")
+      stop(e, call. = FALSE)
+    }
+  }
+
+  if (is.list(ptab)) {
+    cn <- names(ptab)
+    if (!all(cn %in% c("all", "even", "odd", "small_cells"))) {
+      stop("invalid names in input list of perturbation tables.", call. = FALSE)
+    }
+    if ("all" %in% cn) {
+      .is_numptab(ptab$all, arg = "ptab$all")
+      ptab_final <- ptab$all@pTable
+    } else {
+      .is_numptab(ptab$even, arg = "ptab$even")
+      .is_numptab(ptab$even, arg = "ptab$odd")
+      ptab_final <- rbind(ptab$even@pTable, ptab$odd@pTable)
+    }
+
+    if ("small_cells" %in% cn) {
+      .is_numptab(ptab$small_cells, arg = "ptab$small_cells")
+      pt_sc <- ptab$small_cells@pTable
+      pt_sc$type <- "small_cells"
+      ptab_final <- rbind(ptab_final, pt_sc)
+    }
+    ptab <- ptab_final
+  } else {
+    .is_ptab(ptab, arg = "ptab")
+    if (slot(ptab, "table") != type) {
+      if (type == "nums") {
+        .is_numptab(ptab, arg = "ptab")
+      } else {
+        .is_cntptab(ptab, arg = "ptab")
+      }
+    }
+    ptab <- ptab@pTable
+  }
+
   setnames(ptab, "p_int_lb", "lb", skip_absent = TRUE)
   setnames(ptab, "p_int_ub", "ub", skip_absent = TRUE)
   ptab

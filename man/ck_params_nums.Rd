@@ -4,9 +4,8 @@
 \alias{ck_params_nums}
 \title{Set perturbation parameters for continuous variables}
 \usage{
-ck_params_nums(type = "top_contr", top_k = NULL, ptab,
-  ptab_sc = NULL, mult_params, mu_c = 0, same_key = TRUE,
-  use_zero_rkeys = FALSE, parity = FALSE, path = NULL)
+ck_params_nums(type = "top_contr", top_k = NULL, ptab, mult_params,
+  mu_c = 0, same_key = TRUE, use_zero_rkeys = FALSE, path = NULL)
 }
 \arguments{
 \item{type}{a character value defining the way to identify the \code{magnifier},
@@ -23,10 +22,24 @@ is used.
 
 \item{top_k}{it is ignored if \code{variant} is different from \code{top_contr}. Otherwise,}
 
-\item{ptab}{a perturbation-table object created with \code{\link[ptable:pt_create_pTable]{ptable::pt_create_pTable()}}}
-
-\item{ptab_sc}{a perturbation-table for small cells created
-with \code{\link[ptable:pt_create_pTable]{ptable::pt_create_pTable()}}}
+\item{ptab}{in this argument, one ore more perturbation tables are given as input. the
+following choices are possible:
+\itemize{
+\item an object derived from \code{\link[ptable:pt_create_pTable]{ptable::pt_create_pTable()}}: this case is the same as specifying a
+named list with only a single element \code{"all"} (as described below)
+\item a named \code{list} where the allowed names are shown below and each element must be
+the output of \code{\link[ptable:pt_create_pTable]{ptable::pt_create_pTable()}}
+\itemize{
+\item \code{"all"}: this ptable will be used for all cells; if specified, no elements named \code{"even"}
+or \code{"odd"} must exist.
+\item \code{"even"}: will be used to look up perturbation values for cells with an even number
+of contributors. if specified, also list-element \code{"odd"} must exist.
+\item \code{"odd"}: will be used to look up perturbation values for cells with an odd number
+of contributors; if specified, also list-element \code{"even"} must exist.
+\item \code{"small_cells"}: if specified, this ptable will be used to extract perturbation
+values for very small cells
+}
+}}
 
 \item{mult_params}{an object derived with \code{\link[=ck_flexparams]{ck_flexparams()}} or \code{\link[=ck_simpleparams]{ck_simpleparams()}}
 that contain required parameters for the computation of the perturbation multiplier}
@@ -45,9 +58,6 @@ cell or should a perturbation of the cellkey itself (\code{FALSE}) take place.}
 units not contributing to a specific numeric variables should be
 used (\code{TRUE}) or ignored (\code{FALSE}) when computing cell keys.}
 
-\item{parity}{(logical) scalar defining if different perturbation tables should be used
-for cells with an even or odd number of contributors.}
-
 \item{path}{a scalar character specifying a path to which the parameters created with this functions
 should be written to (in yaml format)}
 }
@@ -62,14 +72,27 @@ perturb cells in magnitude tables.
 \examples{
 # create a perturbation table using
 # functionality from ptable-pkg; see help(pa = "ptable")
-para <- ptable::pt_create_pParams(
+params_all <- ptable::pt_create_pParams(
   D = 4,
-  V = 1,
+  V = 2,
   table = "nums",
   step = 0.2,
   icat = c(1, 5),
   type = "all")
-ptab <- ptable::pt_create_pTable(para)
+
+# parameters for a ptab for very small cells
+params_sc <- ptable::pt_create_pParams(
+  D = 5,
+  V = 1,
+  table = "nums",
+  step = 0.2,
+  icat = c(1, 5, 10),
+  type = "all")
+
+# create a named list
+ptab <- list(
+  all = ptable::pt_create_pTable(params_all),
+  small_cells = ptable::pt_create_pTable(params_sc))
 
 ck_params_nums(
   type = "top_contr",

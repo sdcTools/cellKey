@@ -55,8 +55,7 @@ p1 <- ck_params_nums(
   mult_params = flex,
   mu_c = 2.5,
   same_key = FALSE,
-  use_zero_rkeys = TRUE,
-  parity = FALSE)
+  use_zero_rkeys = TRUE)
 
 p2 <- ck_params_nums(
   type = "mean",
@@ -65,8 +64,7 @@ p2 <- ck_params_nums(
   mult_params = ck_simpleparams(p = 0.1, epsilon = 1),
   mu_c = 2.5,
   same_key = TRUE,
-  use_zero_rkeys = FALSE,
-  parity = FALSE)
+  use_zero_rkeys = FALSE)
 
 
 test_that("checking perturbation parameters", {

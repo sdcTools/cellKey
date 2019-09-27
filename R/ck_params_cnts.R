@@ -4,6 +4,7 @@
 #' to perturb count variables.
 #'
 #' @inheritParams ck_params_nums
+#' @param ptab an object created with [ptable::pt_create_pTable()]
 #' @return an object suitable as input to method `$params_cnts_set()` for the perturbation
 #' of counts and frequencies.
 #' @export

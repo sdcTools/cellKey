@@ -1,10 +1,13 @@
 # cellKey 0.19.0
 - [todo] allow grids for magnitude tables
-- [todo] allow special requirements for positive cells
-- [todo] magnitude_tables: 
-  * [todo] implement suitable utility/risk measures
+- [todo] implement suitable utility/risk measures for count variables
 - [todo] add parameter `pos_neg_var` again  
-  
+- update `summary()` for numtabs
+- [todo] remove or re-implement `by`-argument in ck_perturb()
+
+# cellKey 0.18.1
+- [todo] bugfixes
+
 # cellKey 0.18.0
 - allow to save perturbation-schemes for different variables in `$params_cnts_set()` and `$params_nums_set()`
 - allow return current active perturbation-schemes for variables with `params_cnts_get()` and `params_nums_get()`
@@ -60,14 +63,11 @@
 - correctly sort top weighted observations when computing them
 - update primsupp rules, adding `rule_val()` and adding `weighted` arguments to `rule_freq()`
 - use ptables from ptable-pkg
+- check computation of x_deltas using new documents
+
 - [todo] add example with parity using the ptable inputs
 - [todo] example with only i = 1 in a ptab! no combination!
-
-- [todo] check computation of x_deltas using new documents
-- [todo] implement magnitude tables
-  * [todo] update method `$summary()` to include values for perturbed magnitude tables
 - [todo] update vignette
-- [todo] remove or re-implement `by`-argument in ck_perturb()
 - [todo] remove method `$everything()` which is only here for debugging purposes
 
 # cellKey 0.17.1

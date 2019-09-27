@@ -13,9 +13,21 @@
 #' is used.
 #' - `sum`: the (weighted) cellvalue itself is used as starting point
 #' @param top_k it is ignored if `variant` is different from `top_contr`. Otherwise,
-#' @param ptab a perturbation-table object created with [ptable::pt_create_pTable()]
-#' @param ptab_sc a perturbation-table for small cells created
-#' with [ptable::pt_create_pTable()]
+#' @param ptab in this argument, one ore more perturbation tables are given as input. the
+#' following choices are possible:
+#'
+#' - an object derived from [ptable::pt_create_pTable()]: this case is the same as specifying a
+#' named list with only a single element `"all"` (as described below)
+#' - a named `list` where the allowed names are shown below and each element must be
+#' the output of [ptable::pt_create_pTable()]
+#'   * `"all"`: this ptable will be used for all cells; if specified, no elements named `"even"`
+#'   or `"odd"` must exist.
+#'   * `"even"`: will be used to look up perturbation values for cells with an even number
+#'   of contributors. if specified, also list-element `"odd"` must exist.
+#'   * `"odd"`: will be used to look up perturbation values for cells with an odd number
+#'   of contributors; if specified, also list-element `"even"` must exist.
+#'   * `"small_cells"`: if specified, this ptable will be used to extract perturbation
+#'   values for very small cells
 #' @param mult_params an object derived with [ck_flexparams()] or [ck_simpleparams()]
 #' that contain required parameters for the computation of the perturbation multiplier
 #' @param mu_c fixed extra protection amount (`>= 0)` applied to the absolute of the
@@ -29,8 +41,6 @@
 #' @param use_zero_rkeys (logical) scalar defining if record keys of
 #' units not contributing to a specific numeric variables should be
 #' used (`TRUE`) or ignored (`FALSE`) when computing cell keys.
-#' @param parity (logical) scalar defining if different perturbation tables should be used
-#' for cells with an even or odd number of contributors.
 #' @param path a scalar character specifying a path to which the parameters created with this functions
 #' should be written to (in yaml format)
 #' @return an object suitable as input to method `$params_nums_set()` for the perturbation
@@ -41,14 +51,27 @@
 #' @examples
 #' # create a perturbation table using
 #' # functionality from ptable-pkg; see help(pa = "ptable")
-#' para <- ptable::pt_create_pParams(
+#' params_all <- ptable::pt_create_pParams(
 #'   D = 4,
-#'   V = 1,
+#'   V = 2,
 #'   table = "nums",
 #'   step = 0.2,
 #'   icat = c(1, 5),
 #'   type = "all")
-#' ptab <- ptable::pt_create_pTable(para)
+#'
+#' # parameters for a ptab for very small cells
+#' params_sc <- ptable::pt_create_pParams(
+#'   D = 5,
+#'   V = 1,
+#'   table = "nums",
+#'   step = 0.2,
+#'   icat = c(1, 5, 10),
+#'   type = "all")
+#'
+#' # create a named list
+#' ptab <- list(
+#'   all = ptable::pt_create_pTable(params_all),
+#'   small_cells = ptable::pt_create_pTable(params_sc))
 #'
 #' ck_params_nums(
 #'   type = "top_contr",
@@ -65,12 +88,10 @@ ck_params_nums <-
   function(type = "top_contr",
            top_k = NULL,
            ptab,
-           ptab_sc = NULL,
            mult_params,
            mu_c = 0,
            same_key = TRUE,
            use_zero_rkeys = FALSE,
-           parity = FALSE,
            path = NULL) {
 
   if (!is_scalar_character(type)) {
@@ -80,17 +101,9 @@ ck_params_nums <-
     stop("invalid value in `type` detected.", call. = FALSE)
   }
 
-  separation <- FALSE
   ptab <- .chk_ptab(ptab, type = "nums")
-  if (!is.null(ptab_sc)) {
-    ptab_sc <- .chk_ptab(ptab_sc, type = "nums")
-    if (!all(ptab_sc$type == "all")) {
-      stop("invalid format of ptable `ptab_sc` detected.", call. = FALSE)
-    }
-    ptab_sc$type <- "small_cells"
-    ptab <- rbind(ptab, ptab_sc)
-    separation <- TRUE
-  }
+  parity <- even_odd <- ifelse("even" %in% ptab$type, TRUE, FALSE)
+  separation <- ifelse("small_cells" %in% ptab$type, TRUE, FALSE)
 
   if (!is.numeric(mu_c) | !rlang::is_scalar_atomic(mu_c)) {
     stop("Argument `mu_c` is not a number.", call = FALSE)
@@ -105,10 +118,6 @@ ck_params_nums <-
   }
   if (!is_scalar_logical(use_zero_rkeys)) {
     stop("`use_zero_rkeys` needs to be a scalar logical", call. = FALSE)
-  }
-
-  if (!is_scalar_logical(parity)) {
-    stop("`parity` needs to be a scalar logical", call. = FALSE)
   }
 
   if (type == "top_contr") {
@@ -126,7 +135,8 @@ ck_params_nums <-
   }
 
   if (parity & top_k > 1) {
-    stop("`parity` can only be `TRUE` when `top_k` is > 1.", call. = FALSE)
+    e <- "different ptables for even/odd cases are not possible if `top_k` is > 1."
+    stop(e, call. = FALSE)
   }
 
   if (!class(mult_params) %in% c("params_m_flex", "params_m_simple")) {
@@ -136,22 +146,6 @@ ck_params_nums <-
 
   if (length(mult_params$epsilon) != top_k) {
     stop("Invalid length or argument `epsilon` in `mult_params` detected.", call. = FALSE)
-  }
-
-  # even_odd: different lookups for even/odd unweighted cell values
-  # ~ parameter `parity` in the documents and tau-argus
-  even_odd <- parity
-
-  if (even_odd) {
-    if (nrow(ptab[type == "even"])== 0 | nrow(ptab[type == "odd"]) == 0) {
-      e <- "argument `parity` is TRUE but 0 cells with `type` being 'even' or `odd` found in ptable."
-      stop(e, call. = FALSE)
-    }
-  } else {
-    if (nrow(ptab[type == "all"]) == 0) {
-      e <- "argument `parity` is FALSE but 0 cells with `type == 'all'` found in ptable."
-      stop(e, call. = FALSE)
-    }
   }
 
   # separation: treat very small values in magnitude tables
