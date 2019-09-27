@@ -357,13 +357,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       return(invisible(self))
     },
     # return a table for perturbed count variables
-    freqtab=function(v=NULL, path = NULL, type = "both") {
-      if (!is_scalar_character(type)) {
-        stop("Argument `type` must be a scalar character.", call. = FALSE)
-      }
-      if (!type %in% c("both", "weighted", "unweighted")) {
-        stop("Argument `type` must be either `both`, `weighted` or `unweighted`.", call. = FALSE)
-      }
+    freqtab=function(v=NULL, path = NULL) {
       if (!is.null(path)) {
         if (!is_scalar_character(path)) {
           stop("Argument `path` must be a scalar character.", call. = FALSE)
@@ -393,9 +387,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       }
 
       # return a table for a single perturbed count variable
-      .onevar_tab_freq <- function(results, vname, type, modifications = NULL) {
-        debug <- ifelse(is.null(modifications), FALSE, TRUE)
-
+      .onevar_tab_freq <- function(results, vname) {
         dt1 <-  results$dims
         dt1$strID <- NULL
         dt1$vname <- vname
@@ -405,32 +397,14 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         setnames(dt2, gsub(paste0("_", vname), "", cn))
 
         dt2$pert <- NULL
-
-        if (type == "weighted") {
-          dt2$uwc <- dt2$puwc <- NULL
-        } else if (type == "unweighted") {
-          dt2$wc <- dt2$pwc <- NULL
-        }
-
         dt <- cbind(dt1, dt2)
-        if (debug) {
-          mods <- modifications[countvar == vname, .(row_nr, pert)]
-          dt <- cbind(dt, mods)
-        } else {
-          dt$ck <- dt$wcavg <- NULL
-        }
+        dt$ck <- dt$wcavg <- NULL
         dt[]
       }
 
-      debug <- FALSE
-      if (debug) {
-        modifications <- private$.modifications$cnts
-      } else {
-        modifications <- NULL
-      }
       results <- copy(private$.results)
       res <- rbindlist(lapply(v, function(x) {
-        .onevar_tab_freq(results = results, vname = x, type = type, modifications = modifications)
+        .onevar_tab_freq(results = results, vname = x)
       }))
 
       if (!is.null(path)) {
@@ -1452,21 +1426,19 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' - **`perturb(v)`**: Perturb a count- or magnitude variable. The method has the following arguments:
 #'    * `v`: name(s) of count or magnitude variables that should be perturbed.
 #'
-#' - **`freqtab(v)`**: get results from already perturbed count variables as a `data.table`. The required arguments are:
+#' - **`freqtab(v, path)`**: get results from already perturbed count variables as a `data.table`. The required arguments are:
 #'    * `v`: a vector of variable names for already perturbed count variables. If `NULL` (the default), the results
 #'    are returned for all perturbed count variables.
-#'    * `type`: a scalar character depending what variables should be available in the output. Allowed
-#'    values are `"both"` (the default), `"weighted"` and `"unweighted"`
 #'    * `path`: if not `NULL`, a scalar character defining a (relative or absolute) path to which the result table
 #'    should be written. A `csv` file will be generated and `.csv` will be appended to the value provided.
 #'
 #'    This method returns a `data.table` containing all combinations of the dimensional variables in
 #' the first n columns. Additionally, the following columns are shown:
 #'    * `vname`: name of the perturbed variable
-#'    * `uwc`: unweighted counts (if `type` is `"both"` or `"unweighted"`)
-#'    * `wc`: weighted counts (if `type` is `"both"` or `"weighted"`)
-#'    * `puwc`: perturbed unweighted counts (if `type` is `"both"` or `"unweighted"`)
-#'    * `pwc`: perturbed weighted counts (if `type` is `"both"` or `"weighted"`)
+#'    * `uwc`: unweighted counts
+#'    * `wc`: weighted counts
+#'    * `puwc`: perturbed unweighted counts
+#'    * `pwc`: perturbed weighted counts
 #'
 #' - **`numtab(v, mean_before_sum = FALSE, path = NULL)`**: get results from already perturbed continuous variables as a `data.table`. The required arguments are:
 #'    * `v`: a vector of variable names for already perturbed count variables. If `NULL` (the default), the results

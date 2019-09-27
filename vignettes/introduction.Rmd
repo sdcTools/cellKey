@@ -266,7 +266,6 @@ A `data.table` containing original and perturbed values can now be extracted usi
 Applying the `freqtab()`-methods to one ore more already perturbed variables returns a `data.table` that contains for each table cell the unpertubed and perturbed (weighted and/or unweighted) counts. This function has the following arguments:
 
 - `v`: one or more variable names of already perturbed count variables
-- `type`: a scalar character defining what variables should be included in the result. Possible choices are `"both"` (the default), `"weighted"` and `"unweighted"` 
 - `path`: if not `NULL`, a (relative or absolute) path to which the resulting output table should be written. A `csv` file will be generated and `.csv` will be appended to the value provided.
 
 The method returns a `data.table` with all combinations of the dimensional variables in the first $n$ colums and after those, all (or some) of the following columns:
@@ -278,15 +277,8 @@ The method returns a `data.table` with all combinations of the dimensional varia
 - `pwc`: perturbed weighted counts (if `type` is `"both"` or `"weighted"`)
 
 ```{r}
-tab$freqtab(v = "total", type = "both")
+tab$freqtab(v = c("total", "cnt_males"))
 ```
-
-To query only the weighted unperturbed and perturbed counts for `total` and `cnt_males`, one could use the following code:
-
-```{r}
-tab$freqtab(v = "total", type = "weighted")
-```
-
 
 ### Computing utility measures for count variables
 Method `measures_cnts()` allows to compute information loss measures for perturbed count variables. Its application is as simple as:

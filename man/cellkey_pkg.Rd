@@ -88,12 +88,10 @@ contributers contribute more than \code{k\%} is considered unsafe
 \itemize{
 \item \code{v}: name(s) of count or magnitude variables that should be perturbed.
 }
-\item \strong{\code{freqtab(v)}}: get results from already perturbed count variables as a \code{data.table}. The required arguments are:
+\item \strong{\code{freqtab(v, path)}}: get results from already perturbed count variables as a \code{data.table}. The required arguments are:
 \itemize{
 \item \code{v}: a vector of variable names for already perturbed count variables. If \code{NULL} (the default), the results
 are returned for all perturbed count variables.
-\item \code{type}: a scalar character depending what variables should be available in the output. Allowed
-values are \code{"both"} (the default), \code{"weighted"} and \code{"unweighted"}
 \item \code{path}: if not \code{NULL}, a scalar character defining a (relative or absolute) path to which the result table
 should be written. A \code{csv} file will be generated and \code{.csv} will be appended to the value provided.
 }
@@ -102,10 +100,10 @@ This method returns a \code{data.table} containing all combinations of the dimen
 the first n columns. Additionally, the following columns are shown:
 \itemize{
 \item \code{vname}: name of the perturbed variable
-\item \code{uwc}: unweighted counts (if \code{type} is \code{"both"} or \code{"unweighted"})
-\item \code{wc}: weighted counts (if \code{type} is \code{"both"} or \code{"weighted"})
-\item \code{puwc}: perturbed unweighted counts (if \code{type} is \code{"both"} or \code{"unweighted"})
-\item \code{pwc}: perturbed weighted counts (if \code{type} is \code{"both"} or \code{"weighted"})
+\item \code{uwc}: unweighted counts
+\item \code{wc}: weighted counts
+\item \code{puwc}: perturbed unweighted counts
+\item \code{pwc}: perturbed weighted counts
 }
 \item \strong{\code{numtab(v, mean_before_sum = FALSE, path = NULL)}}: get results from already perturbed continuous variables as a \code{data.table}. The required arguments are:
 \itemize{

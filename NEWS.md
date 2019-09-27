@@ -8,6 +8,7 @@
 # cellKey 0.18.1
 - [todo] bugfixes
 - [todo] add method `$zs()` to return the separation point
+- [todo] `freqtab()` and `numtab()` work for non-perturbed variables
 
 # cellKey 0.18.0
 - allow to save perturbation-schemes for different variables in `$params_cnts_set()` and `$params_nums_set()`
@@ -66,7 +67,7 @@
 - use ptables from ptable-pkg
 - check computation of x_deltas using new documents
 - remove method `$everything()` [allowing for debugging]
-
+- removed argument `type` from method `$freqtab()`
 - [todo] update vignette
   * [todo] add example with parity using the ptable inputs
   * [todo] example with only i = 1 in a ptab! no combination!

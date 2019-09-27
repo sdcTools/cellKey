@@ -31,13 +31,13 @@ test_that("checking dimension and structure of generated testdata is ok", {
 
 ## perturbation parameters for count variables
 set.seed(100)
-para <- ptable::pt_create_pParams(
+suppressMessages(para <- ptable::pt_create_pParams(
   D = 5,
   V = 3,
   js = 2,
   pstay = 0.5,
   optim = 1,
-  mono = TRUE)
+  mono = TRUE))
 
 params_cnts <- ck_params_cnts(ptab = ptable::pt_create_pTable(para))
 ptab <- params_cnts$params$ptable
@@ -77,8 +77,6 @@ expect_message(tab$perturb("total"), "Variable 'total' was already perturbed!")
 test_that("check ck_define_table() with already existing rec-keys", {
   expect_is(tab, "cellkey_obj")
   expect_identical(digest::digest(tab$freqtab("total")), "7bbc19818c87045dc4392795e3cc6d16")
-  expect_identical(digest::digest(tab$freqtab("total", type = "weighted")), "f9c380b7db5c450029f106899dd47edb")
-  expect_identical(digest::digest(tab$freqtab("total", type = "unweighted")), "335afdf8d8ce54457cd9d268686ba08b")
 })
 
 dat$rec_key <- NULL
@@ -159,8 +157,6 @@ test_that("check tabulation of cnt_males is ok", {
 test_that("check tabulation of cnt_highincome is ok", {
   expect_identical(digest::digest(tab$freqtab("cnt_highincome")), "ec941a87f7cf4566cc51f626f5434187")
   expect_identical(digest::digest(tab$measures_cnts("cnt_highincome")), "43be7d55fdccbcd38325bed49850c406")
-  expect_identical(digest::digest(tab$freqtab("cnt_highincome", type = "weighted")), "7d29b5d5005c322ce4d826184b6fc629")
-  expect_identical(digest::digest(tab$freqtab("cnt_highincome", type = "unweighted")), "23b1f9a2b517c494a7865de10c1b837d")
 })
 
 test_that("check tabulation of multiple count variables is ok", {
