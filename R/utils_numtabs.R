@@ -94,7 +94,7 @@
 .perturb_cell_flex <- function(cv, x, ck, lookup, prot_req, params) {
   dig <- .ck_digits()
 
-  debug <- TRUE
+  debug <- FALSE
   fp <- params$mult_params$fp
   p_lg <- params$mult_params$p_large
   p_sm <- params$mult_params$p_small
