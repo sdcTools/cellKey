@@ -528,7 +528,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         stop("`n` is not a number.", call. = FALSE)
       }
 
-      if (weighted) {
+      if (!weighted) {
         testv <- "freq"
       } else {
         testv <- "tmpweightvarfortabulation"
@@ -1332,7 +1332,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       }
       nr_new_supps <- sum(private$.results[[v]]$special_protection)
       s <- nr_new_supps - nr_ex_supp
-      ck_log(rule, ": ", s, " new sensitive cells (incl. duplicates) found (total: ", nr_new_supps, ")")
+      message(rule, ": ", s, " new sensitive cells (incl. duplicates) found (total: ", nr_new_supps, ")")
     },
     # returns modification slot
 
