@@ -198,7 +198,7 @@ tab$perturb(v = "cnt_males")
 
 # write to a file "outtab.csv" (.csv is automatically added to the path)
 \dontrun{
-tab$freqtab(v = c("total", "cnt_males"), path = "outtab")
+tab$freqtab(v = c("total", "cnt_males"), path = "outtab.csv")
 }
 
 # show results containing weighted and unweighted results

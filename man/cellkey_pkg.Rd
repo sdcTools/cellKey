@@ -92,8 +92,9 @@ contributers contribute more than \code{k\%} is considered unsafe
 \itemize{
 \item \code{v}: a vector of variable names for already perturbed count variables. If \code{NULL} (the default), the results
 are returned for all perturbed count variables.
-\item \code{path}: if not \code{NULL}, a scalar character defining a (relative or absolute) path to which the result table
-should be written. A \code{csv} file will be generated and \code{.csv} will be appended to the value provided.
+\item \code{path}: if not \code{NULL}, a scalar character defining a (relative or absolute)
+path to which the result table should be written. A \code{csv} file will be generated
+and, if specified, \code{path} must have ".csv" as file-ending
 }
 
 This method returns a \code{data.table} containing all combinations of the dimensional variables in
@@ -113,8 +114,9 @@ are returned for all perturbed numeric variables.
 being the original weighted cellvalue and \code{p} the perturbed cell value. This makes sense if the the
 accuracy of the variable mean is considered more important than accuracy of sums of the variable. The default value
 is \code{FALSE} (no adjustment is done)
-\item \code{path}: if not \code{NULL}, a scalar character defining a (relative or absolute) path to which the result table
-should be written. A \code{csv} file will be generated and \code{.csv} will be appended to the value provided.
+\item \code{path}: if not \code{NULL}, a scalar character defining a (relative or absolute)
+path to which the result table should be written. A \code{csv} file will be generated
+and, if specified, \code{path} must have ".csv" as file-ending
 }
 
 This method returns a \code{data.table} containing all combinations of the dimensional variables in
@@ -351,7 +353,7 @@ tab$perturb(v = "cnt_males")
 
 # write to a file "outtab.csv" (.csv is automatically added to the path)
 \dontrun{
-tab$freqtab(v = c("total", "cnt_males"), path = "outtab")
+tab$freqtab(v = c("total", "cnt_males"), path = "outtab.csv")
 }
 
 # show results containing weighted and unweighted results

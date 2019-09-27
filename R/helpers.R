@@ -98,6 +98,23 @@ ck_log <- function(..., br = TRUE) {
   }
 }
 
+
+# checks if file has a given extension and does not exist
+.valid_path <- function(path, ext = "yaml") {
+  if (!rlang::is_scalar_character(path)) {
+    stop("`path` is not a scalar character.", call. = FALSE)
+  }
+
+  if (tools::file_ext(path) != ext) {
+    stop("file-exension of argument `path` is not ", shQuote(ext), call. = FALSE)
+  }
+
+  if (file.exists(path)) {
+    stop("the provided file ", shQuote(path), " already exists.", call. = FALSE)
+  }
+  invisible(NULL)
+}
+
 # check validity of ptab-inputs from ptable-pkg
 .chk_ptab <- function(ptab, type = "nums") {
   .is_ptab <- function(x, arg = "ptab") {

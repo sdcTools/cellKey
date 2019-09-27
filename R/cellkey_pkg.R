@@ -359,9 +359,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     # return a table for perturbed count variables
     freqtab=function(v=NULL, path = NULL) {
       if (!is.null(path)) {
-        if (!is_scalar_character(path)) {
-          stop("Argument `path` must be a scalar character.", call. = FALSE)
-        }
+        .valid_path(path, ext = "csv")
       }
 
       avail <- private$.ck_perturbed_vars(what = "countvars")
@@ -408,21 +406,18 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       }))
 
       if (!is.null(path)) {
-        f_out <- paste0(path, ".csv")
-        res <- tryCatch(fwrite(res, file = f_out, sep = ";"), error = function(e) e)
+        res <- tryCatch(fwrite(res, file = path, sep = ";"), error = function(e) e)
         if (inherits(res, "error")) {
-          warning("File ", shQuote(f_out), " could not be written to disk", call. = FALSE)
+          warning("File ", shQuote(path), " could not be written to disk", call. = FALSE)
         }
-        message("File ", shQuote(f_out), " successfully written to disk.")
+        message("File ", shQuote(path), " successfully written to disk.")
       }
       return(res)
     },
     # return a table for perturbed numeric variables
     numtab=function(v = NULL, mean_before_sum = FALSE, path = NULL) {
       if (!is.null(path)) {
-        if (!is_scalar_character(path)) {
-          stop("Argument `path` must be a scalar character.", call. = FALSE)
-        }
+        .valid_path(path, ext = "csv")
       }
 
       if (!rlang::is_scalar_logical(mean_before_sum)) {
@@ -455,10 +450,17 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         cbind(private$.results$dims, tmp)[, -1]
       }))
 
-
       if (mean_before_sum) {
         ck_log("applying correction based on argument `mean_before_sum`")
         tab$pws <- tab$pws * (tab$pws / tab$ws)
+      }
+
+      if (!is.null(path)) {
+        res <- tryCatch(fwrite(tab, file = path, sep = ";"), error = function(e) e)
+        if (inherits(res, "error")) {
+          warning("File ", shQuote(path), " could not be written to disk", call. = FALSE)
+        }
+        message("File ", shQuote(path), " successfully written to disk.")
       }
       tab
     },
@@ -1429,8 +1431,9 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' - **`freqtab(v, path)`**: get results from already perturbed count variables as a `data.table`. The required arguments are:
 #'    * `v`: a vector of variable names for already perturbed count variables. If `NULL` (the default), the results
 #'    are returned for all perturbed count variables.
-#'    * `path`: if not `NULL`, a scalar character defining a (relative or absolute) path to which the result table
-#'    should be written. A `csv` file will be generated and `.csv` will be appended to the value provided.
+#'    * `path`: if not `NULL`, a scalar character defining a (relative or absolute)
+#'    path to which the result table should be written. A `csv` file will be generated
+#'    and, if specified, `path` must have ".csv" as file-ending
 #'
 #'    This method returns a `data.table` containing all combinations of the dimensional variables in
 #' the first n columns. Additionally, the following columns are shown:
@@ -1447,8 +1450,9 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'    being the original weighted cellvalue and `p` the perturbed cell value. This makes sense if the the
 #'    accuracy of the variable mean is considered more important than accuracy of sums of the variable. The default value
 #'    is `FALSE` (no adjustment is done)
-#'    * `path`: if not `NULL`, a scalar character defining a (relative or absolute) path to which the result table
-#'    should be written. A `csv` file will be generated and `.csv` will be appended to the value provided.
+#'    * `path`: if not `NULL`, a scalar character defining a (relative or absolute)
+#'    path to which the result table should be written. A `csv` file will be generated
+#'    and, if specified, `path` must have ".csv" as file-ending
 #'
 #'    This method returns a `data.table` containing all combinations of the dimensional variables in
 #' the first n columns. Additionally, the following columns are shown:
@@ -1679,7 +1683,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'
 #' # write to a file "outtab.csv" (.csv is automatically added to the path)
 #' \dontrun{
-#' tab$freqtab(v = c("total", "cnt_males"), path = "outtab")
+#' tab$freqtab(v = c("total", "cnt_males"), path = "outtab.csv")
 #' }
 #'
 #' # show results containing weighted and unweighted results
