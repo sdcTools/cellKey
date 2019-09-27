@@ -940,7 +940,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
             # row_ind
             rowind <- sapply(1:sum(rkind), function(x) {
-              which.max(ck[x] <= v)
+              which.max(ck[x] < v)
             })
             pert_vals[rkind] <- as.integer(diffs[rowind])
             row_nr[rkind] <- ids[rowind]

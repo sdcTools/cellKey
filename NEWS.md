@@ -75,6 +75,9 @@
 - very simple summary statistics for continuous variables in vignette
 - update vignette
 
+# cellKey 0.17.2
+- fixed issue in lookup up values for frequency tables
+
 # cellKey 0.17.1
 - adding parameter `exclude_zero_cells` to `ck_cnt_measures()`
 - updated documentation
