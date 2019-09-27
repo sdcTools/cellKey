@@ -26,8 +26,8 @@ stable, a version will be released on CRAN too.
 
 ### Important Note:
 
-Major parts of the package were rewritten in version `0.17` compared to
-previous versions. The following changes are now described:
+Major parts of the package were rewritten in version `>=0.17` compared
+to previous versions. The following changes are now described:
 
   - **Definition of hierarchies** One main change is that it is now
     required to directly use functionality from
@@ -42,14 +42,8 @@ previous versions. The following changes are now described:
 
   - **Removing “abs”-input format** For the sake of simplification, the
     differentiation between the *“abs”* and *“destatis”* format was
-    removed. Internally, only the “destatis” format is used.
-
-  - **Removing possibility to perturb magnitude tables** The feature to
-    perturb continuously scaled variables (magnitude tables) was removed
-    in version `0.17` of the package as the input format for
-    perturbation tables is not yet finalized. Future versions of the
-    package will gain the functionality to perturb magnitude tables
-    again.
+    removed in version `>= 0.17`. Internally, only the “destatis” format
+    is used.
 
   - **Simplification** In order to simplify the application of the
     package, the process of defining, modifying and perturbing tables
@@ -58,6 +52,11 @@ previous versions. The following changes are now described:
     vignette that can be viewed after installation of the package using
     `ck_vignette()` or
     [**online**](https://sdctools.github.io/cellKey/articles/introduction.html).
+
+  - **Perturbation of magnitude tables** This features was removed in
+    versions `0.17.x` and added again in versions `>= 0.18.0`. For
+    examples please look at `?cellkey_pkg` or at the
+    [**vignette**](https://sdctools.github.io/cellKey/articles/introduction.html).
 
 ### Installation
 
@@ -76,8 +75,7 @@ The following snippet installs the package:
       repo = "sdcTools/cellKey",
       dependencies = TRUE,
       build_opts = "--no-resave-data",
-      force = TRUE
-    )
+      force = TRUE)
 
 If you experience a timeout due to a proxy server while downloading, one
 can work around this issue by specifying the proxy-server using the

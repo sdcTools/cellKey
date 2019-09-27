@@ -48,18 +48,3 @@ NULL
 #' data(testdata)
 #' head(testdata)
 NULL
-
-#' Perturbation parameters for count variables
-#'
-#' This object is a result from [ck_params_cnts())] and is used in unit-tests.
-#'
-#' @name params_cnts
-#' @docType data
-#' @format params_cnts: a `ck_params` object that can be used as input in [cellkey_pkg()] and
-#' contains parameters to perturb count variables
-#' @references https://ec.europa.eu/eurostat/cros/content/3-random-noise-cell-key-method_en
-#' @keywords internal
-#' @md
-#' @examples
-#' str(params_cnts)
-NULL

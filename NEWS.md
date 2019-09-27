@@ -1,3 +1,25 @@
+# cellKey 0.18.0
+- allow to save perturbation-schemes for different variables in `params_cnts_set()` and `params_nums_set()`
+- allow return current active perturbation parameters for variables with `params_cnts_get()` and `params_nums_get()`
+- added new convenience methods `allvars()`, `numvars()` and `cntvars()` returning variable names eligable for perturbation
+- implemented the perturbation of numerical variables
+  * new method `ck_params_nums()` to define perturbation parameters for continuous variables along with helper-functions `ck_flexparams()` and `ck_simpleparams()`
+  * new method `numtab()` to extract numerical tables
+  * new method `mod_nums()` returning modifications for numerical variables
+- updated methods `print()` and `summary()` to include information about perturbed continuous variables
+- new methods `reset_cntvars()`, `reset_numvars()` and `reset_allvars()` to remove perturbation results and provided perturbation parameters
+- new methods to identify sensitive cells
+  * `$supp_freq(v, max_n)`
+  * `$supp_nk(v, max_n)`
+  * `$supp_p(v, max_n)`
+  * `$supp_pq(v, max_n)`
+- added test-cases and improved coverage
+- make use of ptables from [`ptable`](https://github.com/sdctools/ptable)-pkg
+- Reproducibility:
+  * allow to write perturbation parameters as yaml in `ck_params_nums()` and `ck_params_cnts()`
+  * allow to import such parameters with `ck_read_yaml()`
+- updated and extended package vignette
+
 # cellKey 0.17.3
 - correctly compute perturbed weighted counts
 

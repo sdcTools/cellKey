@@ -9,4 +9,29 @@
 #' @importFrom sdcTable makeProblem sdcProb2df
 #' @importFrom ptable pt_create_pParams pt_create_pTable
 #' @import sdcHierarchies
+#'
+
+Sys.setenv(".ck_nr_digits" = 8)
+.ck_digits <- function(digits = 8) {
+  d <- as.numeric(Sys.getenv(".ck_nr_digits"))
+  if (is.na(d)) {
+    return(digits)
+  }
+  return(d)
+}
+
+# number of cores for parallel processing
+# number of cores to be used when doing parallel computing
+.ck_cores <- function() {
+  available_cores <- parallel::detectCores() - 2
+  chk <- Sys.getenv("_R_CHECK_LIMIT_CORES_", "")
+  if (nzchar(chk) && chk == "TRUE") {
+    # use 2 cores in CRAN/Travis/AppVeyor
+    # see https://stackoverflow.com/a/50571533
+    num_workers <- 1L
+  } else {
+    num_workers <- max(1, available_cores)
+  }
+  max(1, min(num_workers, available_cores))
+}
 NULL

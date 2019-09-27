@@ -15,8 +15,7 @@ This package is developed within the SGA `Open source tools for perturbative con
 We have a first rough version with which interested users may play around. Feedback (via issues) with regards to bugs or features requests are very welcome as well as pull-requests. One the package is deemed stable, a version will be released on CRAN too.
 
 ### Important Note:
-Major parts of the package were rewritten in version `0.17` compared to previous versions. The following changes are now described:
-
+Major parts of the package were rewritten in version `>=0.17` compared to previous versions. The following changes are now described:
 
 - **Definition of hierarchies**
 One main change is that it is now required to directly use functionality from [`sdcHierarchies`](https://cran.r-project.org/package=sdcHierarchies) to setup hierarchies when defining of tables. The following changes are possibly required in existing code. 
@@ -27,13 +26,13 @@ One main change is that it is now required to directly use functionality from [`
   - replace `ck_rename_nodes()` with `hier_rename()`
 
 - **Removing "abs"-input format**
-For the sake of simplification, the differentiation between the *"abs"* and *"destatis"* format was removed. Internally, only the "destatis" format is used.
-
-- **Removing possibility to perturb magnitude tables**
-The feature to perturb continuously scaled variables (magnitude tables) was removed in version `0.17` of the package as the input format for perturbation tables is not yet finalized. Future versions of the package will gain the functionality to perturb magnitude tables again.
+For the sake of simplification, the differentiation between the *"abs"* and *"destatis"* format was removed in version `>= 0.17`. Internally, only the "destatis" format is used.
 
 - **Simplification**
 In order to simplify the application of the package, the process of defining, modifying and perturbing tables was modified. The implementation in versions `>=0.17` is based on `R6` classes and is described in detail in the new and package vignette that can be viewed after installation of the package using `ck_vignette()` or [**online**](https://sdctools.github.io/cellKey/articles/introduction.html).
+
+- **Perturbation of magnitude tables**
+This features was removed in versions `0.17.x` and added again in versions `>= 0.18.0`. For examples please look at `?cellkey_pkg` or at the [**vignette**](https://sdctools.github.io/cellKey/articles/introduction.html).
 
 ### Installation
 The package can directly be installed from `github` using the `remotes` package which is pulled in as a dependency from the `devtools` package. The following snippet installs the package:
@@ -50,8 +49,7 @@ remotes::install_github(
   repo = "sdcTools/cellKey",
   dependencies = TRUE,
   build_opts = "--no-resave-data",
-  force = TRUE
-)
+  force = TRUE)
 ```
 
 If you experience a timeout due to a proxy server while downloading, one can work around this issue by specifying the proxy-server using the `httr` package:

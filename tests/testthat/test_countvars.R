@@ -30,139 +30,53 @@ test_that("checking dimension and structure of generated testdata is ok", {
 })
 
 ## perturbation parameters for count variables
-params_cnts <- ck_params_cnts(
+set.seed(100)
+suppressMessages(para <- ptable::pt_create_pParams(
   D = 5,
   V = 3,
   js = 2,
   pstay = 0.5,
   optim = 1,
-  mono = TRUE
-)
+  mono = TRUE))
 
-ptab <- params_cnts$params$ptable@pTable
+params_cnts <- ck_params_cnts(ptab = ptable::pt_create_pTable(para))
+ptab <- params_cnts$params$ptable
 test_that("ck_params_cnts() is ok", {
   expect_is(params_cnts, "ck_params")
   expect_identical(params_cnts$type, "cnts")
-  expect_identical(dim(ptab), c(66L, 6L))
-  expect_identical(max(ptab$i), 8L)
+  expect_identical(dim(ptab), c(66L, 7L))
+  expect_identical(max(ptab$i), 8)
 })
 
 # we need to load a custom data set because otherwise, the
 # digest based checks don't work
-rm(params_cnts)
-data("params_cnts", package = "cellKey")
 test_that("checking perturbation parameters for counts", {
   expect_is(params_cnts, "ck_params")
   expect_equal(params_cnts$type, "cnts")
-  expect_is(params_cnts$params$ptable, "ptable")
-  expect_identical(digest::digest(params_cnts), "3cf4a3dcde7ce420a9d9e67907678493")
+  expect_is(params_cnts$params$ptable, "data.table")
+  expect_identical(digest::digest(params_cnts), "7426d7da34a57b19b625d35413c1abdf")
 })
 
 countvars <- NULL
 w <- "sampling_weight"
 rkey <- "rec_key"
 
-test_that("ck_setup() fails with invalid inputs", {
-  # input must be a data.frame
-  expect_error(
-    tab <- ck_setup(
-      x = 1:5,
-      rkey = "rec_key",
-      dims = dims,
-      w = w,
-      countvars = countvars,
-      params_cnts = params_cnts
-    )
-  )
-
-  # params_cnts must be created with ck_params_*()
-  expect_error(
-    tab <- ck_setup(
-      x = dat,
-      rkey = "rec_key",
-      dims = dims,
-      w = w,
-      countvars = countvars,
-      params_cnts = 1:5
-    )
-  )
-
-  # invalid record keys
-  expect_error(
-    tab <- ck_setup(
-      x = dat, rkey = "income",
-      dims = dims, w = w,
-      countvars = countvars, numvars = numvars,
-      params_cnts = params_cnts, params_nums = params_nums
-    )
-  )
-
-  # dims is not named
-  expect_error(
-    tab <- ck_setup(
-      x = dat,
-      rkey = "rec_key",
-      dims = 1:5,
-      w = w,
-      countvars = countvars,
-      params_cnts = params_cnts
-    )
-  )
-
-  # dims is not a named list
-  expect_error(
-    tab <- ck_setup(
-      x = dat,
-      rkey = "rec_key",
-      dims = c("a" = 5, "b" = 3),
-      w = w,
-      countvars = countvars,
-      params_cnts = params_cnts
-    )
-  )
-
-  # invalid variable names in `dims`
-  expect_error(
-    tab <- ck_setup(
-      x = dat,
-      rkey = "rec_key",
-      dims = list("a" = 5, "b" = 3),
-      w = w,
-      countvars = countvars,
-      params_cnts = params_cnts
-    )
-  )
-
-  # invalid input in `dims`
-  expect_error(
-    tab <- ck_setup(
-      x = dat, rkey = "rec_key",
-      dims = list("sex" = 5, "age" = 3),
-      w = w,
-      countvars = countvars,
-      params_cnts = params_cnts
-    )
-  )
-})
-
 tab <- ck_setup(
   x = dat,
   rkey = "rec_key",
   dims = dims,
   w = w,
-  countvars = countvars,
-  params_cnts = params_cnts
-)
+  countvars = countvars)
+
+# set perturbation parameters for all variables
+tab$params_cnts_set(val = params_cnts, v = NULL)
 
 expect_message(tab$perturb("total"))
 expect_message(tab$perturb("total"), "Variable 'total' was already perturbed!")
-expect_message(tab$freqtab())
 
 test_that("check ck_define_table() with already existing rec-keys", {
   expect_is(tab, "cellkey_obj")
   expect_identical(digest::digest(tab$freqtab("total")), "7bbc19818c87045dc4392795e3cc6d16")
-  expect_identical(digest::digest(tab$freqtab("total", type = "weighted")), "f9c380b7db5c450029f106899dd47edb")
-  expect_identical(digest::digest(tab$freqtab("total", type = "unweighted")), "335afdf8d8ce54457cd9d268686ba08b")
 })
 
 dat$rec_key <- NULL
@@ -171,13 +85,12 @@ tab <- ck_setup(
   rkey = 7,
   dims = dims,
   w = w,
-  countvars = countvars,
-  params_cnts = params_cnts
-)
+  countvars = countvars)
 
+expect_error(tab$perturb("total"))
+tab$params_cnts_set(val = params_cnts, v = "total")
 expect_message(tab$perturb("total"), "Count variable 'total' was perturbed.")
 expect_message(tab$perturb("total"), "Variable 'total' was already perturbed!")
-expect_message(tab$freqtab())
 
 test_that("ck_define_table() with new record keys is ok", {
   expect_is(tab, "cellkey_obj")
@@ -206,9 +119,10 @@ tab <- ck_setup(
   rkey = 7,
   dims = dims,
   w = NULL,
-  countvars = countvars,
-  params_cnts = params_cnts
-)
+  countvars = countvars)
+
+# set params
+tab$params_cnts_set(params_cnts, v = NULL)
 
 tab$perturb("total")
 freqtab <- tab$freqtab("total")
@@ -228,9 +142,11 @@ tab <- ck_setup(
   rkey = 7,
   dims = dims,
   w = w,
-  countvars = countvars,
-  params_cnts = params_cnts
-)
+  countvars = countvars)
+
+# set params
+tab$params_cnts_set(params_cnts, v = NULL)
+
 tab$perturb(c("total", "cnt_males", "cnt_highincome"))
 
 test_that("check tabulation of cnt_males is ok", {

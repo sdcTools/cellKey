@@ -1,38 +1,10 @@
-gen_stab <- function(D = 3, l = 0.5) {
-  .gen <- function(i, min_d, max_d, l) {
-    pval <- seq(min_d, max_d, by = l)
-    x <- data.table(
-      i = i,
-      j = pval - min(pval),
-      p = NA_real_,
-      kum_p_u = NA_real_,
-      kum_p_o = NA_real_,
-      diff = pval
-    )
-
-    x$p <- diff(sort(runif(nrow(x) + 1)))
-    cs <- cumsum(x$p)
-    x$kum_p_u <- c(0, cs)[1:nrow(x)]
-    x$kum_p_o <- c(cs[1:(nrow(x) - 1)], 1)
-    x
-  }
-
-  dt <- data.table(i = 0, j = 0, p = 1, kum_p_u = 0, kum_p_o = 1, diff = 0)
-  # i:=1
-  dt_a <- .gen(i = 1, min_d = -1, max_d = D, l = l)
-  # i == D
-  dt_b <- .gen(i = D, min_d = -D, max_d = D, l = l)
-  dt <- rbind(dt, dt_a, dt_b)
-  dt
-}
-
-#' Create perturbation parameters for continuous variables
+#' Set perturbation parameters for continuous variables
 #'
 #' This function allows to define perturbation parameters used to
 #' perturb cells in magnitude tables.
 #'
-#' @param P a character value defining the way to identify the `magnifier`,
-#' e.g which contributions/values in a cell should be the used  in the
+#' @param type a character value defining the way to identify the `magnifier`,
+#' e.g which contributions/values in a cell should be the used in the
 #' perturbation procedure. Possible choices are:
 #' - `top_contr`: the `k` largest contributions are used. In this case,
 #' it is also required to specify argument `top_k`
@@ -40,41 +12,105 @@ gen_stab <- function(D = 3, l = 0.5) {
 #' - `range`: the difference between largest and smallest contribution
 #' is used.
 #' - `sum`: the (weighted) cellvalue itself is used as starting point
-#' @param top_k it is ignored if `P` is different from `top_contr`. Otherwise,
-#' @param D maximum perturbation value
-#' @param l stepwidth parameter for computation of perturbation tables
-#' a integerish number >= 1 specifying the number of top contributions whose
-#' values should be perturbed.
+#' @param top_k it is ignored if `variant` is different from `top_contr`. Otherwise,
+#' @param ptab in this argument, one ore more perturbation tables are given as input. the
+#' following choices are possible:
+#'
+#' - an object derived from [ptable::pt_create_pTable()]: this case is the same as specifying a
+#' named list with only a single element `"all"` (as described below)
+#' - a named `list` where the allowed names are shown below and each element must be
+#' the output of [ptable::pt_create_pTable()]
+#'   * `"all"`: this ptable will be used for all cells; if specified, no elements named `"even"`
+#'   or `"odd"` must exist.
+#'   * `"even"`: will be used to look up perturbation values for cells with an even number
+#'   of contributors. if specified, also list-element `"odd"` must exist.
+#'   * `"odd"`: will be used to look up perturbation values for cells with an odd number
+#'   of contributors; if specified, also list-element `"even"` must exist.
+#'   * `"small_cells"`: if specified, this ptable will be used to extract perturbation
+#'   values for very small cells
+#' @param mult_params an object derived with [ck_flexparams()] or [ck_simpleparams()]
+#' that contain required parameters for the computation of the perturbation multiplier
+#' @param mu_c fixed extra protection amount (`>= 0)` applied to the absolute of the
+#' perturbation value of the first (largest) noise component if the cell is sensitive.
+#' This value defaults to `0` (no additional protection). Please note that sensitive cells
+#' can be defined according using the `supp_freq()`, `supp_val`, `supp_p()`, `supp_nk()`
+#' and `supp_pq()` methods. An examples is given in `?cellkey_pkg`.
 #' @param same_key (logical) should original cell key (`TRUE`) used for
 #' for finding perturbation values of the largest contributor to a
 #' cell or should a perturbation of the cellkey itself (`FALSE`) take place.
-#' @param use_zero_rkeys (logical) skalar defining if record keys of
+#' @param use_zero_rkeys (logical) scalar defining if record keys of
 #' units not contributing to a specific numeric variables should be
 #' used (`TRUE`) or ignored (`FALSE`) when computing cell keys.
-#' @return an object suitable as input to [ck_setup()] for the perturbation
-#' of magnitude tables
+#' @param path a scalar character specifying a path to which the parameters created with this functions
+#' should be written to (in yaml format)
+#' @return an object suitable as input to method `$params_nums_set()` for the perturbation
+#' of continous variables.
 #' @export
+#' @seealso [ck_flexparams()]
 #' @md
 #' @examples
-#' ck_params_nums(D = 3, l = 0.5, P = "top_contr", top_k = 3)
-#' ck_params_nums(D = 10, l = .5, P = "mean")
+#' # create a perturbation table using
+#' # functionality from ptable-pkg; see help(pa = "ptable")
+#' params_all <- ptable::pt_create_pParams(
+#'   D = 4,
+#'   V = 2,
+#'   table = "nums",
+#'   step = 0.2,
+#'   icat = c(1, 5),
+#'   type = "all")
+#'
+#' # parameters for a ptab for very small cells
+#' params_sc <- ptable::pt_create_pParams(
+#'   D = 5,
+#'   V = 1,
+#'   table = "nums",
+#'   step = 0.2,
+#'   icat = c(1, 5, 10),
+#'   type = "all")
+#'
+#' # create a named list
+#' ptab <- list(
+#'   all = ptable::pt_create_pTable(params_all),
+#'   small_cells = ptable::pt_create_pTable(params_sc))
+#'
+#' ck_params_nums(
+#'   type = "top_contr",
+#'   top_k = 3,
+#'   ptab = ptab,
+#'   mult_params = ck_flexparams(
+#'     fp = 1000,
+#'     p = c(0.20, 0.03),
+#'     epsilon = c(1, 0.5, 0.2),
+#'     q = 2),
+#'   use_zero_rkeys = TRUE,
+#'   mu_c = 3)
 ck_params_nums <-
-  function(P = "top_contr",
+  function(type = "top_contr",
            top_k = NULL,
-           D,
-           l,
+           ptab,
+           mult_params,
+           mu_c = 0,
            same_key = TRUE,
-           use_zero_rkeys = FALSE) {
+           use_zero_rkeys = FALSE,
+           path = NULL) {
 
-
-  stopifnot(is_scalar_integerish(D))
-  stopifnot(is_scalar_double(l), l > 0, l < 1)
-
-  if (!is_scalar_character(P)) {
-    stop("`P` needs to be a scalar character", call. = FALSE)
+  if (!is_scalar_character(type)) {
+    stop("`type` needs to be a scalar character", call. = FALSE)
   }
-  if (!P %in% c("top_contr", "mean", "range", "sum")) {
-    stop("invalid value in `P` detected.", call. = FALSE)
+  if (!type %in% c("top_contr", "mean", "range", "sum")) {
+    stop("invalid value in `type` detected.", call. = FALSE)
+  }
+
+  ptab <- .chk_ptab(ptab, type = "nums")
+  parity <- even_odd <- ifelse("even" %in% ptab$type, TRUE, FALSE)
+  separation <- ifelse("small_cells" %in% ptab$type, TRUE, FALSE)
+
+  if (!is.numeric(mu_c) | !rlang::is_scalar_atomic(mu_c)) {
+    stop("Argument `mu_c` is not a number.", call = FALSE)
+  }
+
+  if (mu_c < 0) {
+    stop("Argument `mu_c` is not >= 0.", call. = FALSE)
   }
 
   if (!is_scalar_logical(same_key)) {
@@ -84,12 +120,12 @@ ck_params_nums <-
     stop("`use_zero_rkeys` needs to be a scalar logical", call. = FALSE)
   }
 
-  if (P == "top_contr") {
+  if (type == "top_contr") {
     if (is.null(top_k)) {
       stop("please provide a value for `top_k`", call. = FALSE)
     }
     if (!is_integerish(top_k) | top_k < 1 | top_k > 6) {
-      stop("`top_k` must be an integer(ish) number >= 1 and <= 6")
+      stop("`top_k` must be an integer(ish) number >= 1 and <= 6", call. = FALSE)
     }
   } else {
     if (!is.null(top_k)) {
@@ -98,50 +134,214 @@ ck_params_nums <-
     top_k <- 1
   }
 
-  stab <- gen_stab(D = D, l = l)
+  if (parity & top_k > 1) {
+    e <- "different ptables for even/odd cases are not possible if `top_k` is > 1."
+    stop(e, call. = FALSE)
+  }
+
+  if (!class(mult_params) %in% c("params_m_flex", "params_m_simple")) {
+    e <- "`mult_params` needs to be creating with ck_flexparams() or ck_simpleparams()"
+    stop(e, call. = FALSE)
+  }
+
+  if (length(mult_params$epsilon) != top_k) {
+    stop("Invalid length or argument `epsilon` in `mult_params` detected.", call. = FALSE)
+  }
+
+  # separation: treat very small values in magnitude tables
+  # should be treated like counts
+  # if we have a value for `m_fixed_sq`; we have a suitable ptable for small cells
+
+  # compute parameter m1^2 from ptable
+  # used in `ck_params_nums()` in case separation is TRUE
+  .compute_m1sq <- function(ptab) {
+    type <- i <- NULL
+    dt <- ptab[type == "small_cells"]
+    dt <- dt[i == max(i)]
+    if (nrow(dt) == 0) {
+      return(stop("invalid ptab found when computing parameter m1sq.", call. = FALSE))
+    }
+    sum((dt$i - dt$j)^2 * dt$p)
+  }
+
+  m_fixed_sq <- NA
+  if (separation) {
+    m_fixed_sq <- .compute_m1sq(ptab)
+  } else {
+    ptab <- ptab[type != "small_cells"]
+  }
+
+  # separation point z_s (previously g1)
+  .separation_point <- function(m_fixed_sq, E, p_large) {
+    if (is.na(m_fixed_sq)) {
+      return(0)
+    }
+    sqrt(m_fixed_sq) / (sqrt(E) * p_large)
+  }
+
+  E <- sum(mult_params$epsilon^2)
+  if (inherits(mult_params, "params_m_flex")) {
+    p_large <- mult_params$p_large
+  } else if (inherits(mult_params, "params_m_simple")) {
+    p_large <- mult_params$p
+  } else {
+    stop("invalid input.", call. = FALSE)
+  }
+
+  zs <- .separation_point(
+    m_fixed_sq = m_fixed_sq,
+    E = E,
+    p_large = p_large)
+
   out <- list(
     params = list(
-      P = P,
+      type = type,
       top_k = top_k,
-      stab = stab,
+      ptab = ptab,
+      mu_c = mu_c,
+      m_fixed_sq = m_fixed_sq,
+      zs = zs,
+      E = E,
+      mult_params = mult_params,
       same_key = same_key,
-      use_zero_rkeys = use_zero_rkeys
-    ),
-    type = "nums"
-  )
+      use_zero_rkeys = use_zero_rkeys,
+      even_odd = even_odd,
+      separation = separation),
+    type = class(mult_params))
   class(out) <- "ck_params"
+
+  if (!is.null(path)) {
+    out$version <- paste(utils::packageVersion("cellKey"), collapse = ".")
+    out$ptype <- "params_nums"
+    .yaml_write(x = out, path = path)
+    message("yaml configuration ", shQuote(path), " successfully written.")
+  }
+  out$version <- out$ptype <- NULL
   out
 }
 
-# example stab from destatis paper
-stab_paper1 <- function() {
-  dt <- gen_stab(D = 3, l = 0.5)
+#' Set parameters required to perturb numeric variables using a flex function
+#'
+#' [ck_flexparams()] allows to define a flex function that is used to lookup perturbation
+#' magnitudes (percentages) used when perturbing continuous variables.
+#'
+#' @details details about the flex function can be found in Deliverable D4.2, Part I in
+#' SGA *"Open Source tools for perturbative confidentiality methods"*
+#' @param fp (numeric scalar); at which point should the noise coefficient
+#' function reaches its desired maximum (defined by the first element of `p`)
+#' @param p a numeric vector of length `2` where both elements specify a percentage.
+#' The first value refers to the desired maximum perturbation percentage for small
+#' cells (depending on `fp`) while the second element refers to the desired maximum
+#' perturbation percentage for large cells. Both values must be between `0` and `1` and
+#' need to be in descending order.
+#' @param q (numeric scalar); Parameter of the function; `q` needs to be `>= 1`
+#' @param epsilon a numeric vector in descending order with all values `>= 0` and `<= 1` with the first
+#' element forced to equal 1. The length of this vector must correspond with the number `top_k`
+#' specified in [ck_params_nums()] when creating parameters for `type == "top_contr"` which is
+#' checked at runtime. This setting allows to use different flex-functions for the largest `top_k` contributors.
+#' @return an object suitable as input for [ck_params_nums()].
+#' @export
+#' @inherit cellkey_pkg examples
+#' @seealso [ck_simpleparams()], [ck_params_nums()]
+#' @md
+ck_flexparams <- function(fp, p = c(0.25, 0.05), epsilon = 1, q = 3) {
+  if (!is.numeric(fp) | !rlang::is_scalar_atomic(fp)) {
+    stop("Argument `fp` is not a number.", call. = FALSE)
+  }
+  if (fp <= 0) {
+    stop("Argument `fp` must be positive.", call. = FALSE)
+  }
+  if (!is.numeric(p)) {
+    stop("`p` is not a numeric vector.", call. = FALSE)
+  }
+  if (length(p) != 2) {
+    stop("`p` does not have 2 elements.", call. = FALSE)
+  }
+  if (any(diff(p) > 0)) {
+    stop("Argument `p` must contain numbers in descending order", call. = FALSE)
+  }
+  if (max(p) > 1 | min(p) < 0) {
+    stop("values `< 0` or `> 1` are not allowed in argument `p`", call. = FALSE)
+  }
 
-  # paper nachvollziehen
-  dt$p <- c(1,0.18078,0.12789,0.50000,0.06400,0.04528,0.03203,0.02266,0.01603,0.01134,0.00850,0.01719,0.03059,0.04788,0.06594,0.07990,0.50000,0.07990,0.06594,0.04788,0.03059,0.01719,0.00850)
-  dt$kum_p_u <- c(0,  0,  0.18078,  0.30867,  0.80867,  0.87267,  0.91795,  0.94997,  0.97263,  0.98866,  0,  0.00850,  0.02570,  0.05629,  0.10417,  0.17010,  0.25000,  0.75000,  0.82990,  0.89583,  0.94371,  0.97430,  0.99150)
-  dt$kum_p_o <- c(1,  0.18078,  0.30867,  0.80867,  0.87267,  0.91795,  0.94997,  0.97263,  0.98866,  1,  0.00850,  0.02570,  0.05629,  0.10417,  0.17010,  0.25000,  0.75000,  0.82990,  0.89583,  0.94371,0.97430,0.99150,1)
-  dt
+  if (!(rlang::is_scalar_double(q) | rlang::is_scalar_integer(q))) {
+    stop("Argument `q` is not a number", call. = FALSE)
+  }
+
+  if (q < 1) {
+    stop("Argument `q` needs to be >= 1", call. = FALSE)
+  }
+
+  if (!is.numeric(epsilon)) {
+    stop("Argument `epsilon` must be a numeric vector", call. = FALSE)
+  }
+  if (any(epsilon < 0)) {
+    stop("Argument `epsilon` must contain only numbers >= 0", call. = FALSE)
+  }
+  if (any(epsilon > 1)) {
+    stop("Argument `epsilon` must contain only numbers <= 1", call. = FALSE)
+  }
+  if (epsilon[1] != 1) {
+    stop("The first element of `epsilon` must equal 1", call. = FALSE)
+  }
+  if (length(epsilon) > 1) {
+    if (any(diff(epsilon) > 0)) {
+      stop("Argument `epsilon` must contain numbers in descending order", call. = FALSE)
+    }
+  }
+  out <- list(
+    fp = fp,
+    p_small = p[1],
+    p_large = p[2],
+    epsilon = epsilon,
+    q = q)
+  class(out) <- "params_m_flex"
+  out
 }
 
-
-# example stab for even/odd numbers
-stab_paper2 <- function() {
-  i <- c(0, rep(1, 9), rep(3, 13))
-  j <- c(0, seq(0, 4, by = 0.5), seq(0, 6, by = 0.5))
-  p_even <- c(1,0.18078,0.12789,0.50000,0.06400,0.04528,0.03203,0.02266,0.01603,0.01134,0.00850,0.01719,0.03059,0.04788,0.06594,0.07990,0.50000,0.07990,0.06594,0.04788,0.03059,0.01719,0.00850)
-  kum_p_u_even <- c(0,0,0.18078,0.30867,0.80867,0.87267,0.91795,0.94997,0.97263,0.98866,0,0.00850,0.02570,0.05629,0.10417,0.17010,0.25000,0.75000,0.82990,0.89583,0.94371,0.97430,0.99150)
-  kum_p_o_even <- c(1,0.18078,0.30867,0.80867,0.87267,0.91795,0.94997,0.97263,0.98866,1,0.00850,0.02570,0.05629,0.10417,0.17010,0.25000,0.75000,0.82990,0.89583,0.94371,0.97430,0.99150,1)
-
-  p_odd <- c(1,0.28806,0.22003,0.16309,0.11732,0.08189,0.05548,0.03647,0.02326,0.01440,0.00234,0.00908,0.02756,0.06536,0.12111,0.17536,0.19839,0.17536,0.12111,0.06536,0.02756,0.00908,0.00234)
-  kum_p_u_odd <- c(0,0,0.28806,0.50808,0.67118,0.78850,0.87039,0.92587,0.96233,0.98560,0,0.00234,0.01141,0.03897,0.10433,0.22544,0.40080,0.59920,0.77456,0.89567,0.96103,0.98859,0.99766)
-  kum_p_o_odd <- c(1,0.28806,0.50808,0.67118,0.78850,0.87039,0.92587,0.96233,0.98560,1,0.00234,0.01141,0.03897,0.10433,0.22544,0.40080,0.59920,0.77456,0.89567,0.96103,0.98859,0.99766,1)
-
-  p <- c(0, seq(-1, 3, by = 0.5), seq(-3, 3, by = 0.5))
-  data.table(
-    i = i, j = j,
-    p_even = p_even, kum_p_u_even = kum_p_u_even, kum_p_o_even = kum_p_o_even,
-    p_odd = p_odd, kum_p_u_odd = kum_p_u_odd, kum_p_o_odd = kum_p_o_odd,
-    diff = p
-  )
+#' Set parameters required to perturb numeric variables using a simple approach
+#'
+#' [ck_simpleparams()] allows to define parameters for a simple perturbation
+#' approach based on a single magnitude parameter (`m`). The values of `epsilon`
+#' are used to  `"weight"` parameter `m` in case `type == "top_contr"` is set in
+#' [ck_params_nums()].
+#'
+#' @inherit ck_flexparams details
+#' @inherit ck_flexparams return
+#' @inherit cellkey_pkg examples
+#' @inheritParams ck_flexparams
+#' @param p a percentage value used as magnitude for perturbation
+#' @export
+#' @md
+#' @seealso [ck_flexparams()], [ck_params_nums()]
+ck_simpleparams <- function(p, epsilon = 1) {
+  # basically scaling = FALSE
+  if (!rlang::is_scalar_double(p)) {
+    stop("Argument `p` is not a number.", call = FALSE)
+  }
+  if (p <= 0 | p > 1) {
+    stop("Argument `p` must be > 0 and <= 1.", call. = FALSE)
+  }
+  if (!is.numeric(epsilon)) {
+    stop("Argument `epsilon` must be a numeric vector", call. = FALSE)
+  }
+  if (any(epsilon < 0)) {
+    stop("Argument `epsilon` must contain only numbers >= 0", call. = FALSE)
+  }
+  if (any(epsilon > 1)) {
+    stop("Argument `epsilon` must contain only numbers <= 1", call. = FALSE)
+  }
+  if (epsilon[1] != 1) {
+    stop("The first element of `epsilon` must equal 1", call. = FALSE)
+  }
+  if (length(epsilon) > 1) {
+    if (any(diff(epsilon) > 0)) {
+      stop("Argument `epsilon` must contain numbers in descending order", call. = FALSE)
+    }
+  }
+  out <- list(
+    p = p,
+    epsilon = epsilon)
+  class(out) <- "params_m_simple"
+  out
 }

@@ -4,12 +4,13 @@
 \alias{ck_generate_rkeys}
 \title{Generate random record keys}
 \usage{
-ck_generate_rkeys(dat, nr_digits = 10, seed = NULL)
+ck_generate_rkeys(dat, nr_digits = 8, seed = NULL)
 }
 \arguments{
 \item{dat}{microdata used to generated hash for random seed}
 
-\item{nr_digits}{maximum number of digits in the record keys.}
+\item{nr_digits}{maximum number of digits in the record keys. The default setting (\code{8}) corresponds
+with the default setting of the method in \code{tau-argus}.}
 
 \item{seed}{if not \code{NULL}, a number specifying the initial seed value
 for the random number generator. If \code{NULL}, a seed is computed from \code{dat} itself.}
@@ -24,5 +25,5 @@ on the input data set.
 }
 \examples{
 dat <- ck_create_testdata()
-dat$rkeys <- ck_generate_rkeys(dat = ck_create_testdata(), nr_digits = 6)
+dat$rkeys <- ck_generate_rkeys(dat = ck_create_testdata(), nr_digits = 8)
 }

@@ -6,7 +6,7 @@
 \title{cellKey - an post-tabular perturbation method}
 \format{\link[R6:R6Class]{R6::R6Class} object.}
 \usage{
-ck_setup(x, rkey, dims, w, countvars = NULL, params_cnts)
+ck_setup(x, rkey, dims, w, countvars = NULL, numvars = NULL)
 }
 \arguments{
 \item{x}{an object coercible to a \code{data.frame}}
@@ -26,15 +26,15 @@ weights. If \code{w} is \code{NULL} (the default), all weights are assumed to be
 variables withing \code{x} that should be included in the problem instance.
 These variables can later be perturbed.}
 
-\item{params_cnts}{an object containing perturbation parameters for count variables that needs
-to be created with \code{\link[=ck_params_cnts]{ck_params_cnts()}}}
+\item{numvars}{(character) an optional vector of numerical variables that can later be tabulated.}
 }
 \description{
 This class allows to define statistical tables and perturb both
 count and numerical variables.
 }
 \section{Usage}{
- For usage details see the \strong{Methods} and \strong{Examples} sections.
+ For usage details of the implemented methods, see the \strong{Methods} and
+\strong{Examples} sections.
 }
 
 \section{Methods}{
@@ -42,27 +42,90 @@ count and numerical variables.
 \itemize{
 \item \strong{\code{print()}}: prints information about the current table
 \item \strong{\code{summary()}}: some aggregated summary statistics about perturbed variables
+\item \strong{\code{allvars()}}: a list with elements \code{cntvars} and \code{numvars} with each being a character
+vector containing the pre-defined count- and continuous variables in the current instance.
+\item \strong{\code{cntvars()}}: returns a character vector of available count variables.
+\item \strong{\code{numvars()}}: returns a character vector of available numeric variables.
+\item \strong{\code{supp_freq(v, n, weighted = TRUE)}}: mark sensitive cells based on a minimal-frequency
+rule that refers to the (weighted or unweighted) number of contributors to a given cell. The
+required inputs are:
+\itemize{
+\item \code{v}: a single variable name of a continuous variable (\code{see method numvars()})
+\item \code{n}: a number defining the threshold. All cells \code{<= n} are considered as unsafe.
+\item \code{weighted}: if \code{TRUE}, the weighted number of contributors to a cell are compared to
+the threshold specified in \code{n} (default); else the unweighted number of contributors is used.
+}
+\item \strong{\code{supp_val(v, n, weighted = TRUE)}}: mark sensitive cells based on (weighted
+or unweighted) cell values that are below the given threshold \code{n}. The required inputs are:
+\itemize{
+\item \code{v}: a single variable name of a continuous variable (\code{see method numvars()})
+\item \code{n}: a number defining the threshold. All cells \code{<= n} are considered as unsafe.
+\item \code{weighted}: if \code{TRUE}, the weighted cell value of variable \code{v} is compared to
+the threshold specified in \code{n} (default); else the unweighted number is used.
+}
+\item \strong{\code{supp_p(v, p)}}: mark sensitive cells based on the p%-rule rule. This rule can only be
+applied to positive-only variables and the required inputs are:
+\itemize{
+\item \code{v}: a single variable name of a continuous variable (\code{see method numvars()})
+\item \code{p}: a number defining a percentage between \code{1} and \code{99}.
+}
+\item \strong{\code{supp_pq(v, p, q)}}: mark sensitive cells based on the pq-rule rule. This rule can only be
+applied to positive-only variables and the required inputs are:
+\itemize{
+\item \code{v}: a single variable name of a continuous variable (\code{see method numvars()})
+\item \code{p}: a number defining a percentage between \code{1} and \code{99}.
+\item \code{q}: a number defining a percentage between \code{1} and \code{99}. This value must be larger than \code{p}.
+}
+\item \strong{\code{supp_nk(v, n, k)}}: mark sensitive cells based on the nk-dominance rule. This rule can only be
+applied to positive-only variables and the required inputs are:
+\itemize{
+\item \code{v}: a single variable name of a continuous variable (\code{see method numvars()})
+\item \code{n}: an integerish number \code{>= 2}.
+\item \code{k}: a number defining a percentage between \code{1} and \code{99}. All cells to which the top \code{n}
+contributers contribute more than \code{k\%} is considered unsafe
+}
 \item \strong{\code{perturb(v)}}: Perturb a count- or magnitude variable. The method has the following arguments:
 \itemize{
 \item \code{v}: name(s) of count or magnitude variables that should be perturbed.
 }
-\item \strong{\code{freqtab(v)}}: get results from already perturbed count variables as a \code{data.table}. The required arguments are:
+\item \strong{\code{freqtab(v, path)}}: get results from already perturbed count variables as a \code{data.table}. The required arguments are:
 \itemize{
-\item \code{v}: a vector of variable names for already perturbed count variables
-\item \code{type}: a scalar character depending what variables should be available in the output. Allowed
-values are \code{"both"} (the default), \code{"weighted"} and \code{"unweighted"}
-\item \code{path}: if not \code{NULL}, a scalar character defining a (relative or absolute) path to which the result table
-should be written. A \code{csv} file will be generated and \code{.csv} will be appended to the value provided.
+\item \code{v}: a vector of variable names for already perturbed count variables. If \code{NULL} (the default), the results
+are returned for all perturbed count variables.
+\item \code{path}: if not \code{NULL}, a scalar character defining a (relative or absolute)
+path to which the result table should be written. A \code{csv} file will be generated
+and, if specified, \code{path} must have ".csv" as file-ending
 }
 
 This method returns a \code{data.table} containing all combinations of the dimensional variables in
 the first n columns. Additionally, the following columns are shown:
 \itemize{
 \item \code{vname}: name of the perturbed variable
-\item \code{uwc}: unweighted counts (if \code{type} is \code{"both"} or \code{"unweighted"})
-\item \code{wc}: weighted counts (if \code{type} is \code{"both"} or \code{"weighted"})
-\item \code{puwc}: perturbed unweighted counts (if \code{type} is \code{"both"} or \code{"unweighted"})
-\item \code{pwc}: perturbed weighted counts (if \code{type} is \code{"both"} or \code{"weighted"})
+\item \code{uwc}: unweighted counts
+\item \code{wc}: weighted counts
+\item \code{puwc}: perturbed unweighted counts
+\item \code{pwc}: perturbed weighted counts
+}
+\item \strong{\code{numtab(v, mean_before_sum = FALSE, path = NULL)}}: get results from already perturbed continuous variables as a \code{data.table}. The required arguments are:
+\itemize{
+\item \code{v}: a vector of variable names for already perturbed count variables. If \code{NULL} (the default), the results
+are returned for all perturbed numeric variables.
+\item \code{mean_before_sum}: (logical); if \code{TRUE}, the perturbed values are adjusted by a factor \code{((n+p))⁄n} with \code{n}
+being the original weighted cellvalue and \code{p} the perturbed cell value. This makes sense if the the
+accuracy of the variable mean is considered more important than accuracy of sums of the variable. The default value
+is \code{FALSE} (no adjustment is done)
+\item \code{path}: if not \code{NULL}, a scalar character defining a (relative or absolute)
+path to which the result table should be written. A \code{csv} file will be generated
+and, if specified, \code{path} must have ".csv" as file-ending
+}
+
+This method returns a \code{data.table} containing all combinations of the dimensional variables in
+the first n columns. Additionally, the following columns are shown:
+\itemize{
+\item \code{vname}: name of the perturbed variable
+\item \code{uws}: unweighted sum of the given variable
+\item \code{ws}: weighted cellsum
+\item \code{pws}: perturbed weighted sum of the given cell
 }
 \item \strong{\code{measures_cnts(v, exclude_zeros = TRUE)}}: utility measures for perturbed count variables. The required arguments are:
 \itemize{
@@ -72,9 +135,43 @@ This method returns a \code{list} containing a set of utility measures based on 
 For a detailed description of the computed measures, see \code{\link[=ck_cnt_measures]{ck_cnt_measures()}}
 }
 \item \strong{\code{mod_cnts()}}: returns a \code{data.table} containing modifications applied to count variables
-\item \strong{\code{params_cnts(val)}}: returns or modifies perturbation parameters used for count variables. If
-\code{val} is not provided, the current perturbation object is returned, otherwise the current perturbation
-parameters are replaced with the ones provided (which need to be created using (\code{\link[=ck_params_cnts]{ck_params_cnts()}})
+\item \strong{\code{mod_nums()}}: returns a \code{data.table} containing modifications applied to numerical variables.
+\itemize{
+\item \code{id}: cell id
+\item \code{ckey}: cell key used in the lookup step
+\item \code{cv}: original weighted cell value
+\item \code{cv_pert}: perturbed weighted cell value
+\item \code{x_delta}: multiplier used when computing the actual perturbation amount
+\item \code{lookup}: a character vector specifying in which block of the provided
+table the lookup happened.
+}
+\item \strong{\code{params_cnts_get()}}: returns a named list in which each list-element contains the
+active perturbation parameters for the specific count variable defined by the list-name.
+\item \strong{\code{params_cnts_set(val, v = NULL)}}: allows to set perturbation parameters for count variables.
+The following arguments are expected:
+\itemize{
+\item \code{val}: a perturbation object created with \code{\link[=ck_params_cnts]{ck_params_cnts()}}
+\item \code{v}: a character vector (or \code{NULL}). If \code{NULL} (the default), the perturbation parameters
+provided in \code{val} are set for all count variables; otherwise one may specify the names of
+the count variables for which the parameters should be set.
+}
+\item \strong{\code{params_nums_get()}}: returns a named list in which each list-element contains the
+active perturbation parameters for the specific continuous variable defined by the list-name.
+\item \strong{\code{params_nums_set(val, v = NULL)}}: allows to set perturbation parameters for continuous variables.
+The following arguments are expected:
+\itemize{
+\item \code{val}: a perturbation object created with \code{\link[=ck_params_nums]{ck_params_nums()}}
+\item \code{v}: a character vector (or \code{NULL}). If \code{NULL} (the default), the perturbation parameters
+provided in \code{val} are set for all continuous variables; otherwise one may specify the names of
+the numeric variables for which the parameters should be set.
+}
+\item \strong{\code{reset_cntvars(v = NULL)}}: allows to reset results and parameters for already perturbed count
+variables specified in \code{v}. If \code{v} equals \code{NULL} (the default), the results are reset for all perturbed
+count variables.
+\item \strong{\code{reset_numvars(v = NULL)}}: allows to reset results and parameters for already perturbed numerical
+variables specified in \code{v}. If \code{v} equals \code{NULL} (the default), the results are reset for all perturbed
+numerical variables.
+\item \strong{\code{reset_allvars()}}: allows to reset results and parameters for all already perturbed variables.
 }
 }
 
@@ -85,6 +182,8 @@ x <- ck_create_testdata()
 x[, cnt_females := ifelse(sex == "male", 0, 1)]
 x[, cnt_males := ifelse(sex == "male", 1, 0)]
 x[, cnt_highincome := ifelse(income >= 9000, 1, 0)]
+# a variable with positive and negative contributions
+x[, mixed := sample(-10:10, nrow(x), replace = TRUE)]
 
 # create record keys
 x$rkey <- ck_generate_rkeys(dat = x)
@@ -100,68 +199,165 @@ d_age <- hier_create(root = "Total", nodes = paste0("age_group", 1:6))
 d_age <- hier_add(d_age, root = "age_group1", "ag1a")
 d_age <- hier_add(d_age, root = "age_group2", "ag2a")
 
-# create a named list
-dims <- list(sex = d_sex, age = d_age)
-w <- "sampling_weight"
-countvars <- c("cnt_females", "cnt_males", "cnt_highincome")
-rkey <- "rkey"
-
-# perturbation parameters for count variables
-params_cnts <- ck_params_cnts(
-  D = 5,
-  V = 3,
-  js = 2,
-  pstay = 0.5,
-  optim = 1,
-  mono = TRUE
-)
-
 # define the cell key object
+countvars <- c("cnt_females", "cnt_males", "cnt_highincome")
+numvars <- c("expend", "income", "savings", "mixed")
 tab <- ck_setup(
   x = x,
-  rkey = 5,
-  dims = dims,
-  w = w,
+  rkey = "rkey",
+  dims = list(sex = d_sex, age = d_age),
+  w = "sampling_weight",
   countvars = countvars,
-  params_cnts = params_cnts
-)
+  numvars = numvars)
 
 # show some information about this table instance
-print(tab) # identical with tab$print()
+tab$print() # identical with print(tab)
 
-# perturb a single variable
-tab$perturb(v = "total")
+# which variables have been defined?
+tab$allvars()
 
-# modify the perturbation parameters
+# count-variables
+tab$cntvars()
+
+# continuous variables
+tab$numvars()
+
+# create perturbation parameters for "total" variable and
+# write to yaml-file
+
+# create a ptable using functionality
+# from the ptable-pkg
+para1 <- ptable::pt_create_pParams(
+  D = 5, V = 1, table = "cnts")
+
+# create suitable parameter inputs
+f_yaml <- tempfile(fileext = ".yaml")
+p_cnts1 <- ck_params_cnts(
+  ptab = ptable::pt_create_pTable(para1),
+  path = f_yaml)
+
+# read parameters from yaml-file and set them for variable `"total"`
+p_cnts1 <- ck_read_yaml(path = f_yaml)
+
+tab$params_cnts_set(val = p_cnts1, v = "total")
+
 # create alternative perturbation parameters
-params_cnts_alt <- ck_params_cnts(
-  D = 8,
-  V = 3,
-  js = 2,
-  pstay = 0.5,
-  optim = 1,
-  mono = TRUE
-)
-# we creplace the current parameters with the alternatives
-# they will be used from now on
-tab$params_cnts(params_cnts_alt)
+para2 <- ptable::pt_create_pParams(
+  D = 8, V = 3, js = 2, table = "cnts")
+
+p_cnts2 <- ck_params_cnts(
+  ptab = ptable::pt_create_pTable(para1))
+
+# use it for the remaining variables
+tab$params_cnts_set(val = p_cnts2, v = countvars)
+
+# perturb a variable
+tab$perturb(v = "total")
 
 # multiple variables can be perturbed as well
 tab$perturb(v = c("cnt_males", "cnt_highincome"))
 
-# return results (weighted and unweighted)
+# return weighted and unweighted results
 tab$freqtab(v = c("total", "cnt_males"))
 
-# only unweighted and perturbed unweighted counts
-tab$freqtab(v = c("total", "cnt_males"), type = "unweighted")
+# numerical variables (positive variables using flex-function)
+# we also write the config to a yaml file
+f_yaml <- tempfile(fileext = ".yaml")
+
+# create a ptable using functionality
+# from the ptable-pkg
+para <- ptable::pt_create_pParams(
+  D = 5,
+  V = 1,
+  table = "nums",
+  step = 0.2,
+  icat = c(1, 5),
+  type = "all")
+ptab <- ptable::pt_create_pTable(para)
+
+p_nums1 <- ck_params_nums(
+  ptab = ptab,
+  type = "top_contr",
+  top_k = 3,
+  mult_params = ck_flexparams(
+    fp = 1000,
+    p = c(0.30, 0.03),
+    epsilon = c(1, 0.5, 0.2),
+    q = 3),
+  mu_c = 2,
+  same_key = FALSE,
+  use_zero_rkeys = FALSE,
+  path = f_yaml)
+
+# we read the parameters from the yaml-file
+p_nums1 <- ck_read_yaml(path = f_yaml)
+
+# another set of parameters
+para <- ptable::pt_create_pParams(
+  D = 10,
+  V = 1,
+  table = "nums",
+  step = 0.5,
+  icat = c(1, 5, 10),
+  type = "all")
+ptab <- ptable::pt_create_pTable(para)
+
+# for variables with positive and negative values
+p_nums2 <- ck_params_nums(
+  ptab = ptab,
+  type = "top_contr",
+  top_k = 3,
+  mult_params = ck_flexparams(
+    fp = 1000,
+    p = c(0.15, 0.02),
+    epsilon = c(1, 0.4, 0.15),
+    q = 3),
+  mu_c = 2,
+  same_key = FALSE)
+
+# simple perturbation parameters (not using the flex-function approach)
+p_nums3 <- ck_params_nums(
+  ptab = ptab,
+  type = "mean",
+  mult_params = ck_simpleparams(p = 0.25),
+  mu_c = 2,
+  same_key = FALSE)
+
+# use `p_nums1` for all variables
+tab$params_nums_set(p_nums1, c("savings", "income", "expend"))
+
+# use different parameters for variable `mixed`
+tab$params_nums_set(p_nums2, v = "mixed")
+
+# identify sensitive cells to which extra protection (`mu_c`) is added.
+tab$supp_p(v = "income", p = 85)
+tab$supp_pq(v = "income", p = 85, q = 90)
+tab$supp_nk(v = "income", n = 2, k = 90)
+tab$supp_freq(v = "income", n = 14, weighted = FALSE)
+tab$supp_val(v = "income", n = 10000, weighted = TRUE)
+
+# perturb variables
+tab$perturb(v = c("income", "savings"))
+
+# extract results
+tab$numtab("income", mean_before_sum = TRUE)
+tab$numtab("income", mean_before_sum = FALSE)
+tab$numtab("savings")
+
+# results can be resetted, too
+tab$reset_cntvars(v = "cnt_males")
+
+# we can then set other parameters and perturb again
+tab$params_cnts_set(val = p_cnts1, v = "cnt_males")
+tab$perturb(v = "cnt_males")
 
 # write to a file "outtab.csv" (.csv is automatically added to the path)
 \dontrun{
-tab$freqtab(v = c("total", "cnt_males"), path = "outtab")
+tab$freqtab(v = c("total", "cnt_males"), path = "outtab.csv")
 }
 
-# only weighted and perturbed weighted counts
-tab$freqtab(v = c("total", "cnt_males"), type = "weighted")
+# show results containing weighted and unweighted results
+tab$freqtab(v = c("total", "cnt_males"))
 
 # utility measures for a count variable
 tab$measures_cnts(v = "total", exclude_zeros = TRUE)
