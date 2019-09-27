@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.17.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.18.0</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
 <div id="important-note" class="section level3">
 <h3 class="hasAnchor">
 <a href="#important-note" class="anchor"></a>Important Note:</h3>
-<p>Major parts of the package were rewritten in version <code>0.17</code> compared to previous versions. The following changes are now described:</p>
+<p>Major parts of the package were rewritten in version <code>&gt;=0.17</code> compared to previous versions. The following changes are now described:</p>
 <ul>
 <li>
 <p><strong>Definition of hierarchies</strong> One main change is that it is now required to directly use functionality from <a href="https://cran.r-project.org/package=sdcHierarchies"><code>sdcHierarchies</code></a> to setup hierarchies when defining of tables. The following changes are possibly required in existing code.</p>
@@ -105,9 +105,9 @@
 </li>
 </ul>
 </li>
-<li><p><strong>Removing “abs”-input format</strong> For the sake of simplification, the differentiation between the <em>“abs”</em> and <em>“destatis”</em> format was removed. Internally, only the “destatis” format is used.</p></li>
-<li><p><strong>Removing possibility to perturb magnitude tables</strong> The feature to perturb continuously scaled variables (magnitude tables) was removed in version <code>0.17</code> of the package as the input format for perturbation tables is not yet finalized. Future versions of the package will gain the functionality to perturb magnitude tables again.</p></li>
+<li><p><strong>Removing “abs”-input format</strong> For the sake of simplification, the differentiation between the <em>“abs”</em> and <em>“destatis”</em> format was removed in version <code>&gt;= 0.17</code>. Internally, only the “destatis” format is used.</p></li>
 <li><p><strong>Simplification</strong> In order to simplify the application of the package, the process of defining, modifying and perturbing tables was modified. The implementation in versions <code>&gt;=0.17</code> is based on <code>R6</code> classes and is described in detail in the new and package vignette that can be viewed after installation of the package using <code><a href="reference/ck_vignette.html">ck_vignette()</a></code> or <a href="https://sdctools.github.io/cellKey/articles/introduction.html"><strong>online</strong></a>.</p></li>
+<li><p><strong>Perturbation of magnitude tables</strong> This features was removed in versions <code>0.17.x</code> and added again in versions <code>&gt;= 0.18.0</code>. For examples please look at <code><a href="reference/cellkey_pkg.html">?cellkey_pkg</a></code> or at the <a href="https://sdctools.github.io/cellKey/articles/introduction.html"><strong>vignette</strong></a>.</p></li>
 </ul>
 </div>
 <div id="installation" class="section level3">
@@ -125,8 +125,7 @@
 <a class="sourceLine" id="cb1-9" data-line-number="9">  <span class="dt">repo =</span> <span class="st">"sdcTools/cellKey"</span>,</a>
 <a class="sourceLine" id="cb1-10" data-line-number="10">  <span class="dt">dependencies =</span> <span class="ot">TRUE</span>,</a>
 <a class="sourceLine" id="cb1-11" data-line-number="11">  <span class="dt">build_opts =</span> <span class="st">"--no-resave-data"</span>,</a>
-<a class="sourceLine" id="cb1-12" data-line-number="12">  <span class="dt">force =</span> <span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb1-13" data-line-number="13">)</a></code></pre></div>
+<a class="sourceLine" id="cb1-12" data-line-number="12">  <span class="dt">force =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p>If you experience a timeout due to a proxy server while downloading, one can work around this issue by specifying the proxy-server using the <code>httr</code> package:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">httr<span class="op">::</span><span class="kw"><a href="https://httr.r-lib.org/reference/set_config.html">set_config</a></span>(<span class="kw">use_proxy</span>(<span class="dt">url =</span> <span class="st">"xxx.xxx.xxx.xxx, port = yy))</span></a></code></pre></div>
 </div>
@@ -184,7 +183,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.9000.</p>
 </div>
 
       </footer>

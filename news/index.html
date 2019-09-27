@@ -67,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.17.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.18.0</span>
       </span>
     </div>
 
@@ -117,6 +117,46 @@
       
     </div>
 
+    <div id="cellkey-0-18-0" class="section level1">
+<h1 class="page-header">
+<a href="#cellkey-0-18-0" class="anchor"></a>cellKey 0.18.0</h1>
+<ul>
+<li>allow to save perturbation-schemes for different variables in <code>params_cnts_set()</code> and <code>params_nums_set()</code>
+</li>
+<li>allow return current active perturbation parameters for variables with <code>params_cnts_get()</code> and <code>params_nums_get()</code>
+</li>
+<li>added new convenience methods <code>allvars()</code>, <code>numvars()</code> and <code>cntvars()</code> returning variable names eligable for perturbation</li>
+<li>implemented the perturbation of numerical variables
+<ul>
+<li>new method <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> to define perturbation parameters for continuous variables along with helper-functions <code><a href="../reference/ck_flexparams.html">ck_flexparams()</a></code> and <code><a href="../reference/ck_simpleparams.html">ck_simpleparams()</a></code>
+</li>
+<li>new method <code>numtab()</code> to extract numerical tables</li>
+<li>new method <code>mod_nums()</code> returning modifications for numerical variables</li>
+</ul>
+</li>
+<li>updated methods <code><a href="https://rdrr.io/r/base/print.html">print()</a></code> and <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> to include information about perturbed continuous variables</li>
+<li>new methods <code>reset_cntvars()</code>, <code>reset_numvars()</code> and <code>reset_allvars()</code> to remove perturbation results and provided perturbation parameters</li>
+<li>new methods to identify sensitive cells
+<ul>
+<li><code>$supp_freq(v, max_n)</code></li>
+<li><code>$supp_nk(v, max_n)</code></li>
+<li><code>$supp_p(v, max_n)</code></li>
+<li><code>$supp_pq(v, max_n)</code></li>
+</ul>
+</li>
+<li>added test-cases and improved coverage</li>
+<li>make use of ptables from <a href="https://github.com/sdctools/ptable"><code>ptable</code></a>-pkg</li>
+<li>Reproducibility:
+<ul>
+<li>allow to write perturbation parameters as yaml in <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> and <code><a href="../reference/ck_params_cnts.html">ck_params_cnts()</a></code>
+</li>
+<li>allow to import such parameters with <code><a href="../reference/ck_read_yaml.html">ck_read_yaml()</a></code>
+</li>
+</ul>
+</li>
+<li>updated and extended package vignette</li>
+</ul>
+</div>
     <div id="cellkey-0-17-3" class="section level1">
 <h1 class="page-header">
 <a href="#cellkey-0-17-3" class="anchor"></a>cellKey 0.17.3</h1>
@@ -353,6 +393,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#cellkey-0-18-0">0.18.0</a></li>
         <li><a href="#cellkey-0-17-3">0.17.3</a></li>
         <li><a href="#cellkey-0-17-2">0.17.2</a></li>
         <li><a href="#cellkey-0-17-1">0.17.1</a></li>
@@ -390,7 +431,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.9000.</p>
 </div>
 
       </footer>

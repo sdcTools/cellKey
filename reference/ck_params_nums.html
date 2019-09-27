@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create perturbation parameters for continuous variables — ck_params_nums • cellKey</title>
+<title>Set perturbation parameters for continuous variables — ck_params_nums • cellKey</title>
 
 
 <!-- jquery -->
@@ -35,7 +35,7 @@
 
 
 
-<meta property="og:title" content="Create perturbation parameters for continuous variables — ck_params_nums" />
+<meta property="og:title" content="Set perturbation parameters for continuous variables — ck_params_nums" />
 <meta property="og:description" content="This function allows to define perturbation parameters used to
 perturb cells in magnitude tables." />
 <meta name="twitter:card" content="summary" />
@@ -70,7 +70,7 @@ perturb cells in magnitude tables." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.17.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.18.0</span>
       </span>
     </div>
 
@@ -116,7 +116,7 @@ perturb cells in magnitude tables." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create perturbation parameters for continuous variables</h1>
+    <h1>Set perturbation parameters for continuous variables</h1>
     
     <div class="hidden name"><code>ck_params_nums.Rd</code></div>
     </div>
@@ -126,16 +126,16 @@ perturb cells in magnitude tables." />
 perturb cells in magnitude tables.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ck_params_nums</span>(<span class='kw'>P</span> <span class='kw'>=</span> <span class='st'>"top_contr"</span>, <span class='kw'>top_k</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>D</span>, <span class='no'>l</span>, <span class='kw'>same_key</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>use_zero_rkeys</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>ck_params_nums</span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"top_contr"</span>, <span class='kw'>top_k</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>ptab</span>, <span class='no'>mult_params</span>,
+  <span class='kw'>mu_c</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>same_key</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>use_zero_rkeys</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>path</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>P</th>
+      <th>type</th>
       <td><p>a character value defining the way to identify the <code>magnifier</code>,
-e.g which contributions/values in a cell should be the used  in the
+e.g which contributions/values in a cell should be the used in the
 perturbation procedure. Possible choices are:</p><ul>
 <li><p><code>top_contr</code>: the <code>k</code> largest contributions are used. In this case,
 it is also required to specify argument <code>top_k</code></p></li>
@@ -147,17 +147,39 @@ is used.</p></li>
     </tr>
     <tr>
       <th>top_k</th>
-      <td><p>it is ignored if <code>P</code> is different from <code>top_contr</code>. Otherwise,</p></td>
+      <td><p>it is ignored if <code>variant</code> is different from <code>top_contr</code>. Otherwise,</p></td>
     </tr>
     <tr>
-      <th>D</th>
-      <td><p>maximum perturbation value</p></td>
+      <th>ptab</th>
+      <td><p>in this argument, one ore more perturbation tables are given as input. the
+following choices are possible:</p><ul>
+<li><p>an object derived from <code><a href='https://rdrr.io/pkg/ptable/man/pt_create_pTable.html'>ptable::pt_create_pTable()</a></code>: this case is the same as specifying a
+named list with only a single element <code>"all"</code> (as described below)</p></li>
+<li><p>a named <code>list</code> where the allowed names are shown below and each element must be
+the output of <code><a href='https://rdrr.io/pkg/ptable/man/pt_create_pTable.html'>ptable::pt_create_pTable()</a></code></p><ul>
+<li><p><code>"all"</code>: this ptable will be used for all cells; if specified, no elements named <code>"even"</code>
+or <code>"odd"</code> must exist.</p></li>
+<li><p><code>"even"</code>: will be used to look up perturbation values for cells with an even number
+of contributors. if specified, also list-element <code>"odd"</code> must exist.</p></li>
+<li><p><code>"odd"</code>: will be used to look up perturbation values for cells with an odd number
+of contributors; if specified, also list-element <code>"even"</code> must exist.</p></li>
+<li><p><code>"small_cells"</code>: if specified, this ptable will be used to extract perturbation
+values for very small cells</p></li>
+</ul></li>
+</ul></td>
     </tr>
     <tr>
-      <th>l</th>
-      <td><p>stepwidth parameter for computation of perturbation tables
-a integerish number &gt;= 1 specifying the number of top contributions whose
-values should be perturbed.</p></td>
+      <th>mult_params</th>
+      <td><p>an object derived with <code><a href='ck_flexparams.html'>ck_flexparams()</a></code> or <code><a href='ck_simpleparams.html'>ck_simpleparams()</a></code>
+that contain required parameters for the computation of the perturbation multiplier</p></td>
+    </tr>
+    <tr>
+      <th>mu_c</th>
+      <td><p>fixed extra protection amount (<code>&gt;= 0)</code> applied to the absolute of the
+perturbation value of the first (largest) noise component if the cell is sensitive.
+This value defaults to <code>0</code> (no additional protection). Please note that sensitive cells
+can be defined according using the <code>supp_freq()</code>, <code>supp_val</code>, <code>supp_p()</code>, <code>supp_nk()</code>
+and <code>supp_pq()</code> methods. An examples is given in <code><a href='cellkey_pkg.html'>?cellkey_pkg</a></code>.</p></td>
     </tr>
     <tr>
       <th>same_key</th>
@@ -167,148 +189,127 @@ cell or should a perturbation of the cellkey itself (<code>FALSE</code>) take pl
     </tr>
     <tr>
       <th>use_zero_rkeys</th>
-      <td><p>(logical) skalar defining if record keys of
+      <td><p>(logical) scalar defining if record keys of
 units not contributing to a specific numeric variables should be
 used (<code>TRUE</code>) or ignored (<code>FALSE</code>) when computing cell keys.</p></td>
+    </tr>
+    <tr>
+      <th>path</th>
+      <td><p>a scalar character specifying a path to which the parameters created with this functions
+should be written to (in yaml format)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>an object suitable as input to <code><a href='cellkey_pkg.html'>ck_setup()</a></code> for the perturbation
-of magnitude tables</p>
+    <p>an object suitable as input to method <code>$params_nums_set()</code> for the perturbation
+of continous variables.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='ck_flexparams.html'>ck_flexparams()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>ck_params_nums</span>(<span class='kw'>D</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>l</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='st'>"top_contr"</span>, <span class='kw'>top_k</span> <span class='kw'>=</span> <span class='fl'>3</span>)</div><div class='output co'>#&gt; $params
-#&gt; $params$P
+    <pre class="examples"><div class='input'><span class='co'># create a perturbation table using</span>
+<span class='co'># functionality from ptable-pkg; see help(pa = "ptable")</span>
+<span class='no'>params_all</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>ptable</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/ptable/man/pt_create_pParams.html'>pt_create_pParams</a></span>(
+  <span class='kw'>D</span> <span class='kw'>=</span> <span class='fl'>4</span>,
+  <span class='kw'>V</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+  <span class='kw'>table</span> <span class='kw'>=</span> <span class='st'>"nums"</span>,
+  <span class='kw'>step</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
+  <span class='kw'>icat</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>5</span>),
+  <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"all"</span>)
+
+<span class='co'># parameters for a ptab for very small cells</span>
+<span class='no'>params_sc</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>ptable</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/ptable/man/pt_create_pParams.html'>pt_create_pParams</a></span>(
+  <span class='kw'>D</span> <span class='kw'>=</span> <span class='fl'>5</span>,
+  <span class='kw'>V</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>table</span> <span class='kw'>=</span> <span class='st'>"nums"</span>,
+  <span class='kw'>step</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
+  <span class='kw'>icat</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>5</span>, <span class='fl'>10</span>),
+  <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"all"</span>)
+
+<span class='co'># create a named list</span>
+<span class='no'>ptab</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(
+  <span class='kw'>all</span> <span class='kw'>=</span> <span class='kw pkg'>ptable</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/ptable/man/pt_create_pTable.html'>pt_create_pTable</a></span>(<span class='no'>params_all</span>),
+  <span class='kw'>small_cells</span> <span class='kw'>=</span> <span class='kw pkg'>ptable</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/ptable/man/pt_create_pTable.html'>pt_create_pTable</a></span>(<span class='no'>params_sc</span>))
+
+<span class='fu'>ck_params_nums</span>(
+  <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"top_contr"</span>,
+  <span class='kw'>top_k</span> <span class='kw'>=</span> <span class='fl'>3</span>,
+  <span class='kw'>ptab</span> <span class='kw'>=</span> <span class='no'>ptab</span>,
+  <span class='kw'>mult_params</span> <span class='kw'>=</span> <span class='fu'><a href='ck_flexparams.html'>ck_flexparams</a></span>(
+    <span class='kw'>fp</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
+    <span class='kw'>p</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.20</span>, <span class='fl'>0.03</span>),
+    <span class='kw'>epsilon</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>0.5</span>, <span class='fl'>0.2</span>),
+    <span class='kw'>q</span> <span class='kw'>=</span> <span class='fl'>2</span>),
+  <span class='kw'>use_zero_rkeys</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>mu_c</span> <span class='kw'>=</span> <span class='fl'>3</span>)</div><div class='output co'>#&gt; $params
+#&gt; $params$type
 #&gt; [1] "top_contr"
 #&gt; 
 #&gt; $params$top_k
 #&gt; [1] 3
 #&gt; 
-#&gt; $params$stab
-#&gt;     i   j           p    kum_p_u    kum_p_o diff
-#&gt;  1: 0 0.0 1.000000000 0.00000000 1.00000000  0.0
-#&gt;  2: 1 0.0 0.012336985 0.00000000 0.01233699 -1.0
-#&gt;  3: 1 0.5 0.010059579 0.01233699 0.02239656 -0.5
-#&gt;  4: 1 1.0 0.006458873 0.02239656 0.02885544  0.0
-#&gt;  5: 1 1.5 0.246789435 0.02885544 0.27564487  0.5
-#&gt;  6: 1 2.0 0.149631830 0.27564487 0.42527670  1.0
-#&gt;  7: 1 2.5 0.011465385 0.42527670 0.43674209  1.5
-#&gt;  8: 1 3.0 0.290107711 0.43674209 0.72684980  2.0
-#&gt;  9: 1 3.5 0.048947298 0.72684980 0.77579710  2.5
-#&gt; 10: 1 4.0 0.038093121 0.77579710 1.00000000  3.0
-#&gt; 11: 3 0.0 0.061281256 0.00000000 0.06128126 -3.0
-#&gt; 12: 3 0.5 0.014317899 0.06128126 0.07559916 -2.5
-#&gt; 13: 3 1.0 0.067825180 0.07559916 0.14342434 -2.0
-#&gt; 14: 3 1.5 0.176131292 0.14342434 0.31955563 -1.5
-#&gt; 15: 3 2.0 0.002714366 0.31955563 0.32226999 -1.0
-#&gt; 16: 3 2.5 0.047496737 0.32226999 0.36976673 -0.5
-#&gt; 17: 3 3.0 0.026446960 0.36976673 0.39621369  0.0
-#&gt; 18: 3 3.5 0.015602201 0.39621369 0.41181589  0.5
-#&gt; 19: 3 4.0 0.030445301 0.41181589 0.44226119  1.0
-#&gt; 20: 3 4.5 0.062980696 0.44226119 0.50524189  1.5
-#&gt; 21: 3 5.0 0.136690256 0.50524189 0.64193214  2.0
-#&gt; 22: 3 5.5 0.065322216 0.64193214 0.70725436  2.5
-#&gt; 23: 3 6.0 0.044637735 0.70725436 1.00000000  3.0
-#&gt;     i   j           p    kum_p_u    kum_p_o diff
+#&gt; $params$ptab
+#&gt;       i    j          p    v        lb        ub        type
+#&gt;   1:  0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+#&gt;   2:  1  0.0 0.11305826 -1.0 0.0000000 0.1130583         all
+#&gt;   3:  1  0.2 0.11305825 -0.8 0.1130583 0.2261165         all
+#&gt;   4:  1  0.4 0.11305826 -0.6 0.2261165 0.3391748         all
+#&gt;   5:  1  0.6 0.11305826 -0.4 0.3391748 0.4522330         all
+#&gt;  ---                                                        
+#&gt; 198: 10 14.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+#&gt; 199: 10 14.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+#&gt; 200: 10 14.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+#&gt; 201: 10 14.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+#&gt; 202: 10 15.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
 #&gt; 
-#&gt; $params$same_key
-#&gt; [1] TRUE
+#&gt; $params$mu_c
+#&gt; [1] 3
 #&gt; 
-#&gt; $params$use_zero_rkeys
-#&gt; [1] FALSE
-#&gt; 
-#&gt; 
-#&gt; $type
-#&gt; [1] "nums"
-#&gt; 
-#&gt; attr(,"class")
-#&gt; [1] "ck_params"</div><div class='input'><span class='fu'>ck_params_nums</span>(<span class='kw'>D</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>l</span> <span class='kw'>=</span> <span class='fl'>.5</span>, <span class='kw'>P</span> <span class='kw'>=</span> <span class='st'>"mean"</span>)</div><div class='output co'>#&gt; $params
-#&gt; $params$P
-#&gt; [1] "mean"
-#&gt; 
-#&gt; $params$top_k
+#&gt; $params$m_fixed_sq
 #&gt; [1] 1
 #&gt; 
-#&gt; $params$stab
-#&gt;      i    j             p     kum_p_u     kum_p_o  diff
-#&gt;  1:  0  0.0 1.00000000000 0.000000000 1.000000000   0.0
-#&gt;  2:  1  0.0 0.00946512143 0.000000000 0.009465121  -1.0
-#&gt;  3:  1  0.5 0.02434970415 0.009465121 0.033814826  -0.5
-#&gt;  4:  1  1.0 0.08212723816 0.033814826 0.115942064   0.0
-#&gt;  5:  1  1.5 0.06181406206 0.115942064 0.177756126   0.5
-#&gt;  6:  1  2.0 0.00790845393 0.177756126 0.185664580   1.0
-#&gt;  7:  1  2.5 0.03050883440 0.185664580 0.216173414   1.5
-#&gt;  8:  1  3.0 0.02711114264 0.216173414 0.243284557   2.0
-#&gt;  9:  1  3.5 0.06806718092 0.243284557 0.311351738   2.5
-#&gt; 10:  1  4.0 0.03150079376 0.311351738 0.342852531   3.0
-#&gt; 11:  1  4.5 0.00149163464 0.342852531 0.344344166   3.5
-#&gt; 12:  1  5.0 0.04455465823 0.344344166 0.388898824   4.0
-#&gt; 13:  1  5.5 0.02548224013 0.388898824 0.414381064   4.5
-#&gt; 14:  1  6.0 0.01803789916 0.414381064 0.432418964   5.0
-#&gt; 15:  1  6.5 0.03450042033 0.432418964 0.466919384   5.5
-#&gt; 16:  1  7.0 0.00986653008 0.466919384 0.476785914   6.0
-#&gt; 17:  1  7.5 0.07185763563 0.476785914 0.548643550   6.5
-#&gt; 18:  1  8.0 0.02151482110 0.548643550 0.570158371   7.0
-#&gt; 19:  1  8.5 0.04534539673 0.570158371 0.615503768   7.5
-#&gt; 20:  1  9.0 0.01495505753 0.615503768 0.630458825   8.0
-#&gt; 21:  1  9.5 0.13905808283 0.630458825 0.769516908   8.5
-#&gt; 22:  1 10.0 0.00966093969 0.769516908 0.779177848   9.0
-#&gt; 23:  1 10.5 0.08307129983 0.779177848 0.862249147   9.5
-#&gt; 24:  1 11.0 0.01538467919 0.862249147 1.000000000  10.0
-#&gt; 25: 10  0.0 0.01200617524 0.000000000 0.012006175 -10.0
-#&gt; 26: 10  0.5 0.07023551152 0.012006175 0.082241687  -9.5
-#&gt; 27: 10  1.0 0.03044322319 0.082241687 0.112684910  -9.0
-#&gt; 28: 10  1.5 0.02809083462 0.112684910 0.140775745  -8.5
-#&gt; 29: 10  2.0 0.02254869300 0.140775745 0.163324438  -8.0
-#&gt; 30: 10  2.5 0.02263938403 0.163324438 0.185963822  -7.5
-#&gt; 31: 10  3.0 0.00744617777 0.185963822 0.193409999  -7.0
-#&gt; 32: 10  3.5 0.00531985587 0.193409999 0.198729855  -6.5
-#&gt; 33: 10  4.0 0.06330197817 0.198729855 0.262031833  -6.0
-#&gt; 34: 10  4.5 0.03596905922 0.262031833 0.298000893  -5.5
-#&gt; 35: 10  5.0 0.00353252213 0.298000893 0.301533415  -5.0
-#&gt; 36: 10  5.5 0.02143245633 0.301533415 0.322965871  -4.5
-#&gt; 37: 10  6.0 0.05715760775 0.322965871 0.380123479  -4.0
-#&gt; 38: 10  6.5 0.05277850898 0.380123479 0.432901988  -3.5
-#&gt; 39: 10  7.0 0.01630745316 0.432901988 0.449209441  -3.0
-#&gt; 40: 10  7.5 0.02163640666 0.449209441 0.470845848  -2.5
-#&gt; 41: 10  8.0 0.00006356835 0.470845848 0.470909416  -2.0
-#&gt; 42: 10  8.5 0.00172258844 0.470909416 0.472632004  -1.5
-#&gt; 43: 10  9.0 0.01569885225 0.472632004 0.488330857  -1.0
-#&gt; 44: 10  9.5 0.00785621628 0.488330857 0.496187073  -0.5
-#&gt; 45: 10 10.0 0.00073237601 0.496187073 0.496919449   0.0
-#&gt; 46: 10 10.5 0.01080902596 0.496919449 0.507728475   0.5
-#&gt; 47: 10 11.0 0.02607845026 0.507728475 0.533806925   1.0
-#&gt; 48: 10 11.5 0.02021673718 0.533806925 0.554023662   1.5
-#&gt; 49: 10 12.0 0.00295717246 0.554023662 0.556980835   2.0
-#&gt; 50: 10 12.5 0.05118112732 0.556980835 0.608161962   2.5
-#&gt; 51: 10 13.0 0.04934103368 0.608161962 0.657502996   3.0
-#&gt; 52: 10 13.5 0.02211043751 0.657502996 0.679613433   3.5
-#&gt; 53: 10 14.0 0.01836216496 0.679613433 0.697975598   4.0
-#&gt; 54: 10 14.5 0.01325686532 0.697975598 0.711232464   4.5
-#&gt; 55: 10 15.0 0.03025941434 0.711232464 0.741491878   5.0
-#&gt; 56: 10 15.5 0.00006768084 0.741491878 0.741559559   5.5
-#&gt; 57: 10 16.0 0.00718053733 0.741559559 0.748740096   6.0
-#&gt; 58: 10 16.5 0.06878424506 0.748740096 0.817524341   6.5
-#&gt; 59: 10 17.0 0.00733272452 0.817524341 0.824857066   7.0
-#&gt; 60: 10 17.5 0.03990906943 0.824857066 0.864766135   7.5
-#&gt; 61: 10 18.0 0.03496617870 0.864766135 0.899732314   8.0
-#&gt; 62: 10 18.5 0.01047131838 0.899732314 0.910203632   8.5
-#&gt; 63: 10 19.0 0.00014137221 0.910203632 0.910345004   9.0
-#&gt; 64: 10 19.5 0.00307888468 0.910345004 0.913423889   9.5
-#&gt; 65: 10 20.0 0.00826106546 0.913423889 1.000000000  10.0
-#&gt;      i    j             p     kum_p_u     kum_p_o  diff
+#&gt; $params$zs
+#&gt; [1] 29.34836
+#&gt; 
+#&gt; $params$E
+#&gt; [1] 1.29
+#&gt; 
+#&gt; $params$mult_params
+#&gt; $fp
+#&gt; [1] 1000
+#&gt; 
+#&gt; $p_small
+#&gt; [1] 0.2
+#&gt; 
+#&gt; $p_large
+#&gt; [1] 0.03
+#&gt; 
+#&gt; $epsilon
+#&gt; [1] 1.0 0.5 0.2
+#&gt; 
+#&gt; $q
+#&gt; [1] 2
+#&gt; 
+#&gt; attr(,"class")
+#&gt; [1] "params_m_flex"
 #&gt; 
 #&gt; $params$same_key
 #&gt; [1] TRUE
 #&gt; 
 #&gt; $params$use_zero_rkeys
+#&gt; [1] TRUE
+#&gt; 
+#&gt; $params$even_odd
 #&gt; [1] FALSE
+#&gt; 
+#&gt; $params$separation
+#&gt; [1] TRUE
 #&gt; 
 #&gt; 
 #&gt; $type
-#&gt; [1] "nums"
+#&gt; [1] "params_m_flex"
 #&gt; 
 #&gt; attr(,"class")
 #&gt; [1] "ck_params"</div></pre>
@@ -318,6 +319,7 @@ of magnitude tables</p>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
+      <li><a href="#see-also">See also</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 
@@ -331,7 +333,7 @@ of magnitude tables</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.9000.</p>
 </div>
 
       </footer>
