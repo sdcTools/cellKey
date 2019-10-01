@@ -1,4 +1,4 @@
 library(testthat)
-library(cellKey)
+library(cellKey) # nolint
 
 test_check("cellKey")

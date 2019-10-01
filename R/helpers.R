@@ -3,30 +3,12 @@ gen_vnames <- function(vv, prefix) {
   return(paste0(prefix, "_", vv))
 }
 
-# x: values of a perturbed numerical variable
-# pWC: perturbed weighted counts
-mean_before_sum <- function(x, pWC) {
-  pWMean <- x / pWC
-  pWSum <- pWMean * pWC
-  pWMean[is.na(pWMean)] <- 0
-  data.table(pWMean = pWMean, pWSum = pWSum)
-}
-
-# x: values of a perturbed numerical variable
-# pWC: perturbed weighted counts
-sum_before_mean <- function(x, pWC) {
-  pWSum <- x
-  pWMean <- x / pWC
-  pWMean[is.na(pWMean)] <- 0
-  data.table(pWMean = pWMean, pWSum = pWSum)
-}
-
 # simple check functions for record keys
 check_rkeys <- function(rkeys) {
   if (!is.numeric(rkeys)) {
     stop("`rkeys` must be a numeric vector.", call. = FALSE)
   }
-  if (!all(rkeys >=0)) {
+  if (!all(rkeys >= 0)) {
     stop("`rkeys` must be a >= 0.", call. = FALSE)
   }
   if (!all(rkeys <= 1)) {
@@ -75,7 +57,7 @@ get_distr_vals <- function(dd) {
     e <- c(
       msg,
       "Possible choices are:\n",
-      paste(shQuote(avail), collapse ="; ")
+      paste(shQuote(avail), collapse = "; ")
     )
     stop(paste(e, collapse = " "), call. = FALSE)
   }

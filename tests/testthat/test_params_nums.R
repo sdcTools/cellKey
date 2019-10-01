@@ -94,7 +94,9 @@ test_that("invalid inputs are caught", {
   expect_error(ck_params_nums(ptab = ptab, type = "top_contr", top_k = 4, mult_params = flex))
 
   # converting top_k to 1
-  expect_message(ck_params_nums(ptab = ptab, type = "mean", top_k = 4, mult_params = flex_single), "ignoring argument `top_k`")
+  expect_message(
+    ck_params_nums(ptab = ptab, type = "mean", top_k = 4, mult_params = flex_single),
+    "ignoring argument `top_k`")
 })
 
 set.seed(100)

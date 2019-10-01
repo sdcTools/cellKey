@@ -68,11 +68,3 @@ test_that("invalid inputs are caught", {
   # non-numeric numvars
   expect_error(ck_setup(x = x, rkey = rk, dims = dims, w = w, countvars = cv, numvars = "age"))
 })
-
-#
-#
-#
-# test_that("checking dimension and structure of generated testxa is ok", {
-#   expect_identical(digest::digest(x), "1ad2666d5e0cd33aba567ba1ef0117fe")
-#   expect_true(is.xa.table(x))
-# })

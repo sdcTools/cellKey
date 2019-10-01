@@ -1,6 +1,6 @@
 cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
-  public=list(
-    initialize=function(x, rkey, dims, w, countvars = NULL, numvars = NULL) {
+  public = list(
+    initialize = function(x, rkey, dims, w, countvars = NULL, numvars = NULL) {
       type <- is_perturbed <- NULL
 
       if (!inherits(x, "data.frame")) {
@@ -166,7 +166,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
       # duplicated cells (bogus codes) have the same
       # strID as their parent cell!
-      strids <- unique(tab$strID)
+      strids <- unique(tab[["strID"]])
 
       # calculate contributing indices
       # we do this in any case!
@@ -334,7 +334,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       invisible(self)
     },
     # perturb variables
-    perturb=function(v) {
+    perturb = function(v) {
       # important variables
       countvars <- self$cntvars()
       numvars <- self$numvars()
@@ -357,7 +357,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       return(invisible(self))
     },
     # return a table for perturbed count variables
-    freqtab=function(v=NULL, path = NULL) {
+    freqtab = function(v=NULL, path = NULL) {
       if (!is.null(path)) {
         .valid_path(path, ext = "csv")
       }
@@ -387,7 +387,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       # return a table for a single perturbed count variable
       .onevar_tab_freq <- function(results, vname) {
         dt1 <-  results$dims
-        dt1$strID <- NULL
+        dt1[["strID"]] <- NULL
         dt1$vname <- vname
         dt2 <-  results[[vname]]
 
@@ -415,7 +415,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       return(res)
     },
     # return a table for perturbed numeric variables
-    numtab=function(v = NULL, mean_before_sum = FALSE, path = NULL) {
+    numtab = function(v = NULL, mean_before_sum = FALSE, path = NULL) {
       if (!is.null(path)) {
         .valid_path(path, ext = "csv")
       }
@@ -466,7 +466,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     },
 
     # compute distance-based utility measures
-    measures_cnts=function(v, exclude_zeros = TRUE) {
+    measures_cnts = function(v, exclude_zeros = TRUE) {
       if (!is_scalar_character(v)) {
         stop("Argument `v` needs to be a scalar character!", call. = FALSE)
       }
@@ -488,35 +488,35 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     },
 
     # compute measures for continuous variables
-    measures_nums=function(v) {
+    measures_nums = function(v) {
       stop("No utility measures for continuous variables are available yet.", call. = FALSE)
     },
 
     # return names of all-, cnt- or numerical variables
-    allvars=function() {
+    allvars = function() {
       list(
         cntvars = self$cntvars(),
         numvars = self$numvars()
       )
     },
-    cntvars=function() {
+    cntvars = function() {
       private$.ck_vars("countvars")
     },
-    numvars=function() {
+    numvars = function() {
       private$.ck_vars("numvars")
     },
 
     # return actual modifications
-    mod_cnts=function() {
+    mod_cnts = function() {
       private$modifications(type = "cnts")
     },
-    mod_nums=function() {
+    mod_nums = function() {
       private$modifications(type = "nums")
     },
 
     # identification of sensitive cells
     # based on number of (weighted) contributing units
-    supp_freq=function(v, n, weighted = TRUE) {
+    supp_freq = function(v, n, weighted = TRUE) {
       if (!rlang::is_scalar_logical(weighted)) {
         stop("argument `weighted` is not a logical value.", call. = FALSE)
       }
@@ -541,7 +541,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       invisible(self)
     },
     # based on (weighted) cell values
-    supp_val=function(v, n, weighted = TRUE) {
+    supp_val = function(v, n, weighted = TRUE) {
       if (!rlang::is_scalar_logical(weighted)) {
         stop("argument `weighted` is not a logical value.", call. = FALSE)
       }
@@ -566,7 +566,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       invisible(self)
     },
     # p%-rule
-    supp_p=function(v, p) {
+    supp_p = function(v, p) {
       .check_avail(
         v = v,
         avail = self$numvars(),
@@ -589,12 +589,12 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         type = "p",
         numVarName = v,
         p = p)
-      pat <- sdcProb2df(res, addDups = TRUE)$sdcStatus == "u"
+      pat <- sdcProb2df(res, addDups = TRUE)[["sdcStatus"]] == "u"
       private$.update_supps(v = v, pat = pat, rule = "p%-rule")
       invisible(self)
     },
-    # pq-rule
-    supp_pq=function(v, p, q) {
+    # pq rule
+    supp_pq = function(v, p, q) {
       .check_avail(
         v = v,
         avail = self$numvars(),
@@ -624,12 +624,12 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         numVarName = v,
         p = p,
         q = q)
-      pat <- sdcProb2df(res, addDups = TRUE)$sdcStatus == "u"
+      pat <- sdcProb2df(res, addDups = TRUE)[["sdcStatus"]] == "u"
       private$.update_supps(v = v, pat = pat, rule = "pq-rule")
       invisible(self)
     },
     # nk-dominance rule
-    supp_nk=function(v, n, k) {
+    supp_nk = function(v, n, k) {
       .check_avail(
         v = v,
         avail = self$numvars(),
@@ -656,16 +656,16 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         numVarName = v,
         n = n,
         k = k)
-      pat <- sdcProb2df(res, addDups = TRUE)$sdcStatus == "u"
+      pat <- sdcProb2df(res, addDups = TRUE)[["sdcStatus"]] == "u"
       private$.update_supps(v = v, pat = pat, rule = "nk-rule")
       invisible(self)
     },
 
     # get/set parameters for cnt-vars
-    params_cnts_get=function() {
+    params_cnts_get = function() {
       return(private$.pert_params$cnts)
     },
-    params_cnts_set=function(val, v = NULL) {
+    params_cnts_set = function(val, v = NULL) {
       if (!inherits(val, "ck_params")) {
         stop("Please create the input using `ck_params_cnts()`", call. = FALSE)
       }
@@ -704,7 +704,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
     # reset perturbation and perturbation parameters
     # of the given variables
-    reset_cntvars=function(v = NULL) {
+    reset_cntvars = function(v = NULL) {
       avail <- private$.ck_perturbed_vars(what = "countvars")
       if (length(avail) == 0) {
         message("No perturbed count variables available.")
@@ -721,7 +721,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       private$.reset_vars(vars = v)
       return(invisible(self))
     },
-    reset_numvars=function(v = NULL) {
+    reset_numvars = function(v = NULL) {
       avail <- private$.ck_perturbed_vars(what = "numvars")
       if (length(avail) == 0) {
         message("No perturbed numerical variables available.")
@@ -738,7 +738,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       private$.reset_vars(vars = v)
       return(invisible(self))
     },
-    reset_allvars=function() {
+    reset_allvars = function() {
       avail <- c(private$.ck_perturbed_vars(what = "countvars"), private$.ck_perturbed_vars(what = "numvars"))
       if (length(avail) == 0) {
         message("No perturbed variables available.")
@@ -748,10 +748,10 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     },
 
     # get/set parameters for num-vars
-    params_nums_get=function() {
+    params_nums_get = function() {
       return(private$.pert_params$nums)
     },
-    params_nums_set=function(val, v = NULL) {
+    params_nums_set = function(val, v = NULL) {
       nv <- self$numvars()
       if (length(nv) == 0) {
         message("no numeric variables are available!")
@@ -793,7 +793,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       return(invisible(self))
     },
 
-    summary=function() {
+    summary = function() {
       cli::cat_line(cli::boxx("Utility measures for perturbed count variables", padding = 0))
 
       # perturbed countvars
@@ -842,7 +842,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       #        num_info = num_info)
       # ))
     },
-    print=function() {
+    print = function() {
       cli::cat_rule("Table Information")
       nr_dims <- ncol(private$.results$dims) - 1
       nr_cells <- nrow(private$.results$dims)
@@ -889,7 +889,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     #    max_contr = private$.max_contributions)
     #}
   ),
-  private=list(
+  private = list(
     .prob = NULL,
     .max_contributions = NULL,
     .varsdt = NULL,
@@ -912,13 +912,13 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       return(vv)
     },
     # names of already perturbed count or continuous variables
-    .ck_perturbed_vars=function(what) {
+    .ck_perturbed_vars = function(what) {
       stopifnot(what %in% c("countvars", "numvars"))
       type <- is_perturbed <- vname <- NULL
       private$.varsdt[type == what & is_perturbed == TRUE, vname]
     },
     # actually perturb count variables
-    .ck_perturb_cnts=function(v) {
+    .ck_perturb_cnts = function(v) {
       lookup_freq <- function(ptab, cellkeys, cellvals) {
         row_nr <- rep(-1, length(cellkeys))
         pert_vals <- rep(0L, length(cellkeys))
@@ -1028,7 +1028,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       return(invisible(self))
     },
     # actually perturb continuous variables
-    .ck_perturb_nums=function(v) {
+    .ck_perturb_nums = function(v) {
       dig <- .ck_digits()
       if (private$.is_perturbed_numvar(v)) {
         message("Variable ", shQuote(v),  " was already perturbed!")
@@ -1101,7 +1101,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       }
 
       if (!params$even_odd) {
-        # "all"-case
+        # handle the "all"-case
         x_vals <- lapply(x_vals, function(x) {
           x$even_odd <- NA
           x
@@ -1128,10 +1128,10 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
           ck = x,
           top_k = params$top_k,
           same_key = params$same_key)
-      }, mc.cores = .ck_cores())
+      }, mc.cores = .ck_cores()) # nolint
 
       # we remove duplicated cells for now and add them later!
-      names(cellkeys) <- dim_dt$strID
+      names(cellkeys) <- dim_dt[["strID"]]
       index_nondup <- !private$.dupsinfo$is_bogus
       cellkeys <- cellkeys[index_nondup]
       cellvals <- cellvals[index_nondup]
@@ -1145,7 +1145,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
             return("even")
           }
           return("odd")
-        }, mc.cores = .ck_cores())
+        }, mc.cores = .ck_cores()) # nolint
 
         res <- parallel::mclapply(1:length(x_vals), function(x) {
           .perturb_cell_flex(
@@ -1155,7 +1155,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
             lookup = lookup[[x]],
             prot_req = prot_req[x],
             params = params)
-          }, mc.cores = .ck_cores())
+          }, mc.cores = .ck_cores()) # nolint
 
         pert_result <- rbindlist(parallel::mclapply(1:length(x_vals), function(x) {
          data.table(
@@ -1167,7 +1167,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
            x_delta = res[[x]]$x_delta,
            lookup = res[[x]]$lookup,
            additional_protection = prot_req[x])
-       }, mc.cores = .ck_cores()))
+       }, mc.cores = .ck_cores())) # nolint
       } else {
         # compute x_delta: multiplication parameters m_j (x) * x
         # reason: in case of fixed_variance for very small cells, x_j is changed to 1!
@@ -1182,10 +1182,12 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
           if (lookup_type == "simple") {
             return(.x_delta_simple(x = x, inp_params = inp_params))
           }
+          # nolint start
           #if (lookup_type == "grid") {
           #  return(.x_delta_grid(x = x, inp_params = inp_params))
           #}
-        }, mc.cores = .ck_cores())
+          # nolint end
+        }, mc.cores = .ck_cores()) # nolint
 
         x_delta <- lapply(res, function(x) x$x_delta)
         lookup <- lapply(res, function(x) x$lookup)
@@ -1219,7 +1221,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
             p <- (abs(p) + mu_c[1:length(p)]) * signs
           }
           p
-        }, mc.cores = .ck_cores())
+        }, mc.cores = .ck_cores()) # nolint
         names(pvals) <- names(cellkeys)
 
         # actual perturbation for cells are sum(pvals * x_delta)
@@ -1240,7 +1242,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
             x_delta = x_delta[[x]],
             lookup = lookup[[x]],
             additional_protection = prot_req[x])
-        }, mc.cores = .ck_cores()))
+        }, mc.cores = .ck_cores())) # nolint
       }
 
       ck_log("add rows for duplicated cells!")
@@ -1256,21 +1258,23 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       newtab <- private$.results[[v]]
 
       # no duplicates
+      # nolint start
       unq <- pert_result[!duplicated(strID), list(strID, pert, cv_pert)]
+      # nolint end
       setnames(unq, c("strID", "pert_total", gen_vnames(v, prefix = "pws")))
 
       # we merge the results back; duplicated cells have identical
       # perturbation values (pws_{var} and pert_total)
       # thus, we can easily merge
-      newtab$strID <- dim_dt$strID
+      newtab[["strID"]] <- dim_dt[["strID"]]
       newtab <- merge(newtab, unq, by = "strID", all.x = TRUE)
-      newtab$strID <- NULL
+      newtab[["strID"]] <- NULL
       private$.results[[v]] <- newtab
 
       ck_log("compute and add modifications")
       # note: `ckey`: the first cell key (all others were scrambled)
       mods <- copy(pert_result)
-      mods$strID <- mods$cv <- mods$cv_pert <- NULL
+      mods[["strID"]] <- mods$cv <- mods$cv_pert <- NULL
       mods$numvar <- v
       private$.modifications$nums <- rbind(private$.modifications$nums, mods)
 
@@ -1283,7 +1287,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       return(invisible(self))
     },
     # utility measures for count variables
-    .ck_utility_cnts=function(v, exclude_zeros) {
+    .ck_utility_cnts = function(v, exclude_zeros) {
       v <- tolower(v)
       dt <- private$.results[[v]]
       return(ck_cnt_measures(
@@ -1293,21 +1297,21 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       ))
     },
     # utility measures for numeric variables
-    .ck_utility_nums=function(v) {
+    .ck_utility_nums = function(v) {
       stop(".ck_utility_nums() needs to be implemented", call. = FALSE)
     },
     # is `v` a perturbed countvar?
-    .is_perturbed_countvar=function(v) {
+    .is_perturbed_countvar = function(v) {
       stopifnot(is_scalar_character(v))
       v %in% private$.ck_perturbed_vars("countvars")
     },
     # is `v` a perturbed numvar?
-    .is_perturbed_numvar=function(v) {
+    .is_perturbed_numvar = function(v) {
       stopifnot(is_scalar_character(v))
       v %in% private$.ck_perturbed_vars("numvars")
     },
     # resets perturbed variables
-    .reset_vars=function(vars) {
+    .reset_vars = function(vars) {
       for (v in vars) {
         ck_log("removing perturbation results and parameters for ", shQuote(v))
         if (private$.is_perturbed_countvar(v)) {
@@ -1324,7 +1328,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     },
 
     # updates column `special_protection` after applying primary suppression
-    .update_supps=function(v, pat, rule) {
+    .update_supps = function(v, pat, rule) {
       nr_ex_supp <- sum(private$.results[[v]]$special_protection)
       index_new_supps <- which(pat)
       if (length(index_new_supps) > 0) {
@@ -1337,11 +1341,11 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     # returns modification slot
 
     # returns TRUE if we have a variable containing negative values
-    .has_negative_values=function(v) {
+    .has_negative_values = function(v) {
       min(private$.prob@dataObj@rawData[[v]], na.rm = TRUE) < 0
     },
 
-    modifications=function(type = NULL) {
+    modifications = function(type = NULL) {
       if (is.null(type)) {
         return(private$.modifications)
       }
@@ -1544,7 +1548,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' # which variables have been defined?
 #' tab$allvars()
 #'
-#' # count-variables
+#' # count variables
 #' tab$cntvars()
 #'
 #' # continuous variables

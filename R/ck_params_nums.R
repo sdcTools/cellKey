@@ -143,7 +143,7 @@ ck_params_nums <-
     if (nrow(dt) == 0) {
       return(stop("invalid ptab found when computing parameter m1sq.", call. = FALSE))
     }
-    sum((dt$i - dt$j)^2 * dt$p)
+    return(sum((dt$i - dt$j) ^ 2 * dt$p)) # nolint
   }
 
   m_fixed_sq <- NA
@@ -161,7 +161,7 @@ ck_params_nums <-
     sqrt(m_fixed_sq) / (sqrt(E) * p_large)
   }
 
-  E <- sum(mult_params$epsilon^2)
+  E <- sum(mult_params$epsilon ^ 2)
   if (inherits(mult_params, "params_m_flex")) {
     p_large <- mult_params$p_large
   } else if (inherits(mult_params, "params_m_simple")) {

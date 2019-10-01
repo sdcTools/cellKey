@@ -16,7 +16,7 @@
   }
 
   for (i in 2:top_k) {
-    res[i] <- paste0(beg, substr(res[i - 1], 4, len), substr(res[i- 1], 3, 3))
+    res[i] <- paste0(beg, substr(res[i - 1], 4, len), substr(res[i - 1], 3, 3))
   }
   as.numeric(res)
 }
@@ -28,8 +28,8 @@
 # p_sm: percentage of perturbation for small cells
 # q: parameter for flex function
 .para_m <- function(x, p_sm, p_lg, fp, q) {
-  f1 <- ((p_sm * x) - (p_lg * fp)) / (p_lg * fp)
-  f2 <- ((2 * fp) / (fp + x))^q
+  f1 <- ( (p_sm * x) - (p_lg * fp) ) / (p_lg * fp)
+  f2 <- ( (2 * fp) / (fp + x) ) ^ q
   p_lg * (1 + (f1 * f2))
 }
 
@@ -122,7 +122,6 @@
     }
 
     xj <- x[j]
-    sign_xj <- sign(xj)
     abs_xj <- abs(xj)
 
     if (abs_xj < zs) {
