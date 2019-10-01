@@ -888,15 +888,15 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         }
       }
       return(invisible(NULL))
-    }#,
+    },
     # to delete
-    #everything=function() {
-    #  list(
-    #    prob = private$.prob,
-    #    pert_params = private$.pert_params,
-    #    results = private$.results,
-    #    max_contr = private$.max_contributions)
-    #}
+    everything=function() {
+      list(
+        prob = private$.prob,
+        pert_params = private$.pert_params,
+        results = private$.results,
+        max_contr = private$.max_contributions)
+    }
   ),
   private = list(
     .prob = NULL,
@@ -1146,113 +1146,45 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       cellvals <- cellvals[index_nondup]
       prot_req <- private$.results[[v]]$special_protection[index_nondup]
 
+      lookup <- parallel::mclapply(x_vals, function(x) {
+        if (is.na(x$even_odd)) {
+          #return("all")
+          return(rep("all", length(x$x)))
+        } else if (isTRUE(x$even_odd)) {
+          return("even")
+        }
+        return("odd")
+      }, mc.cores = .ck_cores()) # nolint
+
+
       if (lookup_type == "flex") {
-        lookup <- parallel::mclapply(x_vals, function(x) {
-          if (is.na(x$even_odd)) {
-            return("all")
-          } else if (isTRUE(x$even_odd)) {
-            return("even")
-          }
-          return("odd")
-        }, mc.cores = .ck_cores()) # nolint
-
-        res <- parallel::mclapply(1:length(x_vals), function(x) {
-          .perturb_cell_flex(
-            cv = cellvals[x],
-            x = x_vals[[x]]$x,
-            ck = cellkeys[[x]],
-            lookup = lookup[[x]],
-            prot_req = prot_req[x],
-            params = params)
-          }, mc.cores = .ck_cores()) # nolint
-
-        pert_result <- rbindlist(parallel::mclapply(1:length(x_vals), function(x) {
-         data.table(
-           cell_id = names(x_vals)[x],
-           ckey  = cellkeys[[x]],
-           cv = res[[x]]$cv,
-           cv_pert = res[[x]]$cv_p,
-           pert = sum(res[[x]]$x_hats),
-           x_delta = res[[x]]$x_delta,
-           lookup = res[[x]]$lookup,
-           additional_protection = prot_req[x])
-       }, mc.cores = .ck_cores())) # nolint
-      } else {
-        # compute x_delta: multiplication parameters m_j (x) * x
-        # reason: in case of fixed_variance for very small cells, x_j is changed to 1!
-        # for now, only flex-function is supported (no grids)
-        inp_params <- params$mult_params
-        inp_params$separation <- params$separation
-        inp_params$m_fixed_sq <- params$m_fixed_sq
-        inp_params$top_k <- params$top_k
-        inp_params$zs <- params$zs
-        inp_params$E <- params$E
-        res <- parallel::mclapply(x_vals, function(x) {
-          if (lookup_type == "simple") {
-            return(.x_delta_simple(x = x, inp_params = inp_params))
-          }
-          # nolint start
-          #if (lookup_type == "grid") {
-          #  return(.x_delta_grid(x = x, inp_params = inp_params))
-          #}
-          # nolint end
-        }, mc.cores = .ck_cores()) # nolint
-
-        x_delta <- lapply(res, function(x) x$x_delta)
-        lookup <- lapply(res, function(x) x$lookup)
-
-        ptab <- params$ptab
-
-        ck_log("computing actual perturbation values")
-        # additional perturbation
-        mu_c <- rep(0, params$top_k)
-        mu_c[1] <- params$mu_c
-
-        # lookup could be done in different parts of the ptable
-        # object `lookup` tells us, how to restrict the input
-        lookup_params <- list(
-          ptab = ptab,
-          max_i = max(ptab$i))
-
-        pvals <- parallel::mclapply(1:length(cellkeys), function(x) {
-          # get perturbation values
-          lookup_params$x <- x_vals[[x]]$x
-          lookup_params$x_delta <- x_delta[[x]]
-          lookup_params$lookup <- lookup[[x]]
-          p <- .lookup_v(
-            cellkeys = cellkeys[[x]],
-            params = lookup_params)
-
-          # we add extra perturbation for largest contributor
-          # according to formula 2.1, page 5 if the cell needs extra protection
-          if (prot_req[x]) {
-            signs <- ifelse(p >= 0, 1, -1)
-            p <- (abs(p) + mu_c[1:length(p)]) * signs
-          }
-          p
-        }, mc.cores = .ck_cores()) # nolint
-        names(pvals) <- names(cellkeys)
-
-        # actual perturbation for cells are sum(pvals * x_delta)
-        # these values are added to the weighted cell total to get final perturbed cell values
-        # in case we want to ensure positivity (see section 2.5.1 in D4.2), we apply the formula listed there
-        # also, we add some more variables here that we need for the mods-table (for debugging purposes)
-        ck_log("compute perturbation values and final perturbed cell values for each cells")
-        names(prot_req) <- names(pvals)
-        pert_result <- rbindlist(parallel::mclapply(names(pvals), function(x) {
-          pert <- sum(pvals[[x]] * x_delta[[x]])
-          cell_value_pert <- w_sums[[x]] + pert
-          data.table(
-            cell_id = x,
-            ckey  = cellkeys[[x]],
-            cv = w_sums[[x]],
-            cv_pert = cell_value_pert,
-            pert = pert,
-            x_delta = x_delta[[x]],
-            lookup = lookup[[x]],
-            additional_protection = prot_req[x])
-        }, mc.cores = .ck_cores())) # nolint
+        fun <- .perturb_cell_flex
       }
+      if (lookup_type == "simple") {
+        fun <- .perturb_cell_simple
+      }
+
+      res <- parallel::mclapply(1:length(x_vals), function(x) {
+        fun(
+          cv = cellvals[x],
+          x = x_vals[[x]]$x,
+          ck = cellkeys[[x]],
+          lookup = lookup[[x]],
+          prot_req = prot_req[x],
+          params = params)
+      }, mc.cores = .ck_cores()) # nolint
+
+      pert_result <- rbindlist(parallel::mclapply(1:length(x_vals), function(x) {
+       data.table(
+         cell_id = names(x_vals)[x],
+         ckey  = cellkeys[[x]],
+         cv = res[[x]]$cv,
+         cv_pert = res[[x]]$cv_p,
+         pert = sum(res[[x]]$x_hats),
+         x_delta = res[[x]]$x_delta,
+         lookup = res[[x]]$lookup,
+         additional_protection = prot_req[x])
+      }, mc.cores = .ck_cores())) # nolint
 
       ck_log("add rows for duplicated cells!")
       index_nondup <- !private$.dupsinfo$is_bogus

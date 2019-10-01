@@ -40,7 +40,6 @@ flex <-  ck_flexparams(
   epsilon = ep,
   q = 2)
 
-
 ptab <- ptable::pt_ex_nums(
   parity = TRUE,
   separation = FALSE)

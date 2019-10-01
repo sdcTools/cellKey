@@ -6,6 +6,7 @@
 - feature: allow tabulation of non-perturbed variables in `freqtab()`
 - feature: allow tabulation of non-perturbed variables in `numtab()`
 - code linting
+- bugfix: fixing issues with "simple" approach; harmonizing and code-cleanup
 
 # cellKey 0.18.0
 - allow to save perturbation-schemes for different variables in `params_cnts_set()` and `params_nums_set()`
