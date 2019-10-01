@@ -362,30 +362,23 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         .valid_path(path, ext = "csv")
       }
 
-      avail <- private$.ck_perturbed_vars(what = "countvars")
-      if (length(avail) == 0) {
-        stop("No perturbed count variables found, please use the `perturb()-method` first.", call. = FALSE)
-      }
-
+      avail <- self$cntvars()
       if (is.null(v)) {
         v <- avail
-      }
-
-      if (!is.character(v)) {
-        stop("Argument `v` must be a character vector specifying variable names.", call. = FALSE)
-      }
-
-      v <- tolower(v)
-      ii <- which(!v %in% avail)
-      if (length(ii) > 0) {
-        e <- c(
-          "Variable(s) ", paste(shQuote(v[ii]), collapse = ", "),
-          ", provided in `v`, have not yet been perturbed.")
-        stop(e, collapse = " ", call. = FALSE)
+      } else {
+        if (!is.character(v)) {
+          stop("Argument `v` must be a character vector specifying variable names.", call. = FALSE)
+        }
+        v <- tolower(v)
+        .check_avail(
+          v = v,
+          avail = avail,
+          msg = "Invalid variables specified in `v`:",
+          single_v = FALSE)
       }
 
       # return a table for a single perturbed count variable
-      .onevar_tab_freq <- function(results, vname) {
+      .onevar_tab_freq <- function(results, vname, is_perturbed) {
         dt1 <-  results$dims
         dt1[["strID"]] <- NULL
         dt1$vname <- vname
@@ -394,15 +387,24 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         cn <- names(dt2)
         setnames(dt2, gsub(paste0("_", vname), "", cn))
 
-        dt2$pert <- NULL
+        if (is_perturbed) {
+          dt2$pert <- NULL
+          dt2$ck <- dt2$wcavg <- NULL
+        } else {
+          dt2$puwc <- NA_real_
+          dt2$pwc <- NA_real_
+          dt2$ck <- NULL
+        }
         dt <- cbind(dt1, dt2)
-        dt$ck <- dt$wcavg <- NULL
         dt[]
       }
 
       results <- copy(private$.results)
       res <- rbindlist(lapply(v, function(x) {
-        .onevar_tab_freq(results = results, vname = x)
+        .onevar_tab_freq(
+          results = results,
+          vname = x,
+          is_perturbed = private$.is_perturbed_countvar(x))
       }))
 
       if (!is.null(path)) {
@@ -1431,8 +1433,9 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'    * `v`: name(s) of count or magnitude variables that should be perturbed.
 #'
 #' - **`freqtab(v, path)`**: get results from already perturbed count variables as a `data.table`. The required arguments are:
-#'    * `v`: a vector of variable names for already perturbed count variables. If `NULL` (the default), the results
-#'    are returned for all perturbed count variables.
+#'    * `v`: a vector of variable names for count variables. If `NULL` (the default), the results
+#'    are returned for all perturbed count variables. For variables that have not yet perturbed, columns `puwc` and `pwc`
+#'    are filled with `NA`.
 #'    * `path`: if not `NULL`, a scalar character defining a (relative or absolute)
 #'    path to which the result table should be written. A `csv` file will be generated
 #'    and, if specified, `path` must have ".csv" as file-ending
@@ -1442,8 +1445,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'    * `vname`: name of the perturbed variable
 #'    * `uwc`: unweighted counts
 #'    * `wc`: weighted counts
-#'    * `puwc`: perturbed unweighted counts
-#'    * `pwc`: perturbed weighted counts
+#'    * `puwc`: perturbed unweighted counts or `NA` if `vname` was not yet perturbed
+#'    * `pwc`: perturbed weighted counts or `NA` if `vname` was not yet perturbed
 #'
 #' - **`numtab(v, mean_before_sum = FALSE, path = NULL)`**: get results from already perturbed continuous variables as a `data.table`. The required arguments are:
 #'    * `v`: a vector of variable names for already perturbed count variables. If `NULL` (the default), the results

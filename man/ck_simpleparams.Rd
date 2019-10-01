@@ -68,7 +68,7 @@ tab$print() # identical with print(tab)
 # which variables have been defined?
 tab$allvars()
 
-# count-variables
+# count variables
 tab$cntvars()
 
 # continuous variables

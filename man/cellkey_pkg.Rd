@@ -90,8 +90,9 @@ contributers contribute more than \code{k\%} is considered unsafe
 }
 \item \strong{\code{freqtab(v, path)}}: get results from already perturbed count variables as a \code{data.table}. The required arguments are:
 \itemize{
-\item \code{v}: a vector of variable names for already perturbed count variables. If \code{NULL} (the default), the results
-are returned for all perturbed count variables.
+\item \code{v}: a vector of variable names for count variables. If \code{NULL} (the default), the results
+are returned for all perturbed count variables. For variables that have not yet perturbed, columns \code{puwc} and \code{pwc}
+are filled with \code{NA}.
 \item \code{path}: if not \code{NULL}, a scalar character defining a (relative or absolute)
 path to which the result table should be written. A \code{csv} file will be generated
 and, if specified, \code{path} must have ".csv" as file-ending
@@ -103,8 +104,8 @@ the first n columns. Additionally, the following columns are shown:
 \item \code{vname}: name of the perturbed variable
 \item \code{uwc}: unweighted counts
 \item \code{wc}: weighted counts
-\item \code{puwc}: perturbed unweighted counts
-\item \code{pwc}: perturbed weighted counts
+\item \code{puwc}: perturbed unweighted counts or \code{NA} if \code{vname} was not yet perturbed
+\item \code{pwc}: perturbed weighted counts or \code{NA} if \code{vname} was not yet perturbed
 }
 \item \strong{\code{numtab(v, mean_before_sum = FALSE, path = NULL)}}: get results from already perturbed continuous variables as a \code{data.table}. The required arguments are:
 \itemize{
@@ -216,7 +217,7 @@ tab$print() # identical with print(tab)
 # which variables have been defined?
 tab$allvars()
 
-# count-variables
+# count variables
 tab$cntvars()
 
 # continuous variables
