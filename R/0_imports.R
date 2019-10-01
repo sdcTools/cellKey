@@ -23,6 +23,9 @@ Sys.setenv(".ck_nr_digits" = 8)
 # number of cores for parallel processing
 # number of cores to be used when doing parallel computing
 .ck_cores <- function() {
+  if (Sys.info()["sysname"] == "Windows") {
+    return(1)
+  }
   available_cores <- parallel::detectCores() - 2
   chk <- Sys.getenv("_R_CHECK_LIMIT_CORES_", "")
   if (nzchar(chk) && chk == "TRUE") {

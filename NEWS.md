@@ -1,3 +1,6 @@
+# cellKey 0.18.1
+- bugfix: fallback to use a single core on windows-machines, fixing [`issue #131`](https://github.com/sdcTools/UserSupport/issues/131)
+
 # cellKey 0.18.0
 - allow to save perturbation-schemes for different variables in `params_cnts_set()` and `params_nums_set()`
 - allow return current active perturbation parameters for variables with `params_cnts_get()` and `params_nums_get()`
