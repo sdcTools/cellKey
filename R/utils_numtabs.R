@@ -159,8 +159,6 @@
     # compute perturbation value
     if (!zero_pert) {
       lookup_params$a <- abs(xo / x_delta)
-      print(lookup_params)
-
       lookup_params$max_i <- lookup_params$ptab[type == lookup_params$lookup, max(i)]
 
       v <- .lookup_v_flex(cellkeys = ck[j], params = lookup_params)
