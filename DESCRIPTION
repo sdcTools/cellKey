@@ -17,7 +17,7 @@ Imports:
     methods,
     digest,
     sdcTable (>= 0.30),
-    ptable (>= 0.2.0),
+    ptable (>= 0.3.2),
     cli,
     utils,
     yaml,
@@ -30,7 +30,7 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-Remotes: tenderle/ptable@exp
+Remotes: sdcTools/ptable@master
 NeedsCompilation: no
 Author: Bernhard Meindl [aut, cre]
 Maintainer: Bernhard Meindl <bernhard.meindl@statistik.gv.at>
