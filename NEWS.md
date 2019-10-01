@@ -4,6 +4,8 @@
 - fix vignette due to updates in `ptable`-pkg
 - simplify examples by using examplary ptable from `ptable`-pkg using `ptable::pt_ex_cnts()` and `ptable::pt_ex_nums()`
 - feature: allow tabulation of non-perturbed variables in `freqtab()`
+- feature: allow tabulation of non-perturbed variables in `numtab()`
+- code linting
 
 # cellKey 0.18.0
 - allow to save perturbation-schemes for different variables in `params_cnts_set()` and `params_nums_set()`

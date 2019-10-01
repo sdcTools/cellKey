@@ -426,9 +426,9 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         stop("Argument `mean_before_sum` needs to be a logical scalar.", call. = FALSE)
       }
 
-      avail <- private$.ck_perturbed_vars(what = "numvars")
+      avail <- self$numvars()
       if (length(avail) == 0) {
-        stop("No perturbed numerical variables found, please use the `perturb()-method` first.", call. = FALSE)
+        stop("No numerical variables found in this table-instance.", call. = FALSE)
       }
 
       if (is.null(v)) {
@@ -436,18 +436,25 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       }
       if (!is.character(v)) {
         stop("Argument `v` must be a character vector specifying variable names.", call. = FALSE)
-      }
-
-      v <- tolower(v)
-      if (!all(v %in% avail)) {
-        e <- "Some provided variable(s) in `v` are not valid, already perturbed numerical variables."
-        stop(e, call. = FALSE)
+      } else {
+        v <- tolower(v)
+        .check_avail(
+          v = v,
+          avail = avail,
+          msg = "Invalid continuous variables specified in `v`:",
+          single_v = FALSE)
       }
 
       tab <- rbindlist(lapply(v, function(x) {
         tmp <- private$.results[[x]]
         tmp$vname <- x
-        tmp <- tmp[, c(8, 3:4, 7)]
+
+        if (private$.is_perturbed_numvar(x)) {
+          tmp <- tmp[, c(8, 3:4, 7)]
+        } else {
+          tmp <- tmp[, c(6, 3:4)]
+          tmp$pws <- NA_real_
+        }
         setnames(tmp, c("vname", "uws", "ws", "pws"))
         cbind(private$.results$dims, tmp)[, -1]
       }))
@@ -1434,7 +1441,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'
 #' - **`freqtab(v, path)`**: get results from already perturbed count variables as a `data.table`. The required arguments are:
 #'    * `v`: a vector of variable names for count variables. If `NULL` (the default), the results
-#'    are returned for all perturbed count variables. For variables that have not yet perturbed, columns `puwc` and `pwc`
+#'    are returned for all available count variables. For variables that have not yet perturbed, columns `puwc` and `pwc`
 #'    are filled with `NA`.
 #'    * `path`: if not `NULL`, a scalar character defining a (relative or absolute)
 #'    path to which the result table should be written. A `csv` file will be generated
@@ -1448,9 +1455,10 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'    * `puwc`: perturbed unweighted counts or `NA` if `vname` was not yet perturbed
 #'    * `pwc`: perturbed weighted counts or `NA` if `vname` was not yet perturbed
 #'
-#' - **`numtab(v, mean_before_sum = FALSE, path = NULL)`**: get results from already perturbed continuous variables as a `data.table`. The required arguments are:
-#'    * `v`: a vector of variable names for already perturbed count variables. If `NULL` (the default), the results
-#'    are returned for all perturbed numeric variables.
+#' - **`numtab(v, mean_before_sum = FALSE, path = NULL)`**: get results from already perturbed continuous variables as
+#' a `data.table`. The required arguments are:
+#'    * `v`: a vector of variable names of continuous variables. If `NULL` (the default), the results
+#'    are returned for all available numeric variables.
 #'    * `mean_before_sum`: (logical); if `TRUE`, the perturbed values are adjusted by a factor `((n+p))⁄n` with `n`
 #'    being the original weighted cellvalue and `p` the perturbed cell value. This makes sense if the the
 #'    accuracy of the variable mean is considered more important than accuracy of sums of the variable. The default value
@@ -1464,7 +1472,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'    * `vname`: name of the perturbed variable
 #'    * `uws`: unweighted sum of the given variable
 #'    * `ws`: weighted cellsum
-#'    * `pws`: perturbed weighted sum of the given cell
+#'    * `pws`: perturbed weighted sum of the given cell or `NA` if `vname` has not not perturbed
 #'
 #' - **`measures_cnts(v, exclude_zeros = TRUE)`**: utility measures for perturbed count variables. The required arguments are:
 #'    * `v`: name of a count variable for which utility measures should be computed.
