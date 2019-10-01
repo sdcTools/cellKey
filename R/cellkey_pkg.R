@@ -1553,15 +1553,10 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' # create perturbation parameters for "total" variable and
 #' # write to yaml-file
 #'
-#' # create a ptable using functionality
-#' # from the ptable-pkg
-#' para1 <- ptable::pt_create_pParams(
-#'   D = 5, V = 1, table = "cnts")
-#'
-#' # create suitable parameter inputs
+#' # create a ptable using functionality from the ptable-pkg
 #' f_yaml <- tempfile(fileext = ".yaml")
 #' p_cnts1 <- ck_params_cnts(
-#'   ptab = ptable::pt_create_pTable(para1),
+#'   ptab = ptable::pt_ex_cnts(),
 #'   path = f_yaml)
 #'
 #' # read parameters from yaml-file and set them for variable `"total"`
@@ -1569,14 +1564,14 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'
 #' tab$params_cnts_set(val = p_cnts1, v = "total")
 #'
-#' # create alternative perturbation parameters
+#' # create alternative perturbation parameters by specifying parameters
 #' para2 <- ptable::pt_create_pParams(
 #'   D = 8, V = 3, js = 2, table = "cnts")
 #'
 #' p_cnts2 <- ck_params_cnts(
-#'   ptab = ptable::pt_create_pTable(para1))
+#'   ptab = ptable::pt_create_pTable(para2))
 #'
-#' # use it for the remaining variables
+#' # use these ptable it for the remaining variables
 #' tab$params_cnts_set(val = p_cnts2, v = countvars)
 #'
 #' # perturb a variable
@@ -1592,19 +1587,19 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' # we also write the config to a yaml file
 #' f_yaml <- tempfile(fileext = ".yaml")
 #'
-#' # create a ptable using functionality
-#' # from the ptable-pkg
-#' para <- ptable::pt_create_pParams(
-#'   D = 5,
-#'   V = 1,
-#'   table = "nums",
-#'   step = 0.2,
-#'   icat = c(1, 5),
-#'   type = "all")
-#' ptab <- ptable::pt_create_pTable(para)
+#' # create a ptable using functionality from the ptable-pkg
+#' # a single ptable for all cells
+#' ptab1 <- ptable::pt_ex_nums(parity = TRUE, separation = FALSE)
+#'
+#' # a single ptab for all cells except for very small ones
+#' ptab2 <- ptable::pt_ex_nums(parity = TRUE, separation = TRUE)
+#'
+#' # different ptables for cells with even/odd number of contributors
+#' # and very small cells
+#' ptab3 <- ptable::pt_ex_nums(parity = FALSE, separation = TRUE)
 #'
 #' p_nums1 <- ck_params_nums(
-#'   ptab = ptab,
+#'   ptab = ptab1,
 #'   type = "top_contr",
 #'   top_k = 3,
 #'   mult_params = ck_flexparams(
@@ -1620,19 +1615,9 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' # we read the parameters from the yaml-file
 #' p_nums1 <- ck_read_yaml(path = f_yaml)
 #'
-#' # another set of parameters
-#' para <- ptable::pt_create_pParams(
-#'   D = 10,
-#'   V = 1,
-#'   table = "nums",
-#'   step = 0.5,
-#'   icat = c(1, 5, 10),
-#'   type = "all")
-#' ptab <- ptable::pt_create_pTable(para)
-#'
 #' # for variables with positive and negative values
 #' p_nums2 <- ck_params_nums(
-#'   ptab = ptab,
+#'   ptab = ptab2,
 #'   type = "top_contr",
 #'   top_k = 3,
 #'   mult_params = ck_flexparams(
@@ -1645,7 +1630,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'
 #' # simple perturbation parameters (not using the flex-function approach)
 #' p_nums3 <- ck_params_nums(
-#'   ptab = ptab,
+#'   ptab = ptab3,
 #'   type = "mean",
 #'   mult_params = ck_simpleparams(p = 0.25),
 #'   mu_c = 2,

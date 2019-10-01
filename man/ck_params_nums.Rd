@@ -72,28 +72,10 @@ perturb cells in magnitude tables.
 \examples{
 # create a perturbation table using
 # functionality from ptable-pkg; see help(pa = "ptable")
-params_all <- ptable::pt_create_pParams(
-  D = 4,
-  V = 2,
-  table = "nums",
-  step = 0.2,
-  icat = c(1, 5),
-  type = "all")
+# this returns an extra ptable for very small cells
+ptab <- ptable::pt_ex_nums(separation = TRUE)
 
-# parameters for a ptab for very small cells
-params_sc <- ptable::pt_create_pParams(
-  D = 5,
-  V = 1,
-  table = "nums",
-  step = 0.2,
-  icat = c(1, 5, 10),
-  type = "all")
-
-# create a named list
-ptab <- list(
-  all = ptable::pt_create_pTable(params_all),
-  small_cells = ptable::pt_create_pTable(params_sc))
-
+# create parameters
 ck_params_nums(
   type = "top_contr",
   top_k = 3,

@@ -40,13 +40,10 @@ flex <-  ck_flexparams(
   epsilon = ep,
   q = 2)
 
-para <- ptable::pt_create_pParams(
-  D = 7,
-  V = 1,
-  step = 0.2,
-  icat = c(1, 5, 10),
-  table = "nums")
-ptab <- ptable::pt_create_pTable(para)
+
+ptab <- ptable::pt_ex_nums(
+  parity = TRUE,
+  separation = FALSE)
 
 p1 <- ck_params_nums(
   type = "top_contr",
@@ -70,7 +67,7 @@ p2 <- ck_params_nums(
 test_that("checking perturbation parameters", {
   expect_is(p1, "ck_params")
   expect_equal(p1$type, "params_m_flex")
-  expect_identical(digest::digest(p1), "403dac26eeb37f1473b2f00cde43f6fc")
+  expect_identical(digest::digest(p1), "0474740f1ef9141738c14496b93ffb74")
 })
 
 # set up problem
@@ -99,8 +96,8 @@ expect_message(tab$perturb("income"), "Numeric variable 'income' was perturbed."
 expect_message(tab$perturb("savings"), "Numeric variable 'savings' was perturbed.")
 
 test_that("variable was correctly perturbed", {
-  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = FALSE)), "2d058d624448d3e8375b59472f452ce37ebf2b07")
-  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = FALSE)), "8ddb7dae8c68ac729c507c8fbac26b890855cd1d")
-  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = TRUE)), "6e30ff3955b679e9f7b58c1e2531479f02bfa8d1")
-  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = TRUE)), "64fc784d8fe93c2d5e1838629c34f5010bee672d")
+  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = FALSE)), "aa98640eea8c3a0c31dece188138f30b49df1837")
+  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = FALSE)), "453131410bcfb8923cda42df74a611a5a8c3197e")
+  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = TRUE)), "5665cd2836ba190de89c777ee4923896982a102a")
+  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = TRUE)), "e1e2e48d00f193be470126cafe59fcc143f4aa0e")
 })

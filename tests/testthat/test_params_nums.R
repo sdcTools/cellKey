@@ -51,13 +51,7 @@ flex_single$epsilon <- 1
 # simple
 simple <- ck_simpleparams(p = 0.25, epsilon = c(1, 0.5, 0.2))
 
-para <- ptable::pt_create_pParams(
-  D = 5,
-  V = 1,
-  step = 0.2,
-  icat = c(1, 10),
-  table = "nums")
-ptab <- ptable::pt_create_pTable(para)
+ptab <- ptable::pt_ex_nums(parity = TRUE, separation = FALSE)
 
 test_that("invalid inputs are caught", {
   # ptab is not valid
@@ -124,7 +118,7 @@ test_that("top_contr works with flex_params", {
   expect_identical(p$params$mu_c, 2)
   expect_equal(p$params$m_fixed_sq, NA)
   expect_equal(p$params$zs, 0)
-  expect_identical(digest::sha1(unlist(p$params)), "8c4cd4e67ccecdcdad9e2205582479ddf18825e4")
+  expect_identical(digest::sha1(unlist(p$params)), "0d6861babcbaba043abe7b23acfba092145c8d50")
 })
 file.remove(f_yaml)
 
@@ -147,7 +141,7 @@ test_that("top_contr works with single flex", {
   expect_identical(p$params$mu_c, 2.5)
   expect_equal(p$params$m_fixed_sq, NA)
   expect_equal(p$params$zs, 0)
-  expect_identical(digest::sha1(unlist(p$params)), "0228be4b6268b29ca87eca59706cf2d10f2c0bd0")
+  expect_identical(digest::sha1(unlist(p$params)), "eab9fc27a1eaf52e284bcec5c71d4df9e103d148")
 })
 file.remove(f_yaml)
 
@@ -170,6 +164,6 @@ test_that("top_contr works with simple", {
   expect_identical(p$params$mu_c, 2.5)
   expect_equal(p$params$m_fixed_sq, NA)
   expect_equal(p$params$zs, 0)
-  expect_identical(digest::sha1(unlist(p$params)), "70f0e641ae75903f9480b61f6254a84c433fa782")
+  expect_identical(digest::sha1(unlist(p$params)), "c3b91c2ce8a16e6976dda3a868de03d70a81cd87")
 })
 file.remove(f_yaml)
