@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.18.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.18.1</span>
       </span>
     </div>
 
@@ -78,7 +78,7 @@
       <h1>Introduction to the cellKey-Package</h1>
                         <h4 class="author">Bernhard Meindl</h4>
             
-            <h4 class="date">2019-09-27</h4>
+            <h4 class="date">2019-10-01</h4>
       
       
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -90,7 +90,7 @@
 <div id="about-the-cellkey-package" class="section level2">
 <h2 class="hasAnchor">
 <a href="#about-the-cellkey-package" class="anchor"></a>About the cellKey package</h2>
-<p>This package implements methods to provide perturbation for statistical tables. The implementation if greatly inspired by the the paper <em>Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics</em> (Thompson, Broadfoot, Elazar). This approach however was generalized and a new specification on how record keys are specified and the lookup-tables are defined is used. This package makes usage of perturbation tables that can be defined in the <a href="https://github.com/sdcTools/ptable"><strong>ptable</strong></a> package. This document describes the usage of version <code>0.18.0</code> of the package.</p>
+<p>This package implements methods to provide perturbation for statistical tables. The implementation if greatly inspired by the the paper <em>Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics</em> (Thompson, Broadfoot, Elazar). This approach however was generalized and a new specification on how record keys are specified and the lookup-tables are defined is used. This package makes usage of perturbation tables that can be defined in the <a href="https://github.com/sdcTools/ptable"><strong>ptable</strong></a> package. This document describes the usage of version <code>0.18.1</code> of the package.</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -125,7 +125,7 @@
 <a href="#load-the-package" class="anchor"></a>Load the Package</h3>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(cellKey)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/utils/packageDescription.html">packageVersion</a></span>(<span class="st">"cellKey"</span>)</a></code></pre></div>
-<pre><code>## [1] '0.18.0'</code></pre>
+<pre><code>## [1] '0.18.1'</code></pre>
 <p>The first step in this approach is to generate a statistical table, which can be achieved using <code>ck_setup</code>. This function generates an object that contains all the information required to perturb count- (and optionally continuously scaled) variables. There are however a few inputs that <code><a href="../reference/cellkey_pkg.html">ck_setup()</a></code> requires and that need to be generated beforehand. These inputs are:</p>
 <ul>
 <li>
@@ -156,19 +156,19 @@
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">dat<span class="op">$</span>rkeys &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_generate_rkeys.html">ck_generate_rkeys</a></span>(<span class="dt">dat =</span> dat, <span class="dt">nr_digits =</span> <span class="dv">7</span>)</a>
 <a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(dat))</a></code></pre></div>
 <pre><code>##       sex        age savings income sampling_weight cnt_highincome
-## 1:   male age_group3      12   5780              86              0
+## 1:   male age_group3      12   5780              28              0
 ## 2: female age_group3      28   2530              39              0
-## 3:   male age_group1     550   6920              35              0
-## 4:   male age_group1     870   7960              45              0
-## 5:   male age_group4      20   9030              91              1
-## 6: female age_group3     102   3290              37              0
+## 3:   male age_group1     550   6920              45              0
+## 4:   male age_group1     870   7960              83              0
+## 5:   male age_group4      20   9030              37              1
+## 6: female age_group3     102   3290              68              0
 ##        rkeys
-## 1: 0.9317870
-## 2: 0.6562741
-## 3: 0.6673415
-## 4: 0.7041228
-## 5: 0.8507481
-## 6: 0.8593320</code></pre>
+## 1: 0.8888826
+## 2: 0.2448949
+## 3: 0.7816424
+## 4: 0.8950431
+## 5: 0.4579167
+## 6: 0.7131388</code></pre>
 <p>To ensure that the same record keys are computed each and every time for the same data set, a seed based on the sha1-hash of the input dataset is computed by default in <code>ck_generate_rkeys</code>. This seed is used before sampling the record keys and may be overwritten using the <code>seed</code> argument.</p>
 <p>The goal of this introduction is to create a perturbed table of counts of variables <code>sex</code> by <code>age</code> for all observations as well as for the subgroups given by <code>cnt_highincome</code> that are non-zero. We also want to create perturbed tables of continously scaled variables <code>savings</code> and <code>income</code> also giving the hierarchical structure defined by <code>sex</code> by <code>age</code>.</p>
 </div>
@@ -225,14 +225,15 @@
 <div id="perturbation-parameters-for-count-variables" class="section level4">
 <h4 class="hasAnchor">
 <a href="#perturbation-parameters-for-count-variables" class="anchor"></a>Perturbation parameters for count variables</h4>
-<p>The next task is to define parameters that are used to perturb count variables which can be achieved with <code>ck_params_cnts</code>. This function requires as input the result of function <code>pt_create_pTable</code> from the <a href="https://github.com/sdcTools/ptable"><strong>ptable</strong></a> package. Please refer also to the documentation of this package for information on the required parameters. A typical application is shown below:</p>
+<p>The next task is to define parameters that are used to perturb count variables which can be achieved with <code>ck_params_cnts</code>. This function requires as input the result of function <code>pt_create_pTable</code> from the <a href="https://github.com/sdcTools/ptable"><strong>ptable</strong></a> package. Please refer also to the documentation of this package for information on the required parameters. In this example we are going to use - amongst others - exemplary ptables that can are provided by the <code>ptable</code>-pkg for demonstration purposes:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="co"># two different perturbation parameter sets from the ptable-pkg</span></a>
-<a class="sourceLine" id="cb15-2" data-line-number="2">para1 &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_create_pParams.html">pt_create_pParams</a></span>(<span class="dt">D =</span> 5L, <span class="dt">V =</span> <span class="dv">3</span>, <span class="dt">js =</span> <span class="dv">2</span>, <span class="dt">pstay =</span> <span class="fl">0.5</span>, <span class="dt">optim =</span> <span class="dv">1</span>, <span class="dt">mono =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb15-3" data-line-number="3">ptab1 &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_create_pTable.html">pt_create_pTable</a></span>(para1)</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="co"># an example ptable provided directly</span></a>
+<a class="sourceLine" id="cb15-3" data-line-number="3">ptab1 &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_ex_cnts.html">pt_ex_cnts</a></span>()</a>
 <a class="sourceLine" id="cb15-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb15-5" data-line-number="5">para2 &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_create_pParams.html">pt_create_pParams</a></span>(<span class="dt">D =</span> <span class="dv">8</span>, <span class="dt">V =</span> <span class="dv">3</span>, <span class="dt">js =</span> <span class="dv">2</span>, <span class="dt">pstay =</span> <span class="fl">0.5</span>, <span class="dt">optim =</span> <span class="dv">1</span>, <span class="dt">mono =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb15-6" data-line-number="6">ptab2 &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_create_pTable.html">pt_create_pTable</a></span>(para2)</a></code></pre></div>
-<p>Then we need to create the required inputs for the cellKey package.</p>
+<a class="sourceLine" id="cb15-5" data-line-number="5"><span class="co"># creating a ptable by specifying parameters</span></a>
+<a class="sourceLine" id="cb15-6" data-line-number="6">para2 &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_create_pParams.html">pt_create_pParams</a></span>(<span class="dt">D =</span> <span class="dv">8</span>, <span class="dt">V =</span> <span class="dv">3</span>, <span class="dt">js =</span> <span class="dv">2</span>, <span class="dt">pstay =</span> <span class="fl">0.5</span>, <span class="dt">optim =</span> <span class="dv">1</span>, <span class="dt">mono =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb15-7" data-line-number="7">ptab2 &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_create_pTable.html">pt_create_pTable</a></span>(para2)</a></code></pre></div>
+<p>We then need to create the required inputs for the cellKey package.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">p_cnts1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_params_cnts.html">ck_params_cnts</a></span>(<span class="dt">ptab =</span> ptab1)</a>
 <a class="sourceLine" id="cb16-2" data-line-number="2">p_cnts2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_params_cnts.html">ck_params_cnts</a></span>(<span class="dt">ptab =</span> ptab2)</a></code></pre></div>
 <p><code><a href="../reference/ck_params_cnts.html">ck_params_cnts()</a></code> returns objects that can be used as inputs in method <code>params_cnts_set()</code>. In argument <code>v</code> one may specify count variables for which the supplied perturbation parameters should be used. If <code>v</code> is not specified, the perturbation parameters are used for all count variables.</p>
@@ -301,48 +302,32 @@
 <code>"small_cells"</code>: if specified, this ptable will be used to extract perturbation values for very small cells</li>
 </ul>
 <p>Please note, that if the goal is to have different perturbation tables for cells with an even/odd number of contributors, both <code>"even"</code> or <code>"odd"</code> must be available in the input list. In the chunk below we create four different perturbation tables. For details on the parameters, please look at the documentation of the <a href="https://github.com/sdcTools/ptable"><code>ptable</code></a> package.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="co"># create different ptable using the ptable-pkg</span></a>
-<a class="sourceLine" id="cb23-2" data-line-number="2">p_all &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_create_pParams.html">pt_create_pParams</a></span>(</a>
-<a class="sourceLine" id="cb23-3" data-line-number="3">  <span class="dt">D =</span> <span class="dv">5</span>, <span class="dt">V =</span> <span class="dv">3</span>, <span class="dt">step =</span> <span class="fl">0.2</span>, </a>
-<a class="sourceLine" id="cb23-4" data-line-number="4">  <span class="dt">icat =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">20</span>), <span class="dt">table =</span> <span class="st">"nums"</span>, <span class="dt">type =</span> <span class="st">"all"</span>)</a>
-<a class="sourceLine" id="cb23-5" data-line-number="5">ptab_all &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_create_pTable.html">pt_create_pTable</a></span>(p_all)</a>
-<a class="sourceLine" id="cb23-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb23-7" data-line-number="7">p_even &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_create_pParams.html">pt_create_pParams</a></span>(</a>
-<a class="sourceLine" id="cb23-8" data-line-number="8">  <span class="dt">D =</span> <span class="dv">8</span>, <span class="dt">V =</span> <span class="dv">3</span>, <span class="dt">step =</span> <span class="fl">0.5</span>, </a>
-<a class="sourceLine" id="cb23-9" data-line-number="9">  <span class="dt">icat =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">10</span>), <span class="dt">table =</span> <span class="st">"nums"</span>, <span class="dt">type =</span> <span class="st">"even"</span>)</a>
-<a class="sourceLine" id="cb23-10" data-line-number="10">ptab_even &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_create_pTable.html">pt_create_pTable</a></span>(p_even)</a>
-<a class="sourceLine" id="cb23-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb23-12" data-line-number="12">p_odd &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_create_pParams.html">pt_create_pParams</a></span>(</a>
-<a class="sourceLine" id="cb23-13" data-line-number="13">  <span class="dt">D =</span> <span class="dv">6</span>, <span class="dt">V =</span> <span class="dv">3</span>, <span class="dt">step =</span> <span class="dv">1</span>, </a>
-<a class="sourceLine" id="cb23-14" data-line-number="14">  <span class="dt">icat =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">10</span>), <span class="dt">table =</span> <span class="st">"nums"</span>, <span class="dt">type =</span> <span class="st">"odd"</span>)</a>
-<a class="sourceLine" id="cb23-15" data-line-number="15">ptab_odd &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_create_pTable.html">pt_create_pTable</a></span>(p_odd)</a>
-<a class="sourceLine" id="cb23-16" data-line-number="16"></a>
-<a class="sourceLine" id="cb23-17" data-line-number="17">p_sc &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_create_pParams.html">pt_create_pParams</a></span>(</a>
-<a class="sourceLine" id="cb23-18" data-line-number="18">  <span class="dt">D =</span> <span class="dv">5</span>, <span class="dt">V =</span> <span class="dv">1</span>, <span class="dt">step =</span> <span class="dv">1</span>, </a>
-<a class="sourceLine" id="cb23-19" data-line-number="19">  <span class="dt">icat =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">15</span>), <span class="dt">table =</span> <span class="st">"nums"</span>, <span class="dt">type =</span> <span class="st">"all"</span>)</a>
-<a class="sourceLine" id="cb23-20" data-line-number="20">ptab_sc &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_create_pTable.html">pt_create_pTable</a></span>(p_sc)</a></code></pre></div>
-<p>We can then use these tables to finally create objects containing all the required information to create perturbed magnitude tables using <code>ck_params_nums</code>. In the first case we want the same perturbation table (<code>ptab_all</code>) for cells with an even/odd number of contributors but want to use <code>ptab_sc</code> for very small cells.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="co"># same ptable for all cells except for very small ones</span></a>
+<a class="sourceLine" id="cb23-2" data-line-number="2">ex_ptab1 &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_ex_nums.html">pt_ex_nums</a></span>(<span class="dt">parity =</span> <span class="ot">TRUE</span>, <span class="dt">separation =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<p>We can now use these tables to finally create objects containing all the required information to create perturbed magnitude tables using <code>ck_params_nums</code>. In the first case we want the same perturbation table (<code>ptab_all</code>) for cells with an even/odd number of contributors but want to use <code>ptab_sc</code> for very small cells.</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">p_nums1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_params_nums.html">ck_params_nums</a></span>(</a>
 <a class="sourceLine" id="cb24-2" data-line-number="2">  <span class="dt">type =</span> <span class="st">"top_contr"</span>,</a>
 <a class="sourceLine" id="cb24-3" data-line-number="3">  <span class="dt">top_k =</span> <span class="dv">3</span>,</a>
-<a class="sourceLine" id="cb24-4" data-line-number="4">  <span class="dt">ptab =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">all =</span> ptab_all, <span class="dt">small_cells =</span> ptab_sc),</a>
+<a class="sourceLine" id="cb24-4" data-line-number="4">  <span class="dt">ptab =</span> ex_ptab1,</a>
 <a class="sourceLine" id="cb24-5" data-line-number="5">  <span class="dt">mult_params =</span> p_flex,</a>
 <a class="sourceLine" id="cb24-6" data-line-number="6">  <span class="dt">mu_c =</span> <span class="dv">2</span>,</a>
 <a class="sourceLine" id="cb24-7" data-line-number="7">  <span class="dt">same_key =</span> <span class="ot">FALSE</span>,</a>
 <a class="sourceLine" id="cb24-8" data-line-number="8">  <span class="dt">use_zero_rkeys =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p>The second input we generate should use different ptables for cells with an even/odd number of contributing units (<code>ptab_even</code> and <code>ptab_odd</code>) but should not use a specific perturbation table for very small cells.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">p_nums2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_params_nums.html">ck_params_nums</a></span>(</a>
-<a class="sourceLine" id="cb25-2" data-line-number="2">  <span class="dt">type =</span> <span class="st">"mean"</span>,</a>
-<a class="sourceLine" id="cb25-3" data-line-number="3">  <span class="dt">ptab =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">even =</span> ptab_even, <span class="dt">odd =</span> ptab_odd),</a>
-<a class="sourceLine" id="cb25-4" data-line-number="4">  <span class="dt">mult_params =</span> p_simple,</a>
-<a class="sourceLine" id="cb25-5" data-line-number="5">  <span class="dt">mu_c =</span> <span class="fl">1.5</span>,</a>
-<a class="sourceLine" id="cb25-6" data-line-number="6">  <span class="dt">same_key =</span> <span class="ot">FALSE</span>,</a>
-<a class="sourceLine" id="cb25-7" data-line-number="7">  <span class="dt">use_zero_rkeys =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">ex_ptab2 &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_ex_nums.html">pt_ex_nums</a></span>(<span class="dt">parity =</span> <span class="ot">FALSE</span>, <span class="dt">separation =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<p>As above, we need to use <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> to compute suitable inputs.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1">p_nums2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_params_nums.html">ck_params_nums</a></span>(</a>
+<a class="sourceLine" id="cb26-2" data-line-number="2">  <span class="dt">type =</span> <span class="st">"mean"</span>,</a>
+<a class="sourceLine" id="cb26-3" data-line-number="3">  <span class="dt">ptab =</span> ex_ptab2,</a>
+<a class="sourceLine" id="cb26-4" data-line-number="4">  <span class="dt">mult_params =</span> p_simple,</a>
+<a class="sourceLine" id="cb26-5" data-line-number="5">  <span class="dt">mu_c =</span> <span class="fl">1.5</span>,</a>
+<a class="sourceLine" id="cb26-6" data-line-number="6">  <span class="dt">same_key =</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb26-7" data-line-number="7">  <span class="dt">use_zero_rkeys =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p>The package internally computes the separation point that is used for very small cells in case this is required. Details on this can also be found in deliverable <a href="(https://ec.europa.eu/eurostat/cros/content/perturbative-confidentiality-methods_en)"><code>D4.2</code></a>.</p>
 <p>Now we can attach the results from <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> to numeric variables using the <code>params_nums_set()</code>-method as shown below:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1">tab<span class="op">$</span><span class="kw">params_nums_set</span>(<span class="dt">v =</span> <span class="st">"income"</span>, <span class="dt">val =</span> p_nums1)</a></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1">tab<span class="op">$</span><span class="kw">params_nums_set</span>(<span class="dt">v =</span> <span class="st">"income"</span>, <span class="dt">val =</span> p_nums1)</a></code></pre></div>
 <pre><code>## --&gt; setting perturbation parameters for variable 'income'</code></pre>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">tab<span class="op">$</span><span class="kw">params_nums_set</span>(<span class="dt">v =</span> <span class="st">"savings"</span>, <span class="dt">val =</span> p_nums1)</a></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1">tab<span class="op">$</span><span class="kw">params_nums_set</span>(<span class="dt">v =</span> <span class="st">"savings"</span>, <span class="dt">val =</span> p_nums1)</a></code></pre></div>
 <pre><code>## --&gt; setting perturbation parameters for variable 'savings'</code></pre>
 <p>In order to make use of parameter <code>mu_c</code> that allows ab add extra amount of protection to sensitive cells, one may identify sensitive cells according to some rules. The following methods to identify sensitive cells are implemented:</p>
 <ul>
@@ -358,7 +343,7 @@
 <code>supp_val()</code>: identify sensitive cells based on (weighted) cell values</li>
 </ul>
 <p>We now want to set all cells for variable <code>income</code> as sensitive to which less than <code>15</code> units contribute.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1">tab<span class="op">$</span><span class="kw">supp_freq</span>(<span class="dt">v =</span> <span class="st">"income"</span>, <span class="dt">n =</span> <span class="dv">15</span>, <span class="dt">weighted =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1">tab<span class="op">$</span><span class="kw">supp_freq</span>(<span class="dt">v =</span> <span class="st">"income"</span>, <span class="dt">n =</span> <span class="dv">15</span>, <span class="dt">weighted =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <pre><code>## freq-rule: 3 new sensitive cells (incl. duplicates) found (total: 3)</code></pre>
 </div>
 </div>
@@ -370,12 +355,2908 @@
 <li>
 <code>v</code>: a character vector specifying one or more variables that should be perturbed.</li>
 </ul>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1">tab<span class="op">$</span><span class="kw">perturb</span>(<span class="dt">v =</span> <span class="st">"total"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1">tab<span class="op">$</span><span class="kw">perturb</span>(<span class="dt">v =</span> <span class="st">"total"</span>)</a></code></pre></div>
 <pre><code>## Count variable 'total' was perturbed.</code></pre>
 <p>After this call, object <code>tab</code> is updated and contains now also perturbed values for variable <code>total</code>. We note that no explicit assignment is required. The following code shows that we also can perturb cnt- and numerical variables in one single call.</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1">tab<span class="op">$</span><span class="kw">perturb</span>(<span class="dt">v =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"cnt_highincome"</span>, <span class="st">"savings"</span>, <span class="st">"income"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1">tab<span class="op">$</span><span class="kw">perturb</span>(<span class="dt">v =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"cnt_highincome"</span>, <span class="st">"savings"</span>, <span class="st">"income"</span>))</a></code></pre></div>
 <pre><code>## Count variable 'cnt_highincome' was perturbed.</code></pre>
+<pre><code>## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 52174.86
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 221716
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 232009.3
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 77668.83
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 43555.85
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 116592.3
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 26853.9
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 59267.5
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 72373.45
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 10167.61
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 23310.73
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 45345.55
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 4362.409
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 9296.91
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 56203.55
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 2639.644
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 4823.598
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 15546.22
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 210.4326
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 675.6503
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 905.7957
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 53089.75
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 117157.7
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 118413.3
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 10221.35
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 20937.34
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 60566.44
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 12895.66
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 28457.9
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 89242.15
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 4417.678
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 32068.54
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 22413.31
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 2385.154
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 11536.61
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 13091.98
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 1767.911
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 2678.679
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 4294.767
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 102.5731
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 323.8194
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 886.1017
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 27189.35
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 48360.35
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 469720.1
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 41214.7
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 24748.71
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 151456.6
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 7523.377
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 32482.28
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 36313.33
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 5215.296
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 11958.56
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 23505.84
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 2124.54
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 5491.335
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 10500.64
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 1454.466
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 2658.067
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 8561.423
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 92.26616
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 311.1487
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 1133.782</code></pre>
 <pre><code>## Numeric variable 'savings' was perturbed.</code></pre>
+<pre><code>## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 50195.23
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 100386.5
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 485761
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 21490.96
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 83204.2
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 130510.6
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 39170.29
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 24214.36
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 85010.43
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 9572.569
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 34220.4
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 49081.43
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 4267.43
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 35222.91
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 48173.21
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 3219.879
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 6254.329
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 10370.6
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 237.4376
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 497.5009
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 1096.049
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 48455.14
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 60799.45
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 392772.4
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 20913.58
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 26239.25
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 109408
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 19434.29
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 12013
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 42182.47
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 18317.32
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 23523.13
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 68347.04
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 8991.593
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 9838.284
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 15514.04
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 1631.502
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 2162.084
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 20931.6
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 128.0999
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 368.8859
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 622.1749
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 25162.36
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 50319.71
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 163698.4
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 10686.59
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 27815.01
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 135264.4
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 6759.359
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 14545.2
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 44193.85
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 4954.944
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 17715.84
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 25412.98
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 2089.188
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 6636.485
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 37447.92
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 1538.701
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 1933.552
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 4396.542
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 113.3611
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 211.8902
+## 
+## $ptab
+##      i    j          p    v        lb        ub        type
+##   1: 0  0.0 1.00000000  0.0 0.0000000 1.0000000         all
+##   2: 1  0.0 0.27968425 -1.0 0.0000000 0.2796843         all
+##   3: 1  0.5 0.27968425 -0.5 0.2796843 0.5593685         all
+##   4: 1  1.0 0.27968426  0.0 0.5593685 0.8390528         all
+##   5: 1  1.5 0.05858542  0.5 0.8390528 0.8976382         all
+##  ---                                                       
+## 216: 5  9.2 0.00001179  4.2 0.9999801 0.9999919 small_cells
+## 217: 5  9.4 0.00000499  4.4 0.9999919 0.9999969 small_cells
+## 218: 5  9.6 0.00000203  4.6 0.9999969 0.9999989 small_cells
+## 219: 5  9.8 0.00000079  4.8 0.9999989 0.9999997 small_cells
+## 220: 5 10.0 0.00000030  5.0 0.9999997 1.0000000 small_cells
+## 
+## $max_i
+## [1] 10
+## 
+## $lookup
+## [1] "all"
+## 
+## $a
+## [1] 2069.481</code></pre>
 <pre><code>## Numeric variable 'income' was perturbed.</code></pre>
 <p>A <code>data.table</code> containing original and perturbed values can now be extracted using the <code>freqtab()</code>- and <code>numtab()</code> methods as discussed next.</p>
 </div>
@@ -405,49 +3286,49 @@
 <li>
 <code>pwc</code>: perturbed weighted counts</li>
 </ul>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1">tab<span class="op">$</span><span class="kw">freqtab</span>(<span class="dt">v =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"total"</span>, <span class="st">"cnt_highincome"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1">tab<span class="op">$</span><span class="kw">freqtab</span>(<span class="dt">v =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"total"</span>, <span class="st">"cnt_highincome"</span>))</a></code></pre></div>
 <pre><code>##        sex        age          vname  uwc     wc puwc         pwc
-##  1:  Total      Total          total 4580 273482 4580 273482.0000
-##  2:  Total age_group1          total 1969 118176 1969 118176.0000
-##  3:  Total age_group2          total 1143  67735 1139  67497.9571
-##  4:  Total age_group3          total  864  51864  860  51623.8889
-##  5:  Total age_group4          total  423  25090  427  25327.2577
-##  6:  Total age_group5          total  168   9658  168   9658.0000
-##  7:  Total age_group6          total   13    959   13    959.0000
-##  8: female      Total          total 2284 136276 2283 136216.3345
-##  9: female age_group1          total  954  58120  954  58120.0000
-## 10: female age_group2          total  572  33839  574  33957.3182
-## 11: female age_group3          total  440  25742  443  25917.5136
-## 12: female age_group4          total  228  13283  228  13283.0000
-## 13: female age_group5          total   84   4878   84   4878.0000
-## 14: female age_group6          total    6    414    9    621.0000
-## 15:   male      Total          total 2296 137206 2296 137206.0000
-## 16:   male age_group1          total 1015  60056 1019  60292.6739
-## 17:   male age_group2          total  571  33896  569  33777.2750
-## 18:   male age_group3          total  424  26122  421  25937.1745
-## 19:   male age_group4          total  195  11807  194  11746.4513
-## 20:   male age_group5          total   84   4780   83   4723.0952
-## 21:   male age_group6          total    7    545    8    622.8571
-## 22:  Total      Total cnt_highincome  445  26681  445  26681.0000
-## 23:  Total age_group1 cnt_highincome  192  11700  192  11700.0000
-## 24:  Total age_group2 cnt_highincome  123   7559  123   7559.0000
-## 25:  Total age_group3 cnt_highincome   82   4742   82   4742.0000
-## 26:  Total age_group4 cnt_highincome   34   1884   34   1884.0000
-## 27:  Total age_group5 cnt_highincome   14    796   19   1080.2857
+##  1:  Total      Total          total 4580 273857 4579 273797.2059
+##  2:  Total age_group1          total 1969 117215 1969 117215.0000
+##  3:  Total age_group2          total 1143  68404 1142  68344.1540
+##  4:  Total age_group3          total  864  52013  864  52013.0000
+##  5:  Total age_group4          total  423  25218  423  25218.0000
+##  6:  Total age_group5          total  168  10154  168  10154.0000
+##  7:  Total age_group6          total   13    853   12    787.3846
+##  8: female      Total          total 2284 134059 2284 134059.0000
+##  9: female age_group1          total  954  56443  954  56443.0000
+## 10: female age_group2          total  572  33476  572  33476.0000
+## 11: female age_group3          total  440  25549  442  25665.1318
+## 12: female age_group4          total  228  13112  228  13112.0000
+## 13: female age_group5          total   84   5023   85   5082.7976
+## 14: female age_group6          total    6    456    4    304.0000
+## 15:   male      Total          total 2296 139798 2297 139858.8876
+## 16:   male age_group1          total 1015  60772 1016  60831.8739
+## 17:   male age_group2          total  571  34928  572  34989.1699
+## 18:   male age_group3          total  424  26464  424  26464.0000
+## 19:   male age_group4          total  195  12106  194  12043.9179
+## 20:   male age_group5          total   84   5131   84   5131.0000
+## 21:   male age_group6          total    7    397    6    340.2857
+## 22:  Total      Total cnt_highincome  445  26214  445  26214.0000
+## 23:  Total age_group1 cnt_highincome  192  11162  192  11162.0000
+## 24:  Total age_group2 cnt_highincome  123   7620  121   7496.0976
+## 25:  Total age_group3 cnt_highincome   82   4720   82   4720.0000
+## 26:  Total age_group4 cnt_highincome   34   1765   34   1765.0000
+## 27:  Total age_group5 cnt_highincome   14    947   14    947.0000
 ## 28:  Total age_group6 cnt_highincome    0      0    0      0.0000
-## 29: female      Total cnt_highincome  226  13801  226  13801.0000
-## 30: female age_group1 cnt_highincome  102   6352  102   6352.0000
-## 31: female age_group2 cnt_highincome   57   3484   57   3484.0000
-## 32: female age_group3 cnt_highincome   41   2482   46   2784.6829
-## 33: female age_group4 cnt_highincome   19   1084   19   1084.0000
-## 34: female age_group5 cnt_highincome    7    399    5    285.0000
+## 29: female      Total cnt_highincome  226  12595  228  12706.4602
+## 30: female age_group1 cnt_highincome  102   5713  101   5656.9902
+## 31: female age_group2 cnt_highincome   57   3461   55   3339.5614
+## 32: female age_group3 cnt_highincome   41   2107   41   2107.0000
+## 33: female age_group4 cnt_highincome   19    940   18    890.5263
+## 34: female age_group5 cnt_highincome    7    374    9    480.8571
 ## 35: female age_group6 cnt_highincome    0      0    0      0.0000
-## 36:   male      Total cnt_highincome  219  12880  219  12880.0000
-## 37:   male age_group1 cnt_highincome   90   5348   92   5466.8444
-## 38:   male age_group2 cnt_highincome   66   4075   70   4321.9697
-## 39:   male age_group3 cnt_highincome   41   2260   41   2260.0000
-## 40:   male age_group4 cnt_highincome   15    800   20   1066.6667
-## 41:   male age_group5 cnt_highincome    7    397    8    453.7143
+## 36:   male      Total cnt_highincome  219  13619  219  13619.0000
+## 37:   male age_group1 cnt_highincome   90   5449   88   5327.9111
+## 38:   male age_group2 cnt_highincome   66   4159   62   3906.9394
+## 39:   male age_group3 cnt_highincome   41   2613   40   2549.2683
+## 40:   male age_group4 cnt_highincome   15    825   15    825.0000
+## 41:   male age_group5 cnt_highincome    7    573    7    573.0000
 ## 42:   male age_group6 cnt_highincome    0      0    0      0.0000
 ##        sex        age          vname  uwc     wc puwc         pwc</code></pre>
 </div>
@@ -466,50 +3347,50 @@
 <code>pws</code>: perturbed weighted sum of the given cell</li>
 </ul>
 <p>We now have a look at the results of the variables <code>savings</code> and <code>income</code> that we already have perturbed.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1">tab<span class="op">$</span><span class="kw">numtab</span>(<span class="dt">v =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"savings"</span>, <span class="st">"income"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1">tab<span class="op">$</span><span class="kw">numtab</span>(<span class="dt">v =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"savings"</span>, <span class="st">"income"</span>))</a></code></pre></div>
 <pre><code>##        sex        age   vname      uws         ws          pws
-##  1:  Total      Total savings  2273532  136651177  136653542.9
-##  2:  Total age_group1 savings   982386   59366513   59363434.8
-##  3:  Total age_group2 savings   552336   33210753   33207767.0
-##  4:  Total age_group3 savings   437101   26257209   26263216.8
-##  5:  Total age_group4 savings   214661   12804735   12807547.4
-##  6:  Total age_group5 savings    80451    4502547    4503913.0
-##  7:  Total age_group6 savings     6597     509420     508173.8
-##  8: female      Total savings  1113716   67113402   67110015.5
-##  9: female age_group1 savings   464726   28462932   28460538.4
-## 10: female age_group2 savings   271413   16503770   16507914.4
-## 11: female age_group3 savings   222131   12940559   12942087.3
-## 12: female age_group4 savings   115241    6811488    6814182.1
-## 13: female age_group5 savings    37218    2196188    2202606.8
-## 14: female age_group6 savings     2987     198465     192589.9
-## 15:   male      Total savings  1159816   69537775   69532314.1
-## 16:   male age_group1 savings   517660   30903581   30907517.2
-## 17:   male age_group2 savings   280923   16706983   16709984.7
-## 18:   male age_group3 savings   214970   13316650   13318755.6
-## 19:   male age_group4 savings    99420    5993247    5994340.2
-## 20:   male age_group5 savings    43233    2306359    2310359.7
-## 21:   male age_group6 savings     3610     310955     316148.2
-## 22:  Total      Total  income 22952978 1373619855 1373633960.9
-## 23:  Total age_group1  income  9810547  590585377  590552830.9
-## 24:  Total age_group2  income  5692119  340395967  340383896.7
-## 25:  Total age_group3  income  4406946  264123612  264153683.7
-## 26:  Total age_group4  income  2133543  125092168  125129205.2
-## 27:  Total age_group5  income   848151   49113286   49127993.5
-## 28:  Total age_group6  income    61672    4309445    4293448.8
-## 29: female      Total  income 11690929  699712365  699693256.3
-## 30: female age_group1  income  4933383  301866262  301849495.4
-## 31: female age_group2  income  2880740  171851102  171873048.0
-## 32: female age_group3  income  2238777  131691228  131702535.6
-## 33: female age_group4  income  1155033   66219766   66240095.2
-## 34: female age_group5  income   455017   26292462   26361941.8
-## 35: female age_group6  income    27979    1791545    1730444.9
-## 36:   male      Total  income 11262049  673907490  673871026.3
-## 37:   male age_group1  income  4877164  288719115  288745122.5
-## 38:   male age_group2  income  2811379  168544865  168565407.2
-## 39:   male age_group3  income  2168169  132432384  132445306.9
-## 40:   male age_group4  income   978510   58872402   58882436.2
-## 41:   male age_group5  income   393134   22820824   22869553.6
-## 42:   male age_group6  income    33693    2517900    2544012.6
+##  1:  Total      Total savings  2273532  136015916  136005583.2
+##  2:  Total age_group1 savings   982386   58598001   58599295.1
+##  3:  Total age_group2 savings   552336   32946816   32949003.7
+##  4:  Total age_group3 savings   437101   26506196   26502586.5
+##  5:  Total age_group4 savings   214661   12786574   12782154.2
+##  6:  Total age_group5 savings    80451    4764942    4768431.7
+##  7:  Total age_group6 savings     6597     413387     416944.2
+##  8: female      Total savings  1113716   65135349   65127404.5
+##  9: female age_group1 savings   464726   27503173   27493577.0
+## 10: female age_group2 savings   271413   15821567   15821552.6
+## 11: female age_group3 savings   222131   12910314   12916447.0
+## 12: female age_group4 savings   115241    6559375    6560762.7
+## 13: female age_group5 savings    37218    2139419    2134905.9
+## 14: female age_group6 savings     2987     201501     199003.6
+## 15:   male      Total savings  1159816   70880567   70877659.8
+## 16:   male age_group1 savings   517660   31094828   31089689.8
+## 17:   male age_group2 savings   280923   17125249   17125512.6
+## 18:   male age_group3 savings   214970   13595882   13599459.5
+## 19:   male age_group4 savings    99420    6227199    6231918.3
+## 20:   male age_group5 savings    43233    2625523    2625912.1
+## 21:   male age_group6 savings     3610     211886     215183.1
+## 22:  Total      Total  income 22952978 1370461694 1370328958.6
+## 23:  Total age_group1  income  9810547  586759732  586807121.8
+## 24:  Total age_group2  income  5692119  340761780  340783529.0
+## 25:  Total age_group3  income  4406946  261356303  261324365.6
+## 26:  Total age_group4  income  2133543  126372788  126338276.4
+## 27:  Total age_group5  income   848151   51159386   51194231.9
+## 28:  Total age_group6  income    61672    4051705    4105698.8
+## 29: female      Total  income 11690929  683463238  683378247.4
+## 30: female age_group1  income  4933383  294987611  294933742.1
+## 31: female age_group2  income  2880740  169068494  169090968.5
+## 32: female age_group3  income  2238777  126073312  126087999.9
+## 33: female age_group4  income  1155033   64504975   64520167.4
+## 34: female age_group5  income   455017   26711568   26652871.1
+## 35: female age_group6  income    27979    2117278    2043777.5
+## 36:   male      Total  income 11262049  686998456  686976386.2
+## 37:   male age_group1  income  4877164  291772121  291759393.5
+## 38:   male age_group2  income  2811379  171693286  171699188.1
+## 39:   male age_group3  income  2168169  135282991  135311916.4
+## 40:   male age_group4  income   978510   61867813   61910048.2
+## 41:   male age_group5  income   393134   24447818   24442789.6
+## 42:   male age_group6  income    33693    1934427    2026186.1
 ##        sex        age   vname      uws         ws          pws</code></pre>
 </div>
 </div>
@@ -520,18 +3401,14 @@
 <h4 class="hasAnchor">
 <a href="#utility-measures-for-count-variables" class="anchor"></a>Utility measures for count variables</h4>
 <p>Method <code>measures_cnts()</code> allows to compute information loss measures for perturbed count variables. Its application is as simple as:</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" data-line-number="1">tab<span class="op">$</span><span class="kw">measures_cnts</span>(<span class="dt">v =</span> <span class="st">"total"</span>, <span class="dt">exclude_zeros =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1">tab<span class="op">$</span><span class="kw">measures_cnts</span>(<span class="dt">v =</span> <span class="st">"total"</span>, <span class="dt">exclude_zeros =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## $overview
 ##    noise cnt        pct
-## 1:    -4   2 0.09523810
-## 2:    -3   2 0.09523810
-## 3:    -2   1 0.04761905
-## 4:    -1   1 0.04761905
-## 5:     0   8 0.38095238
-## 6:     1   3 0.14285714
-## 7:     2   1 0.04761905
-## 8:     3   1 0.04761905
-## 9:     4   2 0.09523810
+## 1:    -2   1 0.04761905
+## 2:    -1   4 0.19047619
+## 3:     0  10 0.47619048
+## 4:     1   5 0.23809524
+## 5:     2   1 0.04761905
 ## 
 ## $measures
 ##       what    d1    d2    d3
@@ -539,45 +3416,43 @@
 ##  2:    Q10 0.000 0.000 0.000
 ##  3:    Q20 0.000 0.000 0.000
 ##  4:    Q30 0.000 0.000 0.000
-##  5:    Q40 1.000 0.000 0.010
-##  6:   Mean 1.571 0.033 0.064
-##  7: Median 1.000 0.003 0.042
-##  8:    Q60 2.000 0.004 0.055
-##  9:    Q70 3.000 0.005 0.063
-## 10:    Q80 3.000 0.007 0.071
-## 11:    Q90 4.000 0.012 0.097
-## 12:    Q95 4.000 0.143 0.183
-## 13:    Q99 4.000 0.429 0.477
-## 14:    Max 4.000 0.500 0.551
+##  5:    Q40 0.000 0.000 0.000
+##  6:   Mean 0.619 0.028 0.047
+##  7: Median 1.000 0.000 0.007
+##  8:    Q60 1.000 0.001 0.015
+##  9:    Q70 1.000 0.002 0.021
+## 10:    Q80 1.000 0.005 0.048
+## 11:    Q90 1.000 0.077 0.141
+## 12:    Q95 2.000 0.143 0.196
+## 13:    Q99 2.000 0.295 0.399
+## 14:    Max 2.000 0.333 0.449
 ## 
 ## $cumdistr_d1
 ##    cat cnt       pct
-## 1:   0   8 0.3809524
-## 2:   1  12 0.5714286
-## 3:   2  14 0.6666667
-## 4:   3  17 0.8095238
-## 5:   4  21 1.0000000
+## 1:   0  10 0.4761905
+## 2:   1  19 0.9047619
+## 3:   2  21 1.0000000
 ## 
 ## $cumdistr_d2
 ##            cat cnt       pct
-## 1:    [0,0.02]  19 0.9047619
-## 2: (0.02,0.05]  19 0.9047619
+## 1:    [0,0.02]  18 0.8571429
+## 2: (0.02,0.05]  18 0.8571429
 ## 3:  (0.05,0.1]  19 0.9047619
 ## 4:   (0.1,0.2]  20 0.9523810
 ## 5:   (0.2,0.3]  20 0.9523810
-## 6:   (0.3,0.4]  20 0.9523810
+## 6:   (0.3,0.4]  21 1.0000000
 ## 7:   (0.4,0.5]  21 1.0000000
 ## 8:   (0.5,Inf]  21 1.0000000
 ## 
 ## $cumdistr_d3
 ##            cat cnt       pct
-## 1:    [0,0.02]   9 0.4285714
-## 2: (0.02,0.05]  12 0.5714286
-## 3:  (0.05,0.1]  19 0.9047619
+## 1:    [0,0.02]  14 0.6666667
+## 2: (0.02,0.05]  17 0.8095238
+## 3:  (0.05,0.1]  18 0.8571429
 ## 4:   (0.1,0.2]  20 0.9523810
 ## 5:   (0.2,0.3]  20 0.9523810
 ## 6:   (0.3,0.4]  20 0.9523810
-## 7:   (0.4,0.5]  20 0.9523810
+## 7:   (0.4,0.5]  21 1.0000000
 ## 8:   (0.5,Inf]  21 1.0000000
 ## 
 ## $false_zero
@@ -638,7 +3513,7 @@
 <a href="#additional-features" class="anchor"></a>Additional Features</h3>
 <p>Finally we note that there are <code>print</code> and <code>summary</code> methods implemented for objects created with from <code><a href="../reference/cellkey_pkg.html">ck_setup()</a></code> which can be used as shown below:</p>
 <p>The <code><a href="https://rdrr.io/r/base/print.html">print()</a></code>-method shows the dimension of the table as well as the variables that are (or possibly can be) perturbed. It is also displayed if the table was constructed using weights.</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" data-line-number="1">tab<span class="op">$</span><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>() <span class="co"># same as (print(tab))</span></a></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" data-line-number="1">tab<span class="op">$</span><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>() <span class="co"># same as (print(tab))</span></a></code></pre></div>
 <pre><code>## ── Table Information ──────────────────────────────────────────────────────
 ## ✔ 21 cells in 2 dimensions ('sex', 'age')
 ## ✔ weights: yes
@@ -649,17 +3524,17 @@
 ## ☒ 'income' (perturbed)
 ## ☒ 'savings' (perturbed)</code></pre>
 <p>The <code>summary</code>-method shows some utility statistics for already perturbed variables as shown below:</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" data-line-number="1">tab<span class="op">$</span><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" data-line-number="1">tab<span class="op">$</span><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>()</a></code></pre></div>
 <pre><code>## ┌──────────────────────────────────────────────┐
 ## │Utility measures for perturbed count variables│
 ## └──────────────────────────────────────────────┘
 ## ── Distribution statistics of perturbations ───────────────────────────────
-##          countvar Min Q10 Q20 Q30 Q40  Mean Median Q60 Q70 Q80 Q90 Q95 Q99
-## 1:          total  -4  -3  -1  -1   0 0.048      0   0   0   2   3   4   4
-## 2: cnt_highincome  -2   0   0   0   0 0.952      0   0   0   2   5   5   5
-##    Max
-## 1:   4
-## 2:   5
+##          countvar Min Q10 Q20 Q30 Q40   Mean Median Q60 Q70 Q80 Q90 Q95
+## 1:          total  -2  -1  -1   0   0 -0.048      0   0   0   1   1   1
+## 2: cnt_highincome  -4  -2  -1  -1   0 -0.429      0   0   0   0   0   2
+##    Q99 Max
+## 1: 1.8   2
+## 2: 2.0   2
 ## 
 ## ── Distance-based measures ────────────────────────────────────────────────
 ## ✔ Variable: 'total'
@@ -669,16 +3544,16 @@
 ##  2:    Q10 0.000 0.000 0.000
 ##  3:    Q20 0.000 0.000 0.000
 ##  4:    Q30 0.000 0.000 0.000
-##  5:    Q40 1.000 0.000 0.010
-##  6:   Mean 1.571 0.033 0.064
-##  7: Median 1.000 0.003 0.042
-##  8:    Q60 2.000 0.004 0.055
-##  9:    Q70 3.000 0.005 0.063
-## 10:    Q80 3.000 0.007 0.071
-## 11:    Q90 4.000 0.012 0.097
-## 12:    Q95 4.000 0.143 0.183
-## 13:    Q99 4.000 0.429 0.477
-## 14:    Max 4.000 0.500 0.551
+##  5:    Q40 0.000 0.000 0.000
+##  6:   Mean 0.619 0.028 0.047
+##  7: Median 1.000 0.000 0.007
+##  8:    Q60 1.000 0.001 0.015
+##  9:    Q70 1.000 0.002 0.021
+## 10:    Q80 1.000 0.005 0.048
+## 11:    Q90 1.000 0.077 0.141
+## 12:    Q95 2.000 0.143 0.196
+## 13:    Q99 2.000 0.295 0.399
+## 14:    Max 2.000 0.333 0.449
 ## 
 ## ✔ Variable: 'cnt_highincome'
 ## 
@@ -688,29 +3563,29 @@
 ##  3:    Q20 0.000 0.000 0.000
 ##  4:    Q30 0.000 0.000 0.000
 ##  5:    Q40 0.000 0.000 0.000
-##  6:   Mean 1.333 0.074 0.141
-##  7: Median 0.000 0.000 0.000
-##  8:    Q60 0.200 0.004 0.021
-##  9:    Q70 1.900 0.057 0.175
-## 10:    Q80 3.200 0.134 0.325
-## 11:    Q90 5.000 0.300 0.467
-## 12:    Q95 5.000 0.337 0.602
-## 13:    Q99 5.000 0.353 0.614
-## 14:    Max 5.000 0.357 0.617
+##  6:   Mean 0.944 0.029 0.069
+##  7: Median 0.500 0.004 0.025
+##  8:    Q60 1.000 0.011 0.069
+##  9:    Q70 1.900 0.022 0.089
+## 10:    Q80 2.000 0.031 0.112
+## 11:    Q90 2.000 0.055 0.169
+## 12:    Q95 2.300 0.094 0.266
+## 13:    Q99 3.660 0.247 0.337
+## 14:    Max 4.000 0.286 0.354
 ## 
 ## ┌──────────────────────────────────────────────────┐
 ## │Utility measures for perturbed numerical variables│
 ## └──────────────────────────────────────────────────┘
 ## ── Distribution statistics of perturbations ───────────────────────────────
-##      vname        Min        Q10        Q20        Q30       Q40     Mean
-## 1:  income -61100.097 -32546.115 -16766.570 -12070.329 11307.629 8061.057
-## 2: savings  -5875.128  -3386.491  -2986.033  -1246.177  1365.963 1059.123
-##       Median       Q60       Q70       Q80       Q90       Q95       Q99
-## 1: 14105.940 20329.170 21946.029 26112.650 37037.176 48729.603 65329.729
-## 2:  2105.565  2694.073  3001.654  4000.695  5193.156  6007.797  6336.634
-##          Max
-## 1: 69479.761
-## 2:  6418.843</code></pre>
+##      vname        Min        Q10        Q20        Q30        Q40
+## 1:  income -132735.38 -73500.514 -53868.946 -31937.396 -12727.509
+## 2: savings  -10332.83  -7944.466  -4513.051  -3609.456  -2497.399
+##         Mean   Median       Q60       Q70       Q80       Q90       Q95
+## 1: -6233.907 5902.060 15192.399 22474.536 34845.878 47389.820 53993.777
+## 2:  -984.610  263.609  1294.071  2187.733  3489.746  3577.513  4719.312
+##          Q99       Max
+## 1: 84206.026 91759.089
+## 2:  5850.245  6132.978</code></pre>
 </div>
 </div>
 <div id="summary" class="section level2">
