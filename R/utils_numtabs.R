@@ -28,8 +28,8 @@
 # p_sm: percentage of perturbation for small cells
 # q: parameter for flex function
 .para_m <- function(x, p_sm, p_lg, fp, q) {
-  f1 <- ( (p_sm * x) - (p_lg * fp) ) / (p_lg * fp)
-  f2 <- ( (2 * fp) / (fp + x) ) ^ q
+  f1 <- ((p_sm * x) - (p_lg * fp)) / (p_lg * fp)
+  f2 <- ((2 * fp) / (fp + x)) ^ q
   p_lg * (1 + (f1 * f2))
 }
 
@@ -113,7 +113,7 @@
   xo <- cv
   sign_xo <- sign(xo)
   x_hats <- rep(NA, length(x))
-  for (j in 1:length(x)) {
+  for (j in seq_len(length(x))) {
     zero_pert <- FALSE
     lookup_params$lookup <- lookup[j]
     if (debug) {
@@ -237,7 +237,7 @@
   sign_xo <- sign(xo)
   x_hats <- rep(NA, length(x))
   cnt_sc <- 0
-  for (j in 1:length(x)) {
+  for (j in seq_len(length(x))) {
     zero_pert <- FALSE
 
     lookup_params$lookup <- lookup[j]
@@ -249,7 +249,7 @@
     abs_xj <- abs(xj)
 
     if (abs_xj < zs) {
-      x_delta <- xj # m := 1
+      x_delta <- xj # in this case, m equals 1
       lookup_params$lookup <- "small_cells"
       cnt_sc <- cnt_sc + 1
     } else {

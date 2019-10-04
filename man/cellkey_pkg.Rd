@@ -88,11 +88,12 @@ contributers contribute more than \code{k\%} is considered unsafe
 \itemize{
 \item \code{v}: name(s) of count or magnitude variables that should be perturbed.
 }
-\item \strong{\code{freqtab(v, path)}}: get results from already perturbed count variables as a \code{data.table}. The required arguments are:
+\item \strong{\code{freqtab(v, path)}}: get results from already perturbed count variables as a
+\code{data.table}. The required arguments are:
 \itemize{
 \item \code{v}: a vector of variable names for count variables. If \code{NULL} (the default), the results
-are returned for all available count variables. For variables that have not yet perturbed, columns \code{puwc} and \code{pwc}
-are filled with \code{NA}.
+are returned for all available count variables. For variables that have not yet
+perturbed, columns \code{puwc} and \code{pwc} are filled with \code{NA}.
 \item \code{path}: if not \code{NULL}, a scalar character defining a (relative or absolute)
 path to which the result table should be written. A \code{csv} file will be generated
 and, if specified, \code{path} must have ".csv" as file-ending
@@ -107,15 +108,15 @@ the first n columns. Additionally, the following columns are shown:
 \item \code{puwc}: perturbed unweighted counts or \code{NA} if \code{vname} was not yet perturbed
 \item \code{pwc}: perturbed weighted counts or \code{NA} if \code{vname} was not yet perturbed
 }
-\item \strong{\code{numtab(v, mean_before_sum = FALSE, path = NULL)}}: get results from already perturbed continuous variables as
-a \code{data.table}. The required arguments are:
+\item \strong{\code{numtab(v, mean_before_sum = FALSE, path = NULL)}}: get results from already perturbed
+continuous variables as a \code{data.table}. The required arguments are:
 \itemize{
 \item \code{v}: a vector of variable names of continuous variables. If \code{NULL} (the default), the results
 are returned for all available numeric variables.
 \item \code{mean_before_sum}: (logical); if \code{TRUE}, the perturbed values are adjusted by a factor \code{((n+p))⁄n} with \code{n}
 being the original weighted cellvalue and \code{p} the perturbed cell value. This makes sense if the the
-accuracy of the variable mean is considered more important than accuracy of sums of the variable. The default value
-is \code{FALSE} (no adjustment is done)
+accuracy of the variable mean is considered more important than accuracy of sums of the
+variable. The default value is \code{FALSE} (no adjustment is done)
 \item \code{path}: if not \code{NULL}, a scalar character defining a (relative or absolute)
 path to which the result table should be written. A \code{csv} file will be generated
 and, if specified, \code{path} must have ".csv" as file-ending
@@ -129,10 +130,12 @@ the first n columns. Additionally, the following columns are shown:
 \item \code{ws}: weighted cellsum
 \item \code{pws}: perturbed weighted sum of the given cell or \code{NA} if \code{vname} has not not perturbed
 }
-\item \strong{\code{measures_cnts(v, exclude_zeros = TRUE)}}: utility measures for perturbed count variables. The required arguments are:
+\item \strong{\code{measures_cnts(v, exclude_zeros = TRUE)}}: utility measures for perturbed count variables.
+The required arguments are:
 \itemize{
 \item \code{v}: name of a count variable for which utility measures should be computed.
-\item \code{exclude_zeros}: should empty (zero) cells in the original values be excluded when computing distance measures
+\item \code{exclude_zeros}: should empty (zero) cells in the original values be excluded when computing
+distance measures
 This method returns a \code{list} containing a set of utility measures based on some distance functions.
 For a detailed description of the computed measures, see \code{\link[=ck_cnt_measures]{ck_cnt_measures()}}
 }

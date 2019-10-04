@@ -13,7 +13,7 @@ x[, cnt_males := ifelse(sex == "male", 1, 0)]
 x[, cnt_highincome := ifelse(income >= 9000, 1, 0)]
 x[, mixed := sample(-20:10, nrow(x), replace = TRUE)] # mixed variable with positive and negative contributions
 
-x$id <- 1:nrow(x)
+x$id <- seq_len(nrow(x))
 x$income[1297] <- x$income[1297] * 25
 x$income[3503] <- x$income[3503] * 25
 

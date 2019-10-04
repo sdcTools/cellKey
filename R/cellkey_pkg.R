@@ -159,7 +159,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       ck_log("mark duplicated cells")
       dims <- prob@dimInfo@dimInfo
       tab$is_bogus <- FALSE
-      for (i in 1:length(dims)) {
+      for (i in seq_len(length(dims))) {
         dd <- dims[[i]]
         tab$is_bogus[tab[[dd@vName]] %in% dd@dups] <- TRUE
       }
@@ -176,7 +176,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
       # finding top_k contributors for each cell and numerical variable
       microdat <- prob@dataObj@rawData[, c(names(dims), numvars, wvar), with = FALSE]
-      microdat$.tmpid <- 1:nrow(microdat)
+      microdat$.tmpid <- seq_len(nrow(x))
 
       # perhaps c++?
       # for each numerical variable and each cell, get the top_k contributions
@@ -185,7 +185,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         res <- vector("list", length = length(indices))
         names(res) <- names(indices)
 
-        for (i in 1:length(res)) {
+        for (i in seq_len(length(res))) {
           out <- vector("list", length = length(nv))
           names(out) <- nv
           xx <- microdat[.tmpid %in% indices[[i]]]
@@ -240,7 +240,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       }
 
       # fix cell keys
-      for (i in 1:length(cols_ck)) {
+      for (i in seq_len(length(cols_ck))) {
         res[[cols_ck[i]]] <- res[[cols_ck[i]]] %% 1
       }
 
@@ -269,14 +269,18 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         rescnts[[index]] <- res[, vv, with = FALSE]
       }
 
-      if (length(numvars) > 0) {
+      nr_numvars <- length(numvars)
+      if (nr_numvars > 0) {
+
+        seq_nums <- seq_len(nr_numvars)
+
         resnums <- vector("list", length = length(numvars))
         names(resnums) <- numvars
 
         cols_uws <- gen_vnames(numvars, prefix = "uws")
         setnames(res, numvars, cols_uws)
         cols_ws <- gen_vnames(numvars, prefix = "ws")
-        for (j in 1:length(numvars)) {
+        for (j in seq_nums) {
           cn1 <- gen_vnames("total", prefix = "ck")
           cn2 <- gen_vnames(numvars[j], prefix = "rkey_nozero")
           vv <- c(cn1, cn2, cols_uws[j], cols_ws[j])
@@ -317,7 +321,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       )
 
       dupsinfo <- data.table(
-        id = 1:nrow(rescnts[[1]]),
+        id = seq_len(nrow(rescnts[[1]])),
         is_bogus = rescnts[[1]]$is_bogus)
       rescnts[[1]]$is_bogus <- NULL
 
@@ -346,7 +350,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         single_v = FALSE)
       v <- tolower(v)
 
-      for (i in 1:length(v)) {
+      for (i in seq_len(length(v))) {
         vname <- v[i]
         if (vname %in% countvars) {
           private$.ck_perturb_cnts(v = vname)
@@ -866,7 +870,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
       cli::cat_rule("Tabulated / Perturbed countvars")
       countvars <- private$.varsdt[type == "countvars"]
-      for (i in 1:nrow(countvars)) {
+      for (i in 1:seq_len(nrow(countvars))) {
         v <- countvars$vname[i]
         if (countvars$is_perturbed[i]) {
           cli::cat_line(cli::symbol$checkbox_on, " ", shQuote(v), " (perturbed)")
@@ -878,7 +882,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       numvars <- private$.varsdt[type == "numvars"]
       if (nrow(numvars) > 0) {
         cli::cat_rule("Tabulated / Perturbed numvars")
-        for (i in 1:nrow(numvars)) {
+        for (i in seq_len(nrow(numvars))) {
           v <- numvars$vname[i]
           if (numvars$is_perturbed[i]) {
             cli::cat_line(cli::symbol$checkbox_on, " ", shQuote(v), " (perturbed)")
@@ -932,9 +936,9 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         row_nr <- rep(-1, length(cellkeys))
         pert_vals <- rep(0L, length(cellkeys))
         symmetry <- max(ptab$i)
-        ptab$ids <- 1:nrow(ptab)
+        ptab$ids <- seq_len(nrow(ptab))
 
-        for (d in 1:(symmetry)) {
+        for (d in seq_len(symmetry)) {
           if (d == symmetry) {
             rkind <- cellvals >= d
           } else {
@@ -1148,7 +1152,6 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
       lookup <- parallel::mclapply(x_vals, function(x) {
         if (is.na(x$even_odd)) {
-          #return("all")
           return(rep("all", length(x$x)))
         } else if (isTRUE(x$even_odd)) {
           return("even")
@@ -1164,7 +1167,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         fun <- .perturb_cell_simple
       }
 
-      res <- parallel::mclapply(1:length(x_vals), function(x) {
+      res <- parallel::mclapply(seq_len(length(x_vals)), function(x) {
         fun(
           cv = cellvals[x],
           x = x_vals[[x]]$x,
@@ -1174,7 +1177,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
           params = params)
       }, mc.cores = .ck_cores()) # nolint
 
-      pert_result <- rbindlist(parallel::mclapply(1:length(x_vals), function(x) {
+      pert_result <- rbindlist(parallel::mclapply(seq_len(length(x_vals)), function(x) {
        data.table(
          cell_id = names(x_vals)[x],
          ckey  = cellkeys[[x]],
@@ -1371,10 +1374,11 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' - **`perturb(v)`**: Perturb a count- or magnitude variable. The method has the following arguments:
 #'    * `v`: name(s) of count or magnitude variables that should be perturbed.
 #'
-#' - **`freqtab(v, path)`**: get results from already perturbed count variables as a `data.table`. The required arguments are:
+#' - **`freqtab(v, path)`**: get results from already perturbed count variables as a
+#' `data.table`. The required arguments are:
 #'    * `v`: a vector of variable names for count variables. If `NULL` (the default), the results
-#'    are returned for all available count variables. For variables that have not yet perturbed, columns `puwc` and `pwc`
-#'    are filled with `NA`.
+#'    are returned for all available count variables. For variables that have not yet
+#'    perturbed, columns `puwc` and `pwc` are filled with `NA`.
 #'    * `path`: if not `NULL`, a scalar character defining a (relative or absolute)
 #'    path to which the result table should be written. A `csv` file will be generated
 #'    and, if specified, `path` must have ".csv" as file-ending
@@ -1387,14 +1391,14 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'    * `puwc`: perturbed unweighted counts or `NA` if `vname` was not yet perturbed
 #'    * `pwc`: perturbed weighted counts or `NA` if `vname` was not yet perturbed
 #'
-#' - **`numtab(v, mean_before_sum = FALSE, path = NULL)`**: get results from already perturbed continuous variables as
-#' a `data.table`. The required arguments are:
+#' - **`numtab(v, mean_before_sum = FALSE, path = NULL)`**: get results from already perturbed
+#' continuous variables as a `data.table`. The required arguments are:
 #'    * `v`: a vector of variable names of continuous variables. If `NULL` (the default), the results
 #'    are returned for all available numeric variables.
 #'    * `mean_before_sum`: (logical); if `TRUE`, the perturbed values are adjusted by a factor `((n+p))⁄n` with `n`
 #'    being the original weighted cellvalue and `p` the perturbed cell value. This makes sense if the the
-#'    accuracy of the variable mean is considered more important than accuracy of sums of the variable. The default value
-#'    is `FALSE` (no adjustment is done)
+#'    accuracy of the variable mean is considered more important than accuracy of sums of the
+#'    variable. The default value is `FALSE` (no adjustment is done)
 #'    * `path`: if not `NULL`, a scalar character defining a (relative or absolute)
 #'    path to which the result table should be written. A `csv` file will be generated
 #'    and, if specified, `path` must have ".csv" as file-ending
@@ -1406,9 +1410,11 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'    * `ws`: weighted cellsum
 #'    * `pws`: perturbed weighted sum of the given cell or `NA` if `vname` has not not perturbed
 #'
-#' - **`measures_cnts(v, exclude_zeros = TRUE)`**: utility measures for perturbed count variables. The required arguments are:
+#' - **`measures_cnts(v, exclude_zeros = TRUE)`**: utility measures for perturbed count variables.
+#' The required arguments are:
 #'    * `v`: name of a count variable for which utility measures should be computed.
-#'    * `exclude_zeros`: should empty (zero) cells in the original values be excluded when computing distance measures
+#'    * `exclude_zeros`: should empty (zero) cells in the original values be excluded when computing
+#'    distance measures
 #'    This method returns a `list` containing a set of utility measures based on some distance functions.
 #'    For a detailed description of the computed measures, see [ck_cnt_measures()]
 #'

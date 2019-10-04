@@ -154,14 +154,14 @@ ck_params_nums <-
   }
 
   # separation point z_s (previously g1)
-  .separation_point <- function(m_fixed_sq, E, p_large) {
+  .separation_point <- function(m_fixed_sq, e, p_large) {
     if (is.na(m_fixed_sq)) {
       return(0)
     }
-    sqrt(m_fixed_sq) / (sqrt(E) * p_large)
+    sqrt(m_fixed_sq) / (sqrt(e) * p_large)
   }
 
-  E <- sum(mult_params$epsilon ^ 2)
+  e <- sum(mult_params$epsilon ^ 2)
   if (inherits(mult_params, "params_m_flex")) {
     p_large <- mult_params$p_large
   } else if (inherits(mult_params, "params_m_simple")) {
@@ -172,7 +172,7 @@ ck_params_nums <-
 
   zs <- .separation_point(
     m_fixed_sq = m_fixed_sq,
-    E = E,
+    e = e,
     p_large = p_large)
 
   out <- list(
@@ -183,7 +183,7 @@ ck_params_nums <-
       mu_c = mu_c,
       m_fixed_sq = m_fixed_sq,
       zs = zs,
-      E = E,
+      E = e, # nolint
       mult_params = mult_params,
       same_key = same_key,
       use_zero_rkeys = use_zero_rkeys,
