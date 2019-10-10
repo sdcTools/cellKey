@@ -1521,8 +1521,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' para2 <- ptable::pt_create_pParams(
 #'   D = 8, V = 3, js = 2, table = "cnts")
 #'
-#' p_cnts2 <- ck_params_cnts(
-#'   ptab = ptable::pt_create_pTable(para2))
+#' p_cnts2 <- ck_params_cnts(ptab = para2)
 #'
 #' # use these ptable it for the remaining variables
 #' tab$params_cnts_set(val = p_cnts2, v = countvars)

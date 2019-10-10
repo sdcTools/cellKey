@@ -135,7 +135,7 @@ print(tab)
 
 ### Defining perturbation parameters
 #### Perturbation parameters for count variables
-The next task is to define parameters that are used to perturb count variables which can be achieved with `ck_params_cnts`. This function requires as input the result of function `pt_create_pTable` from the [**ptable**](https://github.com/sdcTools/ptable) package. Please refer also to the documentation of this package for information on the required parameters. In this example we are going to use - amongst others - exemplary ptables that can are provided by the `ptable`-pkg for demonstration purposes:
+The next task is to define parameters that are used to perturb count variables which can be achieved with `ck_params_cnts`. This function requires as input the result of either `pt_create_pParams` or `pt_create_pTable` from the [**ptable**](https://github.com/sdcTools/ptable) package. Please refer also to the documentation of this package for information on the required parameters. In this example we are going to use - amongst others - exemplary ptables that can are provided by the `ptable`-pkg for demonstration purposes:
 
 ```{r, message=FALSE, message=FALSE}
 # two different perturbation parameter sets from the ptable-pkg
@@ -143,15 +143,16 @@ The next task is to define parameters that are used to perturb count variables w
 ptab1 <- ptable::pt_ex_cnts()
 
 # creating a ptable by specifying parameters
-para2 <- ptable::pt_create_pParams(D = 8, V = 3, js = 2, pstay = 0.5, optim = 1, mono = TRUE)
-ptab2 <- ptable::pt_create_pTable(para2)
+para2 <- ptable::pt_create_pParams(
+  D = 8, V = 3, js = 2, pstay = 0.5, 
+  optim = 1, mono = TRUE, table = "cnts")
 ```
 
 We then need to create the required inputs for the cellKey package.
 
 ```{r}
 p_cnts1 <- ck_params_cnts(ptab = ptab1)
-p_cnts2 <- ck_params_cnts(ptab = ptab2)
+p_cnts2 <- ck_params_cnts(ptab = para2)
 ```
 
 `ck_params_cnts()` returns objects that can be used as inputs in method `params_cnts_set()`. In argument `v` one may specify count variables for which the supplied perturbation parameters should be used. If `v` is not specified, the perturbation parameters are used for all count variables. 

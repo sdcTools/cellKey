@@ -31,8 +31,8 @@ test_that("checking dimension and structure of generated testdata is ok", {
   expect_true(is.data.table(x))
 })
 
+
 ## perturbation parameters for count variables
-set.seed(100)
 ep <- c(1, 0.5, 0.3)
 flex <-  ck_flexparams(
   fp = 1000,
@@ -40,6 +40,24 @@ flex <-  ck_flexparams(
   epsilon = ep,
   q = 2)
 
+test_that("ptable params can be used too", {
+  p1 <- ptable::pt_create_pParams(D=5, V=2, table="nums", step=4, icat=c(1,3,5))
+  p2 <- ptable::pt_create_pTable(p1)
+
+  expect_identical(
+    ck_params_nums(
+      type = "top_contr",
+      top_k = 3,
+      ptab = p1,
+      mult_params = flex),
+    ck_params_nums(
+      type = "top_contr",
+      top_k = 3,
+      ptab = p2,
+      mult_params = flex))
+})
+
+set.seed(100)
 ptab <- ptable::pt_ex_nums(
   parity = TRUE,
   separation = FALSE)

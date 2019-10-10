@@ -25,10 +25,11 @@ is used.
 \item{ptab}{in this argument, one ore more perturbation tables are given as input. the
 following choices are possible:
 \itemize{
-\item an object derived from \code{\link[ptable:pt_create_pTable]{ptable::pt_create_pTable()}}: this case is the same as specifying a
-named list with only a single element \code{"all"} (as described below)
+\item an object derived from \code{\link[ptable:pt_create_pTable]{ptable::pt_create_pTable()}} or \code{\link[=pt_create_pParams]{pt_create_pParams()}}:
+this case is the same as specifying a named list with only a single
+element \code{"all"} (as described below)
 \item a named \code{list} where the allowed names are shown below and each element must be
-the output of \code{\link[ptable:pt_create_pTable]{ptable::pt_create_pTable()}}
+the output of \code{\link[ptable:pt_create_pTable]{ptable::pt_create_pTable()}} or \code{\link[=pt_create_pParams]{pt_create_pParams()}}
 \itemize{
 \item \code{"all"}: this ptable will be used for all cells; if specified, no elements named \code{"even"}
 or \code{"odd"} must exist.

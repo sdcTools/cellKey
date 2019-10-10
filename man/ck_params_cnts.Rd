@@ -7,7 +7,8 @@
 ck_params_cnts(ptab, path = NULL)
 }
 \arguments{
-\item{ptab}{an object created with \code{\link[ptable:pt_create_pTable]{ptable::pt_create_pTable()}}}
+\item{ptab}{an object created with \code{\link[ptable:pt_create_pParams]{ptable::pt_create_pParams()}} or
+\code{\link[ptable:pt_create_pTable]{ptable::pt_create_pTable()}}}
 
 \item{path}{a scalar character specifying a path to which the parameters created with this functions
 should be written to (in yaml format)}
@@ -85,8 +86,7 @@ tab$params_cnts_set(val = p_cnts1, v = "total")
 para2 <- ptable::pt_create_pParams(
   D = 8, V = 3, js = 2, table = "cnts")
 
-p_cnts2 <- ck_params_cnts(
-  ptab = ptable::pt_create_pTable(para2))
+p_cnts2 <- ck_params_cnts(ptab = para2)
 
 # use these ptable it for the remaining variables
 tab$params_cnts_set(val = p_cnts2, v = countvars)

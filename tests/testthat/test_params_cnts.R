@@ -15,6 +15,15 @@ para <- ptable::pt_create_pParams(
 ptab <- ptable::pt_create_pTable(para)
 
 
+test_that("ptable params can be used too", {
+  p1 <- ptable::pt_create_pParams(D = 5, V = 2, table = "cnts")
+  p2 <- ptable::pt_create_pTable(p1)
+  expect_identical(
+    ck_params_cnts(ptab = p1),
+    ck_params_cnts(ptab = p2))
+})
+
+
 f_yaml <- tempfile(fileext = ".yaml")
 
 context("Testing perturbation parameters for cnt-vars")

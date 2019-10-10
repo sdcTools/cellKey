@@ -1,3 +1,7 @@
+# cellKey 0.18.2
+- feature: allow objects from `ptable::pt_create_pParams` as input in `ck_params_cnts()`
+- feature: allow objects from `ptable::pt_create_pParams` as input in `ck_params_nums()`
+
 # cellKey 0.18.1
 - bugfix: fallback to use a single core on windows-machines, fixing [`issue #131`](https://github.com/sdcTools/UserSupport/issues/131)
 - updating dependencies and required versions
