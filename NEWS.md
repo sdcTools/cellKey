@@ -1,3 +1,9 @@
+# cellKey 0.18.3
+- reference new methods `create_cnt_ptable()` and `create_num_ptable()` from [ptable-pkg](https://github.com/sdcTools/ptable)
+- update vignette
+- improve documentation of `ck_params_nums()`
+- update tests due to updates in ptable-pkg
+
 # cellKey 0.18.2
 - feature: allow objects from `ptable::pt_create_pParams` as input in `ck_params_cnts()`
 - feature: allow objects from `ptable::pt_create_pParams` as input in `ck_params_nums()`
