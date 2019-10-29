@@ -18,8 +18,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.1/css/all.min.css" integrity="sha256-PbSmjxuVAzJ6FPvNYsrXygfGhNJYyZ2GktDbkMBqQZg=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.1/css/v4-shims.min.css" integrity="sha256-A6jcAdwFD48VMjlI3GDxUd+eCQa7/KWy6G9oe/ovaPA=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
@@ -70,7 +70,7 @@ to perturb count variables." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.18.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.18.3</span>
       </span>
     </div>
 
@@ -133,13 +133,13 @@ to perturb count variables.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>ptab</th>
-      <td><p>an object created with <code><a href='https://rdrr.io/pkg/ptable/man/pt_create_pParams.html'>ptable::pt_create_pParams()</a></code> or
-<code><a href='https://rdrr.io/pkg/ptable/man/pt_create_pTable.html'>ptable::pt_create_pTable()</a></code></p></td>
+      <td><p>an object created with <code><a href='https://rdrr.io/pkg/ptable/man/pt_create_pParams.html'>ptable::pt_create_pParams()</a></code>,
+<code><a href='https://rdrr.io/pkg/ptable/man/pt_create_pTable.html'>ptable::pt_create_pTable()</a></code> or <code><a href='https://rdrr.io/pkg/ptable/man/create_cnt_ptable.html'>ptable::create_cnt_ptable()</a></code></p></td>
     </tr>
     <tr>
       <th>path</th>
-      <td><p>a scalar character specifying a path to which the parameters created with this functions
-should be written to (in yaml format)</p></td>
+      <td><p>a scalar character specifying a path to which the parameters
+created with this functions should be written to (in yaml format)</p></td>
     </tr>
     </table>
 
@@ -150,8 +150,9 @@ of counts and frequencies.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>This function uses functionality from package
-<code>ptable</code> (https://github.com/sdcTools/ptable), expecially <code><a href='https://rdrr.io/pkg/ptable/man/pt_create_pParams.html'>ptable::pt_create_pParams()</a></code>
-and <code><a href='https://rdrr.io/pkg/ptable/man/pt_create_pTable.html'>ptable::pt_create_pTable()</a></code>. More detailed information on the parameters
+<code>ptable</code> (https://github.com/sdcTools/ptable), expecially
+<code><a href='https://rdrr.io/pkg/ptable/man/pt_create_pParams.html'>ptable::pt_create_pParams()</a></code>, <code><a href='https://rdrr.io/pkg/ptable/man/pt_create_pTable.html'>ptable::pt_create_pTable()</a></code> and
+<code><a href='https://rdrr.io/pkg/ptable/man/create_cnt_ptable.html'>ptable::create_cnt_ptable()</a></code>. More detailed information on the parameters
 is available from the respective help-pages of these functions.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -341,14 +342,14 @@ is available from the respective help-pages of these functions.</p></div>
 <span class='no'>f_yaml</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".yaml"</span>)
 <span class='no'>p_cnts1</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_params_cnts</span>(
   <span class='kw'>ptab</span> <span class='kw'>=</span> <span class='kw pkg'>ptable</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/ptable/man/pt_ex_cnts.html'>pt_ex_cnts</a></span>(),
-  <span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmpMxxMGp/file3ad07b162722.yaml' successfully written.</span></div><div class='input'>
+  <span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmpaFdoxb/file3b5464538486.yaml' successfully written.</span></div><div class='input'>
 <span class='co'># read parameters from yaml-file and set them for variable `"total"`</span>
 <span class='no'>p_cnts1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ck_read_yaml.html'>ck_read_yaml</a></span>(<span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)
 
 <span class='no'>tab</span>$<span class='fu'>params_cnts_set</span>(<span class='kw'>val</span> <span class='kw'>=</span> <span class='no'>p_cnts1</span>, <span class='kw'>v</span> <span class='kw'>=</span> <span class='st'>"total"</span>)</div><div class='output co'>#&gt; <span class='message'>--&gt; setting perturbation parameters for variable 'total'</span></div><div class='input'>
 <span class='co'># create alternative perturbation parameters by specifying parameters</span>
 <span class='no'>para2</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>ptable</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/ptable/man/pt_create_pParams.html'>pt_create_pParams</a></span>(
-  <span class='kw'>D</span> <span class='kw'>=</span> <span class='fl'>8</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>js</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>table</span> <span class='kw'>=</span> <span class='st'>"cnts"</span>)</div><div class='output co'>#&gt; <span class='message'>Since type of table is frequency table (argument table is set to 'cnts'), the input parameters 'step' and 'icat' will be ignored.</span></div><div class='input'>
+  <span class='kw'>D</span> <span class='kw'>=</span> <span class='fl'>8</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>js</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>table</span> <span class='kw'>=</span> <span class='st'>"cnts"</span>)</div><div class='output co'>#&gt; <span class='message'>Ignoring argument `step` for freqency tables</span></div><div class='input'>
 <span class='no'>p_cnts2</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_params_cnts</span>(<span class='kw'>ptab</span> <span class='kw'>=</span> <span class='no'>para2</span>)
 
 <span class='co'># use these ptable it for the remaining variables</span>
@@ -477,7 +478,7 @@ is available from the respective help-pages of these functions.</p></div>
   <span class='kw'>mu_c</span> <span class='kw'>=</span> <span class='fl'>2</span>,
   <span class='kw'>same_key</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>use_zero_rkeys</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmpMxxMGp/file3ad014afa210.yaml' successfully written.</span></div><div class='input'>
+  <span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmpaFdoxb/file3b546dc4386c.yaml' successfully written.</span></div><div class='input'>
 <span class='co'># we read the parameters from the yaml-file</span>
 <span class='no'>p_nums1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ck_read_yaml.html'>ck_read_yaml</a></span>(<span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)
 
