@@ -12,40 +12,46 @@
 #' - `range`: the difference between largest and smallest contribution
 #' is used.
 #' - `sum`: the (weighted) cellvalue itself is used as starting point
-#' @param top_k it is ignored if `variant` is different from `top_contr`. Otherwise,
-#' @param ptab in this argument, one ore more perturbation tables are given as input. the
-#' following choices are possible:
+#' @param top_k it is ignored if `variant` is different from `top_contr`.
+#' Otherwise, a scalar number `>0` is expected.
+#' @param ptab in this argument, one ore more perturbation tables are given as
+#' input. the following choices are possible:
 #'
-#' - an object derived from [ptable::pt_create_pTable()] or [pt_create_pParams()]:
-#' this case is the same as specifying a named list with only a single
-#' element `"all"` (as described below)
-#' - a named `list` where the allowed names are shown below and each element must be
-#' the output of [ptable::pt_create_pTable()] or [pt_create_pParams()]
-#'   * `"all"`: this ptable will be used for all cells; if specified, no elements named `"even"`
-#'   or `"odd"` must exist.
-#'   * `"even"`: will be used to look up perturbation values for cells with an even number
-#'   of contributors. if specified, also list-element `"odd"` must exist.
-#'   * `"odd"`: will be used to look up perturbation values for cells with an odd number
-#'   of contributors; if specified, also list-element `"even"` must exist.
-#'   * `"small_cells"`: if specified, this ptable will be used to extract perturbation
-#'   values for very small cells
-#' @param mult_params an object derived with [ck_flexparams()] or [ck_simpleparams()]
-#' that contain required parameters for the computation of the perturbation multiplier
-#' @param mu_c fixed extra protection amount (`>= 0)` applied to the absolute of the
-#' perturbation value of the first (largest) noise component if the cell is sensitive.
-#' This value defaults to `0` (no additional protection). Please note that sensitive cells
-#' can be defined according using the `supp_freq()`, `supp_val`, `supp_p()`, `supp_nk()`
-#' and `supp_pq()` methods. An examples is given in `?cellkey_pkg`.
+#' - an object derived from [ptable::pt_create_pTable()], [pt_create_pParams()]
+#' or [ptable::create_num_ptable()]: this case is the same as specifying a named
+#' list with only a single element `"all"` (as described below)
+#' - a named `list` where the allowed names are shown below and each element
+#' must be the output of [ptable::pt_create_pTable()], [pt_create_pParams()] or
+#' [ptable::create_num_ptable()]
+#'   * `"all"`: this ptable will be used for all cells; if specified, no
+#'   elements named `"even"` or `"odd"` must exist.
+#'   * `"even"`: will be used to look up perturbation values for cells with an
+#'   even number of contributors. if specified, also list-element `"odd"` must
+#'   exist.
+#'   * `"odd"`: will be used to look up perturbation values for cells with an
+#'   odd number of contributors; if specified, also list-element `"even"` must
+#'   exist.
+#'   * `"small_cells"`: if specified, this ptable will be used to extract
+#'   perturbation values for very small cells
+#' @param mult_params an object derived with [ck_flexparams()] or
+#' [ck_simpleparams()] that contain required parameters for the computation of
+#' the perturbation multiplier
+#' @param mu_c fixed extra protection amount (`>= 0)` applied to the absolute of
+#' the perturbation value of the first (largest) noise component if the cell is
+#' sensitive. This value defaults to `0` (no additional protection). Please note
+#' that sensitive cells can be defined according using the `supp_freq()`,
+#' `supp_val`, `supp_p()`, `supp_nk()` and `supp_pq()` methods. An examples is
+#' given in `?cellkey_pkg`.
 #' @param same_key (logical) should original cell key (`TRUE`) used for
 #' for finding perturbation values of the largest contributor to a
 #' cell or should a perturbation of the cellkey itself (`FALSE`) take place.
 #' @param use_zero_rkeys (logical) scalar defining if record keys of
 #' units not contributing to a specific numeric variables should be
 #' used (`TRUE`) or ignored (`FALSE`) when computing cell keys.
-#' @param path a scalar character specifying a path to which the parameters created with this functions
-#' should be written to (in yaml format)
-#' @return an object suitable as input to method `$params_nums_set()` for the perturbation
-#' of continous variables.
+#' @param path a scalar character specifying a path to which the parameters
+#' created with this functions should be written to (in yaml format)
+#' @return an object suitable as input to method `$params_nums_set()` for the
+#' perturbation of continous variables.
 #' @export
 #' @seealso [ck_flexparams()]
 #' @md
@@ -330,9 +336,7 @@ ck_simpleparams <- function(p, epsilon = 1) {
       stop("Argument `epsilon` must contain numbers in descending order", call. = FALSE)
     }
   }
-  out <- list(
-    p = p,
-    epsilon = epsilon)
+  out <- list(p = p, epsilon = epsilon)
   class(out) <- "params_m_simple"
   out
 }

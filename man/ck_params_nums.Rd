@@ -20,36 +20,42 @@ is used.
 \item \code{sum}: the (weighted) cellvalue itself is used as starting point
 }}
 
-\item{top_k}{it is ignored if \code{variant} is different from \code{top_contr}. Otherwise,}
+\item{top_k}{it is ignored if \code{variant} is different from \code{top_contr}.
+Otherwise, a scalar number \code{>0} is expected.}
 
-\item{ptab}{in this argument, one ore more perturbation tables are given as input. the
-following choices are possible:
+\item{ptab}{in this argument, one ore more perturbation tables are given as
+input. the following choices are possible:
 \itemize{
-\item an object derived from \code{\link[ptable:pt_create_pTable]{ptable::pt_create_pTable()}} or \code{\link[=pt_create_pParams]{pt_create_pParams()}}:
-this case is the same as specifying a named list with only a single
-element \code{"all"} (as described below)
-\item a named \code{list} where the allowed names are shown below and each element must be
-the output of \code{\link[ptable:pt_create_pTable]{ptable::pt_create_pTable()}} or \code{\link[=pt_create_pParams]{pt_create_pParams()}}
+\item an object derived from \code{\link[ptable:pt_create_pTable]{ptable::pt_create_pTable()}}, \code{\link[=pt_create_pParams]{pt_create_pParams()}}
+or \code{\link[ptable:create_num_ptable]{ptable::create_num_ptable()}}: this case is the same as specifying a named
+list with only a single element \code{"all"} (as described below)
+\item a named \code{list} where the allowed names are shown below and each element
+must be the output of \code{\link[ptable:pt_create_pTable]{ptable::pt_create_pTable()}}, \code{\link[=pt_create_pParams]{pt_create_pParams()}} or
+\code{\link[ptable:create_num_ptable]{ptable::create_num_ptable()}}
 \itemize{
-\item \code{"all"}: this ptable will be used for all cells; if specified, no elements named \code{"even"}
-or \code{"odd"} must exist.
-\item \code{"even"}: will be used to look up perturbation values for cells with an even number
-of contributors. if specified, also list-element \code{"odd"} must exist.
-\item \code{"odd"}: will be used to look up perturbation values for cells with an odd number
-of contributors; if specified, also list-element \code{"even"} must exist.
-\item \code{"small_cells"}: if specified, this ptable will be used to extract perturbation
-values for very small cells
+\item \code{"all"}: this ptable will be used for all cells; if specified, no
+elements named \code{"even"} or \code{"odd"} must exist.
+\item \code{"even"}: will be used to look up perturbation values for cells with an
+even number of contributors. if specified, also list-element \code{"odd"} must
+exist.
+\item \code{"odd"}: will be used to look up perturbation values for cells with an
+odd number of contributors; if specified, also list-element \code{"even"} must
+exist.
+\item \code{"small_cells"}: if specified, this ptable will be used to extract
+perturbation values for very small cells
 }
 }}
 
-\item{mult_params}{an object derived with \code{\link[=ck_flexparams]{ck_flexparams()}} or \code{\link[=ck_simpleparams]{ck_simpleparams()}}
-that contain required parameters for the computation of the perturbation multiplier}
+\item{mult_params}{an object derived with \code{\link[=ck_flexparams]{ck_flexparams()}} or
+\code{\link[=ck_simpleparams]{ck_simpleparams()}} that contain required parameters for the computation of
+the perturbation multiplier}
 
-\item{mu_c}{fixed extra protection amount (\code{>= 0)} applied to the absolute of the
-perturbation value of the first (largest) noise component if the cell is sensitive.
-This value defaults to \code{0} (no additional protection). Please note that sensitive cells
-can be defined according using the \code{supp_freq()}, \code{supp_val}, \code{supp_p()}, \code{supp_nk()}
-and \code{supp_pq()} methods. An examples is given in \code{?cellkey_pkg}.}
+\item{mu_c}{fixed extra protection amount (\code{>= 0)} applied to the absolute of
+the perturbation value of the first (largest) noise component if the cell is
+sensitive. This value defaults to \code{0} (no additional protection). Please note
+that sensitive cells can be defined according using the \code{supp_freq()},
+\code{supp_val}, \code{supp_p()}, \code{supp_nk()} and \code{supp_pq()} methods. An examples is
+given in \code{?cellkey_pkg}.}
 
 \item{same_key}{(logical) should original cell key (\code{TRUE}) used for
 for finding perturbation values of the largest contributor to a
@@ -59,12 +65,12 @@ cell or should a perturbation of the cellkey itself (\code{FALSE}) take place.}
 units not contributing to a specific numeric variables should be
 used (\code{TRUE}) or ignored (\code{FALSE}) when computing cell keys.}
 
-\item{path}{a scalar character specifying a path to which the parameters created with this functions
-should be written to (in yaml format)}
+\item{path}{a scalar character specifying a path to which the parameters
+created with this functions should be written to (in yaml format)}
 }
 \value{
-an object suitable as input to method \code{$params_nums_set()} for the perturbation
-of continous variables.
+an object suitable as input to method \code{$params_nums_set()} for the
+perturbation of continous variables.
 }
 \description{
 This function allows to define perturbation parameters used to

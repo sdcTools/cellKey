@@ -7,11 +7,11 @@
 ck_params_cnts(ptab, path = NULL)
 }
 \arguments{
-\item{ptab}{an object created with \code{\link[ptable:pt_create_pParams]{ptable::pt_create_pParams()}} or
-\code{\link[ptable:pt_create_pTable]{ptable::pt_create_pTable()}}}
+\item{ptab}{an object created with \code{\link[ptable:pt_create_pParams]{ptable::pt_create_pParams()}},
+\code{\link[ptable:pt_create_pTable]{ptable::pt_create_pTable()}} or \code{\link[ptable:create_cnt_ptable]{ptable::create_cnt_ptable()}}}
 
-\item{path}{a scalar character specifying a path to which the parameters created with this functions
-should be written to (in yaml format)}
+\item{path}{a scalar character specifying a path to which the parameters
+created with this functions should be written to (in yaml format)}
 }
 \value{
 an object suitable as input to method \code{$params_cnts_set()} for the perturbation
@@ -200,7 +200,8 @@ tab$summary()
 }
 \seealso{
 This function uses functionality from package
-\code{ptable} (https://github.com/sdcTools/ptable), expecially \code{\link[ptable:pt_create_pParams]{ptable::pt_create_pParams()}}
-and \code{\link[ptable:pt_create_pTable]{ptable::pt_create_pTable()}}. More detailed information on the parameters
+\code{ptable} (https://github.com/sdcTools/ptable), expecially
+\code{\link[ptable:pt_create_pParams]{ptable::pt_create_pParams()}}, \code{\link[ptable:pt_create_pTable]{ptable::pt_create_pTable()}} and
+\code{\link[ptable:create_cnt_ptable]{ptable::create_cnt_ptable()}}. More detailed information on the parameters
 is available from the respective help-pages of these functions.
 }

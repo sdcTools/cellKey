@@ -4,15 +4,16 @@
 #' to perturb count variables.
 #'
 #' @inheritParams ck_params_nums
-#' @param ptab an object created with [ptable::pt_create_pParams()] or
-#' [ptable::pt_create_pTable()]
+#' @param ptab an object created with [ptable::pt_create_pParams()],
+#' [ptable::pt_create_pTable()] or [ptable::create_cnt_ptable()]
 #' @return an object suitable as input to method `$params_cnts_set()` for the perturbation
 #' of counts and frequencies.
 #' @export
 #' @md
 #' @seealso This function uses functionality from package
-#' `ptable` (https://github.com/sdcTools/ptable), expecially [ptable::pt_create_pParams()]
-#' and [ptable::pt_create_pTable()]. More detailed information on the parameters
+#' `ptable` (https://github.com/sdcTools/ptable), expecially
+#' [ptable::pt_create_pParams()], [ptable::pt_create_pTable()] and
+#' [ptable::create_cnt_ptable()]. More detailed information on the parameters
 #' is available from the respective help-pages of these functions.
 #' @inherit cellkey_pkg examples
 ck_params_cnts <- function(ptab, path = NULL) {
