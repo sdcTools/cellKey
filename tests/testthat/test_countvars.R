@@ -54,7 +54,7 @@ test_that("checking perturbation parameters for counts", {
   expect_is(params_cnts, "ck_params")
   expect_equal(params_cnts$type, "cnts")
   expect_is(params_cnts$params$ptable, "data.table")
-  expect_identical(digest::digest(params_cnts), "d4d156d5e72a2149d407bea34114682d")
+  expect_identical(digest::digest(params_cnts), "7426d7da34a57b19b625d35413c1abdf")
 })
 
 countvars <- NULL
