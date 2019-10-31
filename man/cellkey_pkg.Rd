@@ -46,6 +46,18 @@ count and numerical variables.
 vector containing the pre-defined count- and continuous variables in the current instance.
 \item \strong{\code{cntvars()}}: returns a character vector of available count variables.
 \item \strong{\code{numvars()}}: returns a character vector of available numeric variables.
+\item \strong{\code{hierarchy_info()}}: returns a list (for each dimensional variable) with
+information on the hierarchies. This may be used to restrict output tables to
+specific levels or codes. Each list element is a \code{data.table} containing
+the following variables:
+\itemize{
+\item \code{code}: the name of a code within the hierarchy
+\item \code{level}: number defining the level of the code; the higher the number,
+the lower the hierarchy with \code{1} being the overall total
+\item \code{is_leaf}: if \code{TRUE}, this code is a leaf node which means no other codes
+contribute to it
+\item \code{parent}: name of the parent code
+}
 \item \strong{\code{supp_freq(v, n, weighted = TRUE)}}: mark sensitive cells based on a minimal-frequency
 rule that refers to the (weighted or unweighted) number of contributors to a given cell. The
 required inputs are:
@@ -217,6 +229,9 @@ tab <- ck_setup(
 
 # show some information about this table instance
 tab$print() # identical with print(tab)
+
+# information about the hierarchies
+tab$hierarchy_info()
 
 # which variables have been defined?
 tab$allvars()

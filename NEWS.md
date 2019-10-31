@@ -1,3 +1,6 @@
+# cellKey 0.18.4
+- new method `hierarchy_info()` containing some important information for each dimension
+
 # cellKey 0.18.3
 - reference new methods `create_cnt_ptable()` and `create_num_ptable()` from [ptable-pkg](https://github.com/sdcTools/ptable)
 - update vignette

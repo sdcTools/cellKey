@@ -59,6 +59,9 @@ tab <- ck_setup(
 # show some information about this table instance
 tab$print() # identical with print(tab)
 
+# information about the hierarchies
+tab$hierarchy_info()
+
 # which variables have been defined?
 tab$allvars()
 

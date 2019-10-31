@@ -47,6 +47,19 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         stop("Some elements provided in `dims` are not valid hierarchy objects.", call. = FALSE)
       }
 
+      ck_log("compute dim_info")
+      h_info <- lapply(dims, hier_info)
+      h_info <- lapply(h_info, function(x) {
+        data.table::rbindlist(lapply(x, function(y) {
+          data.frame(
+            code = y$name,
+            level = y$level,
+            is_leaf = y$is_leaf,
+            parent = y$parent,
+            stringsAsFactors = FALSE)
+        }))
+      })
+
       # checking weights
       wvar <- .tmpvarname("weightvar")
       if (!is.null(w)) {
@@ -333,6 +346,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       private$.modifications <- mods
       private$.results <- rescnts
       private$.dupsinfo <- dupsinfo
+      private$.h_info <- h_info
       private$.is_initialized <- TRUE
       private$.validate()
       invisible(self)
@@ -361,7 +375,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       return(invisible(self))
     },
     # return a table for perturbed count variables
-    freqtab = function(v=NULL, path = NULL) {
+    freqtab = function(v = NULL, path = NULL) {
       if (!is.null(path)) {
         .valid_path(path, ext = "csv")
       }
@@ -517,6 +531,11 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     },
     numvars = function() {
       private$.ck_vars("numvars")
+    },
+
+    # hierarchy_info
+    hierarchy_info = function() {
+      return(private$.h_info)
     },
 
     # return actual modifications
@@ -870,7 +889,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
       cli::cat_rule("Tabulated / Perturbed countvars")
       countvars <- private$.varsdt[type == "countvars"]
-      for (i in 1:seq_len(nrow(countvars))) {
+      for (i in seq_len(nrow(countvars))) {
         v <- countvars$vname[i]
         if (countvars$is_perturbed[i]) {
           cli::cat_line(cli::symbol$checkbox_on, " ", shQuote(v), " (perturbed)")
@@ -911,6 +930,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     .modifications = list(),
     .results = list(),
     .dupsinfo = NULL,
+    .h_info = NULL,
     .is_initialized = FALSE,
 
     # return important variables
@@ -1342,6 +1362,17 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' - **`cntvars()`**: returns a character vector of available count variables.
 #' - **`numvars()`**: returns a character vector of available numeric variables.
 #'
+#' - **`hierarchy_info()`**: returns a list (for each dimensional variable) with
+#' information on the hierarchies. This may be used to restrict output tables to
+#' specific levels or codes. Each list element is a `data.table` containing
+#' the following variables:
+#'   * `code`: the name of a code within the hierarchy
+#'   * `level`: number defining the level of the code; the higher the number,
+#'   the lower the hierarchy with `1` being the overall total
+#'   * `is_leaf`: if `TRUE`, this code is a leaf node which means no other codes
+#'   contribute to it
+#'   * `parent`: name of the parent code
+#'
 #' - **`supp_freq(v, n, weighted = TRUE)`**: mark sensitive cells based on a minimal-frequency
 #' rule that refers to the (weighted or unweighted) number of contributors to a given cell. The
 #' required inputs are:
@@ -1493,6 +1524,9 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'
 #' # show some information about this table instance
 #' tab$print() # identical with print(tab)
+#'
+#' # information about the hierarchies
+#' tab$hierarchy_info()
 #'
 #' # which variables have been defined?
 #' tab$allvars()
