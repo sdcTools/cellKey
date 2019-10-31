@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.18.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.18.4</span>
       </span>
     </div>
 
@@ -78,7 +78,7 @@
       <h1>Introduction to the cellKey-Package</h1>
                         <h4 class="author">Bernhard Meindl</h4>
             
-            <h4 class="date">2019-10-29</h4>
+            <h4 class="date">2019-10-31</h4>
       
       
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -90,7 +90,7 @@
 <div id="about-the-cellkey-package" class="section level2">
 <h2 class="hasAnchor">
 <a href="#about-the-cellkey-package" class="anchor"></a>About the cellKey package</h2>
-<p>This package implements methods to provide perturbation for statistical tables. The implementation if greatly inspired by the the paper <em>Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics</em> (Thompson, Broadfoot, Elazar). This approach however was generalized and a new specification on how record keys are specified and the lookup-tables are defined is used. This package makes usage of perturbation tables that can be defined in the <a href="https://github.com/sdcTools/ptable"><strong>ptable</strong></a> package. This document describes the usage of version <code>0.18.3</code> of the package.</p>
+<p>This package implements methods to provide perturbation for statistical tables. The implementation if greatly inspired by the the paper <em>Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics</em> (Thompson, Broadfoot, Elazar). This approach however was generalized and a new specification on how record keys are specified and the lookup-tables are defined is used. This package makes usage of perturbation tables that can be defined in the <a href="https://github.com/sdcTools/ptable"><strong>ptable</strong></a> package. This document describes the usage of version <code>0.18.4</code> of the package.</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -125,7 +125,7 @@
 <a href="#load-the-package" class="anchor"></a>Load the Package</h3>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(cellKey)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/utils/packageDescription.html">packageVersion</a></span>(<span class="st">"cellKey"</span>)</a></code></pre></div>
-<pre><code>## [1] '0.18.3'</code></pre>
+<pre><code>## [1] '0.18.4'</code></pre>
 <p>The first step in this approach is to generate a statistical table, which can be achieved using <code>ck_setup</code>. This function generates an object that contains all the information required to perturb count- (and optionally continuously scaled) variables. There are however a few inputs that <code><a href="../reference/cellkey_pkg.html">ck_setup()</a></code> requires and that need to be generated beforehand. These inputs are:</p>
 <ul>
 <li>
@@ -156,19 +156,19 @@
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">dat<span class="op">$</span>rkeys &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_generate_rkeys.html">ck_generate_rkeys</a></span>(<span class="dt">dat =</span> dat, <span class="dt">nr_digits =</span> <span class="dv">7</span>)</a>
 <a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(dat))</a></code></pre></div>
 <pre><code>##       sex        age savings income sampling_weight cnt_highincome
-## 1:   male age_group3      12   5780              22              0
-## 2: female age_group3      28   2530              53              0
-## 3:   male age_group1     550   6920              89              0
-## 4:   male age_group1     870   7960              23              0
-## 5:   male age_group4      20   9030              96              1
-## 6: female age_group3     102   3290              69              0
+## 1:   male age_group3      12   5780              63              0
+## 2: female age_group3      28   2530              61              0
+## 3:   male age_group1     550   6920              42              0
+## 4:   male age_group1     870   7960              99              0
+## 5:   male age_group4      20   9030              73              1
+## 6: female age_group3     102   3290              48              0
 ##        rkeys
-## 1: 0.3560967
-## 2: 0.9809371
-## 3: 0.0759932
-## 4: 0.7554522
-## 5: 0.0346247
-## 6: 0.2430263</code></pre>
+## 1: 0.6850958
+## 2: 0.5502281
+## 3: 0.8573020
+## 4: 0.9309477
+## 5: 0.4392843
+## 6: 0.6666598</code></pre>
 <p>To ensure that the same record keys are computed each and every time for the same data set, a seed based on the sha1-hash of the input dataset is computed by default in <code>ck_generate_rkeys</code>. This seed is used before sampling the record keys and may be overwritten using the <code>seed</code> argument.</p>
 <p>The goal of this introduction is to create a perturbed table of counts of variables <code>sex</code> by <code>age</code> for all observations as well as for the subgroups given by <code>cnt_highincome</code> that are non-zero. We also want to create perturbed tables of continously scaled variables <code>savings</code> and <code>income</code> also giving the hierarchical structure defined by <code>sex</code> by <code>age</code>.</p>
 </div>
@@ -212,10 +212,9 @@
 <pre><code>## ── Table Information ──────────────────────────────────────────────────────
 ## ✔ 21 cells in 2 dimensions ('sex', 'age')
 ## ✔ weights: yes
-## ── Tabulated / Perturbed countvars ────────────────────────────────────────</code></pre>
-<pre><code>## Warning in 1:seq_len(nrow(countvars)): numerical expression has 2 elements:
-## only the first used</code></pre>
-<pre><code>## ☐ 'total'
+## ── Tabulated / Perturbed countvars ────────────────────────────────────────
+## ☐ 'total'
+## ☐ 'cnt_highincome'
 ## ── Tabulated / Perturbed numvars ──────────────────────────────────────────
 ## ☐ 'income'
 ## ☐ 'savings'</code></pre>
@@ -227,23 +226,23 @@
 <h4 class="hasAnchor">
 <a href="#perturbation-parameters-for-count-variables" class="anchor"></a>Perturbation parameters for count variables</h4>
 <p>The next task is to define parameters that are used to perturb count variables which can be achieved with <code>ck_params_cnts</code>. This function requires as input the result of either <code>pt_create_pParams</code>, <code>pt_create_pTable</code> or <code>create_cnt_ptable</code> from the <a href="https://github.com/sdcTools/ptable"><strong>ptable</strong></a> package. Please refer also to the documentation of this package for information on the required parameters. In this example we are going to use - amongst others - exemplary ptables that can are provided by the <code>ptable</code>-pkg for demonstration purposes:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="co"># two different perturbation parameter sets from the ptable-pkg</span></a>
-<a class="sourceLine" id="cb17-2" data-line-number="2"><span class="co"># an example ptable provided directly</span></a>
-<a class="sourceLine" id="cb17-3" data-line-number="3">ptab1 &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_ex_cnts.html">pt_ex_cnts</a></span>()</a>
-<a class="sourceLine" id="cb17-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb17-5" data-line-number="5"><span class="co"># creating a ptable by specifying parameters</span></a>
-<a class="sourceLine" id="cb17-6" data-line-number="6">para2 &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/create_cnt_ptable.html">create_cnt_ptable</a></span>(</a>
-<a class="sourceLine" id="cb17-7" data-line-number="7">  <span class="dt">D =</span> <span class="dv">8</span>, <span class="dt">V =</span> <span class="dv">3</span>, <span class="dt">js =</span> <span class="dv">2</span>, <span class="dt">pstay =</span> <span class="fl">0.5</span>, </a>
-<a class="sourceLine" id="cb17-8" data-line-number="8">  <span class="dt">optim =</span> <span class="dv">1</span>, <span class="dt">mono =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="co"># two different perturbation parameter sets from the ptable-pkg</span></a>
+<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="co"># an example ptable provided directly</span></a>
+<a class="sourceLine" id="cb15-3" data-line-number="3">ptab1 &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_ex_cnts.html">pt_ex_cnts</a></span>()</a>
+<a class="sourceLine" id="cb15-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb15-5" data-line-number="5"><span class="co"># creating a ptable by specifying parameters</span></a>
+<a class="sourceLine" id="cb15-6" data-line-number="6">para2 &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/create_cnt_ptable.html">create_cnt_ptable</a></span>(</a>
+<a class="sourceLine" id="cb15-7" data-line-number="7">  <span class="dt">D =</span> <span class="dv">8</span>, <span class="dt">V =</span> <span class="dv">3</span>, <span class="dt">js =</span> <span class="dv">2</span>, <span class="dt">pstay =</span> <span class="fl">0.5</span>, </a>
+<a class="sourceLine" id="cb15-8" data-line-number="8">  <span class="dt">optim =</span> <span class="dv">1</span>, <span class="dt">mono =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p>We then need to create the required inputs for the cellKey package.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">p_cnts1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_params_cnts.html">ck_params_cnts</a></span>(<span class="dt">ptab =</span> ptab1)</a>
-<a class="sourceLine" id="cb18-2" data-line-number="2">p_cnts2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_params_cnts.html">ck_params_cnts</a></span>(<span class="dt">ptab =</span> para2)</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">p_cnts1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_params_cnts.html">ck_params_cnts</a></span>(<span class="dt">ptab =</span> ptab1)</a>
+<a class="sourceLine" id="cb16-2" data-line-number="2">p_cnts2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_params_cnts.html">ck_params_cnts</a></span>(<span class="dt">ptab =</span> para2)</a></code></pre></div>
 <p><code><a href="../reference/ck_params_cnts.html">ck_params_cnts()</a></code> returns objects that can be used as inputs in method <code>params_cnts_set()</code>. In argument <code>v</code> one may specify count variables for which the supplied perturbation parameters should be used. If <code>v</code> is not specified, the perturbation parameters are used for all count variables.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="co"># use `p_cnts1` for variable "total" (which always exists)</span></a>
-<a class="sourceLine" id="cb19-2" data-line-number="2">tab<span class="op">$</span><span class="kw">params_cnts_set</span>(<span class="dt">val =</span> p_cnts1, <span class="dt">v =</span> <span class="st">"total"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="co"># use `p_cnts1` for variable "total" (which always exists)</span></a>
+<a class="sourceLine" id="cb17-2" data-line-number="2">tab<span class="op">$</span><span class="kw">params_cnts_set</span>(<span class="dt">val =</span> p_cnts1, <span class="dt">v =</span> <span class="st">"total"</span>)</a></code></pre></div>
 <pre><code>## --&gt; setting perturbation parameters for variable 'total'</code></pre>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="co"># use `p_cnts2` for "cnt_highincome"</span></a>
-<a class="sourceLine" id="cb21-2" data-line-number="2">tab<span class="op">$</span><span class="kw">params_cnts_set</span>(<span class="dt">val =</span> p_cnts2, <span class="dt">v =</span> <span class="st">"cnt_highincome"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="co"># use `p_cnts2` for "cnt_highincome"</span></a>
+<a class="sourceLine" id="cb19-2" data-line-number="2">tab<span class="op">$</span><span class="kw">params_cnts_set</span>(<span class="dt">val =</span> p_cnts2, <span class="dt">v =</span> <span class="st">"cnt_highincome"</span>)</a></code></pre></div>
 <pre><code>## --&gt; setting perturbation parameters for variable 'cnt_highincome'</code></pre>
 <p>It is therefore entirely possible to use different parameter sets for different variables. Modifying perturbation parameters for some variables is easy, too. It is only required to apply the <code>params_cnts_set()</code>-method again which will replace any previously defined parameters.</p>
 </div>
@@ -260,11 +259,11 @@
 <li>
 <code>epsilon</code>: a numeric vector in descending order with all values in <code>[0; 1]</code> and with the first element forced to equal <code>1</code>. The length of this parameter must correspond with the number of <code>top_k</code> specified in <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> (which will be discussed later).</li>
 </ul>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="co"># parameters for the flex-function</span></a>
-<a class="sourceLine" id="cb23-2" data-line-number="2">p_flex &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_flexparams.html">ck_flexparams</a></span>(</a>
-<a class="sourceLine" id="cb23-3" data-line-number="3">  <span class="dt">fp =</span> <span class="dv">1000</span>,</a>
-<a class="sourceLine" id="cb23-4" data-line-number="4">  <span class="dt">p =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.3</span>, <span class="fl">0.03</span>),</a>
-<a class="sourceLine" id="cb23-5" data-line-number="5">  <span class="dt">epsilon =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="fl">0.5</span>, <span class="fl">0.2</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="co"># parameters for the flex-function</span></a>
+<a class="sourceLine" id="cb21-2" data-line-number="2">p_flex &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_flexparams.html">ck_flexparams</a></span>(</a>
+<a class="sourceLine" id="cb21-3" data-line-number="3">  <span class="dt">fp =</span> <span class="dv">1000</span>,</a>
+<a class="sourceLine" id="cb21-4" data-line-number="4">  <span class="dt">p =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.3</span>, <span class="fl">0.03</span>),</a>
+<a class="sourceLine" id="cb21-5" data-line-number="5">  <span class="dt">epsilon =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="fl">0.5</span>, <span class="fl">0.2</span>))</a></code></pre></div>
 <p>In the <a href="https://github.com/sdcTools/cellKey"><strong>cellKey</strong></a> package it is possible to select the underlying data that form the base for the perturbation differently. In <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> the specific approach can be selected in argument <code>type</code>. The valid choices for this argument are:</p>
 <ul>
 <li>
@@ -278,10 +277,10 @@
 <code>"sum"</code>: weighted cellvalues are used as starting points for the perturbation</li>
 </ul>
 <p>Another, more basic approach, is to use a constant perturbation magnitude for all cells, independent on their (weighted) values. The required parameters can be defined with <code><a href="../reference/ck_simpleparams.html">ck_simpleparams()</a></code> as shown below:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="co"># parameters for the simple approach</span></a>
-<a class="sourceLine" id="cb24-2" data-line-number="2">p_simple &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_simpleparams.html">ck_simpleparams</a></span>(</a>
-<a class="sourceLine" id="cb24-3" data-line-number="3">  <span class="dt">p =</span> <span class="fl">0.05</span>,</a>
-<a class="sourceLine" id="cb24-4" data-line-number="4">  <span class="dt">epsilon =</span> <span class="dv">1</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="co"># parameters for the simple approach</span></a>
+<a class="sourceLine" id="cb22-2" data-line-number="2">p_simple &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_simpleparams.html">ck_simpleparams</a></span>(</a>
+<a class="sourceLine" id="cb22-3" data-line-number="3">  <span class="dt">p =</span> <span class="fl">0.05</span>,</a>
+<a class="sourceLine" id="cb22-4" data-line-number="4">  <span class="dt">epsilon =</span> <span class="dv">1</span>)</a></code></pre></div>
 <p>In this appraoch it is only required to specify a single percentage value <code>p</code> and - as in the case for the flex function - a vector of epsilons that are used in the case when <code>top_k &gt; 1</code>.</p>
 <p>Further important parameters for <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> are:</p>
 <ul>
@@ -304,32 +303,32 @@
 <code>"small_cells"</code>: if specified, this ptable will be used to extract perturbation values for very small cells</li>
 </ul>
 <p>Please note, that if the goal is to have different perturbation tables for cells with an even/odd number of contributors, both <code>"even"</code> or <code>"odd"</code> must be available in the input list. In the chunk below we create four different perturbation tables. For details on the parameters, please look at the documentation of the <a href="https://github.com/sdcTools/ptable"><code>ptable</code></a> package, especially in <code><a href="https://rdrr.io/pkg/ptable/man/create_num_ptable.html">ptable::create_num_ptable()</a></code>.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="co"># same ptable for all cells except for very small ones</span></a>
-<a class="sourceLine" id="cb25-2" data-line-number="2">ex_ptab1 &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_ex_nums.html">pt_ex_nums</a></span>(<span class="dt">parity =</span> <span class="ot">TRUE</span>, <span class="dt">separation =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="co"># same ptable for all cells except for very small ones</span></a>
+<a class="sourceLine" id="cb23-2" data-line-number="2">ex_ptab1 &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_ex_nums.html">pt_ex_nums</a></span>(<span class="dt">parity =</span> <span class="ot">TRUE</span>, <span class="dt">separation =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p>We can now use these tables to finally create objects containing all the required information to create perturbed magnitude tables using <code>ck_params_nums</code>. In the first case we want the same perturbation table (<code>ptab_all</code>) for cells with an even/odd number of contributors but want to use <code>ptab_sc</code> for very small cells.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1">p_nums1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_params_nums.html">ck_params_nums</a></span>(</a>
-<a class="sourceLine" id="cb26-2" data-line-number="2">  <span class="dt">type =</span> <span class="st">"top_contr"</span>,</a>
-<a class="sourceLine" id="cb26-3" data-line-number="3">  <span class="dt">top_k =</span> <span class="dv">3</span>,</a>
-<a class="sourceLine" id="cb26-4" data-line-number="4">  <span class="dt">ptab =</span> ex_ptab1,</a>
-<a class="sourceLine" id="cb26-5" data-line-number="5">  <span class="dt">mult_params =</span> p_flex,</a>
-<a class="sourceLine" id="cb26-6" data-line-number="6">  <span class="dt">mu_c =</span> <span class="dv">2</span>,</a>
-<a class="sourceLine" id="cb26-7" data-line-number="7">  <span class="dt">same_key =</span> <span class="ot">FALSE</span>,</a>
-<a class="sourceLine" id="cb26-8" data-line-number="8">  <span class="dt">use_zero_rkeys =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">p_nums1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_params_nums.html">ck_params_nums</a></span>(</a>
+<a class="sourceLine" id="cb24-2" data-line-number="2">  <span class="dt">type =</span> <span class="st">"top_contr"</span>,</a>
+<a class="sourceLine" id="cb24-3" data-line-number="3">  <span class="dt">top_k =</span> <span class="dv">3</span>,</a>
+<a class="sourceLine" id="cb24-4" data-line-number="4">  <span class="dt">ptab =</span> ex_ptab1,</a>
+<a class="sourceLine" id="cb24-5" data-line-number="5">  <span class="dt">mult_params =</span> p_flex,</a>
+<a class="sourceLine" id="cb24-6" data-line-number="6">  <span class="dt">mu_c =</span> <span class="dv">2</span>,</a>
+<a class="sourceLine" id="cb24-7" data-line-number="7">  <span class="dt">same_key =</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb24-8" data-line-number="8">  <span class="dt">use_zero_rkeys =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p>The second input we generate should use different ptables for cells with an even/odd number of contributing units (<code>ptab_even</code> and <code>ptab_odd</code>) but should not use a specific perturbation table for very small cells.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1">ex_ptab2 &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_ex_nums.html">pt_ex_nums</a></span>(<span class="dt">parity =</span> <span class="ot">FALSE</span>, <span class="dt">separation =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">ex_ptab2 &lt;-<span class="st"> </span>ptable<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ptable/man/pt_ex_nums.html">pt_ex_nums</a></span>(<span class="dt">parity =</span> <span class="ot">FALSE</span>, <span class="dt">separation =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <p>As above, we need to use <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> to compute suitable inputs.</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">p_nums2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_params_nums.html">ck_params_nums</a></span>(</a>
-<a class="sourceLine" id="cb28-2" data-line-number="2">  <span class="dt">type =</span> <span class="st">"mean"</span>,</a>
-<a class="sourceLine" id="cb28-3" data-line-number="3">  <span class="dt">ptab =</span> ex_ptab2,</a>
-<a class="sourceLine" id="cb28-4" data-line-number="4">  <span class="dt">mult_params =</span> p_simple,</a>
-<a class="sourceLine" id="cb28-5" data-line-number="5">  <span class="dt">mu_c =</span> <span class="fl">1.5</span>,</a>
-<a class="sourceLine" id="cb28-6" data-line-number="6">  <span class="dt">same_key =</span> <span class="ot">FALSE</span>,</a>
-<a class="sourceLine" id="cb28-7" data-line-number="7">  <span class="dt">use_zero_rkeys =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1">p_nums2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_params_nums.html">ck_params_nums</a></span>(</a>
+<a class="sourceLine" id="cb26-2" data-line-number="2">  <span class="dt">type =</span> <span class="st">"mean"</span>,</a>
+<a class="sourceLine" id="cb26-3" data-line-number="3">  <span class="dt">ptab =</span> ex_ptab2,</a>
+<a class="sourceLine" id="cb26-4" data-line-number="4">  <span class="dt">mult_params =</span> p_simple,</a>
+<a class="sourceLine" id="cb26-5" data-line-number="5">  <span class="dt">mu_c =</span> <span class="fl">1.5</span>,</a>
+<a class="sourceLine" id="cb26-6" data-line-number="6">  <span class="dt">same_key =</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb26-7" data-line-number="7">  <span class="dt">use_zero_rkeys =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p>The package internally computes the separation point that is used for very small cells in case this is required. Details on this can also be found in deliverable <a href="(https://ec.europa.eu/eurostat/cros/content/perturbative-confidentiality-methods_en)"><code>D4.2</code></a>.</p>
 <p>Now we can attach the results from <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> to numeric variables using the <code>params_nums_set()</code>-method as shown below:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1">tab<span class="op">$</span><span class="kw">params_nums_set</span>(<span class="dt">v =</span> <span class="st">"income"</span>, <span class="dt">val =</span> p_nums1)</a></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1">tab<span class="op">$</span><span class="kw">params_nums_set</span>(<span class="dt">v =</span> <span class="st">"income"</span>, <span class="dt">val =</span> p_nums1)</a></code></pre></div>
 <pre><code>## --&gt; setting perturbation parameters for variable 'income'</code></pre>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1">tab<span class="op">$</span><span class="kw">params_nums_set</span>(<span class="dt">v =</span> <span class="st">"savings"</span>, <span class="dt">val =</span> p_nums1)</a></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1">tab<span class="op">$</span><span class="kw">params_nums_set</span>(<span class="dt">v =</span> <span class="st">"savings"</span>, <span class="dt">val =</span> p_nums1)</a></code></pre></div>
 <pre><code>## --&gt; setting perturbation parameters for variable 'savings'</code></pre>
 <p>In order to make use of parameter <code>mu_c</code> that allows ab add extra amount of protection to sensitive cells, one may identify sensitive cells according to some rules. The following methods to identify sensitive cells are implemented:</p>
 <ul>
@@ -345,7 +344,7 @@
 <code>supp_val()</code>: identify sensitive cells based on (weighted) cell values</li>
 </ul>
 <p>We now want to set all cells for variable <code>income</code> as sensitive to which less than <code>15</code> units contribute.</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1">tab<span class="op">$</span><span class="kw">supp_freq</span>(<span class="dt">v =</span> <span class="st">"income"</span>, <span class="dt">n =</span> <span class="dv">15</span>, <span class="dt">weighted =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1">tab<span class="op">$</span><span class="kw">supp_freq</span>(<span class="dt">v =</span> <span class="st">"income"</span>, <span class="dt">n =</span> <span class="dv">15</span>, <span class="dt">weighted =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <pre><code>## freq-rule: 3 new sensitive cells (incl. duplicates) found (total: 3)</code></pre>
 </div>
 </div>
@@ -357,10 +356,10 @@
 <li>
 <code>v</code>: a character vector specifying one or more variables that should be perturbed.</li>
 </ul>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1">tab<span class="op">$</span><span class="kw">perturb</span>(<span class="dt">v =</span> <span class="st">"total"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1">tab<span class="op">$</span><span class="kw">perturb</span>(<span class="dt">v =</span> <span class="st">"total"</span>)</a></code></pre></div>
 <pre><code>## Count variable 'total' was perturbed.</code></pre>
 <p>After this call, object <code>tab</code> is updated and contains now also perturbed values for variable <code>total</code>. We note that no explicit assignment is required. The following code shows that we also can perturb cnt- and numerical variables in one single call.</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1">tab<span class="op">$</span><span class="kw">perturb</span>(<span class="dt">v =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"cnt_highincome"</span>, <span class="st">"savings"</span>, <span class="st">"income"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1">tab<span class="op">$</span><span class="kw">perturb</span>(<span class="dt">v =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"cnt_highincome"</span>, <span class="st">"savings"</span>, <span class="st">"income"</span>))</a></code></pre></div>
 <pre><code>## Count variable 'cnt_highincome' was perturbed.</code></pre>
 <pre><code>## Numeric variable 'savings' was perturbed.</code></pre>
 <pre><code>## Numeric variable 'income' was perturbed.</code></pre>
@@ -392,48 +391,48 @@
 <li>
 <code>pwc</code>: perturbed weighted counts</li>
 </ul>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1">tab<span class="op">$</span><span class="kw">freqtab</span>(<span class="dt">v =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"total"</span>, <span class="st">"cnt_highincome"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1">tab<span class="op">$</span><span class="kw">freqtab</span>(<span class="dt">v =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"total"</span>, <span class="st">"cnt_highincome"</span>))</a></code></pre></div>
 <pre><code>##        sex        age          vname  uwc     wc puwc         pwc
-##  1:  Total      Total          total 4580 273458 4582 273577.4140
-##  2:  Total age_group1          total 1969 119144 1971 119265.0198
-##  3:  Total age_group2          total 1143  68656 1143  68656.0000
-##  4:  Total age_group3          total  864  50795  863  50736.2095
-##  5:  Total age_group4          total  423  24887  421  24769.3310
-##  6:  Total age_group5          total  168   9321  168   9321.0000
-##  7:  Total age_group6          total   13    655   14    705.3846
-##  8: female      Total          total 2284 136038 2283 135978.4387
-##  9: female age_group1          total  954  57368  954  57368.0000
-## 10: female age_group2          total  572  34074  570  33954.8601
-## 11: female age_group3          total  440  25853  441  25911.7568
-## 12: female age_group4          total  228  13739  229  13799.2588
-## 13: female age_group5          total   84   4740   83   4683.5714
-## 14: female age_group6          total    6    264    7    308.0000
-## 15:   male      Total          total 2296 137420 2297 137479.8519
-## 16:   male age_group1          total 1015  61776 1014  61715.1369
-## 17:   male age_group2          total  571  34582  571  34582.0000
-## 18:   male age_group3          total  424  24942  424  24942.0000
-## 19:   male age_group4          total  195  11148  194  11090.8308
-## 20:   male age_group5          total   84   4581   84   4581.0000
-## 21:   male age_group6          total    7    391    9    502.7143
-## 22:  Total      Total cnt_highincome  445  27183  443  27060.8292
-## 23:  Total age_group1 cnt_highincome  192  11735  192  11735.0000
-## 24:  Total age_group2 cnt_highincome  123   7742  123   7742.0000
-## 25:  Total age_group3 cnt_highincome   82   4928   85   5108.2927
-## 26:  Total age_group4 cnt_highincome   34   1981   33   1922.7353
-## 27:  Total age_group5 cnt_highincome   14    797   15    853.9286
+##  1:  Total      Total          total 4580 272839 4579 272779.4282
+##  2:  Total age_group1          total 1969 116674 1969 116674.0000
+##  3:  Total age_group2          total 1143  70177 1143  70177.0000
+##  4:  Total age_group3          total  864  50763  865  50821.7535
+##  5:  Total age_group4          total  423  24881  423  24881.0000
+##  6:  Total age_group5          total  168   9521  168   9521.0000
+##  7:  Total age_group6          total   13    823   13    823.0000
+##  8: female      Total          total 2284 135230 2286 135348.4151
+##  9: female age_group1          total  954  56730  956  56848.9308
+## 10: female age_group2          total  572  34642  574  34763.1259
+## 11: female age_group3          total  440  25442  440  25442.0000
+## 12: female age_group4          total  228  13269  226  13152.6053
+## 13: female age_group5          total   84   4768   82   4654.4762
+## 14: female age_group6          total    6    379    6    379.0000
+## 15:   male      Total          total 2296 137609 2296 137609.0000
+## 16:   male age_group1          total 1015  59944 1015  59944.0000
+## 17:   male age_group2          total  571  35535  571  35535.0000
+## 18:   male age_group3          total  424  25321  424  25321.0000
+## 19:   male age_group4          total  195  11612  195  11612.0000
+## 20:   male age_group5          total   84   4753   84   4753.0000
+## 21:   male age_group6          total    7    444    5    317.1429
+## 22:  Total      Total cnt_highincome  445  26756  444  26695.8742
+## 23:  Total age_group1 cnt_highincome  192  11380  191  11320.7292
+## 24:  Total age_group2 cnt_highincome  123   7422  123   7422.0000
+## 25:  Total age_group3 cnt_highincome   82   5224   80   5096.5854
+## 26:  Total age_group4 cnt_highincome   34   1869   34   1869.0000
+## 27:  Total age_group5 cnt_highincome   14    861   16    984.0000
 ## 28:  Total age_group6 cnt_highincome    0      0    0      0.0000
-## 29: female      Total cnt_highincome  226  13881  226  13881.0000
-## 30: female age_group1 cnt_highincome  102   6092  102   6092.0000
-## 31: female age_group2 cnt_highincome   57   3701   57   3701.0000
-## 32: female age_group3 cnt_highincome   41   2585   37   2332.8049
-## 33: female age_group4 cnt_highincome   19   1114   20   1172.6316
-## 34: female age_group5 cnt_highincome    7    389    7    389.0000
+## 29: female      Total cnt_highincome  226  13363  227  13422.1283
+## 30: female age_group1 cnt_highincome  102   5811  105   5981.9118
+## 31: female age_group2 cnt_highincome   57   3442   57   3442.0000
+## 32: female age_group3 cnt_highincome   41   2621   41   2621.0000
+## 33: female age_group4 cnt_highincome   19   1036   19   1036.0000
+## 34: female age_group5 cnt_highincome    7    453    7    453.0000
 ## 35: female age_group6 cnt_highincome    0      0    0      0.0000
-## 36:   male      Total cnt_highincome  219  13302  219  13302.0000
-## 37:   male age_group1 cnt_highincome   90   5643   91   5705.7000
-## 38:   male age_group2 cnt_highincome   66   4041   69   4224.6818
-## 39:   male age_group3 cnt_highincome   41   2343   43   2457.2927
-## 40:   male age_group4 cnt_highincome   15    867   15    867.0000
+## 36:   male      Total cnt_highincome  219  13393  219  13393.0000
+## 37:   male age_group1 cnt_highincome   90   5569   90   5569.0000
+## 38:   male age_group2 cnt_highincome   66   3980   60   3618.1818
+## 39:   male age_group3 cnt_highincome   41   2603   41   2603.0000
+## 40:   male age_group4 cnt_highincome   15    833   14    777.4667
 ## 41:   male age_group5 cnt_highincome    7    408    7    408.0000
 ## 42:   male age_group6 cnt_highincome    0      0    0      0.0000
 ##        sex        age          vname  uwc     wc puwc         pwc</code></pre>
@@ -453,50 +452,50 @@
 <code>pws</code>: perturbed weighted sum of the given cell</li>
 </ul>
 <p>We now have a look at the results of the variables <code>savings</code> and <code>income</code> that we already have perturbed.</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1">tab<span class="op">$</span><span class="kw">numtab</span>(<span class="dt">v =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"savings"</span>, <span class="st">"income"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1">tab<span class="op">$</span><span class="kw">numtab</span>(<span class="dt">v =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"savings"</span>, <span class="st">"income"</span>))</a></code></pre></div>
 <pre><code>##        sex        age   vname      uws         ws          pws
-##  1:  Total      Total savings  2273532  136518227  136521967.6
-##  2:  Total age_group1 savings   982386   59625884   59621399.6
-##  3:  Total age_group2 savings   552336   33419521   33418234.9
-##  4:  Total age_group3 savings   437101   25995125   25993484.3
-##  5:  Total age_group4 savings   214661   12618079   12612736.5
-##  6:  Total age_group5 savings    80451    4510255    4512101.0
-##  7:  Total age_group6 savings     6597     349363     353828.2
-##  8: female      Total savings  1113716   66731686   66723060.1
-##  9: female age_group1 savings   464726   28019724   28020670.4
-## 10: female age_group2 savings   271413   16246513   16242451.7
-## 11: female age_group3 savings   222131   13218753   13213518.0
-## 12: female age_group4 savings   115241    6994642    6985190.5
-## 13: female age_group5 savings    37218    2112680    2110524.9
-## 14: female age_group6 savings     2987     139374     132542.6
-## 15:   male      Total savings  1159816   69786541   69790496.2
-## 16:   male age_group1 savings   517660   31606160   31608824.1
-## 17:   male age_group2 savings   280923   17173008   17171496.2
-## 18:   male age_group3 savings   214970   12776372   12770244.1
-## 19:   male age_group4 savings    99420    5623437    5623553.8
-## 20:   male age_group5 savings    43233    2397575    2395729.0
-## 21:   male age_group6 savings     3610     209989     214703.0
-## 22:  Total      Total  income 22952978 1369512426 1369571477.9
-## 23:  Total age_group1  income  9810547  595410532  595371248.3
-## 24:  Total age_group2  income  5692119  338533101  338519341.1
-## 25:  Total age_group3  income  4406946  259320623  259330893.9
-## 26:  Total age_group4  income  2133543  125277089  125234136.3
-## 27:  Total age_group5  income   848151   47997694   48009815.3
-## 28:  Total age_group6  income    61672    2973387    3025338.5
-## 29: female      Total  income 11690929  697408250  697250922.5
-## 30: female age_group1  income  4933383  298614861  298623343.1
-## 31: female age_group2  income  2880740  170380920  170309325.2
-## 32: female age_group3  income  2238777  132706288  132634351.7
-## 33: female age_group4  income  1155033   68551836   68478936.7
-## 34: female age_group5  income   455017   25917730   25871359.3
-## 35: female age_group6  income    27979    1236615    1148438.4
-## 36:   male      Total  income 11262049  672104176  672137742.6
-## 37:   male age_group1  income  4877164  296795671  296805375.3
-## 38:   male age_group2  income  2811379  168152181  168140465.6
-## 39:   male age_group3  income  2168169  126614335  126575927.1
-## 40:   male age_group4  income   978510   56725253   56733613.4
-## 41:   male age_group5  income   393134   22079964   22070271.7
-## 42:   male age_group6  income    33693    1736772    1787994.5
+##  1:  Total      Total savings  2273532  135010437  135017484.3
+##  2:  Total age_group1 savings   982386   57979245   57980705.4
+##  3:  Total age_group2 savings   552336   34112991   34110937.4
+##  4:  Total age_group3 savings   437101   25384236   25385188.4
+##  5:  Total age_group4 savings   214661   12473261   12471043.7
+##  6:  Total age_group5 savings    80451    4591867    4593487.6
+##  7:  Total age_group6 savings     6597     468837     469212.8
+##  8: female      Total savings  1113716   65591079   65596809.0
+##  9: female age_group1 savings   464726   27453844   27450821.2
+## 10: female age_group2 savings   271413   16579940   16582641.0
+## 11: female age_group3 savings   222131   12720944   12718024.4
+## 12: female age_group4 savings   115241    6648788    6646492.6
+## 13: female age_group5 savings    37218    1983729    1981423.6
+## 14: female age_group6 savings     2987     203834     208762.4
+## 15:   male      Total savings  1159816   69419358   69417620.0
+## 16:   male age_group1 savings   517660   30525401   30523619.7
+## 17:   male age_group2 savings   280923   17533051   17535227.1
+## 18:   male age_group3 savings   214970   12663292   12658126.5
+## 19:   male age_group4 savings    99420    5824473    5826332.8
+## 20:   male age_group5 savings    43233    2608138    2610557.2
+## 21:   male age_group6 savings     3610     265003     264315.7
+## 22:  Total      Total  income 22952978 1367443583 1367515082.4
+## 23:  Total age_group1  income  9810547  583185951  583212107.9
+## 24:  Total age_group2  income  5692119  349130255  349108790.8
+## 25:  Total age_group3  income  4406946  260524503  260527838.7
+## 26:  Total age_group4  income  2133543  122401709  122417467.2
+## 27:  Total age_group5  income   848151   48350507   48399228.9
+## 28:  Total age_group6  income    61672    3850658    3878775.7
+## 29: female      Total  income 11690929  693414150  693478214.8
+## 30: female age_group1  income  4933383  292971471  292919361.5
+## 31: female age_group2  income  2880740  175801357  175830217.4
+## 32: female age_group3  income  2238777  130663068  130642025.5
+## 33: female age_group4  income  1155033   65860521   65841652.7
+## 34: female age_group5  income   455017   26252726   26190291.0
+## 35: female age_group6  income    27979    1865007    1937218.0
+## 36:   male      Total  income 11262049  674029433  673986003.7
+## 37:   male age_group1  income  4877164  290214480  290185327.3
+## 38:   male age_group2  income  2811379  173328898  173366465.9
+## 39:   male age_group3  income  2168169  129861435  129786709.7
+## 40:   male age_group4  income   978510   56541188   56553331.7
+## 41:   male age_group5  income   393134   22097781   22140634.1
+## 42:   male age_group6  income    33693    1985651    1959586.2
 ##        sex        age   vname      uws         ws          pws</code></pre>
 </div>
 </div>
@@ -507,43 +506,43 @@
 <h4 class="hasAnchor">
 <a href="#utility-measures-for-count-variables" class="anchor"></a>Utility measures for count variables</h4>
 <p>Method <code>measures_cnts()</code> allows to compute information loss measures for perturbed count variables. Its application is as simple as:</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1">tab<span class="op">$</span><span class="kw">measures_cnts</span>(<span class="dt">v =</span> <span class="st">"total"</span>, <span class="dt">exclude_zeros =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1">tab<span class="op">$</span><span class="kw">measures_cnts</span>(<span class="dt">v =</span> <span class="st">"total"</span>, <span class="dt">exclude_zeros =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## $overview
-##    noise cnt       pct
-## 1:    -2   3 0.1428571
-## 2:    -1   5 0.2380952
-## 3:     0   6 0.2857143
-## 4:     1   5 0.2380952
-## 5:     2   2 0.0952381
+##    noise cnt        pct
+## 1:    -2   3 0.14285714
+## 2:    -1   1 0.04761905
+## 3:     0  13 0.61904762
+## 4:     1   1 0.04761905
+## 5:     2   3 0.14285714
 ## 
 ## $measures
 ##       what    d1    d2    d3
 ##  1:    Min 0.000 0.000 0.000
 ##  2:    Q10 0.000 0.000 0.000
 ##  3:    Q20 0.000 0.000 0.000
-##  4:    Q30 1.000 0.000 0.010
-##  5:    Q40 1.000 0.000 0.015
-##  6:   Mean 0.952 0.027 0.048
-##  7: Median 1.000 0.001 0.017
-##  8:    Q60 1.000 0.002 0.024
-##  9:    Q70 1.000 0.004 0.036
-## 10:    Q80 2.000 0.005 0.049
-## 11:    Q90 2.000 0.077 0.136
-## 12:    Q95 2.000 0.167 0.196
-## 13:    Q99 2.000 0.262 0.323
-## 14:    Max 2.000 0.286 0.354
+##  4:    Q30 0.000 0.000 0.000
+##  5:    Q40 0.000 0.000 0.000
+##  6:   Mean 0.667 0.016 0.034
+##  7: Median 0.000 0.000 0.000
+##  8:    Q60 0.000 0.000 0.000
+##  9:    Q70 1.000 0.001 0.017
+## 10:    Q80 2.000 0.002 0.032
+## 11:    Q90 2.000 0.009 0.066
+## 12:    Q95 2.000 0.024 0.110
+## 13:    Q99 2.000 0.233 0.350
+## 14:    Max 2.000 0.286 0.410
 ## 
 ## $cumdistr_d1
 ##    cat cnt       pct
-## 1:   0   6 0.2857143
-## 2:   1  16 0.7619048
+## 1:   0  13 0.6190476
+## 2:   1  15 0.7142857
 ## 3:   2  21 1.0000000
 ## 
 ## $cumdistr_d2
 ##            cat cnt       pct
-## 1:    [0,0.02]  18 0.8571429
-## 2: (0.02,0.05]  18 0.8571429
-## 3:  (0.05,0.1]  19 0.9047619
+## 1:    [0,0.02]  19 0.9047619
+## 2: (0.02,0.05]  20 0.9523810
+## 3:  (0.05,0.1]  20 0.9523810
 ## 4:   (0.1,0.2]  20 0.9523810
 ## 5:   (0.2,0.3]  21 1.0000000
 ## 6:   (0.3,0.4]  21 1.0000000
@@ -552,12 +551,12 @@
 ## 
 ## $cumdistr_d3
 ##            cat cnt       pct
-## 1:    [0,0.02]  11 0.5238095
-## 2: (0.02,0.05]  17 0.8095238
-## 3:  (0.05,0.1]  18 0.8571429
+## 1:    [0,0.02]  15 0.7142857
+## 2: (0.02,0.05]  18 0.8571429
+## 3:  (0.05,0.1]  19 0.9047619
 ## 4:   (0.1,0.2]  20 0.9523810
 ## 5:   (0.2,0.3]  20 0.9523810
-## 6:   (0.3,0.4]  21 1.0000000
+## 6:   (0.3,0.4]  20 0.9523810
 ## 7:   (0.4,0.5]  21 1.0000000
 ## 8:   (0.5,Inf]  21 1.0000000
 ## 
@@ -619,29 +618,28 @@
 <a href="#additional-features" class="anchor"></a>Additional Features</h3>
 <p>Finally we note that there are <code>print</code> and <code>summary</code> methods implemented for objects created with from <code><a href="../reference/cellkey_pkg.html">ck_setup()</a></code> which can be used as shown below:</p>
 <p>The <code><a href="https://rdrr.io/r/base/print.html">print()</a></code>-method shows the dimension of the table as well as the variables that are (or possibly can be) perturbed. It is also displayed if the table was constructed using weights.</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" data-line-number="1">tab<span class="op">$</span><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>() <span class="co"># same as (print(tab))</span></a></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1">tab<span class="op">$</span><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>() <span class="co"># same as (print(tab))</span></a></code></pre></div>
 <pre><code>## ── Table Information ──────────────────────────────────────────────────────
 ## ✔ 21 cells in 2 dimensions ('sex', 'age')
 ## ✔ weights: yes
-## ── Tabulated / Perturbed countvars ────────────────────────────────────────</code></pre>
-<pre><code>## Warning in 1:seq_len(nrow(countvars)): numerical expression has 2 elements:
-## only the first used</code></pre>
-<pre><code>## ☒ 'total' (perturbed)
+## ── Tabulated / Perturbed countvars ────────────────────────────────────────
+## ☒ 'total' (perturbed)
+## ☒ 'cnt_highincome' (perturbed)
 ## ── Tabulated / Perturbed numvars ──────────────────────────────────────────
 ## ☒ 'income' (perturbed)
 ## ☒ 'savings' (perturbed)</code></pre>
 <p>The <code>summary</code>-method shows some utility statistics for already perturbed variables as shown below:</p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" data-line-number="1">tab<span class="op">$</span><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" data-line-number="1">tab<span class="op">$</span><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>()</a></code></pre></div>
 <pre><code>## ┌──────────────────────────────────────────────┐
 ## │Utility measures for perturbed count variables│
 ## └──────────────────────────────────────────────┘
 ## ── Distribution statistics of perturbations ───────────────────────────────
-##          countvar Min Q10 Q20 Q30 Q40  Mean Median Q60 Q70 Q80 Q90 Q95 Q99
-## 1:          total  -2  -1  -1  -1   0 0.095      0   0   1   1   2   2   2
-## 2: cnt_highincome  -4  -1   0   0   0 0.190      0   0   0   1   2   3   3
-##    Max
-## 1:   2
-## 2:   3
+##          countvar Min Q10 Q20 Q30 Q40   Mean Median Q60 Q70 Q80 Q90 Q95
+## 1:          total  -2  -2   0   0   0  0.000      0   0   0   0   2   2
+## 2: cnt_highincome  -6  -1  -1   0   0 -0.238      0   0   0   0   1   2
+##    Q99 Max
+## 1: 2.0   2
+## 2: 2.8   3
 ## 
 ## ── Distance-based measures ────────────────────────────────────────────────
 ## ✔ Variable: 'total'
@@ -650,49 +648,49 @@
 ##  1:    Min 0.000 0.000 0.000
 ##  2:    Q10 0.000 0.000 0.000
 ##  3:    Q20 0.000 0.000 0.000
-##  4:    Q30 1.000 0.000 0.010
-##  5:    Q40 1.000 0.000 0.015
-##  6:   Mean 0.952 0.027 0.048
-##  7: Median 1.000 0.001 0.017
-##  8:    Q60 1.000 0.002 0.024
-##  9:    Q70 1.000 0.004 0.036
-## 10:    Q80 2.000 0.005 0.049
-## 11:    Q90 2.000 0.077 0.136
-## 12:    Q95 2.000 0.167 0.196
-## 13:    Q99 2.000 0.262 0.323
-## 14:    Max 2.000 0.286 0.354
+##  4:    Q30 0.000 0.000 0.000
+##  5:    Q40 0.000 0.000 0.000
+##  6:   Mean 0.667 0.016 0.034
+##  7: Median 0.000 0.000 0.000
+##  8:    Q60 0.000 0.000 0.000
+##  9:    Q70 1.000 0.001 0.017
+## 10:    Q80 2.000 0.002 0.032
+## 11:    Q90 2.000 0.009 0.066
+## 12:    Q95 2.000 0.024 0.110
+## 13:    Q99 2.000 0.233 0.350
+## 14:    Max 2.000 0.286 0.410
 ## 
 ## ✔ Variable: 'cnt_highincome'
 ## 
-##       what   d1    d2    d3
-##  1:    Min 0.00 0.000 0.000
-##  2:    Q10 0.00 0.000 0.000
-##  3:    Q20 0.00 0.000 0.000
-##  4:    Q30 0.00 0.000 0.000
-##  5:    Q40 0.00 0.000 0.000
-##  6:   Mean 1.00 0.022 0.070
-##  7: Median 0.50 0.002 0.024
-##  8:    Q60 1.00 0.015 0.059
-##  9:    Q70 1.00 0.036 0.111
-## 10:    Q80 2.00 0.047 0.145
-## 11:    Q90 3.00 0.058 0.170
-## 12:    Q95 3.15 0.075 0.203
-## 13:    Q99 3.83 0.093 0.297
-## 14:    Max 4.00 0.098 0.320
+##       what    d1    d2    d3
+##  1:    Min 0.000 0.000 0.000
+##  2:    Q10 0.000 0.000 0.000
+##  3:    Q20 0.000 0.000 0.000
+##  4:    Q30 0.000 0.000 0.000
+##  5:    Q40 0.000 0.000 0.000
+##  6:   Mean 0.944 0.020 0.062
+##  7: Median 0.000 0.000 0.000
+##  8:    Q60 1.000 0.003 0.026
+##  9:    Q70 1.000 0.005 0.036
+## 10:    Q80 1.600 0.027 0.123
+## 11:    Q90 2.300 0.074 0.181
+## 12:    Q95 3.450 0.099 0.276
+## 13:    Q99 5.490 0.134 0.358
+## 14:    Max 6.000 0.143 0.378
 ## 
 ## ┌──────────────────────────────────────────────────┐
 ## │Utility measures for perturbed numerical variables│
 ## └──────────────────────────────────────────────────┘
 ## ── Distribution statistics of perturbations ───────────────────────────────
-##      vname         Min       Q10        Q20        Q30        Q40
-## 1:  income -157327.546 -72899.29 -71594.783 -42952.691 -38407.911
-## 2: savings   -9451.479  -6831.44  -5342.489  -4484.425  -2155.066
-##          Mean     Median       Q60      Q70       Q80       Q90       Q95
-## 1: -19970.743 -11715.430  8360.371 9704.313 12121.347 51222.465 51951.496
-## 2:  -1721.496  -1640.716 -1286.091  946.379  2664.052  3955.212  4465.192
-##          Q99       Max
-## 1: 57631.808 59051.885
-## 2:  4664.232  4713.992</code></pre>
+##      vname       Min        Q10       Q20        Q30        Q40     Mean
+## 1:  income -74725.35 -52109.534 -29152.67 -21464.231 -18868.332 4857.082
+## 2: savings  -5165.48  -2919.557  -2295.42  -2053.598  -1737.987  337.382
+##       Median       Q60       Q70       Q80       Q90       Q95       Q99
+## 1: 12143.652 26156.868 28860.370 42853.060 64064.754 71499.355 72068.676
+## 2:   375.828  1460.423  1859.795  2419.225  4928.409  5730.004  6783.828
+##          Max
+## 1: 72211.006
+## 2:  7047.284</code></pre>
 </div>
 </div>
 <div id="summary" class="section level2">

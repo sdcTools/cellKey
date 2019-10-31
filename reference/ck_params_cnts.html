@@ -70,7 +70,7 @@ to perturb count variables." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.18.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.18.4</span>
       </span>
     </div>
 
@@ -318,12 +318,37 @@ is available from the respective help-pages of these functions.</p></div>
 <span class='no'>tab</span>$<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>() <span class='co'># identical with print(tab)</span></div><div class='output co'>#&gt; ── Table Information ───────────────────────────────────────────────────────────
 #&gt; ✔ 45 cells in 2 dimensions ('sex', 'age')
 #&gt; ✔ weights: yes
-#&gt; ── Tabulated / Perturbed countvars ─────────────────────────────────────────────</div><div class='output co'>#&gt; <span class='warning'>Warning: numerical expression has 4 elements: only the first used</span></div><div class='output co'>#&gt; ☐ 'total'
+#&gt; ── Tabulated / Perturbed countvars ─────────────────────────────────────────────
+#&gt; ☐ 'total'
+#&gt; ☐ 'cnt_females'
+#&gt; ☐ 'cnt_males'
+#&gt; ☐ 'cnt_highincome'
 #&gt; ── Tabulated / Perturbed numvars ───────────────────────────────────────────────
 #&gt; ☐ 'expend'
 #&gt; ☐ 'income'
 #&gt; ☐ 'savings'
 #&gt; ☐ 'mixed'</div><div class='input'>
+<span class='co'># information about the hierarchies</span>
+<span class='no'>tab</span>$<span class='fu'>hierarchy_info</span>()</div><div class='output co'>#&gt; $sex
+#&gt;      code level is_leaf parent
+#&gt; 1:  Total     1   FALSE   &lt;NA&gt;
+#&gt; 2:   male     2   FALSE  Total
+#&gt; 3: female     2   FALSE  Total
+#&gt; 4:      f     3    TRUE female
+#&gt; 5:      m     3    TRUE   male
+#&gt; 
+#&gt; $age
+#&gt;          code level is_leaf     parent
+#&gt; 1:      Total     1   FALSE       &lt;NA&gt;
+#&gt; 2: age_group1     2   FALSE      Total
+#&gt; 3: age_group2     2   FALSE      Total
+#&gt; 4: age_group3     2    TRUE      Total
+#&gt; 5: age_group4     2    TRUE      Total
+#&gt; 6: age_group5     2    TRUE      Total
+#&gt; 7: age_group6     2    TRUE      Total
+#&gt; 8:       ag1a     3    TRUE age_group1
+#&gt; 9:       ag2a     3    TRUE age_group2
+#&gt; </div><div class='input'>
 <span class='co'># which variables have been defined?</span>
 <span class='no'>tab</span>$<span class='fu'>allvars</span>()</div><div class='output co'>#&gt; $cntvars
 #&gt; [1] "total"          "cnt_females"    "cnt_males"      "cnt_highincome"
@@ -342,7 +367,7 @@ is available from the respective help-pages of these functions.</p></div>
 <span class='no'>f_yaml</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".yaml"</span>)
 <span class='no'>p_cnts1</span> <span class='kw'>&lt;-</span> <span class='fu'>ck_params_cnts</span>(
   <span class='kw'>ptab</span> <span class='kw'>=</span> <span class='kw pkg'>ptable</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/ptable/man/pt_ex_cnts.html'>pt_ex_cnts</a></span>(),
-  <span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmpaFdoxb/file3b5464538486.yaml' successfully written.</span></div><div class='input'>
+  <span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmpNgukcO/file37dd111a694d.yaml' successfully written.</span></div><div class='input'>
 <span class='co'># read parameters from yaml-file and set them for variable `"total"`</span>
 <span class='no'>p_cnts1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ck_read_yaml.html'>ck_read_yaml</a></span>(<span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)
 
@@ -478,7 +503,7 @@ is available from the respective help-pages of these functions.</p></div>
   <span class='kw'>mu_c</span> <span class='kw'>=</span> <span class='fl'>2</span>,
   <span class='kw'>same_key</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>use_zero_rkeys</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmpaFdoxb/file3b546dc4386c.yaml' successfully written.</span></div><div class='input'>
+  <span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmpNgukcO/file37dd1cc19917.yaml' successfully written.</span></div><div class='input'>
 <span class='co'># we read the parameters from the yaml-file</span>
 <span class='no'>p_nums1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ck_read_yaml.html'>ck_read_yaml</a></span>(<span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)
 
