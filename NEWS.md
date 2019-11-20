@@ -1,3 +1,6 @@
+# cellKey 0.18.5
+- document R6 methods/classes via `roxygen2`
+
 # cellKey 0.18.4
 - new method `hierarchy_info()` containing some important information for each dimension
 
