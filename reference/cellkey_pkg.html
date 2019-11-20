@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>cellKey - an post-tabular perturbation method — cellkey_pkg • cellKey</title>
+<title>R6 Class defining statistical tables that can be perturbed — ck_class • cellKey</title>
 
 
 <!-- jquery -->
@@ -35,7 +35,7 @@
 
 
 
-<meta property="og:title" content="cellKey - an post-tabular perturbation method — cellkey_pkg" />
+<meta property="og:title" content="R6 Class defining statistical tables that can be perturbed — ck_class" />
 <meta property="og:description" content="This class allows to define statistical tables and perturb both
 count and numerical variables." />
 <meta name="twitter:card" content="summary" />
@@ -70,7 +70,7 @@ count and numerical variables." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.18.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.18.5</span>
       </span>
     </div>
 
@@ -116,7 +116,7 @@ count and numerical variables." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>cellKey - an post-tabular perturbation method</h1>
+    <h1>R6 Class defining statistical tables that can be perturbed</h1>
     
     <div class="hidden name"><code>cellkey_pkg.Rd</code></div>
     </div>
@@ -164,23 +164,205 @@ These variables can later be perturbed.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><a href='https://rdrr.io/pkg/R6/man/R6Class.html'>R6::R6Class</a> object.</p>
-    <h2 class="hasAnchor" id="usage"><a class="anchor" href="#usage"></a>Usage</h2>
-
-    <p>For usage details of the implemented methods, see the <strong>Methods</strong> and
-<strong>Examples</strong> sections.</p>
+    <p>Such objects are typically generated using <code>ck_setup()</code>.</p>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
 
-    <p>The following methods are available and can be used:</p><ul>
-<li><p><strong><code><a href='https://rdrr.io/r/base/print.html'>print()</a></code></strong>: prints information about the current table</p></li>
-<li><p><strong><code><a href='https://rdrr.io/r/base/summary.html'>summary()</a></code></strong>: some aggregated summary statistics about perturbed variables</p></li>
-<li><p><strong><code>allvars()</code></strong>: a list with elements <code>cntvars</code> and <code>numvars</code> with each being a character
-vector containing the pre-defined count- and continuous variables in the current instance.</p></li>
-<li><p><strong><code>cntvars()</code></strong>: returns a character vector of available count variables.</p></li>
-<li><p><strong><code>numvars()</code></strong>: returns a character vector of available numeric variables.</p></li>
-<li><p><strong><code>hierarchy_info()</code></strong>: returns a list (for each dimensional variable) with
+    
+<h3>Public methods</h3>
+
+<ul>
+<li><p><a href='#method-new'><code>ck_class$new()</code></a></p></li>
+<li><p><a href='#method-perturb'><code>ck_class$perturb()</code></a></p></li>
+<li><p><a href='#method-freqtab'><code>ck_class$freqtab()</code></a></p></li>
+<li><p><a href='#method-numtab'><code>ck_class$numtab()</code></a></p></li>
+<li><p><a href='#method-measures_cnts'><code>ck_class$measures_cnts()</code></a></p></li>
+<li><p><a href='#method-measures_nums'><code>ck_class$measures_nums()</code></a></p></li>
+<li><p><a href='#method-allvars'><code>ck_class$allvars()</code></a></p></li>
+<li><p><a href='#method-cntvars'><code>ck_class$cntvars()</code></a></p></li>
+<li><p><a href='#method-numvars'><code>ck_class$numvars()</code></a></p></li>
+<li><p><a href='#method-hierarchy_info'><code>ck_class$hierarchy_info()</code></a></p></li>
+<li><p><a href='#method-mod_cnts'><code>ck_class$mod_cnts()</code></a></p></li>
+<li><p><a href='#method-mod_nums'><code>ck_class$mod_nums()</code></a></p></li>
+<li><p><a href='#method-supp_freq'><code>ck_class$supp_freq()</code></a></p></li>
+<li><p><a href='#method-supp_val'><code>ck_class$supp_val()</code></a></p></li>
+<li><p><a href='#method-supp_p'><code>ck_class$supp_p()</code></a></p></li>
+<li><p><a href='#method-supp_pq'><code>ck_class$supp_pq()</code></a></p></li>
+<li><p><a href='#method-supp_nk'><code>ck_class$supp_nk()</code></a></p></li>
+<li><p><a href='#method-params_cnts_get'><code>ck_class$params_cnts_get()</code></a></p></li>
+<li><p><a href='#method-params_cnts_set'><code>ck_class$params_cnts_set()</code></a></p></li>
+<li><p><a href='#method-reset_cntvars'><code>ck_class$reset_cntvars()</code></a></p></li>
+<li><p><a href='#method-reset_numvars'><code>ck_class$reset_numvars()</code></a></p></li>
+<li><p><a href='#method-reset_allvars'><code>ck_class$reset_allvars()</code></a></p></li>
+<li><p><a href='#method-params_nums_get'><code>ck_class$params_nums_get()</code></a></p></li>
+<li><p><a href='#method-params_nums_set'><code>ck_class$params_nums_set()</code></a></p></li>
+<li><p><a href='#method-summary'><code>ck_class$summary()</code></a></p></li>
+<li><p><a href='#method-print'><code>ck_class$print()</code></a></p></li>
+</ul>
+<p><hr>
+<a id="method-new"></a></p><h3>Method <code>new()</code></h3>
+<p>Create a new table instance</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$new(x, rkey, dims, w, countvars = NULL, numvars = NULL)</pre><p></div></p>
+
+<h3>Arguments</h3>
+<p><div class="arguments"></p><dl class='dl-horizontal'>
+<dt><code>x</code></dt><dd><p>an object coercible to a <code>data.frame</code></p></dd>
+
+<dt><code>rkey</code></dt><dd><p>either a column name within <code>x</code> referring to a variable containing record keys
+or a single integer(ish) number &gt; <code>5</code> that referns to the number of digits for record keys that
+will be generated internally.</p></dd>
+
+<dt><code>dims</code></dt><dd><p>a list containing slots for each variable that should be
+tabulated. Each slot consists should be created/modified using <code><a href='https://rdrr.io/pkg/sdcHierarchies/man/hier_create.html'>sdcHierarchies::hier_create()</a></code>,
+<code><a href='https://rdrr.io/pkg/sdcHierarchies/man/hier_add.html'>sdcHierarchies::hier_add()</a></code> and other functionality from package <code>sdcHierarchies</code>.</p></dd>
+
+<dt><code>w</code></dt><dd><p>(character) a scalar character referring to a variable in <code>x</code> holding sampling
+weights. If <code>w</code> is <code>NULL</code> (the default), all weights are assumed to be <code>1</code></p></dd>
+
+<dt><code>countvars</code></dt><dd><p>(character) an optional vector containing names of binary (0/1 coded)
+variables withing <code>x</code> that should be included in the problem instance.
+These variables can later be perturbed.</p></dd>
+
+<dt><code>numvars</code></dt><dd><p>(character) an optional vector of numerical variables that can later be tabulated.</p></dd>
+
+</dl><p></div></p>
+<h3>Returns</h3>
+<p>A new <code>cellkey_obj</code> object.</p>
+<p><hr>
+<a id="method-perturb"></a></p><h3>Method <code>perturb()</code></h3>
+<p>Perturb a count- or magnitude variable</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$perturb(v)</pre><p></div></p>
+
+<h3>Arguments</h3>
+<p><div class="arguments"></p><dl class='dl-horizontal'>
+<dt><code>v</code></dt><dd><p>name(s) of count- or magnitude variables that should be perturbed.</p></dd>
+
+</dl><p></div></p>
+<p><hr>
+<a id="method-freqtab"></a></p><h3>Method <code>freqtab()</code></h3>
+<p>Extract results from already perturbed count variables as a
+<code>data.table</code></p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$freqtab(v = NULL, path = NULL)</pre><p></div></p>
+
+<h3>Arguments</h3>
+<p><div class="arguments"></p><dl class='dl-horizontal'>
+<dt><code>v</code></dt><dd><p>a vector of variable names for count variables. If <code>NULL</code>
+(the default), the results are returned for all available count
+variables. For variables that have not yet perturbed, columns
+<code>puwc</code> and <code>pwc</code> are filled with <code>NA</code>.</p></dd>
+
+<dt><code>path</code></dt><dd><p>if not <code>NULL</code>, a scalar character defining a (relative
+or absolute) path to which the result table should be written. A <code>csv</code>
+file will be generated and, if specified, <code>path</code> must have
+".csv" as file-ending</p></dd>
+
+</dl><p></div></p>
+<h3>Returns</h3>
+<p>This method returns a <code>data.table</code> containing all combinations of the dimensional variables in
+the first n columns. Additionally, the following columns are shown:</p><ul>
+<li><p><code>vname</code>: name of the perturbed variable</p></li>
+<li><p><code>uwc</code>: unweighted counts</p></li>
+<li><p><code>wc</code>: weighted counts</p></li>
+<li><p><code>puwc</code>: perturbed unweighted counts or <code>NA</code> if <code>vname</code> was not yet perturbed</p></li>
+<li><p><code>pwc</code>: perturbed weighted counts or <code>NA</code> if <code>vname</code> was not yet perturbed</p></li>
+</ul>
+
+<p><hr>
+<a id="method-numtab"></a></p><h3>Method <code>numtab()</code></h3>
+<p>Extract results from already perturbed continuous variables
+as a <code>data.table</code>.</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$numtab(v = NULL, mean_before_sum = FALSE, path = NULL)</pre><p></div></p>
+
+<h3>Arguments</h3>
+<p><div class="arguments"></p><dl class='dl-horizontal'>
+<dt><code>v</code></dt><dd><p>a vector of variable names of continuous variables. If <code>NULL</code>
+(the default), the results are returned for all available numeric variables.</p></dd>
+
+<dt><code>mean_before_sum</code></dt><dd><p>(logical); if <code>TRUE</code>, the perturbed values are adjusted
+by a factor <code>((n+p))⁄n</code> with
+<ul>
+<li><p><code>n</code>: the original weighted cell value</p></li>
+<li><p><code>p</code>: the perturbed cell value</p></li>
+</ul>This makes sense if the the accuracy of the variable mean is considered to be
+more important than accuracy of sums of the variable. The default value is
+<code>FALSE</code> (no adjustment is done)</p></dd>
+
+<dt><code>path</code></dt><dd><p>if not <code>NULL</code>, a scalar character defining a (relative or absolute)
+path to which the result table should be written. A <code>csv</code> file will be generated
+and, if specified, <code>path</code> must have ".csv" as file-ending</p></dd>
+
+</dl><p></div></p>
+<h3>Returns</h3>
+<p>This method returns a <code>data.table</code> containing all combinations of the
+dimensional variables in the first n columns. Additionally, the following
+columns are shown:</p><ul>
+<li><p><code>vname</code>: name of the perturbed variable</p></li>
+<li><p><code>uws</code>: unweighted sum of the given variable</p></li>
+<li><p><code>ws</code>: weighted cellsum</p></li>
+<li><p><code>pws</code>: perturbed weighted sum of the given cell or <code>NA</code> if <code>vname</code>
+has not not perturbed</p></li>
+</ul>
+
+<p><hr>
+<a id="method-measures_cnts"></a></p><h3>Method <code>measures_cnts()</code></h3>
+<p>Utility measures for perturbed count variables</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$measures_cnts(v, exclude_zeros = TRUE)</pre><p></div></p>
+
+<h3>Arguments</h3>
+<p><div class="arguments"></p><dl class='dl-horizontal'>
+<dt><code>v</code></dt><dd><p>name of a count variable for which utility measures
+should be computed.</p></dd>
+
+<dt><code>exclude_zeros</code></dt><dd><p>should empty (zero) cells in the original values
+be excluded when computing distance measures</p></dd>
+
+</dl><p></div></p>
+<h3>Returns</h3>
+<p>This method returns a <code>list</code> containing a set of utility
+measures based on some distance functions. For a detailed description
+of the computed measures, see <code><a href='ck_cnt_measures.html'>ck_cnt_measures()</a></code></p>
+<p><hr>
+<a id="method-measures_nums"></a></p><h3>Method <code>measures_nums()</code></h3>
+<p>Utility measures for continuous variables (not yet implemented)</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$measures_nums(v)</pre><p></div></p>
+
+<h3>Arguments</h3>
+<p><div class="arguments"></p><dl class='dl-horizontal'>
+<dt><code>v</code></dt><dd><p>name of a continuosu variable for which utility measures
+should be computed.</p></dd>
+
+</dl><p></div></p>
+<p><hr>
+<a id="method-allvars"></a></p><h3>Method <code>allvars()</code></h3>
+<p>returns a <code>list</code> with the following two elements:</p><ul>
+<li><p><code>cntvars</code>: character vector with names of available count
+variables for perturbation</p></li>
+<li><p><code>numvars</code>: character vector with names of available numerical
+variables for perturbation</p></li>
+</ul>
+<h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$allvars()</pre><p></div></p>
+
+<p><hr>
+<a id="method-cntvars"></a></p><h3>Method <code>cntvars()</code></h3>
+<p>character vector with names of count variables that
+could be perturbed</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$cntvars()</pre><p></div></p>
+
+<p><hr>
+<a id="method-numvars"></a></p><h3>Method <code>numvars()</code></h3>
+<p>character vector with names of continuous variables that
+could be perturbed</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$numvars()</pre><p></div></p>
+
+<p><hr>
+<a id="method-hierarchy_info"></a></p><h3>Method <code>hierarchy_info()</code></h3>
+<p>Information about hierarchies</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$hierarchy_info()</pre><p></div></p>
+
+<h3>Returns</h3>
+<p>a <code>list</code> (for each dimensional variable) with
 information on the hierarchies. This may be used to restrict output tables to
 specific levels or codes. Each list element is a <code>data.table</code> containing
 the following variables:</p><ul>
@@ -190,125 +372,186 @@ the lower the hierarchy with <code>1</code> being the overall total</p></li>
 <li><p><code>is_leaf</code>: if <code>TRUE</code>, this code is a leaf node which means no other codes
 contribute to it</p></li>
 <li><p><code>parent</code>: name of the parent code</p></li>
-</ul></li>
-<li><p><strong><code>supp_freq(v, n, weighted = TRUE)</code></strong>: mark sensitive cells based on a minimal-frequency
-rule that refers to the (weighted or unweighted) number of contributors to a given cell. The
-required inputs are:</p><ul>
-<li><p><code>v</code>: a single variable name of a continuous variable (<code>see method numvars()</code>)</p></li>
-<li><p><code>n</code>: a number defining the threshold. All cells <code>&lt;= n</code> are considered as unsafe.</p></li>
-<li><p><code>weighted</code>: if <code>TRUE</code>, the weighted number of contributors to a cell are compared to
-the threshold specified in <code>n</code> (default); else the unweighted number of contributors is used.</p></li>
-</ul></li>
-<li><p><strong><code>supp_val(v, n, weighted = TRUE)</code></strong>: mark sensitive cells based on (weighted
-or unweighted) cell values that are below the given threshold <code>n</code>. The required inputs are:</p><ul>
-<li><p><code>v</code>: a single variable name of a continuous variable (<code>see method numvars()</code>)</p></li>
-<li><p><code>n</code>: a number defining the threshold. All cells <code>&lt;= n</code> are considered as unsafe.</p></li>
-<li><p><code>weighted</code>: if <code>TRUE</code>, the weighted cell value of variable <code>v</code> is compared to
-the threshold specified in <code>n</code> (default); else the unweighted number is used.</p></li>
-</ul></li>
-<li><p><strong><code>supp_p(v, p)</code></strong>: mark sensitive cells based on the p<!-- %-rule rule. This rule can only be -->
-applied to positive-only variables and the required inputs are:</p><ul>
-<li><p><code>v</code>: a single variable name of a continuous variable (<code>see method numvars()</code>)</p></li>
-<li><p><code>p</code>: a number defining a percentage between <code>1</code> and <code>99</code>.</p></li>
-</ul></li>
-<li><p><strong><code>supp_pq(v, p, q)</code></strong>: mark sensitive cells based on the pq-rule rule. This rule can only be
-applied to positive-only variables and the required inputs are:</p><ul>
-<li><p><code>v</code>: a single variable name of a continuous variable (<code>see method numvars()</code>)</p></li>
-<li><p><code>p</code>: a number defining a percentage between <code>1</code> and <code>99</code>.</p></li>
-<li><p><code>q</code>: a number defining a percentage between <code>1</code> and <code>99</code>. This value must be larger than <code>p</code>.</p></li>
-</ul></li>
-<li><p><strong><code>supp_nk(v, n, k)</code></strong>: mark sensitive cells based on the nk-dominance rule. This rule can only be
-applied to positive-only variables and the required inputs are:</p><ul>
-<li><p><code>v</code>: a single variable name of a continuous variable (<code>see method numvars()</code>)</p></li>
-<li><p><code>n</code>: an integerish number <code>&gt;= 2</code>.</p></li>
-<li><p><code>k</code>: a number defining a percentage between <code>1</code> and <code>99</code>. All cells to which the top <code>n</code>
-contributers contribute more than <code>k%</code> is considered unsafe</p></li>
-</ul></li>
-<li><p><strong><code>perturb(v)</code></strong>: Perturb a count- or magnitude variable. The method has the following arguments:</p><ul>
-<li><p><code>v</code>: name(s) of count or magnitude variables that should be perturbed.</p></li>
-</ul></li>
-<li><p><strong><code>freqtab(v, path)</code></strong>: get results from already perturbed count variables as a
-<code>data.table</code>. The required arguments are:</p><ul>
-<li><p><code>v</code>: a vector of variable names for count variables. If <code>NULL</code> (the default), the results
-are returned for all available count variables. For variables that have not yet
-perturbed, columns <code>puwc</code> and <code>pwc</code> are filled with <code>NA</code>.</p></li>
-<li><p><code>path</code>: if not <code>NULL</code>, a scalar character defining a (relative or absolute)
-path to which the result table should be written. A <code>csv</code> file will be generated
-and, if specified, <code>path</code> must have ".csv" as file-ending</p></li>
 </ul>
 
-<p>This method returns a <code>data.table</code> containing all combinations of the dimensional variables in
-the first n columns. Additionally, the following columns are shown:</p><ul>
-<li><p><code>vname</code>: name of the perturbed variable</p></li>
-<li><p><code>uwc</code>: unweighted counts</p></li>
-<li><p><code>wc</code>: weighted counts</p></li>
-<li><p><code>puwc</code>: perturbed unweighted counts or <code>NA</code> if <code>vname</code> was not yet perturbed</p></li>
-<li><p><code>pwc</code>: perturbed weighted counts or <code>NA</code> if <code>vname</code> was not yet perturbed</p></li>
-</ul></li>
-<li><p><strong><code>numtab(v, mean_before_sum = FALSE, path = NULL)</code></strong>: get results from already perturbed
-continuous variables as a <code>data.table</code>. The required arguments are:</p><ul>
-<li><p><code>v</code>: a vector of variable names of continuous variables. If <code>NULL</code> (the default), the results
-are returned for all available numeric variables.</p></li>
-<li><p><code>mean_before_sum</code>: (logical); if <code>TRUE</code>, the perturbed values are adjusted by a factor <code>((n+p))⁄n</code> with <code>n</code>
-being the original weighted cellvalue and <code>p</code> the perturbed cell value. This makes sense if the the
-accuracy of the variable mean is considered more important than accuracy of sums of the
-variable. The default value is <code>FALSE</code> (no adjustment is done)</p></li>
-<li><p><code>path</code>: if not <code>NULL</code>, a scalar character defining a (relative or absolute)
-path to which the result table should be written. A <code>csv</code> file will be generated
-and, if specified, <code>path</code> must have ".csv" as file-ending</p></li>
-</ul>
+<p><hr>
+<a id="method-mod_cnts"></a></p><h3>Method <code>mod_cnts()</code></h3>
+<p>Modifications applied to count variables</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$mod_cnts()</pre><p></div></p>
 
-<p>This method returns a <code>data.table</code> containing all combinations of the dimensional variables in
-the first n columns. Additionally, the following columns are shown:</p><ul>
-<li><p><code>vname</code>: name of the perturbed variable</p></li>
-<li><p><code>uws</code>: unweighted sum of the given variable</p></li>
-<li><p><code>ws</code>: weighted cellsum</p></li>
-<li><p><code>pws</code>: perturbed weighted sum of the given cell or <code>NA</code> if <code>vname</code> has not not perturbed</p></li>
-</ul></li>
-<li><p><strong><code>measures_cnts(v, exclude_zeros = TRUE)</code></strong>: utility measures for perturbed count variables.
-The required arguments are:</p><ul>
-<li><p><code>v</code>: name of a count variable for which utility measures should be computed.</p></li>
-<li><p><code>exclude_zeros</code>: should empty (zero) cells in the original values be excluded when computing
-distance measures
-This method returns a <code>list</code> containing a set of utility measures based on some distance functions.
-For a detailed description of the computed measures, see <code><a href='ck_cnt_measures.html'>ck_cnt_measures()</a></code></p></li>
-</ul></li>
-<li><p><strong><code>mod_cnts()</code></strong>: returns a <code>data.table</code> containing modifications applied to count variables</p></li>
-<li><p><strong><code>mod_nums()</code></strong>: returns a <code>data.table</code> containing modifications applied to numerical variables.</p><ul>
-<li><p><code>id</code>: cell id</p></li>
-<li><p><code>ckey</code>: cell key used in the lookup step</p></li>
-<li><p><code>cv</code>: original weighted cell value</p></li>
-<li><p><code>cv_pert</code>: perturbed weighted cell value</p></li>
-<li><p><code>x_delta</code>: multiplier used when computing the actual perturbation amount</p></li>
-<li><p><code>lookup</code>: a character vector specifying in which block of the provided
-table the lookup happened.</p></li>
-</ul></li>
-<li><p><strong><code>params_cnts_get()</code></strong>: returns a named list in which each list-element contains the
-active perturbation parameters for the specific count variable defined by the list-name.</p></li>
-<li><p><strong><code>params_cnts_set(val, v = NULL)</code></strong>: allows to set perturbation parameters for count variables.
-The following arguments are expected:</p><ul>
-<li><p><code>val</code>: a perturbation object created with <code><a href='ck_params_cnts.html'>ck_params_cnts()</a></code></p></li>
-<li><p><code>v</code>: a character vector (or <code>NULL</code>). If <code>NULL</code> (the default), the perturbation parameters
-provided in <code>val</code> are set for all count variables; otherwise one may specify the names of
-the count variables for which the parameters should be set.</p></li>
-</ul></li>
-<li><p><strong><code>params_nums_get()</code></strong>: returns a named list in which each list-element contains the
-active perturbation parameters for the specific continuous variable defined by the list-name.</p></li>
-<li><p><strong><code>params_nums_set(val, v = NULL)</code></strong>: allows to set perturbation parameters for continuous variables.
-The following arguments are expected:</p><ul>
-<li><p><code>val</code>: a perturbation object created with <code><a href='ck_params_nums.html'>ck_params_nums()</a></code></p></li>
-<li><p><code>v</code>: a character vector (or <code>NULL</code>). If <code>NULL</code> (the default), the perturbation parameters
-provided in <code>val</code> are set for all continuous variables; otherwise one may specify the names of
-the numeric variables for which the parameters should be set.</p></li>
-</ul></li>
-<li><p><strong><code>reset_cntvars(v = NULL)</code></strong>: allows to reset results and parameters for already perturbed count
-variables specified in <code>v</code>. If <code>v</code> equals <code>NULL</code> (the default), the results are reset for all perturbed
-count variables.</p></li>
-<li><p><strong><code>reset_numvars(v = NULL)</code></strong>: allows to reset results and parameters for already perturbed numerical
-variables specified in <code>v</code>. If <code>v</code> equals <code>NULL</code> (the default), the results are reset for all perturbed
-numerical variables.</p></li>
-<li><p><strong><code>reset_allvars()</code></strong>: allows to reset results and parameters for all already perturbed variables.</p></li>
-</ul>
+<h3>Returns</h3>
+<p>a <code>data.table</code> containing modifications applied to count variables</p>
+<p><hr>
+<a id="method-mod_nums"></a></p><h3>Method <code>mod_nums()</code></h3>
+<p>Modifications applied to numerical variables</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$mod_nums()</pre><p></div></p>
+
+<h3>Returns</h3>
+<p>a <code>data.table</code> containing modifications applied to numerical variables</p>
+<p><hr>
+<a id="method-supp_freq"></a></p><h3>Method <code>supp_freq()</code></h3>
+<p>Identify sensitive cells based on minimum frequency rule</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$supp_freq(v, n, weighted = TRUE)</pre><p></div></p>
+
+<h3>Arguments</h3>
+<p><div class="arguments"></p><dl class='dl-horizontal'>
+<dt><code>v</code></dt><dd><p>a single variable name of a continuous variable (see method <code>numvars()</code>)</p></dd>
+
+<dt><code>n</code></dt><dd><p>a number defining the threshold. All cells <code>&lt;= n</code> are considered as unsafe.</p></dd>
+
+<dt><code>weighted</code></dt><dd><p>if <code>TRUE</code>, the weighted number of contributors to a cell are compared to
+the threshold specified in <code>n</code> (default); else the unweighted number of contributors is used.</p></dd>
+
+</dl><p></div></p>
+<p><hr>
+<a id="method-supp_val"></a></p><h3>Method <code>supp_val()</code></h3>
+<p>Identify sensitive cells based on weighted or unweighted cell values.minimum frequency rule</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$supp_val(v, n, weighted = TRUE)</pre><p></div></p>
+
+<h3>Arguments</h3>
+<p><div class="arguments"></p><dl class='dl-horizontal'>
+<dt><code>v</code></dt><dd><p>a single variable name of a continuous variable (see method <code>numvars()</code>)</p></dd>
+
+<dt><code>n</code></dt><dd><p>a number defining the threshold. All cells <code>&lt;= n</code> are considered as unsafe.</p></dd>
+
+<dt><code>weighted</code></dt><dd><p>if <code>TRUE</code>, the weighted cell value of variable <code>v</code> is compared to
+the threshold specified in <code>n</code> (default); else the unweighted number is used.</p></dd>
+
+</dl><p></div></p>
+<p><hr>
+<a id="method-supp_p"></a></p><h3>Method <code>supp_p()</code></h3>
+<p>Identify sensitive cells based on the p%-rule rule. Please note that this rule
+can only be applied to positive-only variables.</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$supp_p(v, p)</pre><p></div></p>
+
+<h3>Arguments</h3>
+<p><div class="arguments"></p><dl class='dl-horizontal'>
+<dt><code>v</code></dt><dd><p>a single variable name of a continuous variable (see method <code>numvars()</code>)</p></dd>
+
+<dt><code>p</code></dt><dd><p>a number defining a percentage between <code>1</code> and <code>99</code>.</p></dd>
+
+</dl><p></div></p>
+<p><hr>
+<a id="method-supp_pq"></a></p><h3>Method <code>supp_pq()</code></h3>
+<p>Identify sensitive cells based on the pq-rule. Please note that this rule
+can only be applied to positive-only variables.</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$supp_pq(v, p, q)</pre><p></div></p>
+
+<h3>Arguments</h3>
+<p><div class="arguments"></p><dl class='dl-horizontal'>
+<dt><code>v</code></dt><dd><p>a single variable name of a continuous variable (see method <code>numvars()</code>)</p></dd>
+
+<dt><code>p</code></dt><dd><p>a number defining a percentage between <code>1</code> and <code>99</code>.</p></dd>
+
+<dt><code>q</code></dt><dd><p>a number defining a percentage between <code>1</code> and <code>99</code>. This value must be larger than <code>p</code>.</p></dd>
+
+</dl><p></div></p>
+<p><hr>
+<a id="method-supp_nk"></a></p><h3>Method <code>supp_nk()</code></h3>
+<p>Identify sensitive cells based on the nk-dominance rule. Please note that this rule
+can only be applied to positive-only variables.</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$supp_nk(v, n, k)</pre><p></div></p>
+
+<h3>Arguments</h3>
+<p><div class="arguments"></p><dl class='dl-horizontal'>
+<dt><code>v</code></dt><dd><p>a single variable name of a continuous variable (see method <code>numvars()</code>)</p></dd>
+
+<dt><code>n</code></dt><dd><p>an integerish number <code>&gt;= 2</code></p></dd>
+
+<dt><code>k</code></dt><dd><p>a number defining a percentage between <code>1</code> and <code>99</code>. All cells to which the top <code>n</code>
+contributers contribute more than <code>k%</code> is considered unsafe</p></dd>
+
+</dl><p></div></p>
+<p><hr>
+<a id="method-params_cnts_get"></a></p><h3>Method <code>params_cnts_get()</code></h3>
+<p>Return perturbation parameters of count variables</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$params_cnts_get()</pre><p></div></p>
+
+<h3>Returns</h3>
+<p>a named list in which each list-element contains the
+active perturbation parameters for the specific count variable
+defined by the list-name.</p>
+<p><hr>
+<a id="method-params_cnts_set"></a></p><h3>Method <code>params_cnts_set()</code></h3>
+<p>Set perturbation parameters for count variables</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$params_cnts_set(val, v = NULL)</pre><p></div></p>
+
+<h3>Arguments</h3>
+<p><div class="arguments"></p><dl class='dl-horizontal'>
+<dt><code>val</code></dt><dd><p>a perturbation object created with <code><a href='ck_params_cnts.html'>ck_params_cnts()</a></code></p></dd>
+
+<dt><code>v</code></dt><dd><p>a character vector (or <code>NULL</code>). If <code>NULL</code> (the default),
+the perturbation parameters provided in <code>val</code> are set for all
+count variables; otherwise one may specify the names of
+the count variables for which the parameters should be set.</p></dd>
+
+</dl><p></div></p>
+<p><hr>
+<a id="method-reset_cntvars"></a></p><h3>Method <code>reset_cntvars()</code></h3>
+<p>reset results and parameters for already perturbed
+count variables</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$reset_cntvars(v = NULL)</pre><p></div></p>
+
+<h3>Arguments</h3>
+<p><div class="arguments"></p><dl class='dl-horizontal'>
+<dt><code>v</code></dt><dd><p>if <code>v</code> equals <code>NULL</code> (the default), the results are reset
+for all perturbed count variables; otherwise it is possible to specify
+the names of already perturbed count variables.</p></dd>
+
+</dl><p></div></p>
+<p><hr>
+<a id="method-reset_numvars"></a></p><h3>Method <code>reset_numvars()</code></h3>
+<p>reset results and parameters for already perturbed
+numerical variables</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$reset_numvars(v = NULL)</pre><p></div></p>
+
+<h3>Arguments</h3>
+<p><div class="arguments"></p><dl class='dl-horizontal'>
+<dt><code>v</code></dt><dd><p>if <code>v</code> equals <code>NULL</code> (the default), the results are reset for all perturbed
+numerical variables; otherwise it is possible to specify the names of already
+perturbed continuous variables.</p></dd>
+
+</dl><p></div></p>
+<p><hr>
+<a id="method-reset_allvars"></a></p><h3>Method <code>reset_allvars()</code></h3>
+<p>reset results and parameters for all already perturbed variables.</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$reset_allvars()</pre><p></div></p>
+
+<p><hr>
+<a id="method-params_nums_get"></a></p><h3>Method <code>params_nums_get()</code></h3>
+<p>Return perturbation parameters of continuous variables</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$params_nums_get()</pre><p></div></p>
+
+<h3>Returns</h3>
+<p>a named list in which each list-element contains the
+active perturbation parameters for the specific continuous variable
+defined by the list-name.</p>
+<p><hr>
+<a id="method-params_nums_set"></a></p><h3>Method <code>params_nums_set()</code></h3>
+<p>set perturbation parameters for continuous variables.</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$params_nums_set(val, v = NULL)</pre><p></div></p>
+
+<h3>Arguments</h3>
+<p><div class="arguments"></p><dl class='dl-horizontal'>
+<dt><code>val</code></dt><dd><p>a perturbation object created with <code><a href='ck_params_nums.html'>ck_params_nums()</a></code></p></dd>
+
+<dt><code>v</code></dt><dd><p>a character vector (or <code>NULL</code>); if <code>NULL</code> (the default), the
+perturbation parameters provided in <code>val</code> are set for all continuous
+variables; otherwise one may specify the names of the numeric variables for
+which the parameters should be set.</p></dd>
+
+</dl><p></div></p>
+<p><hr>
+<a id="method-summary"></a></p><h3>Method <code><a href='https://rdrr.io/r/base/summary.html'>summary()</a></code></h3>
+<p>some aggregated summary statistics about perturbed variables</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$summary()</pre><p></div></p>
+
+<p><hr>
+<a id="method-print"></a></p><h3>Method <code><a href='https://rdrr.io/r/base/print.html'>print()</a></code></h3>
+<p>prints information about the current table</p><h3>Usage</h3>
+<p><div class="r"></p><pre>ck_class$print()</pre><p></div></p>
+
+
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -523,7 +766,7 @@ numerical variables.</p></li>
 <span class='no'>f_yaml</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".yaml"</span>)
 <span class='no'>p_cnts1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ck_params_cnts.html'>ck_params_cnts</a></span>(
   <span class='kw'>ptab</span> <span class='kw'>=</span> <span class='kw pkg'>ptable</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/ptable/man/pt_ex_cnts.html'>pt_ex_cnts</a></span>(),
-  <span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmpNgukcO/file37dd71ad01c4.yaml' successfully written.</span></div><div class='input'>
+  <span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/Rtmp09UBN4/file3bd412006ff1.yaml' successfully written.</span></div><div class='input'>
 <span class='co'># read parameters from yaml-file and set them for variable `"total"`</span>
 <span class='no'>p_cnts1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ck_read_yaml.html'>ck_read_yaml</a></span>(<span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)
 
@@ -659,7 +902,7 @@ numerical variables.</p></li>
   <span class='kw'>mu_c</span> <span class='kw'>=</span> <span class='fl'>2</span>,
   <span class='kw'>same_key</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>use_zero_rkeys</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmpNgukcO/file37dd75ad42e.yaml' successfully written.</span></div><div class='input'>
+  <span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/Rtmp09UBN4/file3bd47a5ca846.yaml' successfully written.</span></div><div class='input'>
 <span class='co'># we read the parameters from the yaml-file</span>
 <span class='no'>p_nums1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ck_read_yaml.html'>ck_read_yaml</a></span>(<span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)
 
@@ -1094,8 +1337,7 @@ numerical variables.</p></li>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#format">Format</a></li>
-      <li><a href="#usage">Usage</a></li>
+      <li><a href="#details">Details</a></li>
       <li><a href="#methods">Methods</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
