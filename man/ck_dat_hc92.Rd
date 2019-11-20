@@ -8,7 +8,7 @@
 \itemize{
 \item \code{id}: a numeric identifier
 \item \code{geo_m}: a character vector defining regions
-\item \code{sex a}: character vector defining gender
+\item \verb{sex a}: character vector defining gender
 \item \code{age_m}: a character vector containing age groups
 \item \code{yae_h}: a character vector
 \item \code{rkey}: a numeric vector holding record keys

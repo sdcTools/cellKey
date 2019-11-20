@@ -14,7 +14,7 @@ ck_params_cnts(ptab, path = NULL)
 created with this functions should be written to (in yaml format)}
 }
 \value{
-an object suitable as input to method \code{$params_cnts_set()} for the perturbation
+an object suitable as input to method \verb{$params_cnts_set()} for the perturbation
 of counts and frequencies.
 }
 \description{

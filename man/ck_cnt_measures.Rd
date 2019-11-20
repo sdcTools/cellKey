@@ -12,7 +12,7 @@ ck_cnt_measures(orig, pert, exclude_zeros = TRUE)
 \item{pert}{a numeric vector holding perturbed values}
 
 \item{exclude_zeros}{a scalar logical value; if \code{TRUE} (the default), all only cells
-with counts \code{> 0} are used when computing distances \code{d1}, \code{d2} and \code{d3}. If this
+with counts \verb{> 0} are used when computing distances \code{d1}, \code{d2} and \code{d3}. If this
 argument is \code{FALSE}, the complete vector is used.}
 }
 \value{

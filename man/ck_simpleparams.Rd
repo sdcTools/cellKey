@@ -9,7 +9,7 @@ ck_simpleparams(p, epsilon = 1)
 \arguments{
 \item{p}{a percentage value used as magnitude for perturbation}
 
-\item{epsilon}{a numeric vector in descending order with all values \code{>= 0} and \code{<= 1} with the first
+\item{epsilon}{a numeric vector in descending order with all values \verb{>= 0} and \verb{<= 1} with the first
 element forced to equal 1. The length of this vector must correspond with the number \code{top_k}
 specified in \code{\link[=ck_params_nums]{ck_params_nums()}} when creating parameters for \code{type == "top_contr"} which is
 checked at runtime. This setting allows to use different flex-functions for the largest \code{top_k} contributors.}

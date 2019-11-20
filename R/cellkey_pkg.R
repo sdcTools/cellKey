@@ -1,5 +1,25 @@
-cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
+#' R6 Class defining statistical tables that can be perturbed
+#'
+#' Such objects are typically generated using [ck_setup()].
+#' @md
+#' @rdname cellkey_pkg
+ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
   public = list(
+    #' @description Create a new table instance
+    #' @param x an object coercible to a `data.frame`
+    #' @param rkey either a column name within `x` referring to a variable containing record keys
+    #' or a single integer(ish) number > `5` that referns to the number of digits for record keys that
+    #' will be generated internally.
+    #' @param dims a list containing slots for each variable that should be
+    #' tabulated. Each slot consists should be created/modified using [sdcHierarchies::hier_create()],
+    #' [sdcHierarchies::hier_add()] and other functionality from package `sdcHierarchies`.
+    #' @param w (character) a scalar character referring to a variable in `x` holding sampling
+    #' weights. If `w` is `NULL` (the default), all weights are assumed to be `1`
+    #' @param countvars (character) an optional vector containing names of binary (0/1 coded)
+    #' variables withing `x` that should be included in the problem instance.
+    #' These variables can later be perturbed.
+    #' @param numvars (character) an optional vector of numerical variables that can later be tabulated.
+    #' @return A new `cellkey_obj` object.
     initialize = function(x, rkey, dims, w, countvars = NULL, numvars = NULL) {
       type <- is_perturbed <- NULL
 
@@ -351,7 +371,9 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       private$.validate()
       invisible(self)
     },
-    # perturb variables
+
+    #' @description Perturb a count- or magnitude variable
+    #' @param v name(s) of count- or magnitude variables that should be perturbed.
     perturb = function(v) {
       # important variables
       countvars <- self$cntvars()
@@ -374,7 +396,24 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       }
       return(invisible(self))
     },
-    # return a table for perturbed count variables
+
+    #' @description Extract results from already perturbed count variables as a
+    #' `data.table`
+    #' @param v a vector of variable names for count variables. If `NULL`
+    #' (the default), the results are returned for all available count
+    #' variables. For variables that have not yet perturbed, columns
+    #' `puwc` and `pwc` are filled with `NA`.
+    #' @param path if not `NULL`, a scalar character defining a (relative
+    #' or absolute) path to which the result table should be written. A `csv`
+    #' file will be generated and, if specified, `path` must have
+    #' ".csv" as file-ending
+    #' @return This method returns a `data.table` containing all combinations of the dimensional variables in
+    #' the first n columns. Additionally, the following columns are shown:
+    #' - `vname`: name of the perturbed variable
+    #' - `uwc`: unweighted counts
+    #' - `wc`: weighted counts
+    #' - `puwc`: perturbed unweighted counts or `NA` if `vname` was not yet perturbed
+    #' - `pwc`: perturbed weighted counts or `NA` if `vname` was not yet perturbed
     freqtab = function(v = NULL, path = NULL) {
       if (!is.null(path)) {
         .valid_path(path, ext = "csv")
@@ -434,7 +473,31 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       }
       return(res)
     },
-    # return a table for perturbed numeric variables
+
+    #' @description Extract results from already perturbed continuous variables
+    #' as a `data.table`.
+    #' @param v a vector of variable names of continuous variables. If `NULL`
+    #' (the default), the results are returned for all available numeric variables.
+    #' @param mean_before_sum (logical); if `TRUE`, the perturbed values are adjusted
+    #' by a factor `((n+p))⁄n` with
+    #' - `n`: the original weighted cell value
+    #' - `p`: the perturbed cell value
+    #'
+    #' This makes sense if the the accuracy of the variable mean is considered to be
+    #' more important than accuracy of sums of the variable. The default value is
+    #' `FALSE` (no adjustment is done)
+    #' @param path if not `NULL`, a scalar character defining a (relative or absolute)
+    #' path to which the result table should be written. A `csv` file will be generated
+    #' and, if specified, `path` must have ".csv" as file-ending
+    #'
+    #' @return This method returns a `data.table` containing all combinations of the
+    #' dimensional variables in the first n columns. Additionally, the following
+    #' columns are shown:
+    #' - `vname`: name of the perturbed variable
+    #' - `uws`: unweighted sum of the given variable
+    #' - `ws`: weighted cellsum
+    #' - `pws`: perturbed weighted sum of the given cell or `NA` if `vname`
+    #' has not not perturbed
     numtab = function(v = NULL, mean_before_sum = FALSE, path = NULL) {
       if (!is.null(path)) {
         .valid_path(path, ext = "csv")
@@ -492,7 +555,14 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       tab
     },
 
-    # compute distance-based utility measures
+    #' @description Utility measures for perturbed count variables
+    #' @param v name of a count variable for which utility measures
+    #' should be computed.
+    #' @param exclude_zeros should empty (zero) cells in the original values
+    #' be excluded when computing distance measures
+    #' @return This method returns a `list` containing a set of utility
+    #' measures based on some distance functions. For a detailed description
+    #' of the computed measures, see [ck_cnt_measures()]
     measures_cnts = function(v, exclude_zeros = TRUE) {
       if (!is_scalar_character(v)) {
         stop("Argument `v` needs to be a scalar character!", call. = FALSE)
@@ -514,40 +584,70 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       }
     },
 
-    # compute measures for continuous variables
+    #' @description Utility measures for continuous variables (not yet implemented)
+    #' @param v name of a continuosu variable for which utility measures
+    #' should be computed.
     measures_nums = function(v) {
       stop("No utility measures for continuous variables are available yet.", call. = FALSE)
     },
 
-    # return names of all-, cnt- or numerical variables
+    #' @description returns a `list` with the following two elements:
+    #' - `cntvars`: character vector with names of available count
+    #' variables for perturbation
+    #' - `numvars`: character vector with names of available numerical
+    #' variables for perturbation
     allvars = function() {
       list(
         cntvars = self$cntvars(),
         numvars = self$numvars()
       )
     },
+
+    #' @description character vector with names of count variables that
+    #' could be perturbed
     cntvars = function() {
       private$.ck_vars("countvars")
     },
+
+    #' @description character vector with names of continuous variables that
+    #' could be perturbed
     numvars = function() {
       private$.ck_vars("numvars")
     },
 
-    # hierarchy_info
+    #' @description Information about hierarchies
+    #' @return a `list` (for each dimensional variable) with
+    #' information on the hierarchies. This may be used to restrict output tables to
+    #' specific levels or codes. Each list element is a `data.table` containing
+    #' the following variables:
+    #' - `code`: the name of a code within the hierarchy
+    #' - `level`: number defining the level of the code; the higher the number,
+    #' the lower the hierarchy with `1` being the overall total
+    #' - `is_leaf`: if `TRUE`, this code is a leaf node which means no other codes
+    #' contribute to it
+    #' - `parent`: name of the parent code
+    #'
     hierarchy_info = function() {
       return(private$.h_info)
     },
 
-    # return actual modifications
+    #' @description Modifications applied to count variables
+    #' @return a `data.table` containing modifications applied to count variables
     mod_cnts = function() {
       private$modifications(type = "cnts")
     },
+
+    #' @description Modifications applied to numerical variables
+    #' @return a `data.table` containing modifications applied to numerical variables
     mod_nums = function() {
       private$modifications(type = "nums")
     },
 
-    # identification of sensitive cells
-    # based on number of (weighted) contributing units
+    #' @description Identify sensitive cells based on minimum frequency rule
+    #' @param v a single variable name of a continuous variable (see method `numvars()`)
+    #' @param n a number defining the threshold. All cells `<= n` are considered as unsafe.
+    #' @param weighted if `TRUE`, the weighted number of contributors to a cell are compared to
+    #' the threshold specified in `n` (default); else the unweighted number of contributors is used.
     supp_freq = function(v, n, weighted = TRUE) {
       if (!rlang::is_scalar_logical(weighted)) {
         stop("argument `weighted` is not a logical value.", call. = FALSE)
@@ -572,7 +672,12 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       private$.update_supps(v = v, pat = pat, rule = "freq-rule")
       invisible(self)
     },
-    # based on (weighted) cell values
+
+    #' @description Identify sensitive cells based on weighted or unweighted cell values.minimum frequency rule
+    #' @param v a single variable name of a continuous variable (see method `numvars()`)
+    #' @param n a number defining the threshold. All cells `<= n` are considered as unsafe.
+    #' @param weighted if `TRUE`, the weighted cell value of variable `v` is compared to
+    #' the threshold specified in `n` (default); else the unweighted number is used.
     supp_val = function(v, n, weighted = TRUE) {
       if (!rlang::is_scalar_logical(weighted)) {
         stop("argument `weighted` is not a logical value.", call. = FALSE)
@@ -597,7 +702,11 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       private$.update_supps(v = v, pat = pat, rule = "val-rule")
       invisible(self)
     },
-    # p%-rule
+
+    #' @description Identify sensitive cells based on the p%-rule rule. Please note that this rule
+    #' can only be applied to positive-only variables.
+    #' @param v a single variable name of a continuous variable (see method `numvars()`)
+    #' @param p a number defining a percentage between `1` and `99`.
     supp_p = function(v, p) {
       .check_avail(
         v = v,
@@ -625,7 +734,12 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       private$.update_supps(v = v, pat = pat, rule = "p%-rule")
       invisible(self)
     },
-    # pq rule
+
+    #' @description Identify sensitive cells based on the pq-rule. Please note that this rule
+    #' can only be applied to positive-only variables.
+    #' @param v a single variable name of a continuous variable (see method `numvars()`)
+    #' @param p a number defining a percentage between `1` and `99`.
+    #' @param q a number defining a percentage between `1` and `99`. This value must be larger than `p`.
     supp_pq = function(v, p, q) {
       .check_avail(
         v = v,
@@ -660,7 +774,13 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       private$.update_supps(v = v, pat = pat, rule = "pq-rule")
       invisible(self)
     },
-    # nk-dominance rule
+
+    #' @description Identify sensitive cells based on the nk-dominance rule. Please note that this rule
+    #' can only be applied to positive-only variables.
+    #' @param v a single variable name of a continuous variable (see method `numvars()`)
+    #' @param n an integerish number `>= 2`
+    #' @param k a number defining a percentage between `1` and `99`. All cells to which the top `n`
+    #' contributers contribute more than `k%` is considered unsafe
     supp_nk = function(v, n, k) {
       .check_avail(
         v = v,
@@ -693,10 +813,20 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       invisible(self)
     },
 
-    # get/set parameters for cnt-vars
+    #' @description Return perturbation parameters of count variables
+    #' @return a named list in which each list-element contains the
+    #' active perturbation parameters for the specific count variable
+    #' defined by the list-name.
     params_cnts_get = function() {
       return(private$.pert_params$cnts)
     },
+
+    #' @description Set perturbation parameters for count variables
+    #' @param val a perturbation object created with [ck_params_cnts()]
+    #' @param v a character vector (or `NULL`). If `NULL` (the default),
+    #' the perturbation parameters provided in `val` are set for all
+    #' count variables; otherwise one may specify the names of
+    #' the count variables for which the parameters should be set.
     params_cnts_set = function(val, v = NULL) {
       if (!inherits(val, "ck_params")) {
         stop("Please create the input using `ck_params_cnts()`", call. = FALSE)
@@ -734,8 +864,11 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       return(invisible(self))
     },
 
-    # reset perturbation and perturbation parameters
-    # of the given variables
+    #' @description reset results and parameters for already perturbed
+    #' count variables
+    #' @param v if `v` equals `NULL` (the default), the results are reset
+    #' for all perturbed count variables; otherwise it is possible to specify
+    #' the names of already perturbed count variables.
     reset_cntvars = function(v = NULL) {
       avail <- private$.ck_perturbed_vars(what = "countvars")
       if (length(avail) == 0) {
@@ -753,6 +886,12 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       private$.reset_vars(vars = v)
       return(invisible(self))
     },
+
+    #' @description reset results and parameters for already perturbed
+    #' numerical variables
+    #' @param v if `v` equals `NULL` (the default), the results are reset for all perturbed
+    #' numerical variables; otherwise it is possible to specify the names of already
+    #' perturbed continuous variables.
     reset_numvars = function(v = NULL) {
       avail <- private$.ck_perturbed_vars(what = "numvars")
       if (length(avail) == 0) {
@@ -770,6 +909,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       private$.reset_vars(vars = v)
       return(invisible(self))
     },
+
+    #' @description  reset results and parameters for all already perturbed variables.
     reset_allvars = function() {
       avail <- c(private$.ck_perturbed_vars(what = "countvars"), private$.ck_perturbed_vars(what = "numvars"))
       if (length(avail) == 0) {
@@ -779,10 +920,20 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       private$.reset_vars(vars = avail)
     },
 
-    # get/set parameters for num-vars
+    #' @description Return perturbation parameters of continuous variables
+    #' @return a named list in which each list-element contains the
+    #' active perturbation parameters for the specific continuous variable
+    #' defined by the list-name.
     params_nums_get = function() {
       return(private$.pert_params$nums)
     },
+
+    #' @description set perturbation parameters for continuous variables.
+    #' @param val a perturbation object created with [ck_params_nums()]
+    #' @param v a character vector (or `NULL`); if `NULL` (the default), the
+    #' perturbation parameters provided in `val` are set for all continuous
+    #' variables; otherwise one may specify the names of the numeric variables for
+    #' which the parameters should be set.
     params_nums_set = function(val, v = NULL) {
       nv <- self$numvars()
       if (length(nv) == 0) {
@@ -825,6 +976,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       return(invisible(self))
     },
 
+    #' @description some aggregated summary statistics about perturbed variables
     summary = function() {
       cli::cat_line(cli::boxx("Utility measures for perturbed count variables", padding = 0))
 
@@ -874,6 +1026,8 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       #        num_info = num_info)
       # ))
     },
+
+    #' @description prints information about the current table
     print = function() {
       cli::cat_rule("Table Information")
       nr_dims <- ncol(private$.results$dims) - 1
@@ -1350,142 +1504,6 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' variables withing `x` that should be included in the problem instance.
 #' These variables can later be perturbed.
 #' @param numvars (character) an optional vector of numerical variables that can later be tabulated.
-#' @format [R6::R6Class] object.
-#' @section Usage: For usage details of the implemented methods, see the **Methods** and
-#' **Examples** sections.
-#' @section Methods: The following methods are available and can be used:
-#' - **`print()`**: prints information about the current table
-#' - **`summary()`**: some aggregated summary statistics about perturbed variables
-#'
-#' - **`allvars()`**: a list with elements `cntvars` and `numvars` with each being a character
-#' vector containing the pre-defined count- and continuous variables in the current instance.
-#' - **`cntvars()`**: returns a character vector of available count variables.
-#' - **`numvars()`**: returns a character vector of available numeric variables.
-#'
-#' - **`hierarchy_info()`**: returns a list (for each dimensional variable) with
-#' information on the hierarchies. This may be used to restrict output tables to
-#' specific levels or codes. Each list element is a `data.table` containing
-#' the following variables:
-#'   * `code`: the name of a code within the hierarchy
-#'   * `level`: number defining the level of the code; the higher the number,
-#'   the lower the hierarchy with `1` being the overall total
-#'   * `is_leaf`: if `TRUE`, this code is a leaf node which means no other codes
-#'   contribute to it
-#'   * `parent`: name of the parent code
-#'
-#' - **`supp_freq(v, n, weighted = TRUE)`**: mark sensitive cells based on a minimal-frequency
-#' rule that refers to the (weighted or unweighted) number of contributors to a given cell. The
-#' required inputs are:
-#'    * `v`: a single variable name of a continuous variable (`see method numvars()`)
-#'    * `n`: a number defining the threshold. All cells `<= n` are considered as unsafe.
-#'    * `weighted`: if `TRUE`, the weighted number of contributors to a cell are compared to
-#'    the threshold specified in `n` (default); else the unweighted number of contributors is used.
-#' - **`supp_val(v, n, weighted = TRUE)`**: mark sensitive cells based on (weighted
-#' or unweighted) cell values that are below the given threshold `n`. The required inputs are:
-#'    * `v`: a single variable name of a continuous variable (`see method numvars()`)
-#'    * `n`: a number defining the threshold. All cells `<= n` are considered as unsafe.
-#'    * `weighted`: if `TRUE`, the weighted cell value of variable `v` is compared to
-#'    the threshold specified in `n` (default); else the unweighted number is used.
-#' - **`supp_p(v, p)`**: mark sensitive cells based on the p%-rule rule. This rule can only be
-#' applied to positive-only variables and the required inputs are:
-#'    * `v`: a single variable name of a continuous variable (`see method numvars()`)
-#'    * `p`: a number defining a percentage between `1` and `99`.
-#' - **`supp_pq(v, p, q)`**: mark sensitive cells based on the pq-rule rule. This rule can only be
-#' applied to positive-only variables and the required inputs are:
-#'    * `v`: a single variable name of a continuous variable (`see method numvars()`)
-#'    * `p`: a number defining a percentage between `1` and `99`.
-#'    * `q`: a number defining a percentage between `1` and `99`. This value must be larger than `p`.
-#' - **`supp_nk(v, n, k)`**: mark sensitive cells based on the nk-dominance rule. This rule can only be
-#' applied to positive-only variables and the required inputs are:
-#'    * `v`: a single variable name of a continuous variable (`see method numvars()`)
-#'    * `n`: an integerish number `>= 2`.
-#'    * `k`: a number defining a percentage between `1` and `99`. All cells to which the top `n`
-#'    contributers contribute more than `k%` is considered unsafe
-#'
-#' - **`perturb(v)`**: Perturb a count- or magnitude variable. The method has the following arguments:
-#'    * `v`: name(s) of count or magnitude variables that should be perturbed.
-#'
-#' - **`freqtab(v, path)`**: get results from already perturbed count variables as a
-#' `data.table`. The required arguments are:
-#'    * `v`: a vector of variable names for count variables. If `NULL` (the default), the results
-#'    are returned for all available count variables. For variables that have not yet
-#'    perturbed, columns `puwc` and `pwc` are filled with `NA`.
-#'    * `path`: if not `NULL`, a scalar character defining a (relative or absolute)
-#'    path to which the result table should be written. A `csv` file will be generated
-#'    and, if specified, `path` must have ".csv" as file-ending
-#'
-#'    This method returns a `data.table` containing all combinations of the dimensional variables in
-#' the first n columns. Additionally, the following columns are shown:
-#'    * `vname`: name of the perturbed variable
-#'    * `uwc`: unweighted counts
-#'    * `wc`: weighted counts
-#'    * `puwc`: perturbed unweighted counts or `NA` if `vname` was not yet perturbed
-#'    * `pwc`: perturbed weighted counts or `NA` if `vname` was not yet perturbed
-#'
-#' - **`numtab(v, mean_before_sum = FALSE, path = NULL)`**: get results from already perturbed
-#' continuous variables as a `data.table`. The required arguments are:
-#'    * `v`: a vector of variable names of continuous variables. If `NULL` (the default), the results
-#'    are returned for all available numeric variables.
-#'    * `mean_before_sum`: (logical); if `TRUE`, the perturbed values are adjusted by a factor `((n+p))⁄n` with `n`
-#'    being the original weighted cellvalue and `p` the perturbed cell value. This makes sense if the the
-#'    accuracy of the variable mean is considered more important than accuracy of sums of the
-#'    variable. The default value is `FALSE` (no adjustment is done)
-#'    * `path`: if not `NULL`, a scalar character defining a (relative or absolute)
-#'    path to which the result table should be written. A `csv` file will be generated
-#'    and, if specified, `path` must have ".csv" as file-ending
-#'
-#'    This method returns a `data.table` containing all combinations of the dimensional variables in
-#' the first n columns. Additionally, the following columns are shown:
-#'    * `vname`: name of the perturbed variable
-#'    * `uws`: unweighted sum of the given variable
-#'    * `ws`: weighted cellsum
-#'    * `pws`: perturbed weighted sum of the given cell or `NA` if `vname` has not not perturbed
-#'
-#' - **`measures_cnts(v, exclude_zeros = TRUE)`**: utility measures for perturbed count variables.
-#' The required arguments are:
-#'    * `v`: name of a count variable for which utility measures should be computed.
-#'    * `exclude_zeros`: should empty (zero) cells in the original values be excluded when computing
-#'    distance measures
-#'    This method returns a `list` containing a set of utility measures based on some distance functions.
-#'    For a detailed description of the computed measures, see [ck_cnt_measures()]
-#'
-#' - **`mod_cnts()`**: returns a `data.table` containing modifications applied to count variables
-#' - **`mod_nums()`**: returns a `data.table` containing modifications applied to numerical variables.
-#'    * `id`: cell id
-#'    * `ckey`: cell key used in the lookup step
-#'    * `cv`: original weighted cell value
-#'    * `cv_pert`: perturbed weighted cell value
-#'    * `x_delta`: multiplier used when computing the actual perturbation amount
-#'    * `lookup`: a character vector specifying in which block of the provided
-#'    table the lookup happened.
-#'
-#' - **`params_cnts_get()`**: returns a named list in which each list-element contains the
-#' active perturbation parameters for the specific count variable defined by the list-name.
-#'
-#' - **`params_cnts_set(val, v = NULL)`**: allows to set perturbation parameters for count variables.
-#' The following arguments are expected:
-#'    * `val`: a perturbation object created with [ck_params_cnts()]
-#'    * `v`: a character vector (or `NULL`). If `NULL` (the default), the perturbation parameters
-#'    provided in `val` are set for all count variables; otherwise one may specify the names of
-#'    the count variables for which the parameters should be set.
-#'
-#' - **`params_nums_get()`**: returns a named list in which each list-element contains the
-#' active perturbation parameters for the specific continuous variable defined by the list-name.
-#'
-#' - **`params_nums_set(val, v = NULL)`**: allows to set perturbation parameters for continuous variables.
-#' The following arguments are expected:
-#'    * `val`: a perturbation object created with [ck_params_nums()]
-#'    * `v`: a character vector (or `NULL`). If `NULL` (the default), the perturbation parameters
-#'    provided in `val` are set for all continuous variables; otherwise one may specify the names of
-#'    the numeric variables for which the parameters should be set.
-#'
-#' - **`reset_cntvars(v = NULL)`**: allows to reset results and parameters for already perturbed count
-#' variables specified in `v`. If `v` equals `NULL` (the default), the results are reset for all perturbed
-#' count variables.
-#' - **`reset_numvars(v = NULL)`**: allows to reset results and parameters for already perturbed numerical
-#' variables specified in `v`. If `v` equals `NULL` (the default), the results are reset for all perturbed
-#' numerical variables.
-#' - **`reset_allvars()`**: allows to reset results and parameters for all already perturbed variables.
 #' @export
 #' @examples
 #' x <- ck_create_testdata()
@@ -1667,7 +1685,7 @@ cellkey_obj_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' # display a summary about utility measures
 #' tab$summary()
 ck_setup <- function(x, rkey, dims, w, countvars = NULL, numvars = NULL) {
-  cellkey_obj_class$new(
+  ck_class$new(
     x = x,
     rkey = rkey,
     dims = dims,

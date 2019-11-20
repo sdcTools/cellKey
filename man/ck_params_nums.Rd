@@ -4,8 +4,16 @@
 \alias{ck_params_nums}
 \title{Set perturbation parameters for continuous variables}
 \usage{
-ck_params_nums(type = "top_contr", top_k = NULL, ptab, mult_params,
-  mu_c = 0, same_key = TRUE, use_zero_rkeys = FALSE, path = NULL)
+ck_params_nums(
+  type = "top_contr",
+  top_k = NULL,
+  ptab,
+  mult_params,
+  mu_c = 0,
+  same_key = TRUE,
+  use_zero_rkeys = FALSE,
+  path = NULL
+)
 }
 \arguments{
 \item{type}{a character value defining the way to identify the \code{magnifier},
@@ -21,7 +29,7 @@ is used.
 }}
 
 \item{top_k}{it is ignored if \code{variant} is different from \code{top_contr}.
-Otherwise, a scalar number \code{>0} is expected.}
+Otherwise, a scalar number \verb{>0} is expected.}
 
 \item{ptab}{in this argument, one ore more perturbation tables are given as
 input. the following choices are possible:
@@ -50,7 +58,7 @@ perturbation values for very small cells
 \code{\link[=ck_simpleparams]{ck_simpleparams()}} that contain required parameters for the computation of
 the perturbation multiplier}
 
-\item{mu_c}{fixed extra protection amount (\code{>= 0)} applied to the absolute of
+\item{mu_c}{fixed extra protection amount (\verb{>= 0)} applied to the absolute of
 the perturbation value of the first (largest) noise component if the cell is
 sensitive. This value defaults to \code{0} (no additional protection). Please note
 that sensitive cells can be defined according using the \code{supp_freq()},
@@ -69,7 +77,7 @@ used (\code{TRUE}) or ignored (\code{FALSE}) when computing cell keys.}
 created with this functions should be written to (in yaml format)}
 }
 \value{
-an object suitable as input to method \code{$params_nums_set()} for the
+an object suitable as input to method \verb{$params_nums_set()} for the
 perturbation of continous variables.
 }
 \description{

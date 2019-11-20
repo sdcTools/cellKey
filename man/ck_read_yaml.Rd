@@ -10,9 +10,9 @@ ck_read_yaml(path)
 \item{path}{a path to a yaml-input file}
 }
 \value{
-an object object suitable as input to method \code{$params_nums_set()} for the perturbation
+an object object suitable as input to method \verb{$params_nums_set()} for the perturbation
 of continous variables in case \code{path} was created using \code{\link[=ck_params_nums]{ck_params_nums()}} or an object
-suitable as input for \code{$params_cnts_set()} for the perturbation
+suitable as input for \verb{$params_cnts_set()} for the perturbation
 of counts and frequencies if the input file was generated using \code{\link[=ck_params_cnts]{ck_params_cnts()}}.
 }
 \description{
