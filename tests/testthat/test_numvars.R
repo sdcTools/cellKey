@@ -27,7 +27,7 @@ dims <- list(sex = dim_sex, age = dim_age)
 x$rkey <- ck_generate_rkeys(dat = x, nr_digits = 8)
 
 test_that("checking dimension and structure of generated testdata is ok", {
-  expect_identical(digest::digest(x), "1ad2666d5e0cd33aba567ba1ef0117fe")
+  expect_identical(digest::digest(x), "adb7111c9f85652b0744200eb9b8b30e")
   expect_true(is.data.table(x))
 })
 
@@ -113,8 +113,8 @@ expect_message(tab$perturb("income"), "Numeric variable 'income' was perturbed."
 expect_message(tab$perturb("savings"), "Numeric variable 'savings' was perturbed.")
 
 test_that("variable was correctly perturbed", {
-  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = FALSE)), "aa98640eea8c3a0c31dece188138f30b49df1837")
-  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = FALSE)), "453131410bcfb8923cda42df74a611a5a8c3197e")
-  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = TRUE)), "5665cd2836ba190de89c777ee4923896982a102a")
-  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = TRUE)), "e1e2e48d00f193be470126cafe59fcc143f4aa0e")
+  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = FALSE)), "f26f2eb9f88b3f691354c7450e39b7e443aa8352")
+  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = FALSE)), "21c708fc30cd613797ac67cbb28468676b4db84c")
+  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = TRUE)), "20ff3a0b92dff03a6c4cff1580ad4fcf31dcf3c7")
+  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = TRUE)), "c243c42a6cff0cb7e44bbb4af9eaed69d543a7a3")
 })

@@ -15,7 +15,7 @@ Depends: R(>= 2.10), sdcHierarchies (>= 0.18.1), data.table
 Imports: 
     rlang,
     methods,
-    digest,
+    digest (>= 0.6.23),
     sdcTable (>= 0.30),
     ptable (>= 0.3.3),
     cli,
@@ -24,7 +24,7 @@ Imports:
     parallel
 License: GPL-2
 Encoding: UTF-8
-RoxygenNote: 7.0.0
+RoxygenNote: 7.0.2
 Suggests: 
     testthat,
     knitr,

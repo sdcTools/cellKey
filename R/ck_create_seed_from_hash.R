@@ -1,5 +1,5 @@
 ck_create_seed_from_hash <- function(x) {
-  hash <- sha1(x)
+  hash <- digest::sha1(x)
   hash <- unlist(strsplit(hash, ""))
   hash <- sapply(hash, function(x) {
     res <- suppressWarnings(as.numeric(x))
