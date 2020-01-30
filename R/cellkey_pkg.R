@@ -178,7 +178,7 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         numvars, numvars_w, nozero_reckeys_nums
       )
 
-      prob <- makeProblem(
+      prob <- sdcTable::makeProblem(
         data = x,
         dimList = dims,
         freqVarInd = match(freqvar, names(x)),
@@ -187,7 +187,11 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         sampWeightInd = NULL)
 
       # with perturbations
-      tab <- sdcProb2df(prob, addDups = TRUE, addNumVars = TRUE, dimCodes = "original")
+      tab <- sdcTable::sdcProb2df(
+        obj = prob,
+        addDups = TRUE,
+        addNumVars = TRUE,
+        dimCodes = "original")
 
       ck_log("mark duplicated cells")
       dims <- prob@dimInfo@dimInfo
@@ -230,21 +234,29 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
             # unweighted
             out[[v]]$uw_ids <- xx$.tmpid[1:top_k]
-            out[[v]]$uw_vals <- xx[[v]][1:top_k]
-            out[[v]]$uw_spread <- diff(range(xx[[v]], na.rm = TRUE))
-            out[[v]]$uw_sum <- sum(xx[[v]], na.rm = TRUE)
-            out[[v]]$uw_mean <- out[[v]]$uw_sum / nrow(xx)
+            out[[v]]$w_ids <- out[[v]]$uw_ids
 
+            if (top_k == 0) {
+              out[[v]]$uw_spread <- out[[v]]$w_spread <- 0
+              out[[v]]$uw_sum <- out[[v]]$w_sum <- 0
+              out[[v]]$uw_mean <- out[[v]]$w_mean <- 0
+              out[[v]]$uw_vals <- out[[v]]$w_vals <- 0
+            } else {
+              out[[v]]$uw_spread <- diff(range(xx[[v]], na.rm = TRUE))
+              out[[v]]$uw_sum <- sum(xx[[v]], na.rm = TRUE)
+              out[[v]]$uw_mean <- out[[v]]$uw_sum / nrow(xx)
+
+              out[[v]]$w_spread <- diff(range(xx[[v]], na.rm = TRUE))
+              out[[v]]$w_sum <- sum(xx$.tmpweightvar, na.rm = TRUE)
+              out[[v]]$w_mean <- out[[v]]$w_sum / sum(xx[[wvar]], na.rm = TRUE)
+
+              out[[v]]$uw_vals <- xx[[v]][1:top_k]
+              out[[v]]$w_vals <- xx$.tmpweightvar[1:top_k]
+            }
             # we compute if the number of contributors to the cell
             # is even or odd. This information can later be used if
             # we have different ptables (parity-case)
             out[[v]]$even_contributors <- nrow(xx) %% 2 == 0
-
-            out[[v]]$w_ids <- out[[v]]$uw_ids
-            out[[v]]$w_vals <- xx$.tmpweightvar[1:top_k]
-            out[[v]]$w_spread <- diff(range(xx[[v]], na.rm = TRUE))
-            out[[v]]$w_sum <- sum(xx$.tmpweightvar, na.rm = TRUE)
-            out[[v]]$w_mean <- out[[v]]$w_sum / sum(xx[[wvar]], na.rm = TRUE)
           }
           res[[i]] <- out
         }
@@ -262,8 +274,6 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         top_k = 6)
 
       res <- tab[, c("strID", "freq", dimvars, "is_bogus", nv), with = FALSE]
-      setnames(res, nv, tolower(nv))
-
       cols_ck <- gen_vnames(c("total", countvars), prefix = "ck")
 
       if (length(countvars) > 0) {
@@ -304,9 +314,7 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
       nr_numvars <- length(numvars)
       if (nr_numvars > 0) {
-
         seq_nums <- seq_len(nr_numvars)
-
         resnums <- vector("list", length = length(numvars))
         names(resnums) <- numvars
 
@@ -336,7 +344,7 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         vname = dimvars, type = "dimvars"
       ))
       varsdt <- rbind(varsdt, data.table(
-        vname = c("Total", countvars), type = "countvars"
+        vname = c("total", countvars), type = "countvars"
       ))
       if (length(numvars) > 0) {
         varsdt <- rbind(varsdt, data.table(
@@ -345,7 +353,6 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       }
       varsdt$is_perturbed <- NA
       varsdt[type %in% c("countvars", "numvars"), is_perturbed := FALSE]
-      varsdt$vname <- tolower(varsdt$vname)
 
       # modifications and perturbation parameters
       mods <- pert_params <- list(
@@ -384,7 +391,6 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         avail = avail,
         msg = "Invalid variables specified in `v`:",
         single_v = FALSE)
-      v <- tolower(v)
 
       for (i in seq_len(length(v))) {
         vname <- v[i]
@@ -518,7 +524,6 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       if (!is.character(v)) {
         stop("Argument `v` must be a character vector specifying variable names.", call. = FALSE)
       } else {
-        v <- tolower(v)
         .check_avail(
           v = v,
           avail = avail,
@@ -1341,13 +1346,13 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         fun <- .perturb_cell_simple
       }
 
-      res <- parallel::mclapply(seq_len(length(x_vals)), function(x) {
+      res <- parallel::mclapply(seq_len(length(x_vals)), function(y) {
         fun(
-          cv = cellvals[x],
-          x = x_vals[[x]]$x,
-          ck = cellkeys[[x]],
-          lookup = lookup[[x]],
-          prot_req = prot_req[x],
+          cv = cellvals[y],
+          x = x_vals[[y]]$x,
+          ck = cellkeys[[y]],
+          lookup = lookup[[y]],
+          prot_req = prot_req[y],
           params = params)
       }, mc.cores = .ck_cores()) # nolint
 
