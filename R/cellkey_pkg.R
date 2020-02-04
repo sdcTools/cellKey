@@ -847,9 +847,11 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         if (!is.character(v)) {
           stop("Argument `v` needs to be a character vector.", call. = FALSE)
         }
-        if (!all(v %in% cv)) {
-          stop("Please specify only valid countvars in argument `v`.", call. = FALSE)
-        }
+        .check_avail(
+          v = v,
+          avail = cv,
+          msg = "Invalid variables specified in `v`:",
+          single_v = FALSE)
       }
 
       ex_params <- private$.pert_params$cnts
@@ -960,9 +962,11 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         if (!is.character(v)) {
           stop("Argument `v` needs to be a character vector.", call. = FALSE)
         }
-        if (!all(v %in% nv)) {
-          stop("Please specify only valid numvars in argument `v`.", call. = FALSE)
-        }
+        .check_avail(
+          v = v,
+          avail = nv,
+          msg = "Invalid variables specified in `v`:",
+          single_v = FALSE)
       }
       ex_params <- private$.pert_params$nums
       for (curvar in v) {
