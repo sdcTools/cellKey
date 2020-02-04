@@ -70,7 +70,7 @@ count and numerical variables." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.18.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.18.6</span>
       </span>
     </div>
 
@@ -766,7 +766,7 @@ which the parameters should be set.</p></dd>
 <span class='no'>f_yaml</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".yaml"</span>)
 <span class='no'>p_cnts1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ck_params_cnts.html'>ck_params_cnts</a></span>(
   <span class='kw'>ptab</span> <span class='kw'>=</span> <span class='kw pkg'>ptable</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/ptable/man/pt_ex_cnts.html'>pt_ex_cnts</a></span>(),
-  <span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/Rtmp09UBN4/file3bd412006ff1.yaml' successfully written.</span></div><div class='input'>
+  <span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmpEtkipE/file427824742ee8.yaml' successfully written.</span></div><div class='input'>
 <span class='co'># read parameters from yaml-file and set them for variable `"total"`</span>
 <span class='no'>p_cnts1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ck_read_yaml.html'>ck_read_yaml</a></span>(<span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)
 
@@ -783,98 +783,98 @@ which the parameters should be set.</p></dd>
 <span class='co'># multiple variables can be perturbed as well</span>
 <span class='no'>tab</span>$<span class='fu'>perturb</span>(<span class='kw'>v</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"cnt_males"</span>, <span class='st'>"cnt_highincome"</span>))</div><div class='output co'>#&gt; <span class='message'>Count variable 'cnt_males' was perturbed.</span></div><div class='output co'>#&gt; <span class='message'>Count variable 'cnt_highincome' was perturbed.</span></div><div class='input'>
 <span class='co'># return weighted and unweighted results</span>
-<span class='no'>tab</span>$<span class='fu'>freqtab</span>(<span class='kw'>v</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"total"</span>, <span class='st'>"cnt_males"</span>))</div><div class='output co'>#&gt;        sex        age     vname  uwc     wc puwc         pwc
-#&gt;  1:  Total      Total     total 4580 274707 4579 274647.0203
-#&gt;  2:  Total age_group1     total 1969 118802 1968 118741.6638
-#&gt;  3:  Total       ag1a     total 1969 118802 1968 118741.6638
-#&gt;  4:  Total age_group2     total 1143  68583 1143  68583.0000
-#&gt;  5:  Total       ag2a     total 1143  68583 1143  68583.0000
-#&gt;  6:  Total age_group3     total  864  51473  864  51473.0000
-#&gt;  7:  Total age_group4     total  423  25121  423  25121.0000
-#&gt;  8:  Total age_group5     total  168   9970  167   9910.6548
-#&gt;  9:  Total age_group6     total   13    758   12    699.6923
-#&gt; 10: female      Total     total 2284 137362 2286 137482.2820
-#&gt; 11:      f      Total     total 2284 137362 2286 137482.2820
-#&gt; 12: female age_group1     total  954  57468  955  57528.2390
-#&gt; 13:      f age_group1     total  954  57468  955  57528.2390
-#&gt; 14: female       ag1a     total  954  57468  955  57528.2390
-#&gt; 15:      f       ag1a     total  954  57468  955  57528.2390
-#&gt; 16: female age_group2     total  572  34475  573  34535.2710
-#&gt; 17:      f age_group2     total  572  34475  573  34535.2710
-#&gt; 18: female       ag2a     total  572  34475  573  34535.2710
-#&gt; 19:      f       ag2a     total  572  34475  573  34535.2710
-#&gt; 20: female age_group3     total  440  26490  438  26369.5909
-#&gt; 21:      f age_group3     total  440  26490  438  26369.5909
-#&gt; 22: female age_group4     total  228  13373  228  13373.0000
-#&gt; 23:      f age_group4     total  228  13373  228  13373.0000
-#&gt; 24: female age_group5     total   84   5274   84   5274.0000
-#&gt; 25:      f age_group5     total   84   5274   84   5274.0000
-#&gt; 26: female age_group6     total    6    282    5    235.0000
-#&gt; 27:      f age_group6     total    6    282    5    235.0000
-#&gt; 28:   male      Total     total 2296 137345 2295 137285.1807
-#&gt; 29:      m      Total     total 2296 137345 2295 137285.1807
-#&gt; 30:   male age_group1     total 1015  61334 1014  61273.5724
-#&gt; 31:      m age_group1     total 1015  61334 1014  61273.5724
-#&gt; 32:   male       ag1a     total 1015  61334 1014  61273.5724
-#&gt; 33:      m       ag1a     total 1015  61334 1014  61273.5724
-#&gt; 34:   male age_group2     total  571  34108  572  34167.7338
-#&gt; 35:      m age_group2     total  571  34108  572  34167.7338
-#&gt; 36:   male       ag2a     total  571  34108  572  34167.7338
-#&gt; 37:      m       ag2a     total  571  34108  572  34167.7338
-#&gt; 38:   male age_group3     total  424  24983  424  24983.0000
-#&gt; 39:      m age_group3     total  424  24983  424  24983.0000
-#&gt; 40:   male age_group4     total  195  11748  197  11868.4923
-#&gt; 41:      m age_group4     total  195  11748  197  11868.4923
-#&gt; 42:   male age_group5     total   84   4696   85   4751.9048
-#&gt; 43:      m age_group5     total   84   4696   85   4751.9048
-#&gt; 44:   male age_group6     total    7    476    5    340.0000
-#&gt; 45:      m age_group6     total    7    476    5    340.0000
-#&gt; 46:  Total      Total cnt_males 2296 137345 2295 137285.1807
-#&gt; 47:  Total age_group1 cnt_males 1015  61334 1014  61273.5724
-#&gt; 48:  Total       ag1a cnt_males 1015  61334 1014  61273.5724
-#&gt; 49:  Total age_group2 cnt_males  571  34108  572  34167.7338
-#&gt; 50:  Total       ag2a cnt_males  571  34108  572  34167.7338
-#&gt; 51:  Total age_group3 cnt_males  424  24983  424  24983.0000
-#&gt; 52:  Total age_group4 cnt_males  195  11748  198  11928.7385
-#&gt; 53:  Total age_group5 cnt_males   84   4696   85   4751.9048
-#&gt; 54:  Total age_group6 cnt_males    7    476    4    272.0000
-#&gt; 55: female      Total cnt_males    0      0    0      0.0000
-#&gt; 56:      f      Total cnt_males    0      0    0      0.0000
-#&gt; 57: female age_group1 cnt_males    0      0    0      0.0000
-#&gt; 58:      f age_group1 cnt_males    0      0    0      0.0000
-#&gt; 59: female       ag1a cnt_males    0      0    0      0.0000
-#&gt; 60:      f       ag1a cnt_males    0      0    0      0.0000
-#&gt; 61: female age_group2 cnt_males    0      0    0      0.0000
-#&gt; 62:      f age_group2 cnt_males    0      0    0      0.0000
-#&gt; 63: female       ag2a cnt_males    0      0    0      0.0000
-#&gt; 64:      f       ag2a cnt_males    0      0    0      0.0000
-#&gt; 65: female age_group3 cnt_males    0      0    0      0.0000
-#&gt; 66:      f age_group3 cnt_males    0      0    0      0.0000
-#&gt; 67: female age_group4 cnt_males    0      0    0      0.0000
-#&gt; 68:      f age_group4 cnt_males    0      0    0      0.0000
-#&gt; 69: female age_group5 cnt_males    0      0    0      0.0000
-#&gt; 70:      f age_group5 cnt_males    0      0    0      0.0000
-#&gt; 71: female age_group6 cnt_males    0      0    0      0.0000
-#&gt; 72:      f age_group6 cnt_males    0      0    0      0.0000
-#&gt; 73:   male      Total cnt_males 2296 137345 2295 137285.1807
-#&gt; 74:      m      Total cnt_males 2296 137345 2295 137285.1807
-#&gt; 75:   male age_group1 cnt_males 1015  61334 1014  61273.5724
-#&gt; 76:      m age_group1 cnt_males 1015  61334 1014  61273.5724
-#&gt; 77:   male       ag1a cnt_males 1015  61334 1014  61273.5724
-#&gt; 78:      m       ag1a cnt_males 1015  61334 1014  61273.5724
-#&gt; 79:   male age_group2 cnt_males  571  34108  572  34167.7338
-#&gt; 80:      m age_group2 cnt_males  571  34108  572  34167.7338
-#&gt; 81:   male       ag2a cnt_males  571  34108  572  34167.7338
-#&gt; 82:      m       ag2a cnt_males  571  34108  572  34167.7338
-#&gt; 83:   male age_group3 cnt_males  424  24983  424  24983.0000
-#&gt; 84:      m age_group3 cnt_males  424  24983  424  24983.0000
-#&gt; 85:   male age_group4 cnt_males  195  11748  198  11928.7385
-#&gt; 86:      m age_group4 cnt_males  195  11748  198  11928.7385
-#&gt; 87:   male age_group5 cnt_males   84   4696   85   4751.9048
-#&gt; 88:      m age_group5 cnt_males   84   4696   85   4751.9048
-#&gt; 89:   male age_group6 cnt_males    7    476    4    272.0000
-#&gt; 90:      m age_group6 cnt_males    7    476    4    272.0000
-#&gt;        sex        age     vname  uwc     wc puwc         pwc</div><div class='input'>
+<span class='no'>tab</span>$<span class='fu'>freqtab</span>(<span class='kw'>v</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"total"</span>, <span class='st'>"cnt_males"</span>))</div><div class='output co'>#&gt;        sex        age     vname  uwc     wc puwc        pwc
+#&gt;  1:  Total      Total     total 4580 274707 4580 274707.000
+#&gt;  2:  Total age_group1     total 1969 118802 1968 118741.664
+#&gt;  3:  Total       ag1a     total 1969 118802 1968 118741.664
+#&gt;  4:  Total age_group2     total 1143  68583 1143  68583.000
+#&gt;  5:  Total       ag2a     total 1143  68583 1143  68583.000
+#&gt;  6:  Total age_group3     total  864  51473  863  51413.425
+#&gt;  7:  Total age_group4     total  423  25121  423  25121.000
+#&gt;  8:  Total age_group5     total  168   9970  168   9970.000
+#&gt;  9:  Total age_group6     total   13    758   13    758.000
+#&gt; 10: female      Total     total 2284 137362 2283 137301.859
+#&gt; 11:      f      Total     total 2284 137362 2283 137301.859
+#&gt; 12: female age_group1     total  954  57468  954  57468.000
+#&gt; 13:      f age_group1     total  954  57468  954  57468.000
+#&gt; 14: female       ag1a     total  954  57468  954  57468.000
+#&gt; 15:      f       ag1a     total  954  57468  954  57468.000
+#&gt; 16: female age_group2     total  572  34475  572  34475.000
+#&gt; 17:      f age_group2     total  572  34475  572  34475.000
+#&gt; 18: female       ag2a     total  572  34475  572  34475.000
+#&gt; 19:      f       ag2a     total  572  34475  572  34475.000
+#&gt; 20: female age_group3     total  440  26490  439  26429.795
+#&gt; 21:      f age_group3     total  440  26490  439  26429.795
+#&gt; 22: female age_group4     total  228  13373  227  13314.346
+#&gt; 23:      f age_group4     total  228  13373  227  13314.346
+#&gt; 24: female age_group5     total   84   5274   84   5274.000
+#&gt; 25:      f age_group5     total   84   5274   84   5274.000
+#&gt; 26: female age_group6     total    6    282    5    235.000
+#&gt; 27:      f age_group6     total    6    282    5    235.000
+#&gt; 28:   male      Total     total 2296 137345 2295 137285.181
+#&gt; 29:      m      Total     total 2296 137345 2295 137285.181
+#&gt; 30:   male age_group1     total 1015  61334 1016  61394.428
+#&gt; 31:      m age_group1     total 1015  61334 1016  61394.428
+#&gt; 32:   male       ag1a     total 1015  61334 1016  61394.428
+#&gt; 33:      m       ag1a     total 1015  61334 1016  61394.428
+#&gt; 34:   male age_group2     total  571  34108  573  34227.468
+#&gt; 35:      m age_group2     total  571  34108  573  34227.468
+#&gt; 36:   male       ag2a     total  571  34108  573  34227.468
+#&gt; 37:      m       ag2a     total  571  34108  573  34227.468
+#&gt; 38:   male age_group3     total  424  24983  422  24865.156
+#&gt; 39:      m age_group3     total  424  24983  422  24865.156
+#&gt; 40:   male age_group4     total  195  11748  194  11687.754
+#&gt; 41:      m age_group4     total  195  11748  194  11687.754
+#&gt; 42:   male age_group5     total   84   4696   85   4751.905
+#&gt; 43:      m age_group5     total   84   4696   85   4751.905
+#&gt; 44:   male age_group6     total    7    476    7    476.000
+#&gt; 45:      m age_group6     total    7    476    7    476.000
+#&gt; 46:  Total      Total cnt_males 2296 137345 2295 137285.181
+#&gt; 47:  Total age_group1 cnt_males 1015  61334 1017  61454.855
+#&gt; 48:  Total       ag1a cnt_males 1015  61334 1017  61454.855
+#&gt; 49:  Total age_group2 cnt_males  571  34108  575  34346.935
+#&gt; 50:  Total       ag2a cnt_males  571  34108  575  34346.935
+#&gt; 51:  Total age_group3 cnt_males  424  24983  420  24747.311
+#&gt; 52:  Total age_group4 cnt_males  195  11748  193  11627.508
+#&gt; 53:  Total age_group5 cnt_males   84   4696   85   4751.905
+#&gt; 54:  Total age_group6 cnt_males    7    476    7    476.000
+#&gt; 55: female      Total cnt_males    0      0    0      0.000
+#&gt; 56:      f      Total cnt_males    0      0    0      0.000
+#&gt; 57: female age_group1 cnt_males    0      0    0      0.000
+#&gt; 58:      f age_group1 cnt_males    0      0    0      0.000
+#&gt; 59: female       ag1a cnt_males    0      0    0      0.000
+#&gt; 60:      f       ag1a cnt_males    0      0    0      0.000
+#&gt; 61: female age_group2 cnt_males    0      0    0      0.000
+#&gt; 62:      f age_group2 cnt_males    0      0    0      0.000
+#&gt; 63: female       ag2a cnt_males    0      0    0      0.000
+#&gt; 64:      f       ag2a cnt_males    0      0    0      0.000
+#&gt; 65: female age_group3 cnt_males    0      0    0      0.000
+#&gt; 66:      f age_group3 cnt_males    0      0    0      0.000
+#&gt; 67: female age_group4 cnt_males    0      0    0      0.000
+#&gt; 68:      f age_group4 cnt_males    0      0    0      0.000
+#&gt; 69: female age_group5 cnt_males    0      0    0      0.000
+#&gt; 70:      f age_group5 cnt_males    0      0    0      0.000
+#&gt; 71: female age_group6 cnt_males    0      0    0      0.000
+#&gt; 72:      f age_group6 cnt_males    0      0    0      0.000
+#&gt; 73:   male      Total cnt_males 2296 137345 2295 137285.181
+#&gt; 74:      m      Total cnt_males 2296 137345 2295 137285.181
+#&gt; 75:   male age_group1 cnt_males 1015  61334 1017  61454.855
+#&gt; 76:      m age_group1 cnt_males 1015  61334 1017  61454.855
+#&gt; 77:   male       ag1a cnt_males 1015  61334 1017  61454.855
+#&gt; 78:      m       ag1a cnt_males 1015  61334 1017  61454.855
+#&gt; 79:   male age_group2 cnt_males  571  34108  575  34346.935
+#&gt; 80:      m age_group2 cnt_males  571  34108  575  34346.935
+#&gt; 81:   male       ag2a cnt_males  571  34108  575  34346.935
+#&gt; 82:      m       ag2a cnt_males  571  34108  575  34346.935
+#&gt; 83:   male age_group3 cnt_males  424  24983  420  24747.311
+#&gt; 84:      m age_group3 cnt_males  424  24983  420  24747.311
+#&gt; 85:   male age_group4 cnt_males  195  11748  193  11627.508
+#&gt; 86:      m age_group4 cnt_males  195  11748  193  11627.508
+#&gt; 87:   male age_group5 cnt_males   84   4696   85   4751.905
+#&gt; 88:      m age_group5 cnt_males   84   4696   85   4751.905
+#&gt; 89:   male age_group6 cnt_males    7    476    7    476.000
+#&gt; 90:      m age_group6 cnt_males    7    476    7    476.000
+#&gt;        sex        age     vname  uwc     wc puwc        pwc</div><div class='input'>
 <span class='co'># numerical variables (positive variables using flex-function)</span>
 <span class='co'># we also write the config to a yaml file</span>
 <span class='no'>f_yaml</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".yaml"</span>)
@@ -902,7 +902,7 @@ which the parameters should be set.</p></dd>
   <span class='kw'>mu_c</span> <span class='kw'>=</span> <span class='fl'>2</span>,
   <span class='kw'>same_key</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>use_zero_rkeys</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/Rtmp09UBN4/file3bd47a5ca846.yaml' successfully written.</span></div><div class='input'>
+  <span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmpEtkipE/file427834efe53e.yaml' successfully written.</span></div><div class='input'>
 <span class='co'># we read the parameters from the yaml-file</span>
 <span class='no'>p_nums1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ck_read_yaml.html'>ck_read_yaml</a></span>(<span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>f_yaml</span>)
 
@@ -937,143 +937,143 @@ which the parameters should be set.</p></dd>
 <span class='no'>tab</span>$<span class='fu'>perturb</span>(<span class='kw'>v</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"income"</span>, <span class='st'>"savings"</span>))</div><div class='output co'>#&gt; <span class='message'>Numeric variable 'income' was perturbed.</span></div><div class='output co'>#&gt; <span class='message'>Numeric variable 'savings' was perturbed.</span></div><div class='input'>
 <span class='co'># extract results</span>
 <span class='no'>tab</span>$<span class='fu'>numtab</span>(<span class='st'>"income"</span>, <span class='kw'>mean_before_sum</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;        sex        age  vname      uws         ws        pws
-#&gt;  1:  Total      Total income 22952978 1377005797 1377073424
-#&gt;  2:  Total age_group1 income  9810547  590371940  590365458
-#&gt;  3:  Total       ag1a income  9810547  590371940  590365458
-#&gt;  4:  Total age_group2 income  5692119  340327551  340309861
-#&gt;  5:  Total       ag2a income  5692119  340327551  340309861
-#&gt;  6:  Total age_group3 income  4406946  263870748  263887794
-#&gt;  7:  Total age_group4 income  2133543  128635475  128657949
-#&gt;  8:  Total age_group5 income   848151   50513336   50541476
-#&gt;  9:  Total age_group6 income    61672    3286747    3319040
-#&gt; 10: female      Total income 11690929  702755232  702797498
-#&gt; 11:      f      Total income 11690929  702755232  702797498
-#&gt; 12: female age_group1 income  4933383  296150572  296123078
-#&gt; 13:      f age_group1 income  4933383  296150572  296123078
-#&gt; 14: female       ag1a income  4933383  296150572  296123078
-#&gt; 15:      f       ag1a income  4933383  296150572  296123078
-#&gt; 16: female age_group2 income  2880740  173368984  173388146
-#&gt; 17:      f age_group2 income  2880740  173368984  173388146
-#&gt; 18: female       ag2a income  2880740  173368984  173388146
-#&gt; 19:      f       ag2a income  2880740  173368984  173388146
-#&gt; 20: female age_group3 income  2238777  134883636  134851158
-#&gt; 21:      f age_group3 income  2238777  134883636  134851158
-#&gt; 22: female age_group4 income  1155033   68276741   68178323
-#&gt; 23:      f age_group4 income  1155033   68276741   68178323
-#&gt; 24: female age_group5 income   455017   28913759   28940085
-#&gt; 25:      f age_group5 income   455017   28913759   28940085
-#&gt; 26: female age_group6 income    27979    1161540    1267084
-#&gt; 27:      f age_group6 income    27979    1161540    1267084
-#&gt; 28:   male      Total income 11262049  674250565  674338251
-#&gt; 29:      m      Total income 11262049  674250565  674338251
-#&gt; 30:   male age_group1 income  4877164  294221368  294071892
-#&gt; 31:      m age_group1 income  4877164  294221368  294071892
-#&gt; 32:   male       ag1a income  4877164  294221368  294071892
-#&gt; 33:      m       ag1a income  4877164  294221368  294071892
-#&gt; 34:   male age_group2 income  2811379  166958567  167049714
-#&gt; 35:      m age_group2 income  2811379  166958567  167049714
-#&gt; 36:   male       ag2a income  2811379  166958567  167049714
-#&gt; 37:      m       ag2a income  2811379  166958567  167049714
-#&gt; 38:   male age_group3 income  2168169  128987112  128939361
-#&gt; 39:      m age_group3 income  2168169  128987112  128939361
-#&gt; 40:   male age_group4 income   978510   60358734   60252043
-#&gt; 41:      m age_group4 income   978510   60358734   60252043
-#&gt; 42:   male age_group5 income   393134   21599577   21610203
-#&gt; 43:      m age_group5 income   393134   21599577   21610203
-#&gt; 44:   male age_group6 income    33693    2125207    2195229
-#&gt; 45:      m age_group6 income    33693    2125207    2195229
+#&gt;  1:  Total      Total income 22952978 1377005797 1377155393
+#&gt;  2:  Total age_group1 income  9810547  590371940  590326240
+#&gt;  3:  Total       ag1a income  9810547  590371940  590326240
+#&gt;  4:  Total age_group2 income  5692119  340327551  340190105
+#&gt;  5:  Total       ag2a income  5692119  340327551  340190105
+#&gt;  6:  Total age_group3 income  4406946  263870748  263897308
+#&gt;  7:  Total age_group4 income  2133543  128635475  128658430
+#&gt;  8:  Total age_group5 income   848151   50513336   50613743
+#&gt;  9:  Total age_group6 income    61672    3286747    3434191
+#&gt; 10: female      Total income 11690929  702755232  702735529
+#&gt; 11:      f      Total income 11690929  702755232  702735529
+#&gt; 12: female age_group1 income  4933383  296150572  296042438
+#&gt; 13:      f age_group1 income  4933383  296150572  296042438
+#&gt; 14: female       ag1a income  4933383  296150572  296042438
+#&gt; 15:      f       ag1a income  4933383  296150572  296042438
+#&gt; 16: female age_group2 income  2880740  173368984  173345328
+#&gt; 17:      f age_group2 income  2880740  173368984  173345328
+#&gt; 18: female       ag2a income  2880740  173368984  173345328
+#&gt; 19:      f       ag2a income  2880740  173368984  173345328
+#&gt; 20: female age_group3 income  2238777  134883636  134805480
+#&gt; 21:      f age_group3 income  2238777  134883636  134805480
+#&gt; 22: female age_group4 income  1155033   68276741   68123047
+#&gt; 23:      f age_group4 income  1155033   68276741   68123047
+#&gt; 24: female age_group5 income   455017   28913759   28913472
+#&gt; 25:      f age_group5 income   455017   28913759   28913472
+#&gt; 26: female age_group6 income    27979    1161540    1056121
+#&gt; 27:      f age_group6 income    27979    1161540    1056121
+#&gt; 28:   male      Total income 11262049  674250565  674328297
+#&gt; 29:      m      Total income 11262049  674250565  674328297
+#&gt; 30:   male age_group1 income  4877164  294221368  294218355
+#&gt; 31:      m age_group1 income  4877164  294221368  294218355
+#&gt; 32:   male       ag1a income  4877164  294221368  294218355
+#&gt; 33:      m       ag1a income  4877164  294221368  294218355
+#&gt; 34:   male age_group2 income  2811379  166958567  167094262
+#&gt; 35:      m age_group2 income  2811379  166958567  167094262
+#&gt; 36:   male       ag2a income  2811379  166958567  167094262
+#&gt; 37:      m       ag2a income  2811379  166958567  167094262
+#&gt; 38:   male age_group3 income  2168169  128987112  128929878
+#&gt; 39:      m age_group3 income  2168169  128987112  128929878
+#&gt; 40:   male age_group4 income   978510   60358734   60327959
+#&gt; 41:      m age_group4 income   978510   60358734   60327959
+#&gt; 42:   male age_group5 income   393134   21599577   21663081
+#&gt; 43:      m age_group5 income   393134   21599577   21663081
+#&gt; 44:   male age_group6 income    33693    2125207    2096535
+#&gt; 45:      m age_group6 income    33693    2125207    2096535
 #&gt;        sex        age  vname      uws         ws        pws</div><div class='input'><span class='no'>tab</span>$<span class='fu'>numtab</span>(<span class='st'>"income"</span>, <span class='kw'>mean_before_sum</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt;        sex        age  vname      uws         ws        pws
-#&gt;  1:  Total      Total income 22952978 1377005797 1377039610
-#&gt;  2:  Total age_group1 income  9810547  590371940  590368699
-#&gt;  3:  Total       ag1a income  9810547  590371940  590368699
-#&gt;  4:  Total age_group2 income  5692119  340327551  340318706
-#&gt;  5:  Total       ag2a income  5692119  340327551  340318706
-#&gt;  6:  Total age_group3 income  4406946  263870748  263879271
-#&gt;  7:  Total age_group4 income  2133543  128635475  128646712
-#&gt;  8:  Total age_group5 income   848151   50513336   50527404
-#&gt;  9:  Total age_group6 income    61672    3286747    3302854
-#&gt; 10: female      Total income 11690929  702755232  702776364
-#&gt; 11:      f      Total income 11690929  702755232  702776364
-#&gt; 12: female age_group1 income  4933383  296150572  296136825
-#&gt; 13:      f age_group1 income  4933383  296150572  296136825
-#&gt; 14: female       ag1a income  4933383  296150572  296136825
-#&gt; 15:      f       ag1a income  4933383  296150572  296136825
-#&gt; 16: female age_group2 income  2880740  173368984  173378565
-#&gt; 17:      f age_group2 income  2880740  173368984  173378565
-#&gt; 18: female       ag2a income  2880740  173368984  173378565
-#&gt; 19:      f       ag2a income  2880740  173368984  173378565
-#&gt; 20: female age_group3 income  2238777  134883636  134867396
-#&gt; 21:      f age_group3 income  2238777  134883636  134867396
-#&gt; 22: female age_group4 income  1155033   68276741   68227514
-#&gt; 23:      f age_group4 income  1155033   68276741   68227514
-#&gt; 24: female age_group5 income   455017   28913759   28926919
-#&gt; 25:      f age_group5 income   455017   28913759   28926919
-#&gt; 26: female age_group6 income    27979    1161540    1213165
-#&gt; 27:      f age_group6 income    27979    1161540    1213165
-#&gt; 28:   male      Total income 11262049  674250565  674294406
-#&gt; 29:      m      Total income 11262049  674250565  674294406
-#&gt; 30:   male age_group1 income  4877164  294221368  294146620
-#&gt; 31:      m age_group1 income  4877164  294221368  294146620
-#&gt; 32:   male       ag1a income  4877164  294221368  294146620
-#&gt; 33:      m       ag1a income  4877164  294221368  294146620
-#&gt; 34:   male age_group2 income  2811379  166958567  167004134
-#&gt; 35:      m age_group2 income  2811379  166958567  167004134
-#&gt; 36:   male       ag2a income  2811379  166958567  167004134
-#&gt; 37:      m       ag2a income  2811379  166958567  167004134
-#&gt; 38:   male age_group3 income  2168169  128987112  128963234
-#&gt; 39:      m age_group3 income  2168169  128987112  128963234
-#&gt; 40:   male age_group4 income   978510   60358734   60305365
-#&gt; 41:      m age_group4 income   978510   60358734   60305365
-#&gt; 42:   male age_group5 income   393134   21599577   21604889
-#&gt; 43:      m age_group5 income   393134   21599577   21604889
-#&gt; 44:   male age_group6 income    33693    2125207    2159934
-#&gt; 45:      m age_group6 income    33693    2125207    2159934
+#&gt;  1:  Total      Total income 22952978 1377005797 1377080593
+#&gt;  2:  Total age_group1 income  9810547  590371940  590349089
+#&gt;  3:  Total       ag1a income  9810547  590371940  590349089
+#&gt;  4:  Total age_group2 income  5692119  340327551  340258821
+#&gt;  5:  Total       ag2a income  5692119  340327551  340258821
+#&gt;  6:  Total age_group3 income  4406946  263870748  263884028
+#&gt;  7:  Total age_group4 income  2133543  128635475  128646952
+#&gt;  8:  Total age_group5 income   848151   50513336   50563515
+#&gt;  9:  Total age_group6 income    61672    3286747    3359660
+#&gt; 10: female      Total income 11690929  702755232  702745380
+#&gt; 11:      f      Total income 11690929  702755232  702745380
+#&gt; 12: female age_group1 income  4933383  296150572  296096500
+#&gt; 13:      f age_group1 income  4933383  296150572  296096500
+#&gt; 14: female       ag1a income  4933383  296150572  296096500
+#&gt; 15:      f       ag1a income  4933383  296150572  296096500
+#&gt; 16: female age_group2 income  2880740  173368984  173357155
+#&gt; 17:      f age_group2 income  2880740  173368984  173357155
+#&gt; 18: female       ag2a income  2880740  173368984  173357155
+#&gt; 19:      f       ag2a income  2880740  173368984  173357155
+#&gt; 20: female age_group3 income  2238777  134883636  134844552
+#&gt; 21:      f age_group3 income  2238777  134883636  134844552
+#&gt; 22: female age_group4 income  1155033   68276741   68199850
+#&gt; 23:      f age_group4 income  1155033   68276741   68199850
+#&gt; 24: female age_group5 income   455017   28913759   28913616
+#&gt; 25:      f age_group5 income   455017   28913759   28913616
+#&gt; 26: female age_group6 income    27979    1161540    1107577
+#&gt; 27:      f age_group6 income    27979    1161540    1107577
+#&gt; 28:   male      Total income 11262049  674250565  674289430
+#&gt; 29:      m      Total income 11262049  674250565  674289430
+#&gt; 30:   male age_group1 income  4877164  294221368  294219861
+#&gt; 31:      m age_group1 income  4877164  294221368  294219861
+#&gt; 32:   male       ag1a income  4877164  294221368  294219861
+#&gt; 33:      m       ag1a income  4877164  294221368  294219861
+#&gt; 34:   male age_group2 income  2811379  166958567  167026401
+#&gt; 35:      m age_group2 income  2811379  166958567  167026401
+#&gt; 36:   male       ag2a income  2811379  166958567  167026401
+#&gt; 37:      m       ag2a income  2811379  166958567  167026401
+#&gt; 38:   male age_group3 income  2168169  128987112  128958492
+#&gt; 39:      m age_group3 income  2168169  128987112  128958492
+#&gt; 40:   male age_group4 income   978510   60358734   60343345
+#&gt; 41:      m age_group4 income   978510   60358734   60343345
+#&gt; 42:   male age_group5 income   393134   21599577   21631306
+#&gt; 43:      m age_group5 income   393134   21599577   21631306
+#&gt; 44:   male age_group6 income    33693    2125207    2110822
+#&gt; 45:      m age_group6 income    33693    2125207    2110822
 #&gt;        sex        age  vname      uws         ws        pws</div><div class='input'><span class='no'>tab</span>$<span class='fu'>numtab</span>(<span class='st'>"savings"</span>)</div><div class='output co'>#&gt;        sex        age   vname     uws        ws         pws
-#&gt;  1:  Total      Total savings 2273532 136873818 136875564.6
-#&gt;  2:  Total age_group1 savings  982386  59422265  59425129.7
-#&gt;  3:  Total       ag1a savings  982386  59422265  59425129.7
-#&gt;  4:  Total age_group2 savings  552336  33246815  33246439.1
-#&gt;  5:  Total       ag2a savings  552336  33246815  33246439.1
-#&gt;  6:  Total age_group3 savings  437101  26180709  26172177.1
-#&gt;  7:  Total age_group4 savings  214661  12776589  12778694.5
-#&gt;  8:  Total age_group5 savings   80451   4886105   4888072.2
-#&gt;  9:  Total age_group6 savings    6597    361335    361434.3
-#&gt; 10: female      Total savings 1113716  67211781  67215028.9
-#&gt; 11:      f      Total savings 1113716  67211781  67215028.9
-#&gt; 12: female age_group1 savings  464726  27991793  27991593.7
-#&gt; 13:      f age_group1 savings  464726  27991793  27991593.7
-#&gt; 14: female       ag1a savings  464726  27991793  27991593.7
-#&gt; 15:      f       ag1a savings  464726  27991793  27991593.7
-#&gt; 16: female age_group2 savings  271413  16410574  16411757.8
-#&gt; 17:      f age_group2 savings  271413  16410574  16411757.8
-#&gt; 18: female       ag2a savings  271413  16410574  16411757.8
-#&gt; 19:      f       ag2a savings  271413  16410574  16411757.8
-#&gt; 20: female age_group3 savings  222131  13497780  13497555.7
-#&gt; 21:      f age_group3 savings  222131  13497780  13497555.7
-#&gt; 22: female age_group4 savings  115241   6810459   6806070.6
-#&gt; 23:      f age_group4 savings  115241   6810459   6806070.6
-#&gt; 24: female age_group5 savings   37218   2377583   2378435.9
-#&gt; 25:      f age_group5 savings   37218   2377583   2378435.9
-#&gt; 26: female age_group6 savings    2987    123592    126756.7
-#&gt; 27:      f age_group6 savings    2987    123592    126756.7
-#&gt; 28:   male      Total savings 1159816  69662037  69660447.5
-#&gt; 29:      m      Total savings 1159816  69662037  69660447.5
-#&gt; 30:   male age_group1 savings  517660  31430472  31422620.1
-#&gt; 31:      m age_group1 savings  517660  31430472  31422620.1
-#&gt; 32:   male       ag1a savings  517660  31430472  31422620.1
-#&gt; 33:      m       ag1a savings  517660  31430472  31422620.1
-#&gt; 34:   male age_group2 savings  280923  16836241  16839487.2
-#&gt; 35:      m age_group2 savings  280923  16836241  16839487.2
-#&gt; 36:   male       ag2a savings  280923  16836241  16839487.2
-#&gt; 37:      m       ag2a savings  280923  16836241  16839487.2
-#&gt; 38:   male age_group3 savings  214970  12682929  12683174.2
-#&gt; 39:      m age_group3 savings  214970  12682929  12683174.2
-#&gt; 40:   male age_group4 savings   99420   5966130   5961942.5
-#&gt; 41:      m age_group4 savings   99420   5966130   5961942.5
-#&gt; 42:   male age_group5 savings   43233   2508522   2508834.0
-#&gt; 43:      m age_group5 savings   43233   2508522   2508834.0
-#&gt; 44:   male age_group6 savings    3610    237743    236666.3
-#&gt; 45:      m age_group6 savings    3610    237743    236666.3
+#&gt;  1:  Total      Total savings 2273532 136873818 136870751.3
+#&gt;  2:  Total age_group1 savings  982386  59422265  59416084.3
+#&gt;  3:  Total       ag1a savings  982386  59422265  59416084.3
+#&gt;  4:  Total age_group2 savings  552336  33246815  33241171.0
+#&gt;  5:  Total       ag2a savings  552336  33246815  33241171.0
+#&gt;  6:  Total age_group3 savings  437101  26180709  26175474.1
+#&gt;  7:  Total age_group4 savings  214661  12776589  12779309.1
+#&gt;  8:  Total age_group5 savings   80451   4886105   4892706.7
+#&gt;  9:  Total age_group6 savings    6597    361335    364357.9
+#&gt; 10: female      Total savings 1113716  67211781  67215708.2
+#&gt; 11:      f      Total savings 1113716  67211781  67215708.2
+#&gt; 12: female age_group1 savings  464726  27991793  27993895.4
+#&gt; 13:      f age_group1 savings  464726  27991793  27993895.4
+#&gt; 14: female       ag1a savings  464726  27991793  27993895.4
+#&gt; 15:      f       ag1a savings  464726  27991793  27993895.4
+#&gt; 16: female age_group2 savings  271413  16410574  16410044.9
+#&gt; 17:      f age_group2 savings  271413  16410574  16410044.9
+#&gt; 18: female       ag2a savings  271413  16410574  16410044.9
+#&gt; 19:      f       ag2a savings  271413  16410574  16410044.9
+#&gt; 20: female age_group3 savings  222131  13497780  13490965.0
+#&gt; 21:      f age_group3 savings  222131  13497780  13490965.0
+#&gt; 22: female age_group4 savings  115241   6810459   6803910.4
+#&gt; 23:      f age_group4 savings  115241   6810459   6803910.4
+#&gt; 24: female age_group5 savings   37218   2377583   2378760.7
+#&gt; 25:      f age_group5 savings   37218   2377583   2378760.7
+#&gt; 26: female age_group6 savings    2987    123592    121502.8
+#&gt; 27:      f age_group6 savings    2987    123592    121502.8
+#&gt; 28:   male      Total savings 1159816  69662037  69660814.1
+#&gt; 29:      m      Total savings 1159816  69662037  69660814.1
+#&gt; 30:   male age_group1 savings  517660  31430472  31431019.4
+#&gt; 31:      m age_group1 savings  517660  31430472  31431019.4
+#&gt; 32:   male       ag1a savings  517660  31430472  31431019.4
+#&gt; 33:      m       ag1a savings  517660  31430472  31431019.4
+#&gt; 34:   male age_group2 savings  280923  16836241  16841346.0
+#&gt; 35:      m age_group2 savings  280923  16836241  16841346.0
+#&gt; 36:   male       ag2a savings  280923  16836241  16841346.0
+#&gt; 37:      m       ag2a savings  280923  16836241  16841346.0
+#&gt; 38:   male age_group3 savings  214970  12682929  12684198.2
+#&gt; 39:      m age_group3 savings  214970  12682929  12684198.2
+#&gt; 40:   male age_group4 savings   99420   5966130   5966279.0
+#&gt; 41:      m age_group4 savings   99420   5966130   5966279.0
+#&gt; 42:   male age_group5 savings   43233   2508522   2512844.5
+#&gt; 43:      m age_group5 savings   43233   2508522   2512844.5
+#&gt; 44:   male age_group6 savings    3610    237743    236698.2
+#&gt; 45:      m age_group6 savings    3610    237743    236698.2
 #&gt;        sex        age   vname     uws        ws         pws</div><div class='input'>
 <span class='co'># results can be resetted, too</span>
 <span class='no'>tab</span>$<span class='fu'>reset_cntvars</span>(<span class='kw'>v</span> <span class='kw'>=</span> <span class='st'>"cnt_males"</span>)
@@ -1086,136 +1086,136 @@ which the parameters should be set.</p></dd>
 }
 
 <span class='co'># show results containing weighted and unweighted results</span>
-<span class='no'>tab</span>$<span class='fu'>freqtab</span>(<span class='kw'>v</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"total"</span>, <span class='st'>"cnt_males"</span>))</div><div class='output co'>#&gt;        sex        age     vname  uwc     wc puwc         pwc
-#&gt;  1:  Total      Total     total 4580 274707 4579 274647.0203
-#&gt;  2:  Total age_group1     total 1969 118802 1968 118741.6638
-#&gt;  3:  Total       ag1a     total 1969 118802 1968 118741.6638
-#&gt;  4:  Total age_group2     total 1143  68583 1143  68583.0000
-#&gt;  5:  Total       ag2a     total 1143  68583 1143  68583.0000
-#&gt;  6:  Total age_group3     total  864  51473  864  51473.0000
-#&gt;  7:  Total age_group4     total  423  25121  423  25121.0000
-#&gt;  8:  Total age_group5     total  168   9970  167   9910.6548
-#&gt;  9:  Total age_group6     total   13    758   12    699.6923
-#&gt; 10: female      Total     total 2284 137362 2286 137482.2820
-#&gt; 11:      f      Total     total 2284 137362 2286 137482.2820
-#&gt; 12: female age_group1     total  954  57468  955  57528.2390
-#&gt; 13:      f age_group1     total  954  57468  955  57528.2390
-#&gt; 14: female       ag1a     total  954  57468  955  57528.2390
-#&gt; 15:      f       ag1a     total  954  57468  955  57528.2390
-#&gt; 16: female age_group2     total  572  34475  573  34535.2710
-#&gt; 17:      f age_group2     total  572  34475  573  34535.2710
-#&gt; 18: female       ag2a     total  572  34475  573  34535.2710
-#&gt; 19:      f       ag2a     total  572  34475  573  34535.2710
-#&gt; 20: female age_group3     total  440  26490  438  26369.5909
-#&gt; 21:      f age_group3     total  440  26490  438  26369.5909
-#&gt; 22: female age_group4     total  228  13373  228  13373.0000
-#&gt; 23:      f age_group4     total  228  13373  228  13373.0000
-#&gt; 24: female age_group5     total   84   5274   84   5274.0000
-#&gt; 25:      f age_group5     total   84   5274   84   5274.0000
-#&gt; 26: female age_group6     total    6    282    5    235.0000
-#&gt; 27:      f age_group6     total    6    282    5    235.0000
-#&gt; 28:   male      Total     total 2296 137345 2295 137285.1807
-#&gt; 29:      m      Total     total 2296 137345 2295 137285.1807
-#&gt; 30:   male age_group1     total 1015  61334 1014  61273.5724
-#&gt; 31:      m age_group1     total 1015  61334 1014  61273.5724
-#&gt; 32:   male       ag1a     total 1015  61334 1014  61273.5724
-#&gt; 33:      m       ag1a     total 1015  61334 1014  61273.5724
-#&gt; 34:   male age_group2     total  571  34108  572  34167.7338
-#&gt; 35:      m age_group2     total  571  34108  572  34167.7338
-#&gt; 36:   male       ag2a     total  571  34108  572  34167.7338
-#&gt; 37:      m       ag2a     total  571  34108  572  34167.7338
-#&gt; 38:   male age_group3     total  424  24983  424  24983.0000
-#&gt; 39:      m age_group3     total  424  24983  424  24983.0000
-#&gt; 40:   male age_group4     total  195  11748  197  11868.4923
-#&gt; 41:      m age_group4     total  195  11748  197  11868.4923
-#&gt; 42:   male age_group5     total   84   4696   85   4751.9048
-#&gt; 43:      m age_group5     total   84   4696   85   4751.9048
-#&gt; 44:   male age_group6     total    7    476    5    340.0000
-#&gt; 45:      m age_group6     total    7    476    5    340.0000
-#&gt; 46:  Total      Total cnt_males 2296 137345 2295 137285.1807
-#&gt; 47:  Total age_group1 cnt_males 1015  61334 1014  61273.5724
-#&gt; 48:  Total       ag1a cnt_males 1015  61334 1014  61273.5724
-#&gt; 49:  Total age_group2 cnt_males  571  34108  572  34167.7338
-#&gt; 50:  Total       ag2a cnt_males  571  34108  572  34167.7338
-#&gt; 51:  Total age_group3 cnt_males  424  24983  424  24983.0000
-#&gt; 52:  Total age_group4 cnt_males  195  11748  197  11868.4923
-#&gt; 53:  Total age_group5 cnt_males   84   4696   85   4751.9048
-#&gt; 54:  Total age_group6 cnt_males    7    476    5    340.0000
-#&gt; 55: female      Total cnt_males    0      0    0      0.0000
-#&gt; 56:      f      Total cnt_males    0      0    0      0.0000
-#&gt; 57: female age_group1 cnt_males    0      0    0      0.0000
-#&gt; 58:      f age_group1 cnt_males    0      0    0      0.0000
-#&gt; 59: female       ag1a cnt_males    0      0    0      0.0000
-#&gt; 60:      f       ag1a cnt_males    0      0    0      0.0000
-#&gt; 61: female age_group2 cnt_males    0      0    0      0.0000
-#&gt; 62:      f age_group2 cnt_males    0      0    0      0.0000
-#&gt; 63: female       ag2a cnt_males    0      0    0      0.0000
-#&gt; 64:      f       ag2a cnt_males    0      0    0      0.0000
-#&gt; 65: female age_group3 cnt_males    0      0    0      0.0000
-#&gt; 66:      f age_group3 cnt_males    0      0    0      0.0000
-#&gt; 67: female age_group4 cnt_males    0      0    0      0.0000
-#&gt; 68:      f age_group4 cnt_males    0      0    0      0.0000
-#&gt; 69: female age_group5 cnt_males    0      0    0      0.0000
-#&gt; 70:      f age_group5 cnt_males    0      0    0      0.0000
-#&gt; 71: female age_group6 cnt_males    0      0    0      0.0000
-#&gt; 72:      f age_group6 cnt_males    0      0    0      0.0000
-#&gt; 73:   male      Total cnt_males 2296 137345 2295 137285.1807
-#&gt; 74:      m      Total cnt_males 2296 137345 2295 137285.1807
-#&gt; 75:   male age_group1 cnt_males 1015  61334 1014  61273.5724
-#&gt; 76:      m age_group1 cnt_males 1015  61334 1014  61273.5724
-#&gt; 77:   male       ag1a cnt_males 1015  61334 1014  61273.5724
-#&gt; 78:      m       ag1a cnt_males 1015  61334 1014  61273.5724
-#&gt; 79:   male age_group2 cnt_males  571  34108  572  34167.7338
-#&gt; 80:      m age_group2 cnt_males  571  34108  572  34167.7338
-#&gt; 81:   male       ag2a cnt_males  571  34108  572  34167.7338
-#&gt; 82:      m       ag2a cnt_males  571  34108  572  34167.7338
-#&gt; 83:   male age_group3 cnt_males  424  24983  424  24983.0000
-#&gt; 84:      m age_group3 cnt_males  424  24983  424  24983.0000
-#&gt; 85:   male age_group4 cnt_males  195  11748  197  11868.4923
-#&gt; 86:      m age_group4 cnt_males  195  11748  197  11868.4923
-#&gt; 87:   male age_group5 cnt_males   84   4696   85   4751.9048
-#&gt; 88:      m age_group5 cnt_males   84   4696   85   4751.9048
-#&gt; 89:   male age_group6 cnt_males    7    476    5    340.0000
-#&gt; 90:      m age_group6 cnt_males    7    476    5    340.0000
-#&gt;        sex        age     vname  uwc     wc puwc         pwc</div><div class='input'>
+<span class='no'>tab</span>$<span class='fu'>freqtab</span>(<span class='kw'>v</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"total"</span>, <span class='st'>"cnt_males"</span>))</div><div class='output co'>#&gt;        sex        age     vname  uwc     wc puwc        pwc
+#&gt;  1:  Total      Total     total 4580 274707 4580 274707.000
+#&gt;  2:  Total age_group1     total 1969 118802 1968 118741.664
+#&gt;  3:  Total       ag1a     total 1969 118802 1968 118741.664
+#&gt;  4:  Total age_group2     total 1143  68583 1143  68583.000
+#&gt;  5:  Total       ag2a     total 1143  68583 1143  68583.000
+#&gt;  6:  Total age_group3     total  864  51473  863  51413.425
+#&gt;  7:  Total age_group4     total  423  25121  423  25121.000
+#&gt;  8:  Total age_group5     total  168   9970  168   9970.000
+#&gt;  9:  Total age_group6     total   13    758   13    758.000
+#&gt; 10: female      Total     total 2284 137362 2283 137301.859
+#&gt; 11:      f      Total     total 2284 137362 2283 137301.859
+#&gt; 12: female age_group1     total  954  57468  954  57468.000
+#&gt; 13:      f age_group1     total  954  57468  954  57468.000
+#&gt; 14: female       ag1a     total  954  57468  954  57468.000
+#&gt; 15:      f       ag1a     total  954  57468  954  57468.000
+#&gt; 16: female age_group2     total  572  34475  572  34475.000
+#&gt; 17:      f age_group2     total  572  34475  572  34475.000
+#&gt; 18: female       ag2a     total  572  34475  572  34475.000
+#&gt; 19:      f       ag2a     total  572  34475  572  34475.000
+#&gt; 20: female age_group3     total  440  26490  439  26429.795
+#&gt; 21:      f age_group3     total  440  26490  439  26429.795
+#&gt; 22: female age_group4     total  228  13373  227  13314.346
+#&gt; 23:      f age_group4     total  228  13373  227  13314.346
+#&gt; 24: female age_group5     total   84   5274   84   5274.000
+#&gt; 25:      f age_group5     total   84   5274   84   5274.000
+#&gt; 26: female age_group6     total    6    282    5    235.000
+#&gt; 27:      f age_group6     total    6    282    5    235.000
+#&gt; 28:   male      Total     total 2296 137345 2295 137285.181
+#&gt; 29:      m      Total     total 2296 137345 2295 137285.181
+#&gt; 30:   male age_group1     total 1015  61334 1016  61394.428
+#&gt; 31:      m age_group1     total 1015  61334 1016  61394.428
+#&gt; 32:   male       ag1a     total 1015  61334 1016  61394.428
+#&gt; 33:      m       ag1a     total 1015  61334 1016  61394.428
+#&gt; 34:   male age_group2     total  571  34108  573  34227.468
+#&gt; 35:      m age_group2     total  571  34108  573  34227.468
+#&gt; 36:   male       ag2a     total  571  34108  573  34227.468
+#&gt; 37:      m       ag2a     total  571  34108  573  34227.468
+#&gt; 38:   male age_group3     total  424  24983  422  24865.156
+#&gt; 39:      m age_group3     total  424  24983  422  24865.156
+#&gt; 40:   male age_group4     total  195  11748  194  11687.754
+#&gt; 41:      m age_group4     total  195  11748  194  11687.754
+#&gt; 42:   male age_group5     total   84   4696   85   4751.905
+#&gt; 43:      m age_group5     total   84   4696   85   4751.905
+#&gt; 44:   male age_group6     total    7    476    7    476.000
+#&gt; 45:      m age_group6     total    7    476    7    476.000
+#&gt; 46:  Total      Total cnt_males 2296 137345 2295 137285.181
+#&gt; 47:  Total age_group1 cnt_males 1015  61334 1016  61394.428
+#&gt; 48:  Total       ag1a cnt_males 1015  61334 1016  61394.428
+#&gt; 49:  Total age_group2 cnt_males  571  34108  573  34227.468
+#&gt; 50:  Total       ag2a cnt_males  571  34108  573  34227.468
+#&gt; 51:  Total age_group3 cnt_males  424  24983  422  24865.156
+#&gt; 52:  Total age_group4 cnt_males  195  11748  194  11687.754
+#&gt; 53:  Total age_group5 cnt_males   84   4696   85   4751.905
+#&gt; 54:  Total age_group6 cnt_males    7    476    7    476.000
+#&gt; 55: female      Total cnt_males    0      0    0      0.000
+#&gt; 56:      f      Total cnt_males    0      0    0      0.000
+#&gt; 57: female age_group1 cnt_males    0      0    0      0.000
+#&gt; 58:      f age_group1 cnt_males    0      0    0      0.000
+#&gt; 59: female       ag1a cnt_males    0      0    0      0.000
+#&gt; 60:      f       ag1a cnt_males    0      0    0      0.000
+#&gt; 61: female age_group2 cnt_males    0      0    0      0.000
+#&gt; 62:      f age_group2 cnt_males    0      0    0      0.000
+#&gt; 63: female       ag2a cnt_males    0      0    0      0.000
+#&gt; 64:      f       ag2a cnt_males    0      0    0      0.000
+#&gt; 65: female age_group3 cnt_males    0      0    0      0.000
+#&gt; 66:      f age_group3 cnt_males    0      0    0      0.000
+#&gt; 67: female age_group4 cnt_males    0      0    0      0.000
+#&gt; 68:      f age_group4 cnt_males    0      0    0      0.000
+#&gt; 69: female age_group5 cnt_males    0      0    0      0.000
+#&gt; 70:      f age_group5 cnt_males    0      0    0      0.000
+#&gt; 71: female age_group6 cnt_males    0      0    0      0.000
+#&gt; 72:      f age_group6 cnt_males    0      0    0      0.000
+#&gt; 73:   male      Total cnt_males 2296 137345 2295 137285.181
+#&gt; 74:      m      Total cnt_males 2296 137345 2295 137285.181
+#&gt; 75:   male age_group1 cnt_males 1015  61334 1016  61394.428
+#&gt; 76:      m age_group1 cnt_males 1015  61334 1016  61394.428
+#&gt; 77:   male       ag1a cnt_males 1015  61334 1016  61394.428
+#&gt; 78:      m       ag1a cnt_males 1015  61334 1016  61394.428
+#&gt; 79:   male age_group2 cnt_males  571  34108  573  34227.468
+#&gt; 80:      m age_group2 cnt_males  571  34108  573  34227.468
+#&gt; 81:   male       ag2a cnt_males  571  34108  573  34227.468
+#&gt; 82:      m       ag2a cnt_males  571  34108  573  34227.468
+#&gt; 83:   male age_group3 cnt_males  424  24983  422  24865.156
+#&gt; 84:      m age_group3 cnt_males  424  24983  422  24865.156
+#&gt; 85:   male age_group4 cnt_males  195  11748  194  11687.754
+#&gt; 86:      m age_group4 cnt_males  195  11748  194  11687.754
+#&gt; 87:   male age_group5 cnt_males   84   4696   85   4751.905
+#&gt; 88:      m age_group5 cnt_males   84   4696   85   4751.905
+#&gt; 89:   male age_group6 cnt_males    7    476    7    476.000
+#&gt; 90:      m age_group6 cnt_males    7    476    7    476.000
+#&gt;        sex        age     vname  uwc     wc puwc        pwc</div><div class='input'>
 <span class='co'># utility measures for a count variable</span>
 <span class='no'>tab</span>$<span class='fu'>measures_cnts</span>(<span class='kw'>v</span> <span class='kw'>=</span> <span class='st'>"total"</span>, <span class='kw'>exclude_zeros</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; $overview
 #&gt;    noise cnt        pct
 #&gt; 1:    -2   4 0.08888889
-#&gt; 2:    -1  14 0.31111111
-#&gt; 3:     0  10 0.22222222
-#&gt; 4:     1  13 0.28888889
-#&gt; 5:     2   4 0.08888889
+#&gt; 2:    -1   6 0.13333333
+#&gt; 3:     0  18 0.40000000
+#&gt; 4:     1  15 0.33333333
+#&gt; 5:     2   2 0.04444444
 #&gt; 
 #&gt; $measures
 #&gt;       what    d1    d2    d3
 #&gt;  1:    Min 0.000 0.000 0.000
 #&gt;  2:    Q10 0.000 0.000 0.000
 #&gt;  3:    Q20 0.000 0.000 0.000
-#&gt;  4:    Q30 1.000 0.001 0.011
-#&gt;  5:    Q40 1.000 0.001 0.016
-#&gt;  6:   Mean 0.956 0.024 0.048
-#&gt;  7: Median 1.000 0.001 0.016
-#&gt;  8:    Q60 1.000 0.002 0.021
-#&gt;  9:    Q70 1.000 0.002 0.021
-#&gt; 10:    Q80 1.000 0.007 0.049
-#&gt; 11:    Q90 2.000 0.051 0.113
-#&gt; 12:    Q95 2.000 0.167 0.213
-#&gt; 13:    Q99 2.000 0.286 0.410
-#&gt; 14:    Max 2.000 0.286 0.410
+#&gt;  4:    Q30 0.000 0.000 0.000
+#&gt;  5:    Q40 0.600 0.000 0.006
+#&gt;  6:   Mean 0.733 0.009 0.025
+#&gt;  7: Median 1.000 0.001 0.011
+#&gt;  8:    Q60 1.000 0.001 0.016
+#&gt;  9:    Q70 1.000 0.003 0.031
+#&gt; 10:    Q80 1.000 0.004 0.042
+#&gt; 11:    Q90 2.000 0.005 0.049
+#&gt; 12:    Q95 2.000 0.012 0.054
+#&gt; 13:    Q99 2.000 0.167 0.213
+#&gt; 14:    Max 2.000 0.167 0.213
 #&gt; 
 #&gt; $cumdistr_d1
 #&gt;    cat cnt       pct
-#&gt; 1:   0  10 0.2222222
-#&gt; 2:   1  37 0.8222222
+#&gt; 1:   0  18 0.4000000
+#&gt; 2:   1  39 0.8666667
 #&gt; 3:   2  45 1.0000000
 #&gt; 
 #&gt; $cumdistr_d2
 #&gt;            cat cnt       pct
-#&gt; 1:    [0,0.02]  40 0.8888889
-#&gt; 2: (0.02,0.05]  40 0.8888889
-#&gt; 3:  (0.05,0.1]  41 0.9111111
-#&gt; 4:   (0.1,0.2]  43 0.9555556
+#&gt; 1:    [0,0.02]  43 0.9555556
+#&gt; 2: (0.02,0.05]  43 0.9555556
+#&gt; 3:  (0.05,0.1]  43 0.9555556
+#&gt; 4:   (0.1,0.2]  45 1.0000000
 #&gt; 5:   (0.2,0.3]  45 1.0000000
 #&gt; 6:   (0.3,0.4]  45 1.0000000
 #&gt; 7:   (0.4,0.5]  45 1.0000000
@@ -1223,12 +1223,12 @@ which the parameters should be set.</p></dd>
 #&gt; 
 #&gt; $cumdistr_d3
 #&gt;            cat cnt       pct
-#&gt; 1:    [0,0.02]  23 0.5111111
-#&gt; 2: (0.02,0.05]  36 0.8000000
-#&gt; 3:  (0.05,0.1]  40 0.8888889
-#&gt; 4:   (0.1,0.2]  41 0.9111111
-#&gt; 5:   (0.2,0.3]  43 0.9555556
-#&gt; 6:   (0.3,0.4]  43 0.9555556
+#&gt; 1:    [0,0.02]  29 0.6444444
+#&gt; 2: (0.02,0.05]  41 0.9111111
+#&gt; 3:  (0.05,0.1]  43 0.9555556
+#&gt; 4:   (0.1,0.2]  43 0.9555556
+#&gt; 5:   (0.2,0.3]  45 1.0000000
+#&gt; 6:   (0.3,0.4]  45 1.0000000
 #&gt; 7:   (0.4,0.5]  45 1.0000000
 #&gt; 8:   (0.5,Inf]  45 1.0000000
 #&gt; 
@@ -1242,27 +1242,31 @@ which the parameters should be set.</p></dd>
 #&gt; [1] TRUE
 #&gt; </div><div class='input'>
 <span class='co'># modifications for perturbed count variables</span>
-<span class='no'>tab</span>$<span class='fu'>mod_cnts</span>()</div><div class='output co'>#&gt;        sex        age row_nr pert       ckey  countvar
-#&gt;   1: Total      Total     14   -1 0.24410263     total
-#&gt;   2: Total age_group1     14   -1 0.22869726     total
-#&gt;   3: Total       ag1a     14   -1 0.22869726     total
-#&gt;   4: Total age_group2     15    0 0.63623435     total
-#&gt;   5: Total       ag2a     15    0 0.63623435     total
-#&gt;  ---                                                  
-#&gt; 131:     m age_group4     17    2 0.95029257 cnt_males
-#&gt; 132:  male age_group5     16    1 0.76251335 cnt_males
-#&gt; 133:     m age_group5     16    1 0.76251335 cnt_males
-#&gt; 134:  male age_group6     13   -2 0.06163708 cnt_males
-#&gt; 135:     m age_group6     13   -2 0.06163708 cnt_males</div><div class='input'>
+<span class='no'>tab</span>$<span class='fu'>mod_cnts</span>()</div><div class='output co'>#&gt;        sex        age row_nr pert      ckey  countvar
+#&gt;   1: Total      Total     15    0 0.4538475     total
+#&gt;   2: Total age_group1     14   -1 0.2506256     total
+#&gt;   3: Total       ag1a     14   -1 0.2506256     total
+#&gt;   4: Total age_group2     15    0 0.6401657     total
+#&gt;   5: Total       ag2a     15    0 0.6401657     total
+#&gt;  ---                                                 
+#&gt; 131:     m age_group4     14   -1 0.1713567 cnt_males
+#&gt; 132:  male age_group5     16    1 0.7668765 cnt_males
+#&gt; 133:     m age_group5     16    1 0.7668765 cnt_males
+#&gt; 134:  male age_group6     15    0 0.4541847 cnt_males
+#&gt; 135:     m age_group6     15    0 0.4541847 cnt_males</div><div class='input'>
 <span class='co'># display a summary about utility measures</span>
 <span class='no'>tab</span>$<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>()</div><div class='output co'>#&gt; ┌──────────────────────────────────────────────┐
 #&gt; │Utility measures for perturbed count variables│
 #&gt; └──────────────────────────────────────────────┘
 #&gt; ── Distribution statistics of perturbations ────────────────────────────────────
-#&gt;          countvar Min Q10 Q20 Q30 Q40  Mean Median Q60 Q70 Q80 Q90 Q95 Q99 Max
-#&gt; 1:          total  -2  -1  -1  -1   0 0.022      0 0.4 1.0   1 1.0 2.0   2   2
-#&gt; 2: cnt_highincome  -2  -2   0   0   0 0.311      0 0.0 0.8   1 2.6 3.0   4   4
-#&gt; 3:      cnt_males  -2  -1  -1   0   0 0.000      0 0.0 0.0   1 1.0 1.8   2   2
+#&gt;          countvar Min Q10  Q20  Q30 Q40   Mean Median Q60 Q70 Q80 Q90 Q95 Q99
+#&gt; 1:          total  -2  -1 -1.0 -1.0   0 -0.111      0   0   0   1   1   2   2
+#&gt; 2: cnt_highincome  -3  -2 -1.0 -0.8   0  0.222      0   1   1   2   2   3   3
+#&gt; 3:      cnt_males  -2  -1 -0.2  0.0   0  0.200      0   0   1   1   2   2   2
+#&gt;    Max
+#&gt; 1:   2
+#&gt; 2:   3
+#&gt; 3:   2
 #&gt; 
 #&gt; ── Distance-based measures ─────────────────────────────────────────────────────
 #&gt; ✔ Variable: 'total'
@@ -1271,17 +1275,17 @@ which the parameters should be set.</p></dd>
 #&gt;  1:    Min 0.000 0.000 0.000
 #&gt;  2:    Q10 0.000 0.000 0.000
 #&gt;  3:    Q20 0.000 0.000 0.000
-#&gt;  4:    Q30 1.000 0.001 0.011
-#&gt;  5:    Q40 1.000 0.001 0.016
-#&gt;  6:   Mean 0.956 0.024 0.048
-#&gt;  7: Median 1.000 0.001 0.016
-#&gt;  8:    Q60 1.000 0.002 0.021
-#&gt;  9:    Q70 1.000 0.002 0.021
-#&gt; 10:    Q80 1.000 0.007 0.049
-#&gt; 11:    Q90 2.000 0.051 0.113
-#&gt; 12:    Q95 2.000 0.167 0.213
-#&gt; 13:    Q99 2.000 0.286 0.410
-#&gt; 14:    Max 2.000 0.286 0.410
+#&gt;  4:    Q30 0.000 0.000 0.000
+#&gt;  5:    Q40 0.600 0.000 0.006
+#&gt;  6:   Mean 0.733 0.009 0.025
+#&gt;  7: Median 1.000 0.001 0.011
+#&gt;  8:    Q60 1.000 0.001 0.016
+#&gt;  9:    Q70 1.000 0.003 0.031
+#&gt; 10:    Q80 1.000 0.004 0.042
+#&gt; 11:    Q90 2.000 0.005 0.049
+#&gt; 12:    Q95 2.000 0.012 0.054
+#&gt; 13:    Q99 2.000 0.167 0.213
+#&gt; 14:    Max 2.000 0.167 0.213
 #&gt; 
 #&gt; ✔ Variable: 'cnt_males'
 #&gt; 
@@ -1291,49 +1295,54 @@ which the parameters should be set.</p></dd>
 #&gt;  3:    Q20 1.000 0.001 0.011
 #&gt;  4:    Q30 1.000 0.001 0.016
 #&gt;  5:    Q40 1.000 0.001 0.016
-#&gt;  6:   Mean 1.111 0.035 0.069
-#&gt;  7: Median 1.000 0.002 0.021
-#&gt;  8:    Q60 1.000 0.002 0.021
-#&gt;  9:    Q70 1.000 0.010 0.054
-#&gt; 10:    Q80 1.800 0.012 0.068
-#&gt; 11:    Q90 2.000 0.121 0.207
-#&gt; 12:    Q95 2.000 0.286 0.410
-#&gt; 13:    Q99 2.000 0.286 0.410
-#&gt; 14:    Max 2.000 0.286 0.410
+#&gt;  6:   Mean 1.222 0.003 0.029
+#&gt;  7: Median 1.000 0.004 0.036
+#&gt;  8:    Q60 1.000 0.004 0.042
+#&gt;  9:    Q70 2.000 0.005 0.042
+#&gt; 10:    Q80 2.000 0.005 0.047
+#&gt; 11:    Q90 2.000 0.008 0.051
+#&gt; 12:    Q95 2.000 0.012 0.054
+#&gt; 13:    Q99 2.000 0.012 0.054
+#&gt; 14:    Max 2.000 0.012 0.054
 #&gt; 
 #&gt; ✔ Variable: 'cnt_highincome'
 #&gt; 
 #&gt;       what   d1    d2    d3
 #&gt;  1:    Min 0.00 0.000 0.000
 #&gt;  2:    Q10 0.00 0.000 0.000
-#&gt;  3:    Q20 0.00 0.000 0.000
-#&gt;  4:    Q30 0.00 0.000 0.000
-#&gt;  5:    Q40 0.00 0.000 0.000
-#&gt;  6:   Mean 1.05 0.033 0.080
-#&gt;  7: Median 1.00 0.009 0.060
-#&gt;  8:    Q60 1.00 0.016 0.068
-#&gt;  9:    Q70 2.00 0.018 0.108
-#&gt; 10:    Q80 2.00 0.030 0.124
-#&gt; 11:    Q90 3.00 0.143 0.183
-#&gt; 12:    Q95 3.05 0.149 0.288
-#&gt; 13:    Q99 4.00 0.267 0.486
-#&gt; 14:    Max 4.00 0.267 0.486
+#&gt;  3:    Q20 1.00 0.005 0.034
+#&gt;  4:    Q30 1.00 0.009 0.049
+#&gt;  5:    Q40 1.00 0.010 0.053
+#&gt;  6:   Mean 1.45 0.051 0.120
+#&gt;  7: Median 1.00 0.011 0.067
+#&gt;  8:    Q60 2.00 0.026 0.109
+#&gt;  9:    Q70 2.00 0.035 0.131
+#&gt; 10:    Q80 2.20 0.053 0.136
+#&gt; 11:    Q90 3.00 0.086 0.252
+#&gt; 12:    Q95 3.00 0.211 0.383
+#&gt; 13:    Q99 3.00 0.429 0.646
+#&gt; 14:    Max 3.00 0.429 0.646
 #&gt; 
 #&gt; ┌──────────────────────────────────────────────────┐
 #&gt; │Utility measures for perturbed numerical variables│
 #&gt; └──────────────────────────────────────────────────┘
-#&gt; ── Distribution statistics of perturbations ────────────────────────────────────</div><div class='output co'>#&gt; <span class='warning'>Warning: no non-missing arguments to min; returning Inf</span></div><div class='output co'>#&gt; <span class='warning'>Warning: no non-missing arguments to max; returning -Inf</span></div><div class='output co'>#&gt; <span class='warning'>Warning: no non-missing arguments to min; returning Inf</span></div><div class='output co'>#&gt; <span class='warning'>Warning: no non-missing arguments to max; returning -Inf</span></div><div class='output co'>#&gt;      vname        Min        Q10        Q20        Q30      Q40     Mean
-#&gt; 1:  expend        Inf         NA         NA         NA       NA      NaN
-#&gt; 2:  income -74747.579 -53369.292 -23877.935 -13747.282 -5482.80 -436.548
-#&gt; 3: savings  -8531.892  -6466.508  -2109.131   -375.942  -199.27 -431.285
-#&gt; 4:   mixed        Inf         NA         NA         NA       NA      NaN
-#&gt;      Median       Q60       Q70       Q80       Q90       Q95      Q99      Max
-#&gt; 1:       NA        NA        NA        NA        NA        NA       NA     -Inf
-#&gt; 2: 8522.635 10243.028 15699.244 34727.399 45567.471 45567.471 51624.70 51624.70
-#&gt; 3:  245.153   852.934  1183.768  2864.709  3246.228  3246.228  3247.92  3247.92
-#&gt; 4:       NA        NA        NA        NA        NA        NA       NA     -Inf</div></pre>
+#&gt; ── Distribution statistics of perturbations ────────────────────────────────────</div><div class='output co'>#&gt; <span class='warning'>Warning: no non-missing arguments to min; returning Inf</span></div><div class='output co'>#&gt; <span class='warning'>Warning: no non-missing arguments to max; returning -Inf</span></div><div class='output co'>#&gt; <span class='warning'>Warning: no non-missing arguments to min; returning Inf</span></div><div class='output co'>#&gt; <span class='warning'>Warning: no non-missing arguments to max; returning -Inf</span></div><div class='output co'>#&gt;      vname        Min        Q10        Q20        Q30        Q40      Mean
+#&gt; 1:  expend        Inf         NA         NA         NA         NA       NaN
+#&gt; 2:  income -76890.545 -54072.132 -53962.939 -27466.447 -14786.624 -6539.474
+#&gt; 3: savings  -6815.017  -6180.703  -3500.374  -1187.258   -529.134   -98.961
+#&gt; 4:   mixed        Inf         NA         NA         NA         NA       NaN
+#&gt;        Median       Q60      Q70       Q80      Q90       Q95      Q99
+#&gt; 1:         NA        NA       NA        NA       NA        NA       NA
+#&gt; 2: -11828.604 -1506.520 -143.251 33156.021 67833.81 67833.813 73967.51
+#&gt; 3:    547.446  1177.724 2102.390  3203.752  4792.01  5104.989  5943.17
+#&gt; 4:         NA        NA       NA        NA       NA        NA       NA
+#&gt;          Max
+#&gt; 1:      -Inf
+#&gt; 2: 74795.886
+#&gt; 3:  6601.741
+#&gt; 4:      -Inf</div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
