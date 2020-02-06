@@ -246,7 +246,7 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
               out[[v]]$uw_sum <- sum(xx[[v]], na.rm = TRUE)
               out[[v]]$uw_mean <- out[[v]]$uw_sum / nrow(xx)
 
-              out[[v]]$w_spread <- diff(xx$.tmpweightvar, na.rm = TRUE)
+              out[[v]]$w_spread <- diff(range(xx$.tmpweightvar, na.rm = TRUE))
               out[[v]]$w_sum <- sum(xx$.tmpweightvar, na.rm = TRUE)
               out[[v]]$w_mean <- out[[v]]$w_sum / sum(xx[[wvar]], na.rm = TRUE)
 
