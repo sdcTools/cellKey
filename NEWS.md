@@ -1,3 +1,6 @@
+# cellKey 0.18.7
+- fixed computation of weighted spreads, thx @staudtlex
+
 # cellKey 0.18.6
 - do not perturb cells with 0 contributors in the flex-approach
 - update tests due to updates in `digest`-pkg
