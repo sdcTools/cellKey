@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Introduction to the cellKey-Package • cellKey</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.1/css/all.min.css" integrity="sha256-PbSmjxuVAzJ6FPvNYsrXygfGhNJYyZ2GktDbkMBqQZg=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.1/css/v4-shims.min.css" integrity="sha256-A6jcAdwFD48VMjlI3GDxUd+eCQa7/KWy6G9oe/ovaPA=" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Introduction to the cellKey-Package">
 <meta property="og:description" content="">
@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.18.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.18.8</span>
       </span>
     </div>
 
@@ -78,7 +78,7 @@
       <h1>Introduction to the cellKey-Package</h1>
                         <h4 class="author">Bernhard Meindl</h4>
             
-            <h4 class="date">2020-02-07</h4>
+            <h4 class="date">2020-03-11</h4>
       
       
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -90,7 +90,7 @@
 <div id="about-the-cellkey-package" class="section level2">
 <h2 class="hasAnchor">
 <a href="#about-the-cellkey-package" class="anchor"></a>About the cellKey package</h2>
-<p>This package implements methods to provide perturbation for statistical tables. The implementation if greatly inspired by the the paper <em>Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics</em> (Thompson, Broadfoot, Elazar). This approach however was generalized and a new specification on how record keys are specified and the lookup-tables are defined is used. This package makes usage of perturbation tables that can be defined in the <a href="https://github.com/sdcTools/ptable"><strong>ptable</strong></a> package. This document describes the usage of version <code>0.18.7</code> of the package.</p>
+<p>This package implements methods to provide perturbation for statistical tables. The implementation if greatly inspired by the the paper <em>Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics</em> (Thompson, Broadfoot, Elazar). This approach however was generalized and a new specification on how record keys are specified and the lookup-tables are defined is used. This package makes usage of perturbation tables that can be defined in the <a href="https://github.com/sdcTools/ptable"><strong>ptable</strong></a> package. This document describes the usage of version <code>0.18.8</code> of the package.</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -103,7 +103,7 @@
 <a class="sourceLine" id="cb1-5" data-line-number="5"><span class="cf">if</span> (<span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"remotes"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) {</a>
 <a class="sourceLine" id="cb1-6" data-line-number="6">  <span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"remotes"</span>)</a>
 <a class="sourceLine" id="cb1-7" data-line-number="7">}</a>
-<a class="sourceLine" id="cb1-8" data-line-number="8">remotes<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/remotes/man/install_github.html">install_github</a></span>(</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">remotes<span class="op">::</span><span class="kw"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(</a>
 <a class="sourceLine" id="cb1-9" data-line-number="9">  <span class="dt">repo =</span> <span class="st">"sdcTools/cellKey"</span>,</a>
 <a class="sourceLine" id="cb1-10" data-line-number="10">  <span class="dt">dependencies =</span> <span class="ot">TRUE</span>,</a>
 <a class="sourceLine" id="cb1-11" data-line-number="11">  <span class="dt">build_opts =</span> <span class="st">"--no-resave-data"</span>,</a>
@@ -125,7 +125,7 @@
 <a href="#load-the-package" class="anchor"></a>Load the Package</h3>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(cellKey)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/utils/packageDescription.html">packageVersion</a></span>(<span class="st">"cellKey"</span>)</a></code></pre></div>
-<pre><code>## [1] '0.18.7'</code></pre>
+<pre><code>## [1] '0.18.8'</code></pre>
 <p>The first step in this approach is to generate a statistical table, which can be achieved using <code>ck_setup</code>. This function generates an object that contains all the information required to perturb count- (and optionally continuously scaled) variables. There are however a few inputs that <code><a href="../reference/cellkey_pkg.html">ck_setup()</a></code> requires and that need to be generated beforehand. These inputs are:</p>
 <ul>
 <li>
@@ -156,12 +156,12 @@
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">dat<span class="op">$</span>rkeys &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ck_generate_rkeys.html">ck_generate_rkeys</a></span>(<span class="dt">dat =</span> dat, <span class="dt">nr_digits =</span> <span class="dv">7</span>)</a>
 <a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(dat))</a></code></pre></div>
 <pre><code>##       sex        age savings income sampling_weight cnt_highincome     rkeys
-## 1:   male age_group3      12   5780              33              0 0.7970827
-## 2: female age_group3      28   2530              92              0 0.7485766
-## 3:   male age_group1     550   6920              45              0 0.8073352
-## 4:   male age_group1     870   7960              85              0 0.8185187
-## 5:   male age_group4      20   9030              51              1 0.1335263
-## 6: female age_group3     102   3290              29              0 0.6509475</code></pre>
+## 1:   male age_group3      12   5780              22              0 0.0386157
+## 2: female age_group3      28   2530              96              0 0.1167248
+## 3:   male age_group1     550   6920              52              0 0.8690866
+## 4:   male age_group1     870   7960              71              0 0.0006429
+## 5:   male age_group4      20   9030              63              1 0.0809790
+## 6: female age_group3     102   3290              60              0 0.4853176</code></pre>
 <p>To ensure that the same record keys are computed each and every time for the same data set, a seed based on the sha1-hash of the input dataset is computed by default in <code>ck_generate_rkeys</code>. This seed is used before sampling the record keys and may be overwritten using the <code>seed</code> argument.</p>
 <p>The goal of this introduction is to create a perturbed table of counts of variables <code>sex</code> by <code>age</code> for all observations as well as for the subgroups given by <code>cnt_highincome</code> that are non-zero. We also want to create perturbed tables of continously scaled variables <code>savings</code> and <code>income</code> also giving the hierarchical structure defined by <code>sex</code> by <code>age</code>.</p>
 </div>
@@ -354,8 +354,596 @@
 <p>After this call, object <code>tab</code> is updated and contains now also perturbed values for variable <code>total</code>. We note that no explicit assignment is required. The following code shows that we also can perturb cnt- and numerical variables in one single call.</p>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1">tab<span class="op">$</span><span class="kw">perturb</span>(<span class="dt">v =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"cnt_highincome"</span>, <span class="st">"savings"</span>, <span class="st">"income"</span>))</a></code></pre></div>
 <pre><code>## Count variable 'cnt_highincome' was perturbed.</code></pre>
-<pre><code>## Numeric variable 'savings' was perturbed.</code></pre>
-<pre><code>## Numeric variable 'income' was perturbed.</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.84369399999654</code></pre>
+<pre><code>## xj: 71000 | x_delta: 2162.36818416 | a: 63507.00958615 | v: 1.5
+## x_hat: 3243.55227623457
+## updating original value: old: 137325537 | new: 137328780.552276
+## j: 2 | ck: 0.43693999996548
+## xj: 32000 | x_delta: 514.08631772 | a: 267131.75553985 | v: -0.5
+## x_hat: -257.043158861341
+## updating original value: old: 137328780.552276 | new: 137328523.509117
+## j: 3 | ck: 0.36939999965484
+## xj: 68931 | x_delta: 420.24533219 | a: 326781.79384559 | v: -0.5
+## x_hat: -210.122666096274
+## updating original value: old: 137328523.509117 | new: 137328313.386451</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.190267000000404
+## xj: 64935 | x_delta: 1983.29938711 | a: 29784.36910935 | v: -1.5
+## x_hat: -2974.94908066305
+## updating original value: old: 59071321 | new: 59068346.0509193
+## j: 2 | ck: 0.90267000000404
+## xj: 86826 | x_delta: 1315.72862447 | a: 44894.01914062 | v: 2
+## x_hat: 2631.4572489446
+## updating original value: old: 59068346.0509193 | new: 59070977.5081683
+## j: 3 | ck: 0.0267000000404019
+## xj: 29940 | x_delta: 194.11874516 | a: 304303.31424358 | v: -3.5
+## x_hat: -679.415608050516
+## updating original value: old: 59070977.5081683 | new: 59070298.0925602</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.441032999995065
+## xj: 32000 | x_delta: 1028.17263545 | a: 33291.02703183 | v: -0.5
+## x_hat: -514.086317722681
+## updating original value: old: 34228923 | new: 34228408.9136823
+## j: 2 | ck: 0.410329999950654
+## xj: 20979 | x_delta: 364.19032731 | a: 93984.94783347 | v: -0.5
+## x_hat: -182.095163654994
+## updating original value: old: 34228408.9136823 | new: 34228226.8185186
+## j: 3 | ck: 0.103299999506544
+## xj: 51896 | x_delta: 320.09371865 | a: 106931.8915809 | v: -2
+## x_hat: -640.18743730206
+## updating original value: old: 34228226.8185186 | new: 34227586.6310813</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.243945000000393
+## xj: 71000 | x_delta: 2162.36818416 | a: 11996.48570029 | v: -1
+## x_hat: -2162.36818415638
+## updating original value: old: 25940819 | new: 25938656.6318158
+## j: 2 | ck: 0.439450000003932
+## xj: 91724 | x_delta: 1388.51018872 | a: 18680.92639329 | v: -0.5
+## x_hat: -694.255094360269
+## updating original value: old: 25938656.6318158 | new: 25937962.3767215
+## j: 3 | ck: 0.394500000039324
+## xj: 95616 | x_delta: 578.55672192 | a: 44832.18566835 | v: -0.5
+## x_hat: -289.278360959229
+## updating original value: old: 25937962.3767215 | new: 25937673.0983605</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.296482000000427
+## xj: 68931 | x_delta: 2101.22666096 | a: 6000.94708213 | v: -1
+## x_hat: -2101.22666096273
+## updating original value: old: 12609350 | new: 12607248.773339
+## j: 2 | ck: 0.964820000004272
+## xj: 59880 | x_delta: 917.2368469 | a: 13744.81282123 | v: 3
+## x_hat: 2751.7105406923
+## updating original value: old: 12607248.773339 | new: 12610000.4838797
+## j: 3 | ck: 0.648200000042729
+## xj: 39840 | x_delta: 250.19658374 | a: 50400.37036174 | v: 0.5
+## x_hat: 125.098291871395
+## updating original value: old: 12610000.4838797 | new: 12610125.5821716</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.435158000000068
+## xj: 80838 | x_delta: 2453.71852216 | a: 2032.9324472 | v: -0.5
+## x_hat: -1226.85926108082
+## updating original value: old: 4988244 | new: 4987017.14073892
+## j: 2 | ck: 0.351580000000684
+## xj: 95616 | x_delta: 1446.3918048 | a: 3447.90196142 | v: -0.5
+## x_hat: -723.195902398072
+## updating original value: old: 4987017.14073892 | new: 4986293.94483652
+## j: 3 | ck: 0.515800000006843
+## xj: 58528 | x_delta: 358.94947752 | a: 13891.353121 | v: 0
+## x_hat: 0
+## updating original value: old: 4986293.94483652 | new: 4986293.94483652</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.236809000000004
+## xj: 61617 | x_delta: 1885.56357958 | a: 258.21457588 | v: -1
+## x_hat: -1885.56357958313
+## updating original value: old: 486880 | new: 484994.436420417
+## j: 2 | ck: 0.36809000000004
+## xj: 81792 | x_delta: 1241.00883914 | a: 390.80659309 | v: -0.5
+## x_hat: -620.504419571583
+## updating original value: old: 484994.436420417 | new: 484373.932000845
+## j: 3 | ck: 0.680900000000402
+## xj: 81279 | x_delta: 493.35986144 | a: 981.78625758 | v: 1
+## x_hat: 493.359861439785
+## updating original value: old: 484373.932000845 | new: 484867.291862285</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.367074999999662
+## xj: 32000 | x_delta: 1028.17263545 | a: 66221.50760753 | v: -0.5
+## x_hat: -514.086317722681
+## updating original value: old: 68087142 | new: 68086627.9136823
+## j: 2 | ck: 0.670749999996623
+## xj: 20979 | x_delta: 364.19032731 | a: 186953.42190055 | v: 1
+## x_hat: 364.190327309988
+## updating original value: old: 68086627.9136823 | new: 68086992.1040096
+## j: 3 | ck: 0.707499999966236
+## xj: 59880 | x_delta: 366.89473876 | a: 185576.36540201 | v: 1
+## x_hat: 366.894738758974
+## updating original value: old: 68086992.1040096 | new: 68087358.9987484</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.63621800000187
+## xj: 19960 | x_delta: 702.11828482 | a: 40517.75977761 | v: 0.5
+## x_hat: 351.059142412385
+## updating original value: old: 28448260 | new: 28448611.0591424
+## j: 2 | ck: 0.36218000001876
+## xj: 96612 | x_delta: 1461.21050895 | a: 19469.20781428 | v: -0.5
+## x_hat: -730.605254474759
+## updating original value: old: 28448611.0591424 | new: 28447880.4538879
+## j: 3 | ck: 0.62180000018763
+## xj: 47760 | x_delta: 295.984721 | a: 96112.66540292 | v: 0.5
+## x_hat: 147.992360500206
+## updating original value: old: 28447880.4538879 | new: 28448028.4462484</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.607012999998237
+## xj: 32000 | x_delta: 1028.17263545 | a: 16668.98282366 | v: 0.5
+## x_hat: 514.086317722681
+## updating original value: old: 17138592 | new: 17139106.0863177
+## j: 2 | ck: 0.070129999982376
+## xj: 20979 | x_delta: 364.19032731 | a: 47060.84923483 | v: -2.5
+## x_hat: -910.475818274969
+## updating original value: old: 17139106.0863177 | new: 17138195.6104994
+## j: 3 | ck: 0.70129999982376
+## xj: 90636 | x_delta: 548.93476157 | a: 31220.82405865 | v: 1
+## x_hat: 548.934761565073
+## updating original value: old: 17138195.6104994 | new: 17138744.545261</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.131971000000081
+## xj: 95616 | x_delta: 2892.78360959 | a: 4541.03824304 | v: -2
+## x_hat: -5785.56721918458
+## updating original value: old: 13136241 | new: 13130455.4327808
+## j: 2 | ck: 0.319710000000811
+## xj: 34860 | x_delta: 554.43243731 | a: 23682.69702362 | v: -1
+## x_hat: -554.432437305726
+## updating original value: old: 13130455.4327808 | new: 13129901.0003435
+## j: 3 | ck: 0.197100000008113
+## xj: 42656 | x_delta: 266.40849937 | a: 49284.84275569 | v: -1.5
+## x_hat: -399.612749058441
+## updating original value: old: 13129901.0003435 | new: 13129501.3875945</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.414072000000638
+## xj: 59880 | x_delta: 1834.47369379 | a: 3728.49391252 | v: -0.5
+## x_hat: -917.236846897435
+## updating original value: old: 6839824 | new: 6838906.7631531
+## j: 2 | ck: 0.140720000006384
+## xj: 39840 | x_delta: 625.49145936 | a: 10933.65330709 | v: -2
+## x_hat: -1250.98291871395
+## updating original value: old: 6838906.7631531 | new: 6837655.78023439
+## j: 3 | ck: 0.407200000063841
+## xj: 74625 | x_delta: 453.92207796 | a: 15063.50123114 | v: -0.5
+## x_hat: -226.961038981441
+## updating original value: old: 6837655.78023439 | new: 6837428.81919541</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.573747999999883
+## xj: 59100 | x_delta: 1811.5502606 | a: 1271.23991538 | v: 0.5
+## x_hat: 905.775130299845
+## updating original value: old: 2302915 | new: 2303820.7751303
+## j: 2 | ck: 0.737479999998835
+## xj: 96624 | x_delta: 1461.38906231 | a: 1576.45957161 | v: 1
+## x_hat: 1461.38906230951
+## updating original value: old: 2303820.7751303 | new: 2305282.16419261
+## j: 3 | ck: 0.374799999988357
+## xj: 65170 | x_delta: 398.04564758 | a: 5791.5020003 | v: -0.5
+## x_hat: -199.022823791769
+## updating original value: old: 2305282.16419261 | new: 2305083.14136882</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.0040534
+## xj: 61617 | x_delta: 1885.56357958 | a: 117.3707439 | v: -4.5
+## x_hat: -8485.0361081241
+## updating original value: old: 221310 | new: 212824.963891876
+## j: 2 | ck: 0.040534
+## xj: 81792 | x_delta: 1241.00883914 | a: 171.49351171 | v: -3
+## x_hat: -3723.0265174295
+## updating original value: old: 212824.963891876 | new: 209101.937374446
+## j: 3 | ck: 0.40534
+## xj: 52200 | x_delta: 321.86990955 | a: 649.64736115 | v: -0.5
+## x_hat: -160.934954776279
+## updating original value: old: 209101.937374446 | new: 208941.00241967</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.476618999996842
+## xj: 71000 | x_delta: 2162.36818416 | a: 32019.70668423 | v: 0
+## x_hat: 0
+## updating original value: old: 69238395 | new: 69238395
+## j: 2 | ck: 0.766189999968424
+## xj: 68931 | x_delta: 1050.61333048 | a: 65902.83312727 | v: 1.5
+## x_hat: 1575.91999572205
+## updating original value: old: 69238395 | new: 69239970.9199957
+## j: 3 | ck: 0.661899999684247
+## xj: 64935 | x_delta: 396.65987742 | a: 174557.53621982 | v: 0.5
+## x_hat: 198.32993871087
+## updating original value: old: 69239970.9199957 | new: 69240169.2499344</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.554048999998032
+## xj: 64935 | x_delta: 1983.29938711 | a: 15440.46309854 | v: 0
+## x_hat: 0
+## updating original value: old: 30623061 | new: 30623061
+## j: 2 | ck: 0.540489999980325
+## xj: 86826 | x_delta: 1315.72862447 | a: 23274.60270334 | v: 0
+## x_hat: 0
+## updating original value: old: 30623061 | new: 30623061
+## j: 3 | ck: 0.404899999803255
+## xj: 29940 | x_delta: 194.11874516 | a: 157754.27033173 | v: -0.5
+## x_hat: -97.0593725786452
+## updating original value: old: 30623061 | new: 30622963.9406274</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.834019999996837
+## xj: 51896 | x_delta: 1600.46859326 | a: 10678.32950426 | v: 1.5
+## x_hat: 2400.70288988273
+## updating original value: old: 17090331 | new: 17092731.7028899
+## j: 2 | ck: 0.340199999968378
+## xj: 25948 | x_delta: 430.34751451 | a: 39718.43946233 | v: -0.5
+## x_hat: -215.173757255765
+## updating original value: old: 17092731.7028899 | new: 17092516.5291326
+## j: 3 | ck: 0.401999999683783
+## xj: 93530 | x_delta: 566.14557501 | a: 30191.02733211 | v: -0.5
+## x_hat: -283.072787505897
+## updating original value: old: 17092516.5291326 | new: 17092233.4563451</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.11197400000062
+## xj: 71000 | x_delta: 2162.36818416 | a: 5921.55308879 | v: -2
+## x_hat: -4324.73636831276
+## updating original value: old: 12804578 | new: 12800253.2636317
+## j: 2 | ck: 0.11974000000621
+## xj: 91724 | x_delta: 1388.51018872 | a: 9218.69595745 | v: -2
+## x_hat: -2777.02037744108
+## updating original value: old: 12800253.2636317 | new: 12797476.2432542
+## j: 3 | ck: 0.19740000006211
+## xj: 63744 | x_delta: 389.63928961 | a: 32844.41940166 | v: -1.5
+## x_hat: -584.458934412151
+## updating original value: old: 12797476.2432542 | new: 12796891.7843198</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.882409999999948
+## xj: 68931 | x_delta: 2101.22666096 | a: 2745.78945108 | v: 2
+## x_hat: 4202.45332192547
+## updating original value: old: 5769526 | new: 5773728.45332193
+## j: 2 | ck: 0.824099999999488
+## xj: 72635 | x_delta: 1105.36014078 | a: 5223.39121911 | v: 1.5
+## x_hat: 1658.04021117413
+## updating original value: old: 5773728.45332193 | new: 5775386.4935331
+## j: 3 | ck: 0.240999999994888
+## xj: 90181 | x_delta: 546.22970947 | a: 10573.18266188 | v: -1
+## x_hat: -546.229709466221
+## updating original value: old: 5775386.4935331 | new: 5774840.26382363</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.861410000000114
+## xj: 80838 | x_delta: 2453.71852216 | a: 1094.39162469 | v: 2
+## x_hat: 4907.43704432329
+## updating original value: old: 2685329 | new: 2690236.43704432
+## j: 2 | ck: 0.614100000001148
+## xj: 95616 | x_delta: 1446.3918048 | a: 1859.96382731 | v: 0.5
+## x_hat: 723.195902398072
+## updating original value: old: 2690236.43704432 | new: 2690959.63294672
+## j: 3 | ck: 0.141000000011486
+## xj: 58528 | x_delta: 358.94947752 | a: 7496.76431217 | v: -2
+## x_hat: -717.89895504091
+## updating original value: old: 2690959.63294672 | new: 2690241.73399168</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.2327566
+## xj: 81279 | x_delta: 2466.7993072 | a: 107.65772441 | v: -1.5
+## x_hat: -3700.19896079839
+## updating original value: old: 265570 | new: 261869.801039202
+## j: 2 | ck: 0.3275662
+## xj: 65535 | x_delta: 1000.49585555 | a: 261.7400158 | v: -1
+## x_hat: -1000.4958555482
+## updating original value: old: 261869.801039202 | new: 260869.305183653
+## j: 3 | ck: 0.2756623
+## xj: 20709 | x_delta: 144.27740026 | a: 1808.10927225 | v: -1
+## x_hat: -144.277400258773
+## updating original value: old: 260869.305183653 | new: 260725.027783395
+## Numeric variable 'savings' was perturbed.</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.84369399999654
+## xj: 800000 | x_delta: 24002.98840447 | a: 57657.17400181 | v: 1.5
+## x_hat: 36004.4826067039
+## updating original value: old: 1383944479 | new: 1383980483.48261
+## j: 2 | ck: 0.43693999996548
+## xj: 770000 | x_delta: 11551.55218384 | a: 119809.0491613 | v: -0.5
+## x_hat: -5775.77609191834
+## updating original value: old: 1383980483.48261 | new: 1383974707.70651
+## j: 3 | ck: 0.36939999965484
+## xj: 420000 | x_delta: 2521.13446242 | a: 548949.18471619 | v: -0.5
+## x_hat: -1260.56723121105
+## updating original value: old: 1383974707.70651 | new: 1383973447.13928</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.190267000000404
+## xj: 800000 | x_delta: 24002.98840447 | a: 24594.94668131 | v: -1.5
+## x_hat: -36004.4826067039
+## updating original value: old: 590352220 | new: 590316215.517393
+## j: 2 | ck: 0.90267000000404
+## xj: 420000 | x_delta: 6302.83615606 | a: 93658.82293327 | v: 2
+## x_hat: 12605.6723121105
+## updating original value: old: 590316215.517393 | new: 590328821.189705
+## j: 3 | ck: 0.0267000000404019
+## xj: 879120 | x_delta: 5275.26407965 | a: 111905.07475574 | v: -3.5
+## x_hat: -18463.4242787818
+## updating original value: old: 590328821.189705 | new: 590310357.765427</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.441032999995065
+## xj: 809190 | x_delta: 24278.65459492 | a: 14470.16973805 | v: -0.5
+## x_hat: -12139.3272974604
+## updating original value: old: 351316253 | new: 351304113.672703
+## j: 2 | ck: 0.410329999950654
+## xj: 668660 | x_delta: 10031.6863391 | a: 35019.44755824 | v: -0.5
+## x_hat: -5015.84316954861
+## updating original value: old: 351304113.672703 | new: 351299097.829533
+## j: 3 | ck: 0.103299999506544
+## xj: 239280 | x_delta: 1437.66024821 | a: 244354.74116171 | v: -2
+## x_hat: -2875.32049641756
+## updating original value: old: 351299097.829533 | new: 351296222.509037</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.243945000000393
+## xj: 770000 | x_delta: 23103.10436767 | a: 11351.47951662 | v: -1
+## x_hat: -23103.1043676734
+## updating original value: old: 262254416 | new: 262231312.895632
+## j: 2 | ck: 0.439450000003932
+## xj: 768460 | x_delta: 11528.45528189 | a: 22746.4396993 | v: -0.5
+## x_hat: -5764.22764094653
+## updating original value: old: 262231312.895632 | new: 262225548.667991
+## j: 3 | ck: 0.394500000039324
+## xj: 887330 | x_delta: 5324.51906314 | a: 49248.68247416 | v: -0.5
+## x_hat: -2662.25953156802
+## updating original value: old: 262225548.667991 | new: 262222886.40846</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.296482000000427
+## xj: 717840 | x_delta: 21538.52896585 | a: 5727.86745072 | v: -1
+## x_hat: -21538.528965852
+## updating original value: old: 123369839 | new: 123348300.471034
+## j: 2 | ck: 0.964820000004272
+## xj: 686550 | x_delta: 10299.99000088 | a: 11975.57477828 | v: 3
+## x_hat: 30899.9700026369
+## updating original value: old: 123348300.471034 | new: 123379200.441037
+## j: 3 | ck: 0.648200000042729
+## xj: 625590 | x_delta: 3754.30348591 | a: 32863.40619612 | v: 0.5
+## x_hat: 1877.15174295582
+## updating original value: old: 123379200.441037 | new: 123381077.59278</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.435158000000068
+## xj: 299700 | x_delta: 8998.92573431 | a: 5804.38527244 | v: -0.5
+## x_hat: -4499.46286715276
+## updating original value: old: 52233232 | new: 52228732.5371328
+## j: 2 | ck: 0.351580000000684
+## xj: 823360 | x_delta: 12351.85196883 | a: 4228.4130889 | v: -0.5
+## x_hat: -6175.9259844155
+## updating original value: old: 52228732.5371328 | new: 52222556.6111484
+## j: 3 | ck: 0.515800000006843
+## xj: 237840 | x_delta: 1429.03208197 | a: 36544.00574353 | v: 0
+## x_hat: 0
+## updating original value: old: 52222556.6111484 | new: 52222556.6111484</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.236809000000004
+## xj: 763420 | x_delta: 22905.73101604 | a: 192.90015223 | v: -1
+## x_hat: -68717.19304813
+## updating original value: old: 4418519 | new: 4349801.80695187
+## j: 2 | ck: 0.36809000000004
+## xj: 527850 | x_delta: 7920.01007311 | a: 549.21670134 | v: -0.5
+## x_hat: -19800.025182771
+## updating original value: old: 4349801.80695187 | new: 4330001.7817691
+## j: 3 | ck: 0.680900000000402
+## xj: 669240 | x_delta: 4016.15391925 | a: 1078.14637308 | v: 1
+## x_hat: 12048.4617577427
+## updating original value: old: 4330001.7817691 | new: 4342050.24352684</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.367074999999662
+## xj: 800000 | x_delta: 24002.98840447 | a: 29640.11755584 | v: -0.5
+## x_hat: -12001.4942022346
+## updating original value: old: 711451398 | new: 711439396.505798
+## j: 2 | ck: 0.670749999996623
+## xj: 879120 | x_delta: 13188.16019913 | a: 53945.3104727 | v: 1
+## x_hat: 13188.1601991298
+## updating original value: old: 711439396.505798 | new: 711452584.665997
+## j: 3 | ck: 0.707499999966236
+## xj: 809190 | x_delta: 4855.73091898 | a: 146518.12395215 | v: 1
+## x_hat: 4855.73091898415
+## updating original value: old: 711452584.665997 | new: 711457440.396916</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.63621800000187
+## xj: 800000 | x_delta: 24002.98840447 | a: 12485.71985912 | v: 0.5
+## x_hat: 12001.4942022346
+## updating original value: old: 299694589 | new: 299706590.494202
+## j: 2 | ck: 0.36218000001876
+## xj: 879120 | x_delta: 13188.16019913 | a: 22725.42841222 | v: -0.5
+## x_hat: -6594.08009956492
+## updating original value: old: 299706590.494202 | new: 299699996.414103
+## j: 3 | ck: 0.62180000018763
+## xj: 968060 | x_delta: 5808.85425255 | a: 51593.65055207 | v: 0.5
+## x_hat: 2904.42712627649
+## updating original value: old: 299699996.414103 | new: 299702900.841229</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.607012999998237
+## xj: 809190 | x_delta: 24278.65459492 | a: 7393.77292503 | v: 0.5
+## x_hat: 12139.3272974604
+## updating original value: old: 179510859 | new: 179522998.327297
+## j: 2 | ck: 0.070129999982376
+## xj: 668660 | x_delta: 10031.6863391 | a: 17895.59524281 | v: -2.5
+## x_hat: -25079.215847743
+## updating original value: old: 179522998.327297 | new: 179497919.11145
+## j: 3 | ck: 0.70129999982376
+## xj: 239280 | x_delta: 1437.66024821 | a: 124854.19926933 | v: 1
+## x_hat: 1437.66024820878
+## updating original value: old: 179497919.11145 | new: 179499356.771698</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.131971000000081
+## xj: 796800 | x_delta: 23907.00035946 | a: 5584.32203926 | v: -2
+## x_hat: -47814.0007189145
+## updating original value: old: 133504389 | new: 133456574.999281
+## j: 2 | ck: 0.319710000000811
+## xj: 228160 | x_delta: 3427.58863873 | a: 38935.99526241 | v: -1
+## x_hat: -3427.58863873481
+## updating original value: old: 133456574.999281 | new: 133453147.410642
+## j: 3 | ck: 0.197100000008113
+## xj: 465770 | x_delta: 2795.64372239 | a: 47736.1068371 | v: -1.5
+## x_hat: -4193.46558359019
+## updating original value: old: 133453147.410642 | new: 133448953.945059</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.414072000000638
+## xj: 686550 | x_delta: 20599.98000176 | a: 3298.05087161 | v: -0.5
+## x_hat: -10299.990000879
+## updating original value: old: 67939782 | new: 67929482.0099991
+## j: 2 | ck: 0.140720000006384
+## xj: 625590 | x_delta: 9385.75871478 | a: 7237.50568007 | v: -2
+## x_hat: -18771.5174295582
+## updating original value: old: 67929482.0099991 | new: 67910710.4925696
+## j: 3 | ck: 0.407200000063841
+## xj: 594000 | x_delta: 3564.80387794 | a: 19050.33567564 | v: -0.5
+## x_hat: -1782.40193896956
+## updating original value: old: 67910710.4925696 | new: 67908928.0906306</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.573747999999883
+## xj: 823360 | x_delta: 24703.70393766 | a: 1168.35961412 | v: 0.5
+## x_hat: 12351.851968831
+## updating original value: old: 28862810 | new: 28875161.8519688
+## j: 2 | ck: 0.737479999998835
+## xj: 237840 | x_delta: 3572.58020492 | a: 8082.43907644 | v: 1
+## x_hat: 3572.58020492098
+## updating original value: old: 28875161.8519688 | new: 28878734.4321738
+## j: 3 | ck: 0.374799999988357
+## xj: 250380 | x_delta: 1504.17354161 | a: 19199.070874 | v: -0.5
+## x_hat: -752.086770805073
+## updating original value: old: 28878734.4321738 | new: 28877982.3454029</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.0040534
+## xj: 527850 | x_delta: 15840.02014622 | a: 122.4095034 | v: -4.5
+## x_hat: -102960.130950409
+## updating original value: old: 1938969 | new: 1836008.86904959
+## j: 2 | ck: 0.040534
+## xj: 550710 | x_delta: 8262.81678458 | a: 222.20132879 | v: -3
+## x_hat: -41314.0839228905
+## updating original value: old: 1836008.86904959 | new: 1794694.7851267
+## j: 3 | ck: 0.40534
+## xj: 153090 | x_delta: 921.61275362 | a: 1947.34152503 | v: -0.5
+## x_hat: -2304.03188406025
+## updating original value: old: 1794694.7851267 | new: 1792390.75324264</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.476618999996842
+## xj: 770000 | x_delta: 23103.10436767 | a: 29108.34277064 | v: 0
+## x_hat: 0
+## updating original value: old: 672493081 | new: 672493081
+## j: 2 | ck: 0.766189999968424
+## xj: 420000 | x_delta: 6302.83615606 | a: 106696.90030795 | v: 1.5
+## x_hat: 9454.2542340829
+## updating original value: old: 672493081 | new: 672502535.254234
+## j: 3 | ck: 0.661899999684247
+## xj: 459540 | x_delta: 2758.27750761 | a: 243812.50015597 | v: 0.5
+## x_hat: 1379.13875380473
+## updating original value: old: 672502535.254234 | new: 672503914.392988</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.554048999998032
+## xj: 420000 | x_delta: 12605.67231211 | a: 23057.68576268 | v: 0
+## x_hat: 0
+## updating original value: old: 290657631 | new: 290657631
+## j: 2 | ck: 0.540489999980325
+## xj: 459540 | x_delta: 6895.69376902 | a: 42150.60017683 | v: 0
+## x_hat: 0
+## updating original value: old: 290657631 | new: 290657631
+## j: 3 | ck: 0.404899999803255
+## xj: 958080 | x_delta: 5748.97938438 | a: 50558.12720253 | v: -0.5
+## x_hat: -2874.48969218772
+## updating original value: old: 290657631 | new: 290654756.510308</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.834019999996837
+## xj: 926280 | x_delta: 27790.98235681 | a: 6182.05545217 | v: 1.5
+## x_hat: 41686.4735352086
+## updating original value: old: 171805394 | new: 171847080.473535
+## j: 2 | ck: 0.340199999968378
+## xj: 408360 | x_delta: 6128.31638637 | a: 28041.48311527 | v: -0.5
+## x_hat: -3064.15819318728
+## updating original value: old: 171847080.473535 | new: 171844016.315342
+## j: 3 | ck: 0.401999999683783
+## xj: 278880 | x_delta: 1674.98217664 | a: 102594.5342657 | v: -0.5
+## x_hat: -837.491088318121
+## updating original value: old: 171844016.315342 | new: 171843178.824254</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.11197400000062
+## xj: 770000 | x_delta: 23103.10436767 | a: 5572.84531771 | v: -2
+## x_hat: -46206.2087353467
+## updating original value: old: 128750027 | new: 128703820.791265
+## j: 2 | ck: 0.11974000000621
+## xj: 768460 | x_delta: 11528.45528189 | a: 11164.01266642 | v: -2
+## x_hat: -23056.9105637861
+## updating original value: old: 128703820.791265 | new: 128680763.880701
+## j: 3 | ck: 0.19740000006211
+## xj: 887330 | x_delta: 5324.51906314 | a: 24167.58440619 | v: -1.5
+## x_hat: -7986.77859470406
+## updating original value: old: 128680763.880701 | new: 128672777.102106</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.882409999999948
+## xj: 717840 | x_delta: 21538.52896585 | a: 2573.53030413 | v: 2
+## x_hat: 43077.057931704
+## updating original value: old: 55430057 | new: 55473134.0579317
+## j: 2 | ck: 0.824099999999488
+## xj: 473760 | x_delta: 7108.91642495 | a: 7803.31779724 | v: 1.5
+## x_hat: 10663.3746374313
+## updating original value: old: 55473134.0579317 | new: 55483797.4325691
+## j: 3 | ck: 0.240999999994888
+## xj: 294900 | x_delta: 1771.01067751 | a: 31328.88928185 | v: -1
+## x_hat: -1771.01067750626
+## updating original value: old: 55483797.4325691 | new: 55482026.4218916</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.861410000000114
+## xj: 299700 | x_delta: 8998.92573431 | a: 2597.0235437 | v: 2
+## x_hat: 17997.851468611
+## updating original value: old: 23370422 | new: 23388419.8514686
+## j: 2 | ck: 0.614100000001148
+## xj: 549360 | x_delta: 8242.57207925 | a: 2837.51474984 | v: 0.5
+## x_hat: 4121.28603962569
+## updating original value: old: 23388419.8514686 | new: 23392541.1375082
+## j: 3 | ck: 0.141000000011486
+## xj: 231600 | x_delta: 1391.64503929 | a: 16809.27282248 | v: -2
+## x_hat: -2783.29007858347
+## updating original value: old: 23392541.1375082 | new: 23389757.8474297</code></pre>
+<pre><code>## Warning in if (ck == 0) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
+<pre><code>## j: 1 | ck: 0.2327566
+## xj: 763420 | x_delta: 22905.73101604 | a: 108.25020159 | v: -1.5
+## x_hat: -80170.0585561517
+## updating original value: old: 2479550 | new: 2399379.94144385
+## j: 2 | ck: 0.3275662
+## xj: 669240 | x_delta: 10040.38479812 | a: 238.97290688 | v: -1
+## x_hat: -30121.1543943566
+## updating original value: old: 2399379.94144385 | new: 2369258.78704949
+## j: 3 | ck: 0.2756623
+## xj: 281250 | x_delta: 1689.18799053 | a: 1402.60219723 | v: -1
+## x_hat: -5067.56397157532
+## updating original value: old: 2369258.78704949 | new: 2364191.22307792
+## Numeric variable 'income' was perturbed.</code></pre>
 <p>A <code>data.table</code> containing original and perturbed values can now be extracted using the <code>freqtab()</code>- and <code>numtab()</code> methods as discussed next.</p>
 </div>
 <div id="extracting-results" class="section level3">
@@ -384,49 +972,49 @@
 <li>
 <code>pwc</code>: perturbed weighted counts</li>
 </ul>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1">tab<span class="op">$</span><span class="kw">freqtab</span>(<span class="dt">v =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"total"</span>, <span class="st">"cnt_highincome"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb122-1" data-line-number="1">tab<span class="op">$</span><span class="kw">freqtab</span>(<span class="dt">v =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"total"</span>, <span class="st">"cnt_highincome"</span>))</a></code></pre></div>
 <pre><code>##        sex        age          vname  uwc     wc puwc         pwc
-##  1:  Total      Total          total 4580 273109 4578 272989.7384
-##  2:  Total age_group1          total 1969 117928 1970 117987.8923
-##  3:  Total age_group2          total 1143  68053 1144  68112.5389
-##  4:  Total age_group3          total  864  51544  865  51603.6574
-##  5:  Total age_group4          total  423  24273  421  24158.2340
-##  6:  Total age_group5          total  168  10351  167  10289.3869
-##  7:  Total age_group6          total   13    960   13    960.0000
-##  8: female      Total          total 2284 136292 2285 136351.6725
-##  9: female age_group1          total  954  58027  954  58027.0000
-## 10: female age_group2          total  572  33729  571  33670.0332
-## 11: female age_group3          total  440  25805  441  25863.6477
-## 12: female age_group4          total  228  13153  226  13037.6228
-## 13: female age_group5          total   84   5121   82   4999.0714
-## 14: female age_group6          total    6    457    5    380.8333
-## 15:   male      Total          total 2296 136817 2295 136757.4107
-## 16:   male age_group1          total 1015  59901 1014  59841.9842
-## 17:   male age_group2          total  571  34324  571  34324.0000
-## 18:   male age_group3          total  424  25739  426  25860.4104
-## 19:   male age_group4          total  195  11120  197  11234.0513
-## 20:   male age_group5          total   84   5230   83   5167.7381
-## 21:   male age_group6          total    7    503    7    503.0000
-## 22:  Total      Total cnt_highincome  445  26872  445  26872.0000
-## 23:  Total age_group1 cnt_highincome  192  11811  195  11995.5469
-## 24:  Total age_group2 cnt_highincome  123   7568  123   7568.0000
-## 25:  Total age_group3 cnt_highincome   82   4977   82   4977.0000
-## 26:  Total age_group4 cnt_highincome   34   1656   35   1704.7059
-## 27:  Total age_group5 cnt_highincome   14    860   15    921.4286
+##  1:  Total      Total          total 4580 277672 4580 277672.0000
+##  2:  Total age_group1          total 1969 119550 1967 119428.5678
+##  3:  Total age_group2          total 1143  70625 1143  70625.0000
+##  4:  Total age_group3          total  864  51443  864  51443.0000
+##  5:  Total age_group4          total  423  24857  424  24915.7636
+##  6:  Total age_group5          total  168  10287  169  10348.2321
+##  7:  Total age_group6          total   13    910   11    770.0000
+##  8: female      Total          total 2284 139803 2283 139741.7903
+##  9: female age_group1          total  954  58896  955  58957.7358
+## 10: female age_group2          total  572  35882  573  35944.7308
+## 11: female age_group3          total  440  26193  439  26133.4705
+## 12: female age_group4          total  228  13342  229  13400.5175
+## 13: female age_group5          total   84   5108   84   5108.0000
+## 14: female age_group6          total    6    382    6    382.0000
+## 15:   male      Total          total 2296 137869 2295 137808.9525
+## 16:   male age_group1          total 1015  60654 1014  60594.2424
+## 17:   male age_group2          total  571  34743  572  34803.8459
+## 18:   male age_group3          total  424  25250  423  25190.4481
+## 19:   male age_group4          total  195  11515  196  11574.0513
+## 20:   male age_group5          total   84   5179   84   5179.0000
+## 21:   male age_group6          total    7    528    7    528.0000
+## 22:  Total      Total cnt_highincome  445  25910  443  25793.5506
+## 23:  Total age_group1 cnt_highincome  192  11030  191  10972.5521
+## 24:  Total age_group2 cnt_highincome  123   7578  123   7578.0000
+## 25:  Total age_group3 cnt_highincome   82   4619   83   4675.3293
+## 26:  Total age_group4 cnt_highincome   34   2024   33   1964.4706
+## 27:  Total age_group5 cnt_highincome   14    659   14    659.0000
 ## 28:  Total age_group6 cnt_highincome    0      0    0      0.0000
-## 29: female      Total cnt_highincome  226  13765  226  13765.0000
-## 30: female age_group1 cnt_highincome  102   6441  108   6819.8824
-## 31: female age_group2 cnt_highincome   57   3584   56   3521.1228
-## 32: female age_group3 cnt_highincome   41   2397   41   2397.0000
-## 33: female age_group4 cnt_highincome   19    943   17    843.7368
-## 34: female age_group5 cnt_highincome    7    400    7    400.0000
+## 29: female      Total cnt_highincome  226  13069  226  13069.0000
+## 30: female age_group1 cnt_highincome  102   5898  100   5782.3529
+## 31: female age_group2 cnt_highincome   57   3270   57   3270.0000
+## 32: female age_group3 cnt_highincome   41   2296   42   2352.0000
+## 33: female age_group4 cnt_highincome   19   1175   18   1113.1579
+## 34: female age_group5 cnt_highincome    7    430    8    491.4286
 ## 35: female age_group6 cnt_highincome    0      0    0      0.0000
-## 36:   male      Total cnt_highincome  219  13107  219  13107.0000
-## 37:   male age_group1 cnt_highincome   90   5370   93   5549.0000
-## 38:   male age_group2 cnt_highincome   66   3984   66   3984.0000
-## 39:   male age_group3 cnt_highincome   41   2580   39   2454.1463
-## 40:   male age_group4 cnt_highincome   15    713   15    713.0000
-## 41:   male age_group5 cnt_highincome    7    460    7    460.0000
+## 36:   male      Total cnt_highincome  219  12841  219  12841.0000
+## 37:   male age_group1 cnt_highincome   90   5132   88   5017.9556
+## 38:   male age_group2 cnt_highincome   66   4308   67   4373.2727
+## 39:   male age_group3 cnt_highincome   41   2323   44   2492.9756
+## 40:   male age_group4 cnt_highincome   15    849   18   1018.8000
+## 41:   male age_group5 cnt_highincome    7    229    7    229.0000
 ## 42:   male age_group6 cnt_highincome    0      0    0      0.0000
 ##        sex        age          vname  uwc     wc puwc         pwc</code></pre>
 </div>
@@ -445,50 +1033,50 @@
 <code>pws</code>: perturbed weighted sum of the given cell</li>
 </ul>
 <p>We now have a look at the results of the variables <code>savings</code> and <code>income</code> that we already have perturbed.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1">tab<span class="op">$</span><span class="kw">numtab</span>(<span class="dt">v =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"savings"</span>, <span class="st">"income"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb124-1" data-line-number="1">tab<span class="op">$</span><span class="kw">numtab</span>(<span class="dt">v =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"savings"</span>, <span class="st">"income"</span>))</a></code></pre></div>
 <pre><code>##        sex        age   vname      uws         ws          pws
-##  1:  Total      Total savings  2273532  135275842  135271844.2
-##  2:  Total age_group1 savings   982386   58514633   58517545.5
-##  3:  Total age_group2 savings   552336   32704626   32705859.6
-##  4:  Total age_group3 savings   437101   26179605   26182895.8
-##  5:  Total age_group4 savings   214661   12455210   12440848.1
-##  6:  Total age_group5 savings    80451    4918986    4919161.3
-##  7:  Total age_group6 savings     6597     502782     506239.7
-##  8: female      Total savings  1113716   66310122   66312186.3
-##  9: female age_group1 savings   464726   28063332   28064228.3
-## 10: female age_group2 savings   271413   15981654   15974899.9
-## 11: female age_group3 savings   222131   13040515   13035263.6
-## 12: female age_group4 savings   115241    6678503    6673070.4
-## 13: female age_group5 savings    37218    2294520    2290220.0
-## 14: female age_group6 savings     2987     251598     258917.5
-## 15:   male      Total savings  1159816   68965720   68974777.6
-## 16:   male age_group1 savings   517660   30451301   30446833.3
-## 17:   male age_group2 savings   280923   16722972   16721763.5
-## 18:   male age_group3 savings   214970   13139090   13139922.3
-## 19:   male age_group4 savings    99420    5776707    5782909.5
-## 20:   male age_group5 savings    43233    2624466    2619115.3
-## 21:   male age_group6 savings     3610     251184     254973.1
-## 22:  Total      Total  income 22952978 1369563656 1369519464.0
-## 23:  Total age_group1  income  9810547  587724811  587772979.2
-## 24:  Total age_group2  income  5692119  338999248  339016618.0
-## 25:  Total age_group3  income  4406946  263626437  263657440.6
-## 26:  Total age_group4  income  2133543  122909194  122831783.9
-## 27:  Total age_group5  income   848151   51407406   51433983.7
-## 28:  Total age_group6  income    61672    4896560    4942341.6
-## 29: female      Total  income 11690929  698144083  698169884.2
-## 30: female age_group1  income  4933383  301090311  301127538.7
-## 31: female age_group2  income  2880740  169521580  169448524.3
-## 32: female age_group3  income  2238777  131945267  131903636.8
-## 33: female age_group4  income  1155033   66327228   66285681.6
-## 34: female age_group5  income   455017   26994768   26956851.0
-## 35: female age_group6  income    27979    2264929    2368221.4
-## 36:   male      Total  income 11262049  671419573  671512273.6
-## 37:   male age_group1  income  4877164  286634500  286556896.1
-## 38:   male age_group2  income  2811379  169477668  169454344.4
-## 39:   male age_group3  income  2168169  131681170  131689425.9
-## 40:   male age_group4  income   978510   56581966   56607312.3
-## 41:   male age_group5  income   393134   24412638   24380208.0
-## 42:   male age_group6  income    33693    2631631    2714681.6
+##  1:  Total      Total savings  2273532  137325537  137328313.4
+##  2:  Total age_group1 savings   982386   59071321   59070298.1
+##  3:  Total age_group2 savings   552336   34228923   34227586.6
+##  4:  Total age_group3 savings   437101   25940819   25937673.1
+##  5:  Total age_group4 savings   214661   12609350   12610125.6
+##  6:  Total age_group5 savings    80451    4988244    4986293.9
+##  7:  Total age_group6 savings     6597     486880     484867.3
+##  8: female      Total savings  1113716   68087142   68087359.0
+##  9: female age_group1 savings   464726   28448260   28448028.4
+## 10: female age_group2 savings   271413   17138592   17138744.5
+## 11: female age_group3 savings   222131   13136241   13129501.4
+## 12: female age_group4 savings   115241    6839824    6837428.8
+## 13: female age_group5 savings    37218    2302915    2305083.1
+## 14: female age_group6 savings     2987     221310     208941.0
+## 15:   male      Total savings  1159816   69238395   69240169.2
+## 16:   male age_group1 savings   517660   30623061   30622963.9
+## 17:   male age_group2 savings   280923   17090331   17092233.5
+## 18:   male age_group3 savings   214970   12804578   12796891.8
+## 19:   male age_group4 savings    99420    5769526    5774840.3
+## 20:   male age_group5 savings    43233    2685329    2690241.7
+## 21:   male age_group6 savings     3610     265570     260725.0
+## 22:  Total      Total  income 22952978 1383944479 1383973447.1
+## 23:  Total age_group1  income  9810547  590352220  590310357.8
+## 24:  Total age_group2  income  5692119  351316253  351296222.5
+## 25:  Total age_group3  income  4406946  262254416  262222886.4
+## 26:  Total age_group4  income  2133543  123369839  123381077.6
+## 27:  Total age_group5  income   848151   52233232   52222556.6
+## 28:  Total age_group6  income    61672    4418519    4342050.2
+## 29: female      Total  income 11690929  711451398  711457440.4
+## 30: female age_group1  income  4933383  299694589  299702900.8
+## 31: female age_group2  income  2880740  179510859  179499356.8
+## 32: female age_group3  income  2238777  133504389  133448953.9
+## 33: female age_group4  income  1155033   67939782   67908928.1
+## 34: female age_group5  income   455017   28862810   28877982.3
+## 35: female age_group6  income    27979    1938969    1792390.8
+## 36:   male      Total  income 11262049  672493081  672503914.4
+## 37:   male age_group1  income  4877164  290657631  290654756.5
+## 38:   male age_group2  income  2811379  171805394  171843178.8
+## 39:   male age_group3  income  2168169  128750027  128672777.1
+## 40:   male age_group4  income   978510   55430057   55482026.4
+## 41:   male age_group5  income   393134   23370422   23389757.8
+## 42:   male age_group6  income    33693    2479550    2364191.2
 ##        sex        age   vname      uws         ws          pws</code></pre>
 </div>
 </div>
@@ -499,54 +1087,53 @@
 <h4 class="hasAnchor">
 <a href="#utility-measures-for-count-variables" class="anchor"></a>Utility measures for count variables</h4>
 <p>Method <code>measures_cnts()</code> allows to compute information loss measures for perturbed count variables. Its application is as simple as:</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1">tab<span class="op">$</span><span class="kw">measures_cnts</span>(<span class="dt">v =</span> <span class="st">"total"</span>, <span class="dt">exclude_zeros =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb126-1" data-line-number="1">tab<span class="op">$</span><span class="kw">measures_cnts</span>(<span class="dt">v =</span> <span class="st">"total"</span>, <span class="dt">exclude_zeros =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## $overview
 ##    noise cnt       pct
-## 1:    -2   2 0.0952381
-## 2:    -1   5 0.2380952
-## 3:     0   4 0.1904762
-## 4:     1   6 0.2857143
-## 5:     2   4 0.1904762
+## 1:    -1   7 0.3333333
+## 2:     0   7 0.3333333
+## 3:     1   5 0.2380952
+## 4:     2   2 0.0952381
 ## 
 ## $measures
 ##       what    d1    d2    d3
 ##  1:    Min 0.000 0.000 0.000
 ##  2:    Q10 0.000 0.000 0.000
-##  3:    Q20 1.000 0.000 0.010
-##  4:    Q30 1.000 0.000 0.011
-##  5:    Q40 1.000 0.001 0.015
-##  6:   Mean 1.095 0.012 0.038
-##  7: Median 1.000 0.001 0.017
-##  8:    Q60 1.000 0.002 0.024
-##  9:    Q70 1.000 0.005 0.049
-## 10:    Q80 2.000 0.009 0.055
-## 11:    Q90 2.000 0.012 0.071
-## 12:    Q95 2.000 0.024 0.110
-## 13:    Q99 2.000 0.138 0.193
-## 14:    Max 2.000 0.167 0.213
+##  3:    Q20 0.000 0.000 0.000
+##  4:    Q30 0.000 0.000 0.000
+##  5:    Q40 1.000 0.000 0.010
+##  6:   Mean 0.762 0.009 0.028
+##  7: Median 1.000 0.001 0.016
+##  8:    Q60 1.000 0.002 0.021
+##  9:    Q70 1.000 0.002 0.024
+## 10:    Q80 1.000 0.002 0.024
+## 11:    Q90 1.000 0.005 0.036
+## 12:    Q95 2.000 0.006 0.039
+## 13:    Q99 2.000 0.124 0.239
+## 14:    Max 2.000 0.154 0.289
 ## 
 ## $cumdistr_d1
 ##    cat cnt       pct
-## 1:   0   4 0.1904762
-## 2:   1  15 0.7142857
+## 1:   0   7 0.3333333
+## 2:   1  19 0.9047619
 ## 3:   2  21 1.0000000
 ## 
 ## $cumdistr_d2
-##            cat cnt       pct
-## 1:    [0,0.02]  19 0.9047619
-## 2: (0.02,0.05]  20 0.9523810
-## 3:  (0.05,0.1]  20 0.9523810
-## 4:   (0.1,0.2]  21 1.0000000
-## 5:   (0.2,0.3]  21 1.0000000
-## 6:   (0.3,0.4]  21 1.0000000
-## 7:   (0.4,0.5]  21 1.0000000
-## 8:   (0.5,Inf]  21 1.0000000
+##            cat cnt      pct
+## 1:    [0,0.02]  20 0.952381
+## 2: (0.02,0.05]  20 0.952381
+## 3:  (0.05,0.1]  20 0.952381
+## 4:   (0.1,0.2]  21 1.000000
+## 5:   (0.2,0.3]  21 1.000000
+## 6:   (0.3,0.4]  21 1.000000
+## 7:   (0.4,0.5]  21 1.000000
+## 8:   (0.5,Inf]  21 1.000000
 ## 
 ## $cumdistr_d3
 ##            cat cnt       pct
 ## 1:    [0,0.02]  11 0.5238095
-## 2: (0.02,0.05]  16 0.7619048
-## 3:  (0.05,0.1]  19 0.9047619
+## 2: (0.02,0.05]  20 0.9523810
+## 3:  (0.05,0.1]  20 0.9523810
 ## 4:   (0.1,0.2]  20 0.9523810
 ## 5:   (0.2,0.3]  21 1.0000000
 ## 6:   (0.3,0.4]  21 1.0000000
@@ -611,7 +1198,7 @@
 <a href="#additional-features" class="anchor"></a>Additional Features</h3>
 <p>Finally we note that there are <code>print</code> and <code>summary</code> methods implemented for objects created with from <code><a href="../reference/cellkey_pkg.html">ck_setup()</a></code> which can be used as shown below:</p>
 <p>The <code><a href="https://rdrr.io/r/base/print.html">print()</a></code>-method shows the dimension of the table as well as the variables that are (or possibly can be) perturbed. It is also displayed if the table was constructed using weights.</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1">tab<span class="op">$</span><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>() <span class="co"># same as (print(tab))</span></a></code></pre></div>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb128-1" data-line-number="1">tab<span class="op">$</span><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>() <span class="co"># same as (print(tab))</span></a></code></pre></div>
 <pre><code>## ── Table Information ───────────────────────────────────────────────────────────
 ## ✔ 21 cells in 2 dimensions ('sex', 'age')
 ## ✔ weights: yes
@@ -622,14 +1209,14 @@
 ## ☒ 'income' (perturbed)
 ## ☒ 'savings' (perturbed)</code></pre>
 <p>The <code>summary</code>-method shows some utility statistics for already perturbed variables as shown below:</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" data-line-number="1">tab<span class="op">$</span><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb130-1" data-line-number="1">tab<span class="op">$</span><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>()</a></code></pre></div>
 <pre><code>## ┌──────────────────────────────────────────────┐
 ## │Utility measures for perturbed count variables│
 ## └──────────────────────────────────────────────┘
 ## ── Distribution statistics of perturbations ────────────────────────────────────
 ##          countvar Min Q10 Q20 Q30 Q40   Mean Median Q60 Q70 Q80 Q90 Q95 Q99 Max
-## 1:          total  -2  -2  -1  -1  -1 -0.238      0   0   1   1   1   2 2.0   2
-## 2: cnt_highincome  -2  -1   0   0   0  0.429      0   0   0   1   3   3 5.4   6
+## 1:          total  -2  -1  -1  -1   0 -0.095      0   0   1   1   1   1   1   1
+## 2: cnt_highincome  -2  -2  -1   0   0  0.048      0   0   0   1   1   3   3   3
 ## 
 ## ── Distance-based measures ─────────────────────────────────────────────────────
 ## ✔ Variable: 'total'
@@ -637,18 +1224,18 @@
 ##       what    d1    d2    d3
 ##  1:    Min 0.000 0.000 0.000
 ##  2:    Q10 0.000 0.000 0.000
-##  3:    Q20 1.000 0.000 0.010
-##  4:    Q30 1.000 0.000 0.011
-##  5:    Q40 1.000 0.001 0.015
-##  6:   Mean 1.095 0.012 0.038
-##  7: Median 1.000 0.001 0.017
-##  8:    Q60 1.000 0.002 0.024
-##  9:    Q70 1.000 0.005 0.049
-## 10:    Q80 2.000 0.009 0.055
-## 11:    Q90 2.000 0.012 0.071
-## 12:    Q95 2.000 0.024 0.110
-## 13:    Q99 2.000 0.138 0.193
-## 14:    Max 2.000 0.167 0.213
+##  3:    Q20 0.000 0.000 0.000
+##  4:    Q30 0.000 0.000 0.000
+##  5:    Q40 1.000 0.000 0.010
+##  6:   Mean 0.762 0.009 0.028
+##  7: Median 1.000 0.001 0.016
+##  8:    Q60 1.000 0.002 0.021
+##  9:    Q70 1.000 0.002 0.024
+## 10:    Q80 1.000 0.002 0.024
+## 11:    Q90 1.000 0.005 0.036
+## 12:    Q95 2.000 0.006 0.039
+## 13:    Q99 2.000 0.124 0.239
+## 14:    Max 2.000 0.154 0.289
 ## 
 ## ✔ Variable: 'cnt_highincome'
 ## 
@@ -656,31 +1243,31 @@
 ##  1:    Min 0.000 0.000 0.000
 ##  2:    Q10 0.000 0.000 0.000
 ##  3:    Q20 0.000 0.000 0.000
-##  4:    Q30 0.000 0.000 0.000
-##  5:    Q40 0.000 0.000 0.000
-##  6:   Mean 1.056 0.021 0.069
-##  7: Median 0.000 0.000 0.000
-##  8:    Q60 1.000 0.016 0.070
-##  9:    Q70 1.000 0.028 0.106
-## 10:    Q80 2.000 0.043 0.147
-## 11:    Q90 3.000 0.063 0.181
-## 12:    Q95 3.450 0.077 0.244
-## 13:    Q99 5.490 0.100 0.283
-## 14:    Max 6.000 0.105 0.293
+##  4:    Q30 0.100 0.000 0.004
+##  5:    Q40 1.000 0.005 0.045
+##  6:   Mean 1.056 0.033 0.082
+##  7: Median 1.000 0.014 0.058
+##  8:    Q60 1.000 0.020 0.079
+##  9:    Q70 1.000 0.024 0.098
+## 10:    Q80 2.000 0.043 0.112
+## 11:    Q90 2.300 0.094 0.197
+## 12:    Q95 3.000 0.151 0.251
+## 13:    Q99 3.000 0.190 0.346
+## 14:    Max 3.000 0.200 0.370
 ## 
 ## ┌──────────────────────────────────────────────────┐
 ## │Utility measures for perturbed numerical variables│
 ## └──────────────────────────────────────────────────┘
 ## ── Distribution statistics of perturbations ────────────────────────────────────
-##      vname       Min        Q10        Q20        Q30        Q40     Mean
-## 1:  income -77603.90 -73055.737 -41630.225 -37916.963 -23323.570 4546.042
-## 2: savings -14361.85  -5432.593  -5251.413  -4300.023  -1208.543 -471.097
-##       Median       Q60       Q70       Q80       Q90       Q95        Q99
-## 1: 17369.994 25801.157 31003.559 45781.591 83050.572 92700.604 101174.002
-## 2:   832.285  1233.598  2912.479  3457.734  6202.536  7319.516   8709.982
-##           Max
-## 1: 103292.351
-## 2:   9057.599</code></pre>
+##      vname       Min        Q10        Q20        Q30        Q40       Mean
+## 1:  income -146578.2 -77249.898 -55435.055 -31529.592 -20030.491 -20512.489
+## 2: savings  -12369.0  -6739.612  -3145.902  -2012.708  -1336.369  -1135.151
+##        Median      Q60       Q70       Q80       Q90       Q95       Q99
+## 1: -10675.389 6042.397 10833.393 15172.345 28968.139 37784.824 49132.502
+## 2:   -231.554  152.545   775.582  1902.456  2776.386  4912.734  5233.958
+##          Max
+## 1: 51969.422
+## 2:  5314.264</code></pre>
 </div>
 </div>
 <div id="summary" class="section level2">
@@ -690,7 +1277,7 @@
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
 
         <div id="tocnav">
       <h2 class="hasAnchor">
@@ -714,7 +1301,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
 
       </footer>
