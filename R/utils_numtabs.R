@@ -92,10 +92,21 @@
 # params: a perturbation parameter object created with `ck_params_nums` and
 #         mult_params need to be of class `params_m_flex`
 .perturb_cell_flex <- function(cv, x, ck, lookup, prot_req, params) {
+  # no obs -> return an empty parameter set
+  if (ck == 0) {
+    return(list(
+      x_hats = 0,
+      cv = 0,
+      cv_p = 0,
+      lookup = lookup,
+      x_delta = 1
+    ))
+  }
+
   type <- i <- NULL
   dig <- .ck_digits()
 
-  debug <- FALSE
+  debug <- TRUE
   fp <- params$mult_params$fp
   p_lg <- params$mult_params$p_large
   p_sm <- params$mult_params$p_small
@@ -209,10 +220,21 @@
 # params: a perturbation parameter object created with `ck_params_nums` and
 #         mult_params need to be of class `params_m_simple`
 .perturb_cell_simple <- function(cv, x, ck, lookup, prot_req, params) {
+  # no obs -> return an empty parameter set
+  if (ck == 0) {
+    return(list(
+      x_hats = 0,
+      cv = 0,
+      cv_p = 0,
+      lookup = lookup,
+      x_delta = 1
+    ))
+  }
+
+
   type <- i <- NULL
   debug <- TRUE
   dig <- .ck_digits()
-
 
   p <- params$mult_params$p # default percentage
   if (debug) {
