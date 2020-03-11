@@ -13,6 +13,7 @@ apt_packages:
   - libglpk-dev
 
 r_packages:
+  - devtools
   - covr
   - pkgdown
   - lintr
