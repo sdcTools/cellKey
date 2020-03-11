@@ -1,16 +1,14 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
-language: R
+language: r
 sudo: false
 cache: packages
 
 r:
 - release
 
-addons:
-  apt:
-    packages:
-      - libglpk-dev
+apt_packages:
+  - libglpk-dev
 
 r_github_packages:
   - jimhester/lintr
