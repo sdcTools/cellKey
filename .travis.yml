@@ -2,7 +2,9 @@
 
 language: r
 sudo: false
-cache: packages
+
+cache:
+  packages: true
 
 r:
 - release
