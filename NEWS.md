@@ -1,3 +1,6 @@
+# cellKey 0.18.6
+- fixing issues with empty cells for magnitude tables
+
 # cellKey 0.18.5
 - document R6 methods/classes via `roxygen2`
 
