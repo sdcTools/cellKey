@@ -190,7 +190,11 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         sampWeightInd = NULL)
 
       # with perturbations
-      tab <- sdcProb2df(prob, addDups = TRUE, addNumVars = TRUE, dimCodes = "original")
+      tab <- sdcTable::sdcProb2df(
+        obj = prob,
+        addDups = TRUE,
+        addNumVars = TRUE,
+        dimCodes = "original")
 
       ck_log("mark duplicated cells")
       dims <- prob@dimInfo@dimInfo
@@ -229,18 +233,15 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
             xx$.tmpordervar <- abs(xx[[v]])
             xx$.tmpweightvar <- xx[[v]] * xx[[wvar]]
             setorderv(xx, c(".tmpordervar", wvar), order = c(-1L, -1L))
-
-            # unweighted
-            if (top_k == 0) {
-              out[[v]]$uw_vals <- 0
-              out[[v]]$uw_ids <- NA
+            if (nrow(xx) == 0) {
+              out[[v]]$uw_vals <- out[[v]]$w_vals <- 0
+              out[[v]]$uw_ids <- out[[v]]$w_ids <- NA
               out[[v]]$uw_spread <- out[[v]]$w_spread <- 0
               out[[v]]$uw_sum <- out[[v]]$w_sum <- 0
               out[[v]]$uw_mean <- out[[v]]$w_mean <- 0
-              out[[v]]$w_vals <- 0
             } else {
               out[[v]]$uw_vals <- xx[[v]][1:top_k]
-              out[[v]]$uw_ids <- xx$.tmpid[1:top_k]
+              out[[v]]$uw_ids <- out[[v]]$w_ids <- xx$.tmpid[1:top_k]
               out[[v]]$uw_spread <- diff(range(xx[[v]], na.rm = TRUE))
               out[[v]]$uw_sum <- sum(xx[[v]], na.rm = TRUE)
               out[[v]]$uw_mean <- out[[v]]$uw_sum / nrow(xx)
@@ -249,12 +250,10 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
               out[[v]]$w_sum <- sum(xx$.tmpweightvar, na.rm = TRUE)
               out[[v]]$w_mean <- out[[v]]$w_sum / sum(xx[[wvar]], na.rm = TRUE)
             }
-
             # we compute if the number of contributors to the cell
             # is even or odd. This information can later be used if
             # we have different ptables (parity-case)
             out[[v]]$even_contributors <- nrow(xx) %% 2 == 0
-            out[[v]]$w_ids <- out[[v]]$uw_ids
           }
           res[[i]] <- out
         }
@@ -271,8 +270,6 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         top_k = 6)
 
       res <- tab[, c("strID", "freq", dimvars, "is_bogus", nv), with = FALSE]
-      setnames(res, nv, tolower(nv))
-
       cols_ck <- gen_vnames(c("total", countvars), prefix = "ck")
 
       if (length(countvars) > 0) {
@@ -343,7 +340,7 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         vname = dimvars, type = "dimvars"
       ))
       varsdt <- rbind(varsdt, data.table(
-        vname = c("Total", countvars), type = "countvars"
+        vname = c("total", countvars), type = "countvars"
       ))
       if (length(numvars) > 0) {
         varsdt <- rbind(varsdt, data.table(
@@ -352,7 +349,6 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       }
       varsdt$is_perturbed <- NA
       varsdt[type %in% c("countvars", "numvars"), is_perturbed := FALSE]
-      varsdt$vname <- tolower(varsdt$vname)
 
       # modifications and perturbation parameters
       mods <- pert_params <- list(
@@ -391,7 +387,6 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         avail = avail,
         msg = "Invalid variables specified in `v`:",
         single_v = FALSE)
-      v <- tolower(v)
 
       for (i in seq_len(length(v))) {
         vname <- v[i]
@@ -525,7 +520,6 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       if (!is.character(v)) {
         stop("Argument `v` must be a character vector specifying variable names.", call. = FALSE)
       } else {
-        v <- tolower(v)
         .check_avail(
           v = v,
           avail = avail,
@@ -849,9 +843,11 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         if (!is.character(v)) {
           stop("Argument `v` needs to be a character vector.", call. = FALSE)
         }
-        if (!all(v %in% cv)) {
-          stop("Please specify only valid countvars in argument `v`.", call. = FALSE)
-        }
+        .check_avail(
+          v = v,
+          avail = cv,
+          msg = "Invalid variables specified in `v`:",
+          single_v = FALSE)
       }
 
       ex_params <- private$.pert_params$cnts
@@ -962,9 +958,11 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         if (!is.character(v)) {
           stop("Argument `v` needs to be a character vector.", call. = FALSE)
         }
-        if (!all(v %in% nv)) {
-          stop("Please specify only valid numvars in argument `v`.", call. = FALSE)
-        }
+        .check_avail(
+          v = v,
+          avail = nv,
+          msg = "Invalid variables specified in `v`:",
+          single_v = FALSE)
       }
       ex_params <- private$.pert_params$nums
       for (curvar in v) {

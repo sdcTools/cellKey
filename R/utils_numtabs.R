@@ -34,6 +34,7 @@
 }
 
 .lookup_v_flex <- function(cellkeys, params) {
+  stopifnot(length(cellkeys) == 1)
   i <- type <- ub <- NULL
   d <- params$max_i # parameter `D`
 
@@ -47,10 +48,16 @@
     params$lookup[ind_smallcells] <- "_zero_"
   }
 
+  # no contributors, no perturbation
+  # new in > 0.18.5
+  if (cellkeys[1] == 0) {
+    return(0)
+  }
+
   a[a > d] <- d # we cut at the maximum value!
 
   ptab <- params$ptab
-  poss <- sort(unique(ptab$i))
+  poss <- ptab[type == params$lookup, sort(unique(i))]
 
   ind_exact <- which(a %in% poss)
   if (length(ind_exact) > 0) {
@@ -68,7 +75,7 @@
       if (params$lookup[x] == "_zero_") {
         return(0)
       }
-      a0 <- poss[which(a[x] < poss) - 1]
+      a0 <- min(poss[which(a[x] < poss) - 1])
       a1 <- poss[max(which(a[x] > poss)) + 1]
       lambda <- (a[x] - a0) / (a1 - a0)
 
@@ -128,7 +135,7 @@
     zero_pert <- FALSE
     lookup_params$lookup <- lookup[j]
     if (debug) {
-      message("j:= ", j, " | ck: ", ck[j])
+      message("j: ", j, " | ck: ", ck[j])
     }
 
     xj <- x[j]

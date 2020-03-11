@@ -1,5 +1,14 @@
-# cellKey 0.18.6
+# cellKey 0.18.8
 - fixing issues with empty cells for magnitude tables
+
+# cellKey 0.18.7
+- fixed computation of weighted spreads, thx @staudtlex
+
+# cellKey 0.18.6
+- do not perturb cells with 0 contributors in the flex-approach
+- update tests due to updates in `digest`-pkg
+- correctly compute weighted spread
+- do not convert variable names to lowercase
 
 # cellKey 0.18.5
 - document R6 methods/classes via `roxygen2`
