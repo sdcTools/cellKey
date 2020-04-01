@@ -6,7 +6,7 @@
 \alias{ck_setup}
 \title{R6 Class defining statistical tables that can be perturbed}
 \usage{
-ck_setup(x, rkey, dims, w, countvars = NULL, numvars = NULL)
+ck_setup(x, rkey, dims, w = NULL, countvars = NULL, numvars = NULL)
 }
 \arguments{
 \item{x}{an object coercible to a \code{data.frame}}
@@ -251,7 +251,7 @@ tab$summary()
 \subsection{Method \code{new()}}{
 Create a new table instance
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ck_class$new(x, rkey, dims, w, countvars = NULL, numvars = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ck_class$new(x, rkey, dims, w = NULL, countvars = NULL, numvars = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

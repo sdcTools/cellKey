@@ -20,7 +20,7 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     #' These variables can later be perturbed.
     #' @param numvars (character) an optional vector of numerical variables that can later be tabulated.
     #' @return A new `cellkey_obj` object.
-    initialize = function(x, rkey, dims, w, countvars = NULL, numvars = NULL) {
+    initialize = function(x, rkey, dims, w = NULL, countvars = NULL, numvars = NULL) {
       type <- is_perturbed <- NULL
 
       if (!inherits(x, "data.frame")) {
@@ -578,9 +578,14 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         avail <- private$.ck_perturbed_vars("countvars")
         e <- c(
           "Variable `v` is neither a perturbed count ",
-          "nor a perturbed numeric variable. Possible choices are:\n",
-          paste("-->", shQuote(avail), collapse = "\n")
-        )
+          "nor a perturbed numeric variable.\n")
+        if (length(avail) > 0) {
+          e <- c(e, "Possible choices are: ",
+          paste(shQuote(avail), collapse = "\n"))
+        } else {
+          e <- c(e, "Please perturb one of the following variables first: ",
+            paste(shQuote(self$cntvars()), collapse = "\n"))
+        }
         stop(paste(e, collapse = ""), call. = FALSE)
       }
     },
@@ -1338,7 +1343,6 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         return("odd")
       }, mc.cores = .ck_cores()) # nolint
 
-
       if (lookup_type == "flex") {
         fun <- .perturb_cell_flex
       } else if (lookup_type == "simple") {
@@ -1688,7 +1692,7 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'
 #' # display a summary about utility measures
 #' tab$summary()
-ck_setup <- function(x, rkey, dims, w, countvars = NULL, numvars = NULL) {
+ck_setup <- function(x, rkey, dims, w = NULL, countvars = NULL, numvars = NULL) {
   ck_class$new(
     x = x,
     rkey = rkey,
