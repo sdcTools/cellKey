@@ -69,7 +69,7 @@
     })
   }
 
-  ind_comb <- which(a < d)
+  ind_comb <- setdiff(which(a < d), ind_exact)
   if (length(ind_comb) > 0) {
     v[ind_comb] <- sapply(ind_comb, function(x) {
       if (params$lookup[x] == "_zero_") {
@@ -265,7 +265,7 @@
   xo <- cv
   sign_xo <- sign(xo)
   x_hats <- rep(NA, length(x))
-  cnt_sc <- 0
+  has_small_cells <- FALSE
   for (j in seq_len(length(x))) {
     zero_pert <- FALSE
 
@@ -278,9 +278,9 @@
     abs_xj <- abs(xj)
 
     if (abs_xj < zs) {
-      x_delta <- xj # in this case, m equals 1
+      x_delta <- 1 # in this case, m equals 1
       lookup_params$lookup <- "small_cells"
-      cnt_sc <- cnt_sc + 1
+      has_small_cells <- TRUE
     } else {
       x_delta <- xj * p * params$mult_params$epsilon[j]
     }
@@ -299,8 +299,8 @@
       if (abs(abs_xj) < zs) {
         x_delta <- 1
         lookup_params$lookup <- "small_cells"
-        cnt_sc <- cnt_sc + 1
-        if (cnt_sc > 1) {
+        has_small_cells <- TRUE
+        if (has_small_cells) {
           zero_pert <- TRUE
         }
       }
