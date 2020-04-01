@@ -1,3 +1,8 @@
+# cellKey 0.18.9
+- set default value of argument `w = NULL` in `ck_setup()`
+- improve some error messages/outputs
+- bugfix when looking up perturbation values; small_cells and others must not intersect
+
 # cellKey 0.18.8
 - fixing issues with empty cells for magnitude tables
 
