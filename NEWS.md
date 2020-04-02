@@ -1,3 +1,7 @@
+# cellKey 0.18.10
+- bugfix: scrambling cell keys having not enough digits
+- bugfix: computation separation point in flex-approach
+
 # cellKey 0.18.9
 - set default value of argument `w = NULL` in `ck_setup()`
 - improve some error messages/outputs
