@@ -2,11 +2,10 @@
 .scramble_ckeys <- function(ck, top_k, same_key) {
   beg <- substr(ck, 1, 2)
   res <- rep(NA, top_k)
-
   len <- nchar(ck)
-
   if (!same_key) {
-    res[1] <- paste0(beg, substr(ck, 4, len), substr(ck, 3, 3))
+    ss <- substr(ck, 4, len)
+    res[1] <- paste0(beg, ifelse(ss == "", "0", ss), substr(ck, 3, 3))
   } else {
     res[1] <- ck
   }
