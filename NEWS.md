@@ -1,3 +1,6 @@
+# cellKey 0.18.11
+- performance-improvment: speed-up computation of contributing units to cells
+
 # cellKey 0.18.10
 - bugfix: scrambling cell keys having not enough digits
 - bugfix: computation separation point in flex-approach
