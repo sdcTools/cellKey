@@ -248,6 +248,7 @@ tab$summary()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new table instance
 \subsection{Usage}{
@@ -284,6 +285,7 @@ A new \code{cellkey_obj} object.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-perturb"></a>}}
+\if{latex}{\out{\hypertarget{method-perturb}{}}}
 \subsection{Method \code{perturb()}}{
 Perturb a count- or magnitude variable
 \subsection{Usage}{
@@ -300,6 +302,7 @@ Perturb a count- or magnitude variable
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-freqtab"></a>}}
+\if{latex}{\out{\hypertarget{method-freqtab}{}}}
 \subsection{Method \code{freqtab()}}{
 Extract results from already perturbed count variables as a
 \code{data.table}
@@ -336,6 +339,7 @@ the first n columns. Additionally, the following columns are shown:
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-numtab"></a>}}
+\if{latex}{\out{\hypertarget{method-numtab}{}}}
 \subsection{Method \code{numtab()}}{
 Extract results from already perturbed continuous variables
 as a \code{data.table}.
@@ -381,6 +385,7 @@ has not not perturbed
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-measures_cnts"></a>}}
+\if{latex}{\out{\hypertarget{method-measures_cnts}{}}}
 \subsection{Method \code{measures_cnts()}}{
 Utility measures for perturbed count variables
 \subsection{Usage}{
@@ -406,6 +411,7 @@ of the computed measures, see \code{\link[=ck_cnt_measures]{ck_cnt_measures()}}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-measures_nums"></a>}}
+\if{latex}{\out{\hypertarget{method-measures_nums}{}}}
 \subsection{Method \code{measures_nums()}}{
 Utility measures for continuous variables (not yet implemented)
 \subsection{Usage}{
@@ -423,6 +429,7 @@ should be computed.}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-allvars"></a>}}
+\if{latex}{\out{\hypertarget{method-allvars}{}}}
 \subsection{Method \code{allvars()}}{
 returns a \code{list} with the following two elements:
 \itemize{
@@ -438,6 +445,7 @@ variables for perturbation
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-cntvars"></a>}}
+\if{latex}{\out{\hypertarget{method-cntvars}{}}}
 \subsection{Method \code{cntvars()}}{
 character vector with names of count variables that
 could be perturbed
@@ -448,6 +456,7 @@ could be perturbed
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-numvars"></a>}}
+\if{latex}{\out{\hypertarget{method-numvars}{}}}
 \subsection{Method \code{numvars()}}{
 character vector with names of continuous variables that
 could be perturbed
@@ -458,6 +467,7 @@ could be perturbed
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-hierarchy_info"></a>}}
+\if{latex}{\out{\hypertarget{method-hierarchy_info}{}}}
 \subsection{Method \code{hierarchy_info()}}{
 Information about hierarchies
 \subsection{Usage}{
@@ -481,6 +491,7 @@ contribute to it
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-mod_cnts"></a>}}
+\if{latex}{\out{\hypertarget{method-mod_cnts}{}}}
 \subsection{Method \code{mod_cnts()}}{
 Modifications applied to count variables
 \subsection{Usage}{
@@ -493,6 +504,7 @@ a \code{data.table} containing modifications applied to count variables
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-mod_nums"></a>}}
+\if{latex}{\out{\hypertarget{method-mod_nums}{}}}
 \subsection{Method \code{mod_nums()}}{
 Modifications applied to numerical variables
 \subsection{Usage}{
@@ -505,6 +517,7 @@ a \code{data.table} containing modifications applied to numerical variables
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-supp_freq"></a>}}
+\if{latex}{\out{\hypertarget{method-supp_freq}{}}}
 \subsection{Method \code{supp_freq()}}{
 Identify sensitive cells based on minimum frequency rule
 \subsection{Usage}{
@@ -526,6 +539,7 @@ the threshold specified in \code{n} (default); else the unweighted number of con
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-supp_val"></a>}}
+\if{latex}{\out{\hypertarget{method-supp_val}{}}}
 \subsection{Method \code{supp_val()}}{
 Identify sensitive cells based on weighted or unweighted cell values.minimum frequency rule
 \subsection{Usage}{
@@ -547,6 +561,7 @@ the threshold specified in \code{n} (default); else the unweighted number is use
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-supp_p"></a>}}
+\if{latex}{\out{\hypertarget{method-supp_p}{}}}
 \subsection{Method \code{supp_p()}}{
 Identify sensitive cells based on the p\%-rule rule. Please note that this rule
 can only be applied to positive-only variables.
@@ -566,6 +581,7 @@ can only be applied to positive-only variables.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-supp_pq"></a>}}
+\if{latex}{\out{\hypertarget{method-supp_pq}{}}}
 \subsection{Method \code{supp_pq()}}{
 Identify sensitive cells based on the pq-rule. Please note that this rule
 can only be applied to positive-only variables.
@@ -587,6 +603,7 @@ can only be applied to positive-only variables.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-supp_nk"></a>}}
+\if{latex}{\out{\hypertarget{method-supp_nk}{}}}
 \subsection{Method \code{supp_nk()}}{
 Identify sensitive cells based on the nk-dominance rule. Please note that this rule
 can only be applied to positive-only variables.
@@ -609,6 +626,7 @@ contributers contribute more than \verb{k\%} is considered unsafe}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-params_cnts_get"></a>}}
+\if{latex}{\out{\hypertarget{method-params_cnts_get}{}}}
 \subsection{Method \code{params_cnts_get()}}{
 Return perturbation parameters of count variables
 \subsection{Usage}{
@@ -623,6 +641,7 @@ defined by the list-name.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-params_cnts_set"></a>}}
+\if{latex}{\out{\hypertarget{method-params_cnts_set}{}}}
 \subsection{Method \code{params_cnts_set()}}{
 Set perturbation parameters for count variables
 \subsection{Usage}{
@@ -644,6 +663,7 @@ the count variables for which the parameters should be set.}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-reset_cntvars"></a>}}
+\if{latex}{\out{\hypertarget{method-reset_cntvars}{}}}
 \subsection{Method \code{reset_cntvars()}}{
 reset results and parameters for already perturbed
 count variables
@@ -663,6 +683,7 @@ the names of already perturbed count variables.}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-reset_numvars"></a>}}
+\if{latex}{\out{\hypertarget{method-reset_numvars}{}}}
 \subsection{Method \code{reset_numvars()}}{
 reset results and parameters for already perturbed
 numerical variables
@@ -682,6 +703,7 @@ perturbed continuous variables.}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-reset_allvars"></a>}}
+\if{latex}{\out{\hypertarget{method-reset_allvars}{}}}
 \subsection{Method \code{reset_allvars()}}{
 reset results and parameters for all already perturbed variables.
 \subsection{Usage}{
@@ -691,6 +713,7 @@ reset results and parameters for all already perturbed variables.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-params_nums_get"></a>}}
+\if{latex}{\out{\hypertarget{method-params_nums_get}{}}}
 \subsection{Method \code{params_nums_get()}}{
 Return perturbation parameters of continuous variables
 \subsection{Usage}{
@@ -705,6 +728,7 @@ defined by the list-name.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-params_nums_set"></a>}}
+\if{latex}{\out{\hypertarget{method-params_nums_set}{}}}
 \subsection{Method \code{params_nums_set()}}{
 set perturbation parameters for continuous variables.
 \subsection{Usage}{
@@ -726,6 +750,7 @@ which the parameters should be set.}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-summary"></a>}}
+\if{latex}{\out{\hypertarget{method-summary}{}}}
 \subsection{Method \code{summary()}}{
 some aggregated summary statistics about perturbed variables
 \subsection{Usage}{
@@ -735,6 +760,7 @@ some aggregated summary statistics about perturbed variables
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-print"></a>}}
+\if{latex}{\out{\hypertarget{method-print}{}}}
 \subsection{Method \code{print()}}{
 prints information about the current table
 \subsection{Usage}{

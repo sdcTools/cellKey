@@ -4,7 +4,8 @@
 \name{ck_dat_hc92}
 \alias{ck_dat_hc92}
 \title{A real-world data set on persons}
-\format{ck_dat_hc92: a data frame with 820000 observations on the following 6 variables.
+\format{
+ck_dat_hc92: a data frame with 820000 observations on the following 6 variables.
 \itemize{
 \item \code{id}: a numeric identifier
 \item \code{geo_m}: a character vector defining regions
@@ -12,7 +13,8 @@
 \item \code{age_m}: a character vector containing age groups
 \item \code{yae_h}: a character vector
 \item \code{rkey}: a numeric vector holding record keys
-}}
+}
+}
 \description{
 820000 obervations in 5 Variables without sampling weights.
 }
