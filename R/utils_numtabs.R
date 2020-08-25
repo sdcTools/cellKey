@@ -99,7 +99,7 @@
 #         mult_params need to be of class `params_m_flex`
 .perturb_cell_flex <- function(cv, x, ck, lookup, prot_req, params) {
   # no obs -> return an empty parameter set
-  if (ck == 0) {
+  if (ck[1] == 0) {
     return(list(
       x_hats = 0,
       cv = 0,
