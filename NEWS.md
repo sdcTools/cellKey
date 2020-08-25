@@ -1,3 +1,6 @@
+# cellKey 0.18.12
+- bugfix: use only actual number of contributors in flex-approach when perturbing numvars
+
 # cellKey 0.18.11
 - performance-improvment: speed-up computation of contributing units to cells
 
