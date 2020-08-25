@@ -1401,7 +1401,7 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       if (params$type == "top_contr") {
         # we may get NAs -> need to ignore them later
         x_vals <- lapply(max_contr, function(x) {
-          list(x = x$w_vals[1:params$top_k], even_odd = x$even_contributors)
+          list(x = na.omit(x$w_vals[1:params$top_k]), even_odd = x$even_contributors)
         })
       } else if (params$type == "mean") {
         x_vals <- lapply(max_contr, function(x) {
