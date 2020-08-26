@@ -36,3 +36,4 @@ Author: Bernhard Meindl [aut, cre]
 Maintainer: Bernhard Meindl <bernhard.meindl@statistik.gv.at>
 LazyData: true
 BugReports: https://github.com/sdcTools/cellKey/issues
+URL: https://github.com/sdcTools/cellKey
