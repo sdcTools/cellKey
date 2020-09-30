@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -53,7 +57,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -67,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.18.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.18.13</span>
       </span>
     </div>
 
@@ -99,7 +103,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/sdcTools/cellKey/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -113,26 +122,65 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Changelog <small></small></h1>
-      
+      <h1 data-toc-skip>Changelog <small></small></h1>
+      <small>Source: <a href='https://github.com/sdcTools/cellKey/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="cellkey-0-18-13" class="section level1">
+<h1 class="page-header" data-toc-text="0.18.13">
+<a href="#cellkey-0-18-13" class="anchor"></a>cellKey 0.18.13</h1>
+<ul>
+<li>bugfix: do not perturb cells with value 0 using flex-approach</li>
+</ul>
+</div>
+    <div id="cellkey-0-18-12" class="section level1">
+<h1 class="page-header" data-toc-text="0.18.12">
+<a href="#cellkey-0-18-12" class="anchor"></a>cellKey 0.18.12</h1>
+<ul>
+<li>bugfix: use only actual number of contributors in flex-approach when perturbing numvars</li>
+</ul>
+</div>
+    <div id="cellkey-0-18-11" class="section level1">
+<h1 class="page-header" data-toc-text="0.18.11">
+<a href="#cellkey-0-18-11" class="anchor"></a>cellKey 0.18.11</h1>
+<ul>
+<li>performance-improvment: speed-up computation of contributing units to cells</li>
+</ul>
+</div>
+    <div id="cellkey-0-18-10" class="section level1">
+<h1 class="page-header" data-toc-text="0.18.10">
+<a href="#cellkey-0-18-10" class="anchor"></a>cellKey 0.18.10</h1>
+<ul>
+<li>bugfix: scrambling cell keys having not enough digits</li>
+<li>bugfix: computation separation point in flex-approach</li>
+</ul>
+</div>
+    <div id="cellkey-0-18-9" class="section level1">
+<h1 class="page-header" data-toc-text="0.18.9">
+<a href="#cellkey-0-18-9" class="anchor"></a>cellKey 0.18.9</h1>
+<ul>
+<li>set default value of argument <code>w = NULL</code> in <code><a href="../reference/ck_class.html">ck_setup()</a></code>
+</li>
+<li>improve some error messages/outputs</li>
+<li>bugfix when looking up perturbation values; small_cells and others must not intersect</li>
+</ul>
+</div>
     <div id="cellkey-0-18-8" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.18.8">
 <a href="#cellkey-0-18-8" class="anchor"></a>cellKey 0.18.8</h1>
 <ul>
 <li>fixing issues with empty cells for magnitude tables</li>
 </ul>
 </div>
     <div id="cellkey-0-18-7" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.18.7">
 <a href="#cellkey-0-18-7" class="anchor"></a>cellKey 0.18.7</h1>
 <ul>
 <li>fixed computation of weighted spreads, thx <a href='https://github.com/staudtlex'>@staudtlex</a></li>
 </ul>
 </div>
     <div id="cellkey-0-18-6" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.18.6">
 <a href="#cellkey-0-18-6" class="anchor"></a>cellKey 0.18.6</h1>
 <ul>
 <li>do not perturb cells with 0 contributors in the flex-approach</li>
@@ -142,7 +190,7 @@
 </ul>
 </div>
     <div id="cellkey-0-18-5" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.18.5">
 <a href="#cellkey-0-18-5" class="anchor"></a>cellKey 0.18.5</h1>
 <ul>
 <li>document R6 methods/classes via <code>roxygen2</code>
@@ -150,14 +198,14 @@
 </ul>
 </div>
     <div id="cellkey-0-18-4" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.18.4">
 <a href="#cellkey-0-18-4" class="anchor"></a>cellKey 0.18.4</h1>
 <ul>
 <li>new method <code>hierarchy_info()</code> containing some important information for each dimension</li>
 </ul>
 </div>
     <div id="cellkey-0-18-3" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.18.3">
 <a href="#cellkey-0-18-3" class="anchor"></a>cellKey 0.18.3</h1>
 <ul>
 <li>reference new methods <code>create_cnt_ptable()</code> and <code>create_num_ptable()</code> from <a href="https://github.com/sdcTools/ptable">ptable-pkg</a>
@@ -169,7 +217,7 @@
 </ul>
 </div>
     <div id="cellkey-0-18-2" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.18.2">
 <a href="#cellkey-0-18-2" class="anchor"></a>cellKey 0.18.2</h1>
 <ul>
 <li>feature: allow objects from <code><a href="https://rdrr.io/pkg/ptable/man/pt_create_pParams.html">ptable::pt_create_pParams</a></code> as input in <code><a href="../reference/ck_params_cnts.html">ck_params_cnts()</a></code>
@@ -179,10 +227,10 @@
 </ul>
 </div>
     <div id="cellkey-0-18-1" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.18.1">
 <a href="#cellkey-0-18-1" class="anchor"></a>cellKey 0.18.1</h1>
 <ul>
-<li>bugfix: fallback to use a single core on windows-machines, fixing <a href="https://github.com/sdcTools/UserSupport/issues/131"><code>issue #131</code></a>
+<li>bugfix: fallback to use a single core on windows-machines, fixing <a href="https://github.com/sdcTools/UserSupport/issues/131"><code>issue <a href='https://github.com/sdcTools/cellKey/issues/131'>#131</a></code></a>
 </li>
 <li>updating dependencies and required versions</li>
 <li>fix vignette due to updates in <code>ptable</code>-pkg</li>
@@ -197,7 +245,7 @@
 </ul>
 </div>
     <div id="cellkey-0-18-0" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.18.0">
 <a href="#cellkey-0-18-0" class="anchor"></a>cellKey 0.18.0</h1>
 <ul>
 <li>allow to save perturbation-schemes for different variables in <code>params_cnts_set()</code> and <code>params_nums_set()</code>
@@ -237,21 +285,21 @@
 </ul>
 </div>
     <div id="cellkey-0-17-3" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.17.3">
 <a href="#cellkey-0-17-3" class="anchor"></a>cellKey 0.17.3</h1>
 <ul>
 <li>correctly compute perturbed weighted counts</li>
 </ul>
 </div>
     <div id="cellkey-0-17-2" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.17.2">
 <a href="#cellkey-0-17-2" class="anchor"></a>cellKey 0.17.2</h1>
 <ul>
 <li>fixed issue in lookup up values for frequency tables</li>
 </ul>
 </div>
     <div id="cellkey-0-17-1" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.17.1">
 <a href="#cellkey-0-17-1" class="anchor"></a>cellKey 0.17.1</h1>
 <ul>
 <li>adding parameter <code>exclude_zero_cells</code> to <code><a href="../reference/ck_cnt_measures.html">ck_cnt_measures()</a></code>
@@ -260,7 +308,7 @@
 </ul>
 </div>
     <div id="cellkey-0-17-0" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.17.0">
 <a href="#cellkey-0-17-0" class="anchor"></a>cellKey 0.17.0</h1>
 <ul>
 <li>force usage of functionality from <a href="https://github.com/bernhard-da/sdcHierarchies"><code>sdcHierarchies</code></a> to define hierarchies</li>
@@ -269,7 +317,7 @@
 <li>removed <code>by</code>-argument in <code>$perturb()</code> method</li>
 <li>rewrite frequency table perturbation using <code>R6</code> classes
 <ul>
-<li>new function <code><a href="../reference/cellkey_pkg.html">ck_setup()</a></code> to define a table</li>
+<li>new function <code><a href="../reference/ck_class.html">ck_setup()</a></code> to define a table</li>
 <li>allow multiple variables in method <code>$perturb()</code>-method</li>
 <li>removed <code>ck_export_table()</code> and added arguments to method <code>freqtab()</code>
 </li>
@@ -294,21 +342,21 @@
 </ul>
 </div>
     <div id="cellkey-0-16-3" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.16.3">
 <a href="#cellkey-0-16-3" class="anchor"></a>cellKey 0.16.3</h1>
 <ul>
 <li>fix tests due to changes in R 3.6.0</li>
 </ul>
 </div>
     <div id="cellkey-0-16-2" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.16.2">
 <a href="#cellkey-0-16-2" class="anchor"></a>cellKey 0.16.2</h1>
 <ul>
 <li>install <code>ptable</code> from personal fork until <code>sdcTools/ptable</code> is updated</li>
 </ul>
 </div>
     <div id="cellkey-0-16-1" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.16.1">
 <a href="#cellkey-0-16-1" class="anchor"></a>cellKey 0.16.1</h1>
 <ul>
 <li>removed placeholder for <code>pThreshold</code> in <code>perturbTable()</code>
@@ -316,7 +364,7 @@
 </ul>
 </div>
     <div id="cellkey-0-16-0" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.16.0">
 <a href="#cellkey-0-16-0" class="anchor"></a>cellKey 0.16.0</h1>
 <ul>
 <li>make use of new package <code>sdcHierarchies</code> to generate and update hierarchies</li>
@@ -327,7 +375,7 @@
 </ul>
 </div>
     <div id="cellkey-0-15-0" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.15.0">
 <a href="#cellkey-0-15-0" class="anchor"></a>cellKey 0.15.0</h1>
 <ul>
 <li>new convenience function <code><a href="../reference/ck_vignette.html">ck_vignette()</a></code> that displays the package vignette in a browser</li>
@@ -338,7 +386,7 @@
 </ul>
 </div>
     <div id="cellkey-0-14-0" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.14.0">
 <a href="#cellkey-0-14-0" class="anchor"></a>cellKey 0.14.0</h1>
 <ul>
 <li>feature: new method <code>ck_export_table()</code> that allows to save results in a simple format</li>
@@ -349,7 +397,7 @@
 </ul>
 </div>
     <div id="cellkey-0-13-4" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.13.4">
 <a href="#cellkey-0-13-4" class="anchor"></a>cellKey 0.13.4</h1>
 <ul>
 <li>feature: new function <code>ck_cnt_measures_basic()</code> that computes infoloss/utility measures based on two input vectors referring to original and perturbed values</li>
@@ -357,7 +405,7 @@
 </ul>
 </div>
     <div id="cellkey-0-13-3" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.13.3">
 <a href="#cellkey-0-13-3" class="anchor"></a>cellKey 0.13.3</h1>
 <ul>
 <li>feature: perturbation parameters for magnitude tables can be left empty</li>
@@ -366,7 +414,7 @@
 </ul>
 </div>
     <div id="cellkey-0-13-2" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.13.2">
 <a href="#cellkey-0-13-2" class="anchor"></a>cellKey 0.13.2</h1>
 <ul>
 <li>feature: new method <code><a href="https://rdrr.io/r/base/print.html">print()</a></code> for objects returned from <code>perturbTable()</code>
@@ -376,7 +424,7 @@
 </ul>
 </div>
     <div id="cellkey-0-13-1" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.13.1">
 <a href="#cellkey-0-13-1" class="anchor"></a>cellKey 0.13.1</h1>
 <ul>
 <li>small updates to reflect changes in <a href="http://github.com/tenderle/ptable"><strong>ptable</strong></a>
@@ -384,7 +432,7 @@
 </ul>
 </div>
     <div id="cellkey-0-13-0" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.13.0">
 <a href="#cellkey-0-13-0" class="anchor"></a>cellKey 0.13.0</h1>
 <ul>
 <li>depend on package <a href="http://github.com/sdcTools/ptable"><strong>ptable</strong></a> to generate the perturbation tables by rewriting <code>ck_create_pTable()</code>; thus the package must be installed, e.g using <code><a href="https://devtools.r-lib.org//reference/remote-reexports.html">devtools::install_github("sdcTools/ptable", build_vignette=FALSE)</a></code>
@@ -392,14 +440,14 @@
 </ul>
 </div>
     <div id="cellkey-0-12-0" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.12.0">
 <a href="#cellkey-0-12-0" class="anchor"></a>cellKey 0.12.0</h1>
 <ul>
 <li>feature: use package <a href="http://github.com/sdcTools/ptable"><strong>ptable</strong></a> to generate pTables in destatis format</li>
 </ul>
 </div>
     <div id="cellkey-0-11-0" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.11.0">
 <a href="#cellkey-0-11-0" class="anchor"></a>cellKey 0.11.0</h1>
 <ul>
 <li>feature: use functions to create hierarchies directly from <code>sdcTable</code> and bump version requirement of this package to <code>&gt;=0.23</code>
@@ -407,21 +455,21 @@
 </ul>
 </div>
     <div id="cellkey-0-10-2" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.10.2">
 <a href="#cellkey-0-10-2" class="anchor"></a>cellKey 0.10.2</h1>
 <ul>
 <li>feature: if a (valid) variable is specified in argument <code>by</code> <code>in perturbTable()</code> it is automatically added to <code>countVars</code> even though not explicitely specified.</li>
 </ul>
 </div>
     <div id="cellkey-0-10-1" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.10.1">
 <a href="#cellkey-0-10-1" class="anchor"></a>cellKey 0.10.1</h1>
 <ul>
 <li>feature: <code>perturbTable()</code> gained an optional new argument <code>by</code>. In this argument one can use a variable that must also be listed in <code>countVars</code>. This variable is then used to compute the magnitute tables <em>by</em> the given 0/1 binary variable. For an example see <code>?perturbTable</code>.</li>
 </ul>
 </div>
     <div id="cellkey-0-10-0" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.10.0">
 <a href="#cellkey-0-10-0" class="anchor"></a>cellKey 0.10.0</h1>
 <ul>
 <li>feature: new argument <code>countVars</code> in <code>perturbTable()</code> which allows to additionally tabulate any number or 0/1 variables. For such variables. In such case, the record-keys of non-contribution units are set to 0 prior to the lookup in the perturbation table</li>
@@ -433,19 +481,19 @@
 </ul>
 </div>
     <div id="version-0-9-1" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.9.1">
 <a href="#version-0-9-1" class="anchor"></a>Version 0.9.1</h1>
 <ul>
 <li>bugfix for continous tables using pre-specified record keys</li>
 </ul>
 </div>
     <div id="cellkey-0-9-0" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.9.0">
 <a href="#cellkey-0-9-0" class="anchor"></a>cellKey 0.9.0</h1>
 <ul>
 <li>
 <p>feature: new dynamic way to specify hierarchies for tables, for an example see <code>?ck_manage_hierarchies</code>. This functionality will eventually also find its way to <strong>sdcTable</strong></p>
-<h1 id="cellkey-0.8.2" class="page-header">cellKey 0.8.2</h1>
+<h1 id="cellkey-0.8.2" class="page-header" data-toc-text="0.9.0">cellKey 0.8.2</h1>
 <ul>
 <li>bugfix: rkeys need not to be integer if the “destatis”-method is used</li>
 </ul>
@@ -453,14 +501,14 @@
 </ul>
 </div>
     <div id="cellkey-0-8-1" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.8.1">
 <a href="#cellkey-0-8-1" class="anchor"></a>cellKey 0.8.1</h1>
 <ul>
 <li>small fixes and some exported function gained <code>verbose</code> arguments</li>
 </ul>
 </div>
     <div id="cellkey-0-8-0" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.8.0">
 <a href="#cellkey-0-8-0" class="anchor"></a>cellKey 0.8.0</h1>
 <ul>
 <li>feature: perturbation tables (<code>pTable</code>) can now be specified in two different formats. The (default) way is to specify it as described in the original ABS-paper <em>Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics</em> (Thompson, Broadfoot, Elazar). An alternative way is to provide the perturbation tables for count tables in the <em>“destatis”</em>-format. <code>ck_create_pTable(type="destatis")</code> returns an exemplary pTable in this format. In the future, such pTables will likely be generated from another package. As the requirements regarding record keys are different in the following lookup-approach, we have already implemented some (basic) checks for validity of record keys when they are already available in the microdata used in <code>ck_create_input()</code>.</li>
@@ -468,45 +516,10 @@
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <div id="tocnav">
-      <h2>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-        <li><a href="#cellkey-0-18-8">0.18.8</a></li>
-        <li><a href="#cellkey-0-18-7">0.18.7</a></li>
-        <li><a href="#cellkey-0-18-6">0.18.6</a></li>
-        <li><a href="#cellkey-0-18-5">0.18.5</a></li>
-        <li><a href="#cellkey-0-18-4">0.18.4</a></li>
-        <li><a href="#cellkey-0-18-3">0.18.3</a></li>
-        <li><a href="#cellkey-0-18-2">0.18.2</a></li>
-        <li><a href="#cellkey-0-18-1">0.18.1</a></li>
-        <li><a href="#cellkey-0-18-0">0.18.0</a></li>
-        <li><a href="#cellkey-0-17-3">0.17.3</a></li>
-        <li><a href="#cellkey-0-17-2">0.17.2</a></li>
-        <li><a href="#cellkey-0-17-1">0.17.1</a></li>
-        <li><a href="#cellkey-0-17-0">0.17.0</a></li>
-        <li><a href="#cellkey-0-16-3">0.16.3</a></li>
-        <li><a href="#cellkey-0-16-2">0.16.2</a></li>
-        <li><a href="#cellkey-0-16-1">0.16.1</a></li>
-        <li><a href="#cellkey-0-16-0">0.16.0</a></li>
-        <li><a href="#cellkey-0-15-0">0.15.0</a></li>
-        <li><a href="#cellkey-0-14-0">0.14.0</a></li>
-        <li><a href="#cellkey-0-13-4">0.13.4</a></li>
-        <li><a href="#cellkey-0-13-3">0.13.3</a></li>
-        <li><a href="#cellkey-0-13-2">0.13.2</a></li>
-        <li><a href="#cellkey-0-13-1">0.13.1</a></li>
-        <li><a href="#cellkey-0-13-0">0.13.0</a></li>
-        <li><a href="#cellkey-0-12-0">0.12.0</a></li>
-        <li><a href="#cellkey-0-11-0">0.11.0</a></li>
-        <li><a href="#cellkey-0-10-2">0.10.2</a></li>
-        <li><a href="#cellkey-0-10-1">0.10.1</a></li>
-        <li><a href="#cellkey-0-10-0">0.10.0</a></li>
-        <li><a href="#version-0-9-1">0.9.1</a></li>
-        <li><a href="#cellkey-0-9-0">0.9.0</a></li>
-        <li><a href="#cellkey-0-8-1">0.8.1</a></li>
-        <li><a href="#cellkey-0-8-0">0.8.0</a></li>
-      </ul>
-    </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 
 </div>
@@ -518,7 +531,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
