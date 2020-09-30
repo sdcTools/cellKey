@@ -1,3 +1,6 @@
+# cellKey 0.18.13
+- bugfix: do not perturb cells with value 0 using flex-approach
+
 # cellKey 0.18.12
 - bugfix: use only actual number of contributors in flex-approach when perturbing numvars
 
