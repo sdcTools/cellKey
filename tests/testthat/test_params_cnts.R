@@ -1,9 +1,4 @@
-if (R.version$major >= 3 & R.version$minor >= 6) {
-  suppressWarnings(set.seed(120, sample.kind = "Rounding"))
-} else {
-  set.seed(120)
-}
-
+set.seed(120, sample.kind = "Reject")
 
 para <- ptable::pt_create_pParams(
   D = 5,

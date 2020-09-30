@@ -1,10 +1,6 @@
 context("Testing Magnitude Tables")
 
-if (R.version$major >= 3 & R.version$minor >= 6) {
-  suppressWarnings(set.seed(120, sample.kind = "Rounding"))
-} else {
-  set.seed(120)
-}
+set.seed(120, sample.kind = "Reject")
 
 x <- ck_create_testdata()
 # create some 0/1 variables that should be perturbed later
@@ -27,7 +23,7 @@ dims <- list(sex = dim_sex, age = dim_age)
 x$rkey <- ck_generate_rkeys(dat = x, nr_digits = 8)
 
 test_that("checking dimension and structure of generated testdata is ok", {
-  expect_identical(digest::digest(x), "adb7111c9f85652b0744200eb9b8b30e")
+  expect_identical(digest::digest(x), "cb30182261fa548166736d64952096c4")
   expect_true(is.data.table(x))
 })
 
@@ -57,7 +53,7 @@ test_that("ptable params can be used too", {
       mult_params = flex))
 })
 
-set.seed(100)
+set.seed(100, sample.kind = "Reject")
 ptab <- ptable::pt_ex_nums(
   parity = TRUE,
   separation = FALSE)
@@ -113,8 +109,8 @@ expect_message(tab$perturb("income"), "Numeric variable 'income' was perturbed."
 expect_message(tab$perturb("savings"), "Numeric variable 'savings' was perturbed.")
 
 test_that("variable was correctly perturbed", {
-  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = FALSE)), "f26f2eb9f88b3f691354c7450e39b7e443aa8352")
-  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = FALSE)), "21c708fc30cd613797ac67cbb28468676b4db84c")
-  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = TRUE)), "20ff3a0b92dff03a6c4cff1580ad4fcf31dcf3c7")
-  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = TRUE)), "c243c42a6cff0cb7e44bbb4af9eaed69d543a7a3")
+  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = FALSE)), "c7d6aa3f48c3dd27aa8efa56f5871a82125c21e6")
+  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = FALSE)), "8d771752f0c828bff328841ab11145a4387d89a2")
+  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = TRUE)), "e5c881d41ece8a9c1d00eb406a1fe5e4d18f00ca")
+  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = TRUE)), "ee4e15c7df4802bf9696a9fd50741457717f4749")
 })

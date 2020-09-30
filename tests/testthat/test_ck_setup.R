@@ -1,9 +1,4 @@
-if (R.version$major >= 3 & R.version$minor >= 6) {
-  suppressWarnings(set.seed(120, sample.kind = "Rounding"))
-} else {
-  set.seed(120)
-}
-
+set.seed(120, sample.kind = "Reject")
 context("Testing ck_setup()")
 x <- ck_create_testdata()
 # create some 0/1 variables that should be perturbed later

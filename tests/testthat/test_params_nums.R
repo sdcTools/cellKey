@@ -1,9 +1,4 @@
-if (R.version$major >= 3 & R.version$minor >= 6) {
-  suppressWarnings(set.seed(120, sample.kind = "Rounding"))
-} else {
-  set.seed(120)
-}
-
+set.seed(120, sample.kind = "Reject")
 f_yaml <- tempfile(fileext = ".yaml")
 
 context("Testing perturbation parameters for num-vars")
@@ -99,7 +94,8 @@ test_that("invalid inputs are caught", {
     "ignoring argument `top_k`")
 })
 
-set.seed(100)
+set.seed(120, sample.kind = "Reject")
+
 f_yaml <- tempfile(fileext = ".yaml")
 p <- ck_params_nums(
   type = "top_contr",
@@ -124,7 +120,7 @@ test_that("top_contr works with flex_params", {
 })
 file.remove(f_yaml)
 
-set.seed(100)
+set.seed(120, sample.kind = "Reject")
 f_yaml <- tempfile(fileext = ".yaml")
 p <- ck_params_nums(
   type = "top_contr",
@@ -147,7 +143,7 @@ test_that("top_contr works with single flex", {
 })
 file.remove(f_yaml)
 
-set.seed(100)
+set.seed(120, sample.kind = "Reject")
 simple$epsilon <- 1
 f_yaml <- tempfile(fileext = ".yaml")
 p <- ck_params_nums(
