@@ -181,6 +181,13 @@ tab$supp_pq(v = "income", p = 85, q = 90)
 tab$supp_nk(v = "income", n = 2, k = 90)
 tab$supp_freq(v = "income", n = 14, weighted = FALSE)
 tab$supp_val(v = "income", n = 10000, weighted = TRUE)
+tab$supp_cells(
+  v = "income",
+  inp = data.frame(
+    sex = c("female", "female"),
+    "age" = c("age_group1", "age_group3")
+  )
+)
 
 # perturb variables
 tab$perturb(v = c("income", "savings"))

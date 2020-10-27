@@ -182,6 +182,13 @@ tab$supp_pq(v = "income", p = 85, q = 90)
 tab$supp_nk(v = "income", n = 2, k = 90)
 tab$supp_freq(v = "income", n = 14, weighted = FALSE)
 tab$supp_val(v = "income", n = 10000, weighted = TRUE)
+tab$supp_cells(
+  v = "income",
+  inp = data.frame(
+    sex = c("female", "female"),
+    "age" = c("age_group1", "age_group3")
+  )
+)
 
 # perturb variables
 tab$perturb(v = c("income", "savings"))
@@ -232,6 +239,7 @@ tab$summary()
 \item \href{#method-mod_nums}{\code{ck_class$mod_nums()}}
 \item \href{#method-supp_freq}{\code{ck_class$supp_freq()}}
 \item \href{#method-supp_val}{\code{ck_class$supp_val()}}
+\item \href{#method-supp_cells}{\code{ck_class$supp_cells()}}
 \item \href{#method-supp_p}{\code{ck_class$supp_p()}}
 \item \href{#method-supp_pq}{\code{ck_class$supp_pq()}}
 \item \href{#method-supp_nk}{\code{ck_class$supp_nk()}}
@@ -541,7 +549,7 @@ the threshold specified in \code{n} (default); else the unweighted number of con
 \if{html}{\out{<a id="method-supp_val"></a>}}
 \if{latex}{\out{\hypertarget{method-supp_val}{}}}
 \subsection{Method \code{supp_val()}}{
-Identify sensitive cells based on weighted or unweighted cell values.minimum frequency rule
+Identify sensitive cells based on weighted or unweighted cell value
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ck_class$supp_val(v, n, weighted = TRUE)}\if{html}{\out{</div>}}
 }
@@ -555,6 +563,27 @@ Identify sensitive cells based on weighted or unweighted cell values.minimum fre
 
 \item{\code{weighted}}{if \code{TRUE}, the weighted cell value of variable \code{v} is compared to
 the threshold specified in \code{n} (default); else the unweighted number is used.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-supp_cells"></a>}}
+\if{latex}{\out{\hypertarget{method-supp_cells}{}}}
+\subsection{Method \code{supp_cells()}}{
+Identify sensitive cells based on their \code{names}
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ck_class$supp_cells(v, inp)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{v}}{a single variable name of a continuous variable (see method \code{numvars()})}
+
+\item{\code{inp}}{a \code{data.frame} where each colum represents a dimensional variable. Each row of
+this input is then used to compute the relevant cells to be identified as sensitive where
+\code{NA}-values are possible and used to match any characteristics of the dimensional variable.}
 }
 \if{html}{\out{</div>}}
 }

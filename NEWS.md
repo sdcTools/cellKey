@@ -1,3 +1,6 @@
+# cellKey 0.18.14
+- feature: new method `$supp_cells()` that allows to specifiy sensitive cells based on names
+
 # cellKey 0.18.13
 - bugfix: do not perturb cells with value 0 using flex-approach
 

@@ -214,7 +214,7 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       # the .contributing_indices_tmp() should be removed
       # once sdcTable 0.32 is on cran as this version has the
       # appropriate fixes;
-      .contributing_indices_tmp = function(prob, ids = NULL) {
+      .contributing_indices_tmp <- function(prob, ids = NULL) {
         # returns all contributing codes for each dimensions
         # of a sdcProblem-object; dimensions are converted
         # sdcHierarchies-trees and hier_info() is then used.
@@ -225,7 +225,7 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
               codes = slot(d, "codesOriginal"),
               stringsAsFactors = FALSE
             )
-            df$levels <- sapply(1:nrow(df), function(x) {
+            df$levels <- sapply(seq_len(nrow(df)), function(x) {
               paste0(rep("@", df$levels[x]), collapse = "")
             })
             hier_import(df, from = "df")
@@ -290,7 +290,7 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
         # merge inner cell-info to data
         dt_inner <- data.table(id = prob@dimInfo@strID, is_inner = TRUE)
-        dt_inner$idx <- 1:nrow(dt_inner)
+        dt_inner$idx <- seq_len(nrow(dt_inner))
         dt_inner <- dt[dt_inner, on = "id"]
 
         dt_inner$tmp <- apply(dt_inner[, dimvars, with = FALSE], 1, paste0, collapse = "")
@@ -304,13 +304,13 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         names(res) <- ids
 
         for (i in seq_len(nrow(dt))) {
-          strID <- dt$id[i]
+          str_id <- dt$id[i]
           if (dt$freq[i] == 0) {
-            res[[strID]] <- integer()
+            res[[str_id]] <- integer()
           } else {
-            index_vec <- which(dt_inner$id == strID)
+            index_vec <- which(dt_inner$id == str_id)
             if (length(index_vec) > 0) {
-              res[[strID]] <- dt_inner$idx[index_vec]
+              res[[str_id]] <- dt_inner$idx[index_vec]
             } else {
               lev_info <- vector("list", length = nr_dims)
               names(lev_info) <- dimvars
@@ -324,7 +324,7 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
                 }
               }
               cell_indices <- sdcTable:::pasteStrVec(unlist(expand.grid(lev_info)), nr_dims)
-              res[[strID]] <- which(dt_inner$tmp %in% cell_indices)
+              res[[str_id]] <- which(dt_inner$tmp %in% cell_indices)
             }
           }
         }
@@ -803,7 +803,7 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       invisible(self)
     },
 
-    #' @description Identify sensitive cells based on weighted or unweighted cell values.minimum frequency rule
+    #' @description Identify sensitive cells based on weighted or unweighted cell value
     #' @param v a single variable name of a continuous variable (see method `numvars()`)
     #' @param n a number defining the threshold. All cells `<= n` are considered as unsafe.
     #' @param weighted if `TRUE`, the weighted cell value of variable `v` is compared to
@@ -830,6 +830,59 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       res <- sdcProb2df(private$.prob, addDups = TRUE, addNumVars = TRUE)[[testv]]
       pat <- res <= n
       private$.update_supps(v = v, pat = pat, rule = "val-rule")
+      invisible(self)
+    },
+
+    #' @description Identify sensitive cells based on their `names`
+    #' @param v a single variable name of a continuous variable (see method `numvars()`)
+    #' @param inp a `data.frame` where each colum represents a dimensional variable. Each row of
+    #' this input is then used to compute the relevant cells to be identified as sensitive where
+    #' `NA`-values are possible and used to match any characteristics of the dimensional variable.
+    supp_cells = function(v, inp) {
+      .check_avail(
+        v = v,
+        avail = self$numvars(),
+        msg = "Invalid variable specified in `v`:",
+        single_v = TRUE
+      )
+
+      if (!inherits(inp, "data.frame")) {
+        stop("argument `inp` needs to be a `data.frame`", call. = FALSE)
+      }
+
+      dv <- sort(private$.ck_vars("dimvars"))
+      if (!identical(sort(names(inp)), dv)) {
+        e <- c(
+          "invalid and/or missing columns detected in argument `inp`",
+          "(needs to match names of dimensional variables)"
+        )
+        stop(paste(e, collapse = " "), call. = FALSE)
+      }
+
+      for (vname in names(inp)) {
+        if (!all(na.omit(unique(inp[[vname]])) %in% private$.results$dims[[vname]])) {
+          e <- c(
+            "invalid/unknown values detected in argument `inp`",
+            "in column", shQuote(vname)
+          )
+          stop(paste(e, collapse = " "), call. = FALSE)
+        }
+      }
+
+      inp <- as.data.frame(inp)
+      inp <- inp[, dv, drop = FALSE]
+      res <- sdcProb2df(private$.prob, addDups = TRUE, addNumVars = TRUE, dimCodes = "original")
+      res <- res[, c("strID", "freq", dv), with = FALSE]
+      res$supp <- FALSE
+      inp$tmpid <- seq_len(nrow(inp))
+      for (i in seq_len(nrow(inp))) {
+        xx <- inp[i, , drop = FALSE]
+        xx <- xx[, !apply(xx, 2, is.na), drop = FALSE]
+        res <- merge(res, xx, by = setdiff(names(xx), "tmpid"), all.x = TRUE)
+        res[!is.na(tmpid), supp := TRUE]
+        res[, tmpid := NULL]
+      }
+      private$.update_supps(v = v, pat = res$supp, rule = "cell-rule")
       invisible(self)
     },
 
@@ -1784,6 +1837,13 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' tab$supp_nk(v = "income", n = 2, k = 90)
 #' tab$supp_freq(v = "income", n = 14, weighted = FALSE)
 #' tab$supp_val(v = "income", n = 10000, weighted = TRUE)
+#' tab$supp_cells(
+#'   v = "income",
+#'   inp = data.frame(
+#'     sex = c("female", "female"),
+#'     "age" = c("age_group1", "age_group3")
+#'   )
+#' )
 #'
 #' # perturb variables
 #' tab$perturb(v = c("income", "savings"))

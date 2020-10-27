@@ -269,12 +269,29 @@ In order to make use of parameter `mu_c` that allows ab add extra amount of prot
 - `supp_nk()`: identify sensitive cells based on nk-dominance rule
 - `supp_freq()`: identify sensitive cells based on minimal frequencies for (weighted) number of contributors
 - `supp_val()`: identify sensitive cells based on (weighted) cell values
+- `supp_cells()`: identify sensitive cells based on their "names"
 
 We now want to set all cells for variable `income` as sensitive to which less than `15` units contribute.
 
 ```{r, eval = TRUE}
 tab$supp_freq(v = "income", n = 15, weighted = FALSE)
 ```
+
+
+To set specific cells independent on values but their names, one may use the `$supp_cells()`-method. This cell requires a `data.frame` as input that contains a column for each dimensional variable specified. Each row of this input is considered as a cell where `NAs` are used as placeholders that match any characteristic of the relevant variable. Using the `data.frame` `inp` show below, the programm would suppress the following cells:
+
+- `female` x `age_group1`
+- `male` x `age_group3`
+- `male` x any age group available in the data
+
+
+```{r, eval = FALSE}
+inp <- data.frame(
+  "sex" = c("female", "male", "male"),
+  "age" = c("age_group1", "age_group3", NA)
+)
+```
+
 
 ### Compute perturbed tables
 It is now possible to finally perturbed variables using the `perturb()`-method. As `tab` - the object created with `ck_setup()` - already contains all possible data, the only required input is the name of a variable that should be perturbed.
