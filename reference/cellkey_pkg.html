@@ -73,7 +73,7 @@ count and numerical variables." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.18.13</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.19.0</span>
       </span>
     </div>
 
@@ -195,6 +195,7 @@ These variables can later be perturbed.</p></td>
 <li><p><a href='#method-mod_nums'><code>ck_class$mod_nums()</code></a></p></li>
 <li><p><a href='#method-supp_freq'><code>ck_class$supp_freq()</code></a></p></li>
 <li><p><a href='#method-supp_val'><code>ck_class$supp_val()</code></a></p></li>
+<li><p><a href='#method-supp_cells'><code>ck_class$supp_cells()</code></a></p></li>
 <li><p><a href='#method-supp_p'><code>ck_class$supp_p()</code></a></p></li>
 <li><p><a href='#method-supp_pq'><code>ck_class$supp_pq()</code></a></p></li>
 <li><p><a href='#method-supp_nk'><code>ck_class$supp_nk()</code></a></p></li>
@@ -413,7 +414,7 @@ the threshold specified in <code>n</code> (default); else the unweighted number 
 </dl><p></div></p>
 <p><hr>
 <a id="method-supp_val"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>supp_val()</code></h3>
-<p>Identify sensitive cells based on weighted or unweighted cell values.minimum frequency rule</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p>Identify sensitive cells based on weighted or unweighted cell value</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>ck_class</span><span class='op'>$</span><span class='fu'>supp_val</span><span class='op'>(</span><span class='va'>v</span>, <span class='va'>n</span>, weighted <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
@@ -424,6 +425,20 @@ the threshold specified in <code>n</code> (default); else the unweighted number 
 
 <dt><code>weighted</code></dt><dd><p>if <code>TRUE</code>, the weighted cell value of variable <code>v</code> is compared to
 the threshold specified in <code>n</code> (default); else the unweighted number is used.</p></dd>
+
+</dl><p></div></p>
+<p><hr>
+<a id="method-supp_cells"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>supp_cells()</code></h3>
+<p>Identify sensitive cells based on their <code>names</code></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>ck_class</span><span class='op'>$</span><span class='fu'>supp_cells</span><span class='op'>(</span><span class='va'>v</span>, <span class='va'>inp</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>v</code></dt><dd><p>a single variable name of a continuous variable (see method <code>numvars()</code>)</p></dd>
+
+<dt><code>inp</code></dt><dd><p>a <code>data.frame</code> where each colum represents a dimensional variable. Each row of
+this input is then used to compute the relevant cells to be identified as sensitive where
+<code>NA</code>-values are possible and used to match any characteristics of the dimensional variable.</p></dd>
 
 </dl><p></div></p>
 <p><hr>
@@ -784,7 +799,7 @@ which the parameters should be set.</p></dd>
 <span class='va'>p_cnts1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='ck_params_cnts.html'>ck_params_cnts</a></span><span class='op'>(</span>
   ptab <span class='op'>=</span> <span class='fu'>ptable</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/ptable/man/pt_ex_cnts.html'>pt_ex_cnts</a></span><span class='op'>(</span><span class='op'>)</span>,
   path <span class='op'>=</span> <span class='va'>f_yaml</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmptOwavS/fileeda2f15e8d6.yaml' successfully written.</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmpYzze5a/file48667eb4c51b.yaml' successfully written.</span></div><div class='input'>
 <span class='co'># read parameters from yaml-file and set them for variable `"total"`</span>
 <span class='va'>p_cnts1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='ck_read_yaml.html'>ck_read_yaml</a></span><span class='op'>(</span>path <span class='op'>=</span> <span class='va'>f_yaml</span><span class='op'>)</span>
 
@@ -927,7 +942,7 @@ which the parameters should be set.</p></dd>
   same_key <span class='op'>=</span> <span class='cn'>FALSE</span>,
   use_zero_rkeys <span class='op'>=</span> <span class='cn'>FALSE</span>,
   path <span class='op'>=</span> <span class='va'>f_yaml</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmptOwavS/fileeda5049da9.yaml' successfully written.</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmpYzze5a/file48665687404d.yaml' successfully written.</span></div><div class='input'>
 <span class='co'># we read the parameters from the yaml-file</span>
 <span class='va'>p_nums1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='ck_read_yaml.html'>ck_read_yaml</a></span><span class='op'>(</span>path <span class='op'>=</span> <span class='va'>f_yaml</span><span class='op'>)</span>
 
@@ -964,7 +979,14 @@ which the parameters should be set.</p></dd>
 </div><div class='output co'>#&gt; <span class='message'>pq-rule: 0 new sensitive cells (incl. duplicates) found (total: 0)</span></div><div class='input'><span class='va'>tab</span><span class='op'>$</span><span class='fu'>supp_nk</span><span class='op'>(</span>v <span class='op'>=</span> <span class='st'>"income"</span>, n <span class='op'>=</span> <span class='fl'>2</span>, k <span class='op'>=</span> <span class='fl'>90</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>nk-rule: 0 new sensitive cells (incl. duplicates) found (total: 0)</span></div><div class='input'><span class='va'>tab</span><span class='op'>$</span><span class='fu'>supp_freq</span><span class='op'>(</span>v <span class='op'>=</span> <span class='st'>"income"</span>, n <span class='op'>=</span> <span class='fl'>14</span>, weighted <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>freq-rule: 5 new sensitive cells (incl. duplicates) found (total: 5)</span></div><div class='input'><span class='va'>tab</span><span class='op'>$</span><span class='fu'>supp_val</span><span class='op'>(</span>v <span class='op'>=</span> <span class='st'>"income"</span>, n <span class='op'>=</span> <span class='fl'>10000</span>, weighted <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>val-rule: 0 new sensitive cells (incl. duplicates) found (total: 5)</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>val-rule: 0 new sensitive cells (incl. duplicates) found (total: 5)</span></div><div class='input'><span class='va'>tab</span><span class='op'>$</span><span class='fu'>supp_cells</span><span class='op'>(</span>
+  v <span class='op'>=</span> <span class='st'>"income"</span>,
+  inp <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>
+    sex <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"female"</span>, <span class='st'>"female"</span><span class='op'>)</span>,
+    <span class='st'>"age"</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"age_group1"</span>, <span class='st'>"age_group3"</span><span class='op'>)</span>
+  <span class='op'>)</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>cell-rule: 2 new sensitive cells (incl. duplicates) found (total: 7)</span></div><div class='input'>
 <span class='co'># perturb variables</span>
 <span class='va'>tab</span><span class='op'>$</span><span class='fu'>perturb</span><span class='op'>(</span>v <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"income"</span>, <span class='st'>"savings"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Numeric variable 'income' was perturbed.</span></div><div class='output co'>#&gt; <span class='message'>Numeric variable 'savings' was perturbed.</span></div><div class='input'>

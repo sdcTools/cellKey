@@ -73,7 +73,7 @@ to perturb count variables." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.18.13</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.19.0</span>
       </span>
     </div>
 
@@ -385,7 +385,7 @@ is available from the respective help-pages of these functions.</p></div>
 <span class='va'>p_cnts1</span> <span class='op'>&lt;-</span> <span class='fu'>ck_params_cnts</span><span class='op'>(</span>
   ptab <span class='op'>=</span> <span class='fu'>ptable</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/ptable/man/pt_ex_cnts.html'>pt_ex_cnts</a></span><span class='op'>(</span><span class='op'>)</span>,
   path <span class='op'>=</span> <span class='va'>f_yaml</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmptOwavS/fileeda37bb01f3.yaml' successfully written.</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmpYzze5a/file48663f69cbb5.yaml' successfully written.</span></div><div class='input'>
 <span class='co'># read parameters from yaml-file and set them for variable `"total"`</span>
 <span class='va'>p_cnts1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='ck_read_yaml.html'>ck_read_yaml</a></span><span class='op'>(</span>path <span class='op'>=</span> <span class='va'>f_yaml</span><span class='op'>)</span>
 
@@ -528,7 +528,7 @@ is available from the respective help-pages of these functions.</p></div>
   same_key <span class='op'>=</span> <span class='cn'>FALSE</span>,
   use_zero_rkeys <span class='op'>=</span> <span class='cn'>FALSE</span>,
   path <span class='op'>=</span> <span class='va'>f_yaml</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmptOwavS/fileeda60b48e0d.yaml' successfully written.</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmpYzze5a/file48666db94307.yaml' successfully written.</span></div><div class='input'>
 <span class='co'># we read the parameters from the yaml-file</span>
 <span class='va'>p_nums1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='ck_read_yaml.html'>ck_read_yaml</a></span><span class='op'>(</span>path <span class='op'>=</span> <span class='va'>f_yaml</span><span class='op'>)</span>
 
@@ -565,7 +565,14 @@ is available from the respective help-pages of these functions.</p></div>
 </div><div class='output co'>#&gt; <span class='message'>pq-rule: 0 new sensitive cells (incl. duplicates) found (total: 0)</span></div><div class='input'><span class='va'>tab</span><span class='op'>$</span><span class='fu'>supp_nk</span><span class='op'>(</span>v <span class='op'>=</span> <span class='st'>"income"</span>, n <span class='op'>=</span> <span class='fl'>2</span>, k <span class='op'>=</span> <span class='fl'>90</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>nk-rule: 0 new sensitive cells (incl. duplicates) found (total: 0)</span></div><div class='input'><span class='va'>tab</span><span class='op'>$</span><span class='fu'>supp_freq</span><span class='op'>(</span>v <span class='op'>=</span> <span class='st'>"income"</span>, n <span class='op'>=</span> <span class='fl'>14</span>, weighted <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>freq-rule: 5 new sensitive cells (incl. duplicates) found (total: 5)</span></div><div class='input'><span class='va'>tab</span><span class='op'>$</span><span class='fu'>supp_val</span><span class='op'>(</span>v <span class='op'>=</span> <span class='st'>"income"</span>, n <span class='op'>=</span> <span class='fl'>10000</span>, weighted <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>val-rule: 0 new sensitive cells (incl. duplicates) found (total: 5)</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>val-rule: 0 new sensitive cells (incl. duplicates) found (total: 5)</span></div><div class='input'><span class='va'>tab</span><span class='op'>$</span><span class='fu'>supp_cells</span><span class='op'>(</span>
+  v <span class='op'>=</span> <span class='st'>"income"</span>,
+  inp <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>
+    sex <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"female"</span>, <span class='st'>"female"</span><span class='op'>)</span>,
+    <span class='st'>"age"</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"age_group1"</span>, <span class='st'>"age_group3"</span><span class='op'>)</span>
+  <span class='op'>)</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>cell-rule: 2 new sensitive cells (incl. duplicates) found (total: 7)</span></div><div class='input'>
 <span class='co'># perturb variables</span>
 <span class='va'>tab</span><span class='op'>$</span><span class='fu'>perturb</span><span class='op'>(</span>v <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"income"</span>, <span class='st'>"savings"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Numeric variable 'income' was perturbed.</span></div><div class='output co'>#&gt; <span class='message'>Numeric variable 'savings' was perturbed.</span></div><div class='input'>

@@ -75,7 +75,7 @@ ck_params_nums()." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.18.13</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.19.0</span>
       </span>
     </div>
 
@@ -389,7 +389,7 @@ SGA <em>"Open Source tools for perturbative confidentiality methods"</em></p>
 <span class='va'>p_cnts1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='ck_params_cnts.html'>ck_params_cnts</a></span><span class='op'>(</span>
   ptab <span class='op'>=</span> <span class='fu'>ptable</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/ptable/man/pt_ex_cnts.html'>pt_ex_cnts</a></span><span class='op'>(</span><span class='op'>)</span>,
   path <span class='op'>=</span> <span class='va'>f_yaml</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmptOwavS/fileeda442950fd.yaml' successfully written.</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmpYzze5a/file486624034a21.yaml' successfully written.</span></div><div class='input'>
 <span class='co'># read parameters from yaml-file and set them for variable `"total"`</span>
 <span class='va'>p_cnts1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='ck_read_yaml.html'>ck_read_yaml</a></span><span class='op'>(</span>path <span class='op'>=</span> <span class='va'>f_yaml</span><span class='op'>)</span>
 
@@ -532,7 +532,7 @@ SGA <em>"Open Source tools for perturbative confidentiality methods"</em></p>
   same_key <span class='op'>=</span> <span class='cn'>FALSE</span>,
   use_zero_rkeys <span class='op'>=</span> <span class='cn'>FALSE</span>,
   path <span class='op'>=</span> <span class='va'>f_yaml</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmptOwavS/fileeda71f789d2.yaml' successfully written.</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>yaml configuration '/tmp/RtmpYzze5a/file4866420fa302.yaml' successfully written.</span></div><div class='input'>
 <span class='co'># we read the parameters from the yaml-file</span>
 <span class='va'>p_nums1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='ck_read_yaml.html'>ck_read_yaml</a></span><span class='op'>(</span>path <span class='op'>=</span> <span class='va'>f_yaml</span><span class='op'>)</span>
 
@@ -569,7 +569,14 @@ SGA <em>"Open Source tools for perturbative confidentiality methods"</em></p>
 </div><div class='output co'>#&gt; <span class='message'>pq-rule: 0 new sensitive cells (incl. duplicates) found (total: 0)</span></div><div class='input'><span class='va'>tab</span><span class='op'>$</span><span class='fu'>supp_nk</span><span class='op'>(</span>v <span class='op'>=</span> <span class='st'>"income"</span>, n <span class='op'>=</span> <span class='fl'>2</span>, k <span class='op'>=</span> <span class='fl'>90</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>nk-rule: 0 new sensitive cells (incl. duplicates) found (total: 0)</span></div><div class='input'><span class='va'>tab</span><span class='op'>$</span><span class='fu'>supp_freq</span><span class='op'>(</span>v <span class='op'>=</span> <span class='st'>"income"</span>, n <span class='op'>=</span> <span class='fl'>14</span>, weighted <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>freq-rule: 5 new sensitive cells (incl. duplicates) found (total: 5)</span></div><div class='input'><span class='va'>tab</span><span class='op'>$</span><span class='fu'>supp_val</span><span class='op'>(</span>v <span class='op'>=</span> <span class='st'>"income"</span>, n <span class='op'>=</span> <span class='fl'>10000</span>, weighted <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>val-rule: 0 new sensitive cells (incl. duplicates) found (total: 5)</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>val-rule: 0 new sensitive cells (incl. duplicates) found (total: 5)</span></div><div class='input'><span class='va'>tab</span><span class='op'>$</span><span class='fu'>supp_cells</span><span class='op'>(</span>
+  v <span class='op'>=</span> <span class='st'>"income"</span>,
+  inp <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>
+    sex <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"female"</span>, <span class='st'>"female"</span><span class='op'>)</span>,
+    <span class='st'>"age"</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"age_group1"</span>, <span class='st'>"age_group3"</span><span class='op'>)</span>
+  <span class='op'>)</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>cell-rule: 2 new sensitive cells (incl. duplicates) found (total: 7)</span></div><div class='input'>
 <span class='co'># perturb variables</span>
 <span class='va'>tab</span><span class='op'>$</span><span class='fu'>perturb</span><span class='op'>(</span>v <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"income"</span>, <span class='st'>"savings"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Numeric variable 'income' was perturbed.</span></div><div class='output co'>#&gt; <span class='message'>Numeric variable 'savings' was perturbed.</span></div><div class='input'>
@@ -584,7 +591,7 @@ SGA <em>"Open Source tools for perturbative confidentiality methods"</em></p>
 #&gt;  6:  Total age_group3 income  4406946  263540591  263509065
 #&gt;  7:  Total age_group4 income  2133543  128933854  128895052
 #&gt;  8:  Total age_group5 income   848151   52424134   52419604
-#&gt;  9:  Total age_group6 income    61672    3664308    3701635
+#&gt;  9:  Total age_group6 income    61672    3664308    3745007
 #&gt; 10: female      Total income 11690929  706125041  706195978
 #&gt; 11:      f      Total income 11690929  706125041  706195978
 #&gt; 12: female age_group1 income  4933383  299401420  299309598
@@ -601,8 +608,8 @@ SGA <em>"Open Source tools for perturbative confidentiality methods"</em></p>
 #&gt; 23:      f age_group4 income  1155033   69818738   69840816
 #&gt; 24: female age_group5 income   455017   27892210   27805985
 #&gt; 25:      f age_group5 income   455017   27892210   27805985
-#&gt; 26: female age_group6 income    27979    1993409    1923419
-#&gt; 27:      f age_group6 income    27979    1993409    1923419
+#&gt; 26: female age_group6 income    27979    1993409    1999926
+#&gt; 27:      f age_group6 income    27979    1993409    1999926
 #&gt; 28:   male      Total income 11262049  680728839  680575368
 #&gt; 29:      m      Total income 11262049  680728839  680575368
 #&gt; 30:   male age_group1 income  4877164  296919712  296910135
@@ -631,7 +638,7 @@ SGA <em>"Open Source tools for perturbative confidentiality methods"</em></p>
 #&gt;  6:  Total age_group3 income  4406946  263540591  263524828
 #&gt;  7:  Total age_group4 income  2133543  128933854  128914452
 #&gt;  8:  Total age_group5 income   848151   52424134   52421869
-#&gt;  9:  Total age_group6 income    61672    3664308    3682924
+#&gt;  9:  Total age_group6 income    61672    3664308    3704438
 #&gt; 10: female      Total income 11690929  706125041  706160509
 #&gt; 11:      f      Total income 11690929  706125041  706160509
 #&gt; 12: female age_group1 income  4933383  299401420  299355506
@@ -648,8 +655,8 @@ SGA <em>"Open Source tools for perturbative confidentiality methods"</em></p>
 #&gt; 23:      f age_group4 income  1155033   69818738   69829776
 #&gt; 24: female age_group5 income   455017   27892210   27849064
 #&gt; 25:      f age_group5 income   455017   27892210   27849064
-#&gt; 26: female age_group6 income    27979    1993409    1958101
-#&gt; 27:      f age_group6 income    27979    1993409    1958101
+#&gt; 26: female age_group6 income    27979    1993409    1996665
+#&gt; 27:      f age_group6 income    27979    1993409    1996665
 #&gt; 28:   male      Total income 11262049  680728839  680652099
 #&gt; 29:      m      Total income 11262049  680728839  680652099
 #&gt; 30:   male age_group1 income  4877164  296919712  296914923
@@ -975,14 +982,19 @@ SGA <em>"Open Source tools for perturbative confidentiality methods"</em></p>
 #&gt; └──────────────────────────────────────────────────┘
 #&gt; ── Distribution statistics of perturbations ────────────────────────────────────</div><div class='output co'>#&gt; <span class='warning'>Warning: no non-missing arguments to min; returning Inf</span></div><div class='output co'>#&gt; <span class='warning'>Warning: no non-missing arguments to max; returning -Inf</span></div><div class='output co'>#&gt; <span class='warning'>Warning: no non-missing arguments to min; returning Inf</span></div><div class='output co'>#&gt; <span class='warning'>Warning: no non-missing arguments to max; returning -Inf</span></div><div class='output co'>#&gt;      vname        Min        Q10        Q20        Q30       Q40      Mean
 #&gt; 1:  expend        Inf         NA         NA         NA        NA       NaN
-#&gt; 2:  income -76739.822 -45914.448 -35509.110 -32126.643 -4788.554 -4249.271
+#&gt; 2:  income -76739.822 -45914.448 -35509.110 -13568.473 -3274.443 -2057.259
 #&gt; 3: savings  -8848.935  -5437.005  -1763.009   -200.836   284.285  -233.023
 #&gt; 4:   mixed        Inf         NA         NA         NA        NA       NaN
-#&gt;     Median       Q60       Q70       Q80       Q90       Q95       Q99      Max
-#&gt; 1:      NA        NA        NA        NA        NA        NA        NA     -Inf
-#&gt; 2: 437.620 10107.347 11038.175 13267.735 35467.504 48889.389 68032.091 68032.09
-#&gt; 3: 696.371   705.804   964.808  1705.439  2383.666  3368.943  7280.615 10161.72
-#&gt; 4:      NA        NA        NA        NA        NA        NA        NA     -Inf</div></pre>
+#&gt;      Median       Q60       Q70       Q80       Q90       Q95       Q99
+#&gt; 1:       NA        NA        NA        NA        NA        NA        NA
+#&gt; 2: 3255.700 10107.347 11038.175 14930.449 38264.844 48889.389 68032.091
+#&gt; 3:  696.371   705.804   964.808  1705.439  2383.666  3368.943  7280.615
+#&gt; 4:       NA        NA        NA        NA        NA        NA        NA
+#&gt;         Max
+#&gt; 1:     -Inf
+#&gt; 2: 68032.09
+#&gt; 3: 10161.72
+#&gt; 4:     -Inf</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
