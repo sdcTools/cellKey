@@ -1,5 +1,6 @@
 # cellKey 0.18.14
 - feature: new method `$supp_cells()` that allows to specifiy sensitive cells based on names
+- bugfix: replace `sign()` with `ifelse` to enforce perturbation of cells that require additional protection
 
 # cellKey 0.18.13
 - bugfix: do not perturb cells with value 0 using flex-approach
