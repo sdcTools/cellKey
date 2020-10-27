@@ -882,6 +882,7 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         res[!is.na(tmpid), supp := TRUE]
         res[, tmpid := NULL]
       }
+      res <- setkey(res, strID) # required because merge changes order
       private$.update_supps(v = v, pat = res$supp, rule = "cell-rule")
       invisible(self)
     },
