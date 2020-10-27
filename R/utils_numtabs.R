@@ -128,7 +128,7 @@
     max_i = max(ptab$i))
 
   xo <- cv
-  sign_xo <- sign(xo)
+  sign_xo <- ifelse(xo >= 0, 1, -1)
   x_hats <- rep(NA, length(x))
   for (j in seq_len(length(x))) {
     zero_pert <- FALSE
@@ -177,16 +177,15 @@
     if (!zero_pert) {
       lookup_params$a <- abs(xo / x_delta)
       lookup_params$max_i <- lookup_params$ptab[type == lookup_params$lookup, max(i)]
-
       v <- .lookup_v_flex(cellkeys = ck[j], params = lookup_params)
       if (debug) {
         message("xj: ", round(xj, digits = dig), appendLF = FALSE)
         message(" | x_delta: ", round(x_delta, digits = dig), appendLF = FALSE)
         message(" | a: ", round(lookup_params$a, digits = dig), appendLF = FALSE)
+        message(" | max_i: ", lookup_params$max_i, appendLF = FALSE)
         message(" | v: ", v)
       }
-      sign_v <- sign(v)
-
+      sign_v <- ifelse(v >= 0, 1, -1)
       x_hats[j] <- sign_xo * abs(x_delta) * (sign_v * (mu + abs(v)))
       if (sign_v == -1) {
         if (sign_xo == -1) {
@@ -204,7 +203,7 @@
       message("updating original value: old: ", xo, "", appendLF = FALSE)
     }
     xo <- xo + x_hats[j]
-    sign_xo <- sign(xo)
+    sign_xo <- ifelse(xo >= 0, 1, -1)
     if (debug) {
       message(" | new: ", xo)
     }
@@ -262,7 +261,7 @@
   lookup_params <- list(ptab = ptab)
 
   xo <- cv
-  sign_xo <- sign(xo)
+  sign_xo <- ifelse(xo >= 0, 1, -1)
   x_hats <- rep(NA, length(x))
   has_small_cells <- FALSE
   for (j in seq_len(length(x))) {
@@ -318,7 +317,7 @@
         message(" | a: ", round(lookup_params$a, digits = dig), appendLF = FALSE)
         message(" | v: ", v)
       }
-      sign_v <- sign(v)
+      sign_v <- ifelse(v >= 0, 1, -1)
 
       x_hats[j] <- sign_xo * abs(x_delta) * (sign_v * (mu + abs(v)))
       if (sign_v == -1) {
@@ -337,7 +336,7 @@
       message("updating original value: old: ", xo, "", appendLF = FALSE)
     }
     xo <- xo + x_hats[j]
-    sign_xo <- sign(xo)
+    sign_xo <- ifelse(xo >= 0, 1, -1)
     if (debug) {
       message(" | new: ", xo)
     }
