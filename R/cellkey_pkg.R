@@ -305,9 +305,7 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
         for (i in seq_len(nrow(dt))) {
           str_id <- dt$id[i]
-          if (dt$freq[i] == 0) {
-            res[[str_id]] <- integer()
-          } else {
+          if (dt$freq[i] > 0) {
             index_vec <- which(dt_inner$id == str_id)
             if (length(index_vec) > 0) {
               res[[str_id]] <- dt_inner$idx[index_vec]
@@ -348,10 +346,16 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       .get_max_contributions <- function(indices, microdat, wvar, nv, top_k) {
         res <- vector("list", length = length(indices))
         names(res) <- names(indices)
+
+        # we have no numerical-variables -> return empty list
+        if (length(nv) == 0) {
+          return(res)
+        }
+
         for (i in seq_len(length(res))) {
           out <- vector("list", length = length(nv))
           names(out) <- nv
-          xx <- microdat[.tmpid %in% indices[[i]]]
+          xx <- subset(microdat, .tmpid %in% indices[[i]])
           top_k <- min(top_k, nrow(xx))
           for (v in nv) {
             xx$.tmpordervar <- abs(xx[[v]])
