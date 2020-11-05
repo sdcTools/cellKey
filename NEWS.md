@@ -1,3 +1,6 @@
+# cellKey 0.19.1
+- performance improvement: do not compute max contributions if no numeric-keyvariable was specified
+
 # cellKey 0.19.0
 - feature: new method `$supp_cells()` that allows to specifiy sensitive cells based on names
 - bugfix: replace `sign()` with `ifelse` to enforce perturbation of cells that require additional protection
