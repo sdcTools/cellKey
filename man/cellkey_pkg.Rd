@@ -225,38 +225,38 @@ tab$summary()
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{ck_class$new()}}
-\item \href{#method-perturb}{\code{ck_class$perturb()}}
-\item \href{#method-freqtab}{\code{ck_class$freqtab()}}
-\item \href{#method-numtab}{\code{ck_class$numtab()}}
-\item \href{#method-measures_cnts}{\code{ck_class$measures_cnts()}}
-\item \href{#method-measures_nums}{\code{ck_class$measures_nums()}}
-\item \href{#method-allvars}{\code{ck_class$allvars()}}
-\item \href{#method-cntvars}{\code{ck_class$cntvars()}}
-\item \href{#method-numvars}{\code{ck_class$numvars()}}
-\item \href{#method-hierarchy_info}{\code{ck_class$hierarchy_info()}}
-\item \href{#method-mod_cnts}{\code{ck_class$mod_cnts()}}
-\item \href{#method-mod_nums}{\code{ck_class$mod_nums()}}
-\item \href{#method-supp_freq}{\code{ck_class$supp_freq()}}
-\item \href{#method-supp_val}{\code{ck_class$supp_val()}}
-\item \href{#method-supp_cells}{\code{ck_class$supp_cells()}}
-\item \href{#method-supp_p}{\code{ck_class$supp_p()}}
-\item \href{#method-supp_pq}{\code{ck_class$supp_pq()}}
-\item \href{#method-supp_nk}{\code{ck_class$supp_nk()}}
-\item \href{#method-params_cnts_get}{\code{ck_class$params_cnts_get()}}
-\item \href{#method-params_cnts_set}{\code{ck_class$params_cnts_set()}}
-\item \href{#method-reset_cntvars}{\code{ck_class$reset_cntvars()}}
-\item \href{#method-reset_numvars}{\code{ck_class$reset_numvars()}}
-\item \href{#method-reset_allvars}{\code{ck_class$reset_allvars()}}
-\item \href{#method-params_nums_get}{\code{ck_class$params_nums_get()}}
-\item \href{#method-params_nums_set}{\code{ck_class$params_nums_set()}}
-\item \href{#method-summary}{\code{ck_class$summary()}}
-\item \href{#method-print}{\code{ck_class$print()}}
+\item \href{#method-cellkey_obj-new}{\code{ck_class$new()}}
+\item \href{#method-cellkey_obj-perturb}{\code{ck_class$perturb()}}
+\item \href{#method-cellkey_obj-freqtab}{\code{ck_class$freqtab()}}
+\item \href{#method-cellkey_obj-numtab}{\code{ck_class$numtab()}}
+\item \href{#method-cellkey_obj-measures_cnts}{\code{ck_class$measures_cnts()}}
+\item \href{#method-cellkey_obj-measures_nums}{\code{ck_class$measures_nums()}}
+\item \href{#method-cellkey_obj-allvars}{\code{ck_class$allvars()}}
+\item \href{#method-cellkey_obj-cntvars}{\code{ck_class$cntvars()}}
+\item \href{#method-cellkey_obj-numvars}{\code{ck_class$numvars()}}
+\item \href{#method-cellkey_obj-hierarchy_info}{\code{ck_class$hierarchy_info()}}
+\item \href{#method-cellkey_obj-mod_cnts}{\code{ck_class$mod_cnts()}}
+\item \href{#method-cellkey_obj-mod_nums}{\code{ck_class$mod_nums()}}
+\item \href{#method-cellkey_obj-supp_freq}{\code{ck_class$supp_freq()}}
+\item \href{#method-cellkey_obj-supp_val}{\code{ck_class$supp_val()}}
+\item \href{#method-cellkey_obj-supp_cells}{\code{ck_class$supp_cells()}}
+\item \href{#method-cellkey_obj-supp_p}{\code{ck_class$supp_p()}}
+\item \href{#method-cellkey_obj-supp_pq}{\code{ck_class$supp_pq()}}
+\item \href{#method-cellkey_obj-supp_nk}{\code{ck_class$supp_nk()}}
+\item \href{#method-cellkey_obj-params_cnts_get}{\code{ck_class$params_cnts_get()}}
+\item \href{#method-cellkey_obj-params_cnts_set}{\code{ck_class$params_cnts_set()}}
+\item \href{#method-cellkey_obj-reset_cntvars}{\code{ck_class$reset_cntvars()}}
+\item \href{#method-cellkey_obj-reset_numvars}{\code{ck_class$reset_numvars()}}
+\item \href{#method-cellkey_obj-reset_allvars}{\code{ck_class$reset_allvars()}}
+\item \href{#method-cellkey_obj-params_nums_get}{\code{ck_class$params_nums_get()}}
+\item \href{#method-cellkey_obj-params_nums_set}{\code{ck_class$params_nums_set()}}
+\item \href{#method-cellkey_obj-summary}{\code{ck_class$summary()}}
+\item \href{#method-cellkey_obj-print}{\code{ck_class$print()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-new"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new table instance
 \subsection{Usage}{
@@ -292,8 +292,8 @@ A new \code{cellkey_obj} object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-perturb"></a>}}
-\if{latex}{\out{\hypertarget{method-perturb}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-perturb"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-perturb}{}}}
 \subsection{Method \code{perturb()}}{
 Perturb a count- or magnitude variable
 \subsection{Usage}{
@@ -309,8 +309,8 @@ Perturb a count- or magnitude variable
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-freqtab"></a>}}
-\if{latex}{\out{\hypertarget{method-freqtab}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-freqtab"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-freqtab}{}}}
 \subsection{Method \code{freqtab()}}{
 Extract results from already perturbed count variables as a
 \code{data.table}
@@ -346,8 +346,8 @@ the first n columns. Additionally, the following columns are shown:
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-numtab"></a>}}
-\if{latex}{\out{\hypertarget{method-numtab}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-numtab"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-numtab}{}}}
 \subsection{Method \code{numtab()}}{
 Extract results from already perturbed continuous variables
 as a \code{data.table}.
@@ -392,8 +392,8 @@ has not not perturbed
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-measures_cnts"></a>}}
-\if{latex}{\out{\hypertarget{method-measures_cnts}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-measures_cnts"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-measures_cnts}{}}}
 \subsection{Method \code{measures_cnts()}}{
 Utility measures for perturbed count variables
 \subsection{Usage}{
@@ -418,8 +418,8 @@ of the computed measures, see \code{\link[=ck_cnt_measures]{ck_cnt_measures()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-measures_nums"></a>}}
-\if{latex}{\out{\hypertarget{method-measures_nums}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-measures_nums"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-measures_nums}{}}}
 \subsection{Method \code{measures_nums()}}{
 Utility measures for continuous variables (not yet implemented)
 \subsection{Usage}{
@@ -436,8 +436,8 @@ should be computed.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-allvars"></a>}}
-\if{latex}{\out{\hypertarget{method-allvars}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-allvars"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-allvars}{}}}
 \subsection{Method \code{allvars()}}{
 returns a \code{list} with the following two elements:
 \itemize{
@@ -452,8 +452,8 @@ variables for perturbation
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-cntvars"></a>}}
-\if{latex}{\out{\hypertarget{method-cntvars}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-cntvars"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-cntvars}{}}}
 \subsection{Method \code{cntvars()}}{
 character vector with names of count variables that
 could be perturbed
@@ -463,8 +463,8 @@ could be perturbed
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-numvars"></a>}}
-\if{latex}{\out{\hypertarget{method-numvars}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-numvars"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-numvars}{}}}
 \subsection{Method \code{numvars()}}{
 character vector with names of continuous variables that
 could be perturbed
@@ -474,8 +474,8 @@ could be perturbed
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-hierarchy_info"></a>}}
-\if{latex}{\out{\hypertarget{method-hierarchy_info}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-hierarchy_info"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-hierarchy_info}{}}}
 \subsection{Method \code{hierarchy_info()}}{
 Information about hierarchies
 \subsection{Usage}{
@@ -498,8 +498,8 @@ contribute to it
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-mod_cnts"></a>}}
-\if{latex}{\out{\hypertarget{method-mod_cnts}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-mod_cnts"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-mod_cnts}{}}}
 \subsection{Method \code{mod_cnts()}}{
 Modifications applied to count variables
 \subsection{Usage}{
@@ -511,8 +511,8 @@ a \code{data.table} containing modifications applied to count variables
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-mod_nums"></a>}}
-\if{latex}{\out{\hypertarget{method-mod_nums}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-mod_nums"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-mod_nums}{}}}
 \subsection{Method \code{mod_nums()}}{
 Modifications applied to numerical variables
 \subsection{Usage}{
@@ -524,8 +524,8 @@ a \code{data.table} containing modifications applied to numerical variables
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-supp_freq"></a>}}
-\if{latex}{\out{\hypertarget{method-supp_freq}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-supp_freq"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-supp_freq}{}}}
 \subsection{Method \code{supp_freq()}}{
 Identify sensitive cells based on minimum frequency rule
 \subsection{Usage}{
@@ -546,8 +546,8 @@ the threshold specified in \code{n} (default); else the unweighted number of con
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-supp_val"></a>}}
-\if{latex}{\out{\hypertarget{method-supp_val}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-supp_val"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-supp_val}{}}}
 \subsection{Method \code{supp_val()}}{
 Identify sensitive cells based on weighted or unweighted cell value
 \subsection{Usage}{
@@ -568,8 +568,8 @@ the threshold specified in \code{n} (default); else the unweighted number is use
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-supp_cells"></a>}}
-\if{latex}{\out{\hypertarget{method-supp_cells}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-supp_cells"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-supp_cells}{}}}
 \subsection{Method \code{supp_cells()}}{
 Identify sensitive cells based on their \code{names}
 \subsection{Usage}{
@@ -589,8 +589,8 @@ this input is then used to compute the relevant cells to be identified as sensit
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-supp_p"></a>}}
-\if{latex}{\out{\hypertarget{method-supp_p}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-supp_p"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-supp_p}{}}}
 \subsection{Method \code{supp_p()}}{
 Identify sensitive cells based on the p\%-rule rule. Please note that this rule
 can only be applied to positive-only variables.
@@ -609,8 +609,8 @@ can only be applied to positive-only variables.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-supp_pq"></a>}}
-\if{latex}{\out{\hypertarget{method-supp_pq}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-supp_pq"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-supp_pq}{}}}
 \subsection{Method \code{supp_pq()}}{
 Identify sensitive cells based on the pq-rule. Please note that this rule
 can only be applied to positive-only variables.
@@ -631,8 +631,8 @@ can only be applied to positive-only variables.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-supp_nk"></a>}}
-\if{latex}{\out{\hypertarget{method-supp_nk}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-supp_nk"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-supp_nk}{}}}
 \subsection{Method \code{supp_nk()}}{
 Identify sensitive cells based on the nk-dominance rule. Please note that this rule
 can only be applied to positive-only variables.
@@ -654,8 +654,8 @@ contributers contribute more than \verb{k\%} is considered unsafe}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-params_cnts_get"></a>}}
-\if{latex}{\out{\hypertarget{method-params_cnts_get}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-params_cnts_get"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-params_cnts_get}{}}}
 \subsection{Method \code{params_cnts_get()}}{
 Return perturbation parameters of count variables
 \subsection{Usage}{
@@ -669,8 +669,8 @@ defined by the list-name.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-params_cnts_set"></a>}}
-\if{latex}{\out{\hypertarget{method-params_cnts_set}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-params_cnts_set"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-params_cnts_set}{}}}
 \subsection{Method \code{params_cnts_set()}}{
 Set perturbation parameters for count variables
 \subsection{Usage}{
@@ -691,8 +691,8 @@ the count variables for which the parameters should be set.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-reset_cntvars"></a>}}
-\if{latex}{\out{\hypertarget{method-reset_cntvars}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-reset_cntvars"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-reset_cntvars}{}}}
 \subsection{Method \code{reset_cntvars()}}{
 reset results and parameters for already perturbed
 count variables
@@ -711,8 +711,8 @@ the names of already perturbed count variables.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-reset_numvars"></a>}}
-\if{latex}{\out{\hypertarget{method-reset_numvars}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-reset_numvars"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-reset_numvars}{}}}
 \subsection{Method \code{reset_numvars()}}{
 reset results and parameters for already perturbed
 numerical variables
@@ -731,8 +731,8 @@ perturbed continuous variables.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-reset_allvars"></a>}}
-\if{latex}{\out{\hypertarget{method-reset_allvars}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-reset_allvars"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-reset_allvars}{}}}
 \subsection{Method \code{reset_allvars()}}{
 reset results and parameters for all already perturbed variables.
 \subsection{Usage}{
@@ -741,8 +741,8 @@ reset results and parameters for all already perturbed variables.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-params_nums_get"></a>}}
-\if{latex}{\out{\hypertarget{method-params_nums_get}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-params_nums_get"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-params_nums_get}{}}}
 \subsection{Method \code{params_nums_get()}}{
 Return perturbation parameters of continuous variables
 \subsection{Usage}{
@@ -756,8 +756,8 @@ defined by the list-name.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-params_nums_set"></a>}}
-\if{latex}{\out{\hypertarget{method-params_nums_set}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-params_nums_set"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-params_nums_set}{}}}
 \subsection{Method \code{params_nums_set()}}{
 set perturbation parameters for continuous variables.
 \subsection{Usage}{
@@ -778,8 +778,8 @@ which the parameters should be set.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-summary"></a>}}
-\if{latex}{\out{\hypertarget{method-summary}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-summary"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-summary}{}}}
 \subsection{Method \code{summary()}}{
 some aggregated summary statistics about perturbed variables
 \subsection{Usage}{
@@ -788,8 +788,8 @@ some aggregated summary statistics about perturbed variables
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\if{latex}{\out{\hypertarget{method-print}{}}}
+\if{html}{\out{<a id="method-cellkey_obj-print"></a>}}
+\if{latex}{\out{\hypertarget{method-cellkey_obj-print}{}}}
 \subsection{Method \code{print()}}{
 prints information about the current table
 \subsection{Usage}{

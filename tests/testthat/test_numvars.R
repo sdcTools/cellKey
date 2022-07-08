@@ -23,10 +23,10 @@ dims <- list(sex = dim_sex, age = dim_age)
 x$rkey <- ck_generate_rkeys(dat = x, nr_digits = 8)
 
 test_that("checking dimension and structure of generated testdata is ok", {
-  expect_identical(digest::digest(x), "cb30182261fa548166736d64952096c4")
   expect_true(is.data.table(x))
+  expect_identical(digest::sha1(x), "4c804693f7d573e9dfa24bcc312ba2b61b490ada")
+  expect_identical(digest::sha1(dims), "62748837ca3246a33081dd35f50d06334caa3119")
 })
-
 
 ## perturbation parameters for count variables
 ep <- c(1, 0.5, 0.3)
@@ -82,11 +82,10 @@ p2 <- ck_params_nums(
   same_key = TRUE,
   use_zero_rkeys = FALSE)
 
-
 test_that("checking perturbation parameters", {
   expect_is(p1, "ck_params")
   expect_equal(p1$type, "params_m_flex")
-  expect_identical(digest::digest(p1), "0474740f1ef9141738c14496b93ffb74")
+  expect_identical(digest::sha1(p1), "711d258e565cc94e61f9271189b7b73aeced42e6")
 })
 
 # set up problem
@@ -115,8 +114,8 @@ expect_message(tab$perturb("income"), "Numeric variable 'income' was perturbed."
 expect_message(tab$perturb("savings"), "Numeric variable 'savings' was perturbed.")
 
 test_that("variable was correctly perturbed", {
-  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = FALSE)), "c7d6aa3f48c3dd27aa8efa56f5871a82125c21e6")
-  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = FALSE)), "8d771752f0c828bff328841ab11145a4387d89a2")
-  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = TRUE)), "e5c881d41ece8a9c1d00eb406a1fe5e4d18f00ca")
-  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = TRUE)), "ee4e15c7df4802bf9696a9fd50741457717f4749")
+  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = FALSE)), "29eec69ec43987831d951b7e6ecd4d423b27f5e2")
+  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = FALSE)), "77abfc53132ec03b5a523764eefb52e00dca897f")
+  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = TRUE)), "98f4cdbe6b4b362aa0b9ab31337fc39c4d807c1e")
+  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = TRUE)), "39a0fa3ddfd8b45778549711d9f9f58c843b0912")
 })

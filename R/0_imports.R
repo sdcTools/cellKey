@@ -6,6 +6,7 @@
 #' @importFrom stats addmargins formula weights xtabs runif median na.omit quantile
 #' @importFrom utils data RShowDoc
 #' @importFrom digest sha1
+#' @importFrom cli cat_rule cat_line
 #' @importFrom sdcTable makeProblem sdcProb2df
 #' @importFrom ptable pt_create_pParams pt_create_pTable
 #' @import sdcHierarchies
