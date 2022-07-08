@@ -1,5 +1,10 @@
+# cellKey 0.19.2
+- do not rename columns of ptable input object
+- fix vignette and tests
+- bump requirements
+
 # cellKey 0.19.1
-- performance improvement: do not compute max contributions if no numeric-keyvariable was specified
+- performance improvement: do not compute max contributions if no numeric key variable was specified
 
 # cellKey 0.19.0
 - feature: new method `$supp_cells()` that allows to specifiy sensitive cells based on names
