@@ -155,7 +155,8 @@ ck_log <- function(..., br = TRUE) {
     ptab <- ptab@pTable
   }
 
-  setnames(ptab, "p_int_lb", "lb", skip_absent = TRUE)
-  setnames(ptab, "p_int_ub", "ub", skip_absent = TRUE)
-  ptab
+  out <- data.table::copy(ptab)
+  data.table::setnames(out, "p_int_lb", "lb", skip_absent = TRUE)
+  data.table::setnames(out, "p_int_ub", "ub", skip_absent = TRUE)
+  out
 }
