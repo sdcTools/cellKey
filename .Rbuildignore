@@ -10,3 +10,4 @@ README.Rmd
 debugzeugs
 debug
 ^data-raw$
+^\.github$
