@@ -1760,8 +1760,8 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' tab$params_cnts_set(val = p_cnts1, v = "total")
 #'
 #' # create alternative perturbation parameters by specifying parameters
-#' para2 <- ptable::pt_create_pParams(
-#'   D = 8, V = 3, js = 2, table = "cnts")
+#' para2 <- ptable::create_num_ptable(
+#'   D = 8, V = 3, js = 2, create = FALSE)
 #'
 #' p_cnts2 <- ck_params_cnts(ptab = para2)
 #'

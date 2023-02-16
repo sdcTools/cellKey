@@ -100,8 +100,8 @@ p_cnts1 <- ck_read_yaml(path = f_yaml)
 tab$params_cnts_set(val = p_cnts1, v = "total")
 
 # create alternative perturbation parameters by specifying parameters
-para2 <- ptable::pt_create_pParams(
-  D = 8, V = 3, js = 2, table = "cnts")
+para2 <- ptable::create_num_ptable(
+  D = 8, V = 3, js = 2, create = FALSE)
 
 p_cnts2 <- ck_params_cnts(ptab = para2)
 
@@ -362,7 +362,7 @@ as a \code{data.table}.
 (the default), the results are returned for all available numeric variables.}
 
 \item{\code{mean_before_sum}}{(logical); if \code{TRUE}, the perturbed values are adjusted
-by a factor \verb{((n+p))⁄n} with
+by a factor \code{((n+p))⁄n} with
 \itemize{
 \item \code{n}: the original weighted cell value
 \item \code{p}: the perturbed cell value

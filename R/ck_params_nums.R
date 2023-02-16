@@ -17,11 +17,11 @@
 #' @param ptab in this argument, one ore more perturbation tables are given as
 #' input. the following choices are possible:
 #'
-#' - an object derived from [ptable::pt_create_pTable()], [pt_create_pParams()]
+#' - an object derived from [ptable::create_ptable()]
 #' or [ptable::create_num_ptable()]: this case is the same as specifying a named
 #' list with only a single element `"all"` (as described below)
 #' - a named `list` where the allowed names are shown below and each element
-#' must be the output of [ptable::pt_create_pTable()], [pt_create_pParams()] or
+#' must be the output of [ptable::create_ptable())] or
 #' [ptable::create_num_ptable()]
 #'   * `"all"`: this ptable will be used for all cells; if specified, no
 #'   elements named `"even"` or `"odd"` must exist.
@@ -92,10 +92,10 @@ ck_params_nums <-
 
   if (inherits(ptab, "ptable_params")) {
     if (ptab@table != "nums") {
-      e <- "input from `ptable::pt_create_pParams` not suitable for continuous variables."
+      e <- "input from `ptable::create_ptable` or `ptable::create_cnt_ptable` not suitable for continuous variables."
       stop(e, call. = FALSE)
     }
-    ptab <- ptable::pt_create_pTable(params = ptab)
+    ptab <- ptable::create_ptable(params = ptab)
   }
 
   ptab <- .chk_ptab(ptab, type = "nums")
