@@ -8,12 +8,12 @@ para <- ptable::create_cnt_ptable(
   optim = 1,
   mono = TRUE,
   create = FALSE)
-ptab <- ptable::create_ptable(para)
+ptab <- ptable::create_ptable(params = para)
 
 
 test_that("ptable params can be used too", {
   p1 <- ptable::create_cnt_ptable(D = 5, V = 2, create = FALSE)
-  p2 <- ptable::create_ptable(p1)
+  p2 <- ptable::create_ptable(params = p1)
   expect_identical(
     ck_params_cnts(ptab = p1),
     ck_params_cnts(ptab = p2))
