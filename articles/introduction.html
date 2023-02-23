@@ -79,9 +79,10 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Introduction to the cellKey-Package</h1>
-                        <h4 data-toc-skip class="author">Bernhard Meindl</h4>
+                        <h4 data-toc-skip class="author">Bernhard
+Meindl</h4>
             
-            <h4 data-toc-skip class="date">2022-07-21</h4>
+            <h4 data-toc-skip class="date">2023-02-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sdcTools/cellKey/blob/HEAD/vignettes/introduction.Rmd" class="external-link"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -93,12 +94,24 @@
 <div class="section level2">
 <h2 id="about-the-cellkey-package">About the cellKey package<a class="anchor" aria-label="anchor" href="#about-the-cellkey-package"></a>
 </h2>
-<p>This package implements methods to provide perturbation for statistical tables. The implementation if greatly inspired by the the paper <em>Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics</em> (Thompson, Broadfoot, Elazar). This approach however was generalized and a new specification on how record keys are specified and the lookup-tables are defined is used. This package makes usage of perturbation tables that can be defined in the <a href="https://github.com/sdcTools/ptable" class="external-link"><strong>ptable</strong></a> package. This document describes the usage of version <code>0.19.2</code> of the package.</p>
+<p>This package implements methods to provide perturbation for
+statistical tables. The implementation if greatly inspired by the the
+paper <em>Methodology for the Automatic Confidentialisation of
+Statistical Outputs from Remote Servers at the Australian Bureau of
+Statistics</em> (Thompson, Broadfoot, Elazar). This approach however was
+generalized and a new specification on how record keys are specified and
+the lookup-tables are defined is used. This package makes usage of
+perturbation tables that can be defined in the <a href="https://github.com/sdcTools/ptable" class="external-link"><strong>ptable</strong></a>
+package. This document describes the usage of version
+<code>0.19.2</code> of the package.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>Package <a href="https://github.com/sdcTools/cellKey" class="external-link"><strong>cellKey</strong></a> is not yet on <code>CRAN</code> and therefore needs to be installed from source. The following code gives instructions on how to install the latest version of the package directly from <a href="https://www.github.com" class="external-link"><strong>github.com</strong></a>:</p>
+<p>Package <a href="https://github.com/sdcTools/cellKey" class="external-link"><strong>cellKey</strong></a>
+is not yet on <code>CRAN</code> and therefore needs to be installed from
+source. The following code gives instructions on how to install the
+latest version of the package directly from <a href="https://www.github.com" class="external-link"><strong>github.com</strong></a>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># update your R installation</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/update.packages.html" class="external-link">update.packages</a></span><span class="op">(</span>ask <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -116,14 +129,35 @@
 <div class="section level2">
 <h2 id="main-features">Main Features<a class="anchor" aria-label="anchor" href="#main-features"></a>
 </h2>
-<p>In the <strong>cellKey</strong> package it is possible to pertub multidimensional count and magnitude tables. Functionality to generate suitable record keys is provided in function <code><a href="../reference/ck_generate_rkeys.html">ck_generate_rkeys()</a></code>. Using sha1-checksums on the input datasets, we can make sure that the same record keys are generated whenever the same input data set is used for which record keys should be generated. However, it is also possible of course to use already pre-generated record keys available as variable in the microdata set.</p>
-<p>The package allows to make use of sampling weights. Thus, both weighted and unweighted count and magnitude tables can be perturbed. The hierarchical structure of the variables spanning the table can be arbitrarily complex. To generate these hierarchies, the <strong>cellKey</strong> packages depends on functionality available in package <a href="https://cran.r-project.org/package=sdcHierarchies" class="external-link"><strong>sdcHierarchies</strong></a>. Finally, auxiliary methods are provided that allow to extract valueable information from objects created by the main function of this package <code>perturbTable()</code>. For example <code>mod_counts()</code> returns a data object showing for each cell the perturbation value and where it was found in the lookup table.</p>
-<p>What is left is of course identifying bugs and issues and also to optimize performance of the package as well as to include some real world examples, eg. census tables.</p>
+<p>In the <strong>cellKey</strong> package it is possible to pertub
+multidimensional count and magnitude tables. Functionality to generate
+suitable record keys is provided in function
+<code><a href="../reference/ck_generate_rkeys.html">ck_generate_rkeys()</a></code>. Using sha1-checksums on the input
+datasets, we can make sure that the same record keys are generated
+whenever the same input data set is used for which record keys should be
+generated. However, it is also possible of course to use already
+pre-generated record keys available as variable in the microdata
+set.</p>
+<p>The package allows to make use of sampling weights. Thus, both
+weighted and unweighted count and magnitude tables can be perturbed. The
+hierarchical structure of the variables spanning the table can be
+arbitrarily complex. To generate these hierarchies, the
+<strong>cellKey</strong> packages depends on functionality available in
+package <a href="https://cran.r-project.org/package=sdcHierarchies" class="external-link"><strong>sdcHierarchies</strong></a>.
+Finally, auxiliary methods are provided that allow to extract valueable
+information from objects created by the main function of this package
+<code>perturbTable()</code>. For example <code>mod_counts()</code>
+returns a data object showing for each cell the perturbation value and
+where it was found in the lookup table.</p>
+<p>What is left is of course identifying bugs and issues and also to
+optimize performance of the package as well as to include some real
+world examples, eg. census tables.</p>
 </div>
 <div class="section level2">
 <h2 id="an-example">An Example<a class="anchor" aria-label="anchor" href="#an-example"></a>
 </h2>
-<p>We now show the capabilities of the <strong>cellKey</strong> package by running an example that</p>
+<p>We now show the capabilities of the <strong>cellKey</strong> package
+by running an example that</p>
 <div class="section level3">
 <h3 id="load-the-package">Load the Package<a class="anchor" aria-label="anchor" href="#load-the-package"></a>
 </h3>
@@ -131,51 +165,95 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sdcTools/cellKey" class="external-link">cellKey</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html" class="external-link">packageVersion</a></span><span class="op">(</span><span class="st">"cellKey"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] '0.19.2'</span></span></code></pre>
-<p>The first step in this approach is to generate a statistical table, which can be achieved using <code>ck_setup</code>. This function generates an object that contains all the information required to perturb count- (and optionally continuously scaled) variables. There are however a few inputs that <code><a href="../reference/cellkey_pkg.html">ck_setup()</a></code> requires and that need to be generated beforehand. These inputs are:</p>
+<p>The first step in this approach is to generate a statistical table,
+which can be achieved using <code>ck_setup</code>. This function
+generates an object that contains all the information required to
+perturb count- (and optionally continuously scaled) variables. There are
+however a few inputs that <code><a href="../reference/cellkey_pkg.html">ck_setup()</a></code> requires and that need
+to be generated beforehand. These inputs are:</p>
 <ul>
 <li>
-<code>x</code>: a <code>data.frame</code> or <code>data.table</code> containing microdata</li>
+<code>x</code>: a <code>data.frame</code> or <code>data.table</code>
+containing microdata</li>
 <li>
-<code>rkey</code>: defines where to find or how to compute record keys. It is possible to either specify a scalar character name or a number. If a number is specified, record keys are internally created by sampling from a uniform distribution between 0 and 1 with the random numbers rounded to the specified value of digits. If a name is specified, this name is interpreted as a variable name within <code>x</code> already containing record keys.</li>
+<code>rkey</code>: defines where to find or how to compute record
+keys. It is possible to either specify a scalar character name or a
+number. If a number is specified, record keys are internally created by
+sampling from a uniform distribution between 0 and 1 with the random
+numbers rounded to the specified value of digits. If a name is
+specified, this name is interpreted as a variable name within
+<code>x</code> already containing record keys.</li>
 <li>
-<code>dims</code>: a named list where each list element contains a hierarchy created with functionality from package <a href="ttps://cran.r-project.org/package=sdcHierarchies"><strong>sdcHierarchies</strong></a> and each name refers to a variable in <code>x</code>
+<code>dims</code>: a named list where each list element contains a
+hierarchy created with functionality from package <a href="ttps://cran.r-project.org/package=sdcHierarchies"><strong>sdcHierarchies</strong></a>
+and each name refers to a variable in <code>x</code>
 </li>
 <li>
-<code>w</code>: either <code>NULL</code> (no weights) or the name of a variable in <code>x</code> that contains weights</li>
+<code>w</code>: either <code>NULL</code> (no weights) or the name of
+a variable in <code>x</code> that contains weights</li>
 <li>
-<code>countvars</code>: an optional character vector of variables in <code>x</code> holding counts. In any case a special count variable <code>total</code> is internally generated that is <code>1</code> for each row of <code>x</code>
+<code>countvars</code>: an optional character vector of variables in
+<code>x</code> holding counts. In any case a special count variable
+<code>total</code> is internally generated that is <code>1</code> for
+each row of <code>x</code>
 </li>
 <li>
-<code>numvars</code>: an optional character vector of variables in <code>x</code> holding numerical variables that can later be perturbed.</li>
+<code>numvars</code>: an optional character vector of variables in
+<code>x</code> holding numerical variables that can later be
+perturbed.</li>
 </ul>
-<p>We continue to show how to generate the required inputs. The first step is to prepare the inputdata.</p>
+<p>We continue to show how to generate the required inputs. The first
+step is to prepare the inputdata.</p>
 </div>
 <div class="section level3">
 <h3 id="specifying-inputdata">Specifying inputdata<a class="anchor" aria-label="anchor" href="#specifying-inputdata"></a>
 </h3>
-<p>The testdata set we are using in this example contains information on person-level along with sampling weights as well as some categorical and continuously scaled variables. We also compute some binary variables for which we also want to create perturbed tables.</p>
+<p>The testdata set we are using in this example contains information on
+person-level along with sampling weights as well as some categorical and
+continuously scaled variables. We also compute some binary variables for
+which we also want to create perturbed tables.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ck_create_testdata.html">ck_create_testdata</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">dat</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sex"</span>, <span class="st">"age"</span>, <span class="st">"savings"</span>, <span class="st">"income"</span>, <span class="st">"sampling_weight"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="va">dat</span><span class="op">[</span>, <span class="va">cnt_highincome</span> <span class="op">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">income</span> <span class="op">&gt;=</span> <span class="fl">9000</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
-<p>We are now adding record keys (which will be referenced later) with 7 digits to the data set using function <code>ck_generate_rkeys</code> as shown below:</p>
+<p>We are now adding record keys (which will be referenced later) with 7
+digits to the data set using function <code>ck_generate_rkeys</code> as
+shown below:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat</span><span class="op">$</span><span class="va">rkeys</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ck_generate_rkeys.html">ck_generate_rkeys</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat</span>, nr_digits <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##       sex        age savings income sampling_weight cnt_highincome     rkeys</span></span>
-<span><span class="co">## 1:   male age_group3      12   5780              58              0 0.5357640</span></span>
-<span><span class="co">## 2: female age_group3      28   2530              71              0 0.5288742</span></span>
-<span><span class="co">## 3:   male age_group1     550   6920              75              0 0.0844705</span></span>
-<span><span class="co">## 4:   male age_group1     870   7960              45              0 0.6309887</span></span>
-<span><span class="co">## 5:   male age_group4      20   9030              60              1 0.6928324</span></span>
-<span><span class="co">## 6: female age_group3     102   3290              21              0 0.5766711</span></span></code></pre>
-<p>To ensure that the same record keys are computed each and every time for the same data set, a seed based on the sha1-hash of the input dataset is computed by default in <code>ck_generate_rkeys</code>. This seed is used before sampling the record keys and may be overwritten using the <code>seed</code> argument.</p>
-<p>The goal of this introduction is to create a perturbed table of counts of variables <code>sex</code> by <code>age</code> for all observations as well as for the subgroups given by <code>cnt_highincome</code> that are non-zero. We also want to create perturbed tables of continously scaled variables <code>savings</code> and <code>income</code> also giving the hierarchical structure defined by <code>sex</code> by <code>age</code>.</p>
+<span><span class="co">## 1:   male age_group3      12   5780              43              0 0.1744599</span></span>
+<span><span class="co">## 2: female age_group3      28   2530              40              0 0.7145934</span></span>
+<span><span class="co">## 3:   male age_group1     550   6920              26              0 0.5520977</span></span>
+<span><span class="co">## 4:   male age_group1     870   7960              89              0 0.2323114</span></span>
+<span><span class="co">## 5:   male age_group4      20   9030              72              1 0.1014461</span></span>
+<span><span class="co">## 6: female age_group3     102   3290              92              0 0.6386603</span></span></code></pre>
+<p>To ensure that the same record keys are computed each and every time
+for the same data set, a seed based on the sha1-hash of the input
+dataset is computed by default in <code>ck_generate_rkeys</code>. This
+seed is used before sampling the record keys and may be overwritten
+using the <code>seed</code> argument.</p>
+<p>The goal of this introduction is to create a perturbed table of
+counts of variables <code>sex</code> by <code>age</code> for all
+observations as well as for the subgroups given by
+<code>cnt_highincome</code> that are non-zero. We also want to create
+perturbed tables of continously scaled variables <code>savings</code>
+and <code>income</code> also giving the hierarchical structure defined
+by <code>sex</code> by <code>age</code>.</p>
 </div>
 <div class="section level3">
 <h3 id="specifying-dimensions">Specifying dimensions<a class="anchor" aria-label="anchor" href="#specifying-dimensions"></a>
 </h3>
-<p>It is required to define hierarchies for each of the classifying variables of the desired table. There are two ways how the hierarchical structure of these variables (including sub-totals) can be specified. One way is to use <code>"@; value</code> format as (also) used in <a href="ttps://cran.r-project.org/package=sdcTable"><strong>sdcTable</strong></a>. We would suggest however, to use the second alternative which is using functionality from package <a href="ttps://cran.r-project.org/package=sdcHierarchies"><strong>sdcHierarchies</strong></a>. In this vignette, we only show the preferred way to generate hierarchies for categorical variables <code>age</code> and <code>sex</code> below:</p>
+<p>It is required to define hierarchies for each of the classifying
+variables of the desired table. There are two ways how the hierarchical
+structure of these variables (including sub-totals) can be specified.
+One way is to use <code>"@; value</code> format as (also) used in <a href="ttps://cran.r-project.org/package=sdcTable"><strong>sdcTable</strong></a>.
+We would suggest however, to use the second alternative which is using
+functionality from package <a href="ttps://cran.r-project.org/package=sdcHierarchies"><strong>sdcHierarchies</strong></a>.
+In this vignette, we only show the preferred way to generate hierarchies
+for categorical variables <code>age</code> and <code>sex</code>
+below:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dim_sex</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_create.html" class="external-link">hier_create</a></span><span class="op">(</span>root <span class="op">=</span> <span class="st">"Total"</span>, nodes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"male"</span>, <span class="st">"female"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_display.html" class="external-link">hier_display</a></span><span class="op">(</span><span class="va">dim_sex</span><span class="op">)</span></span></code></pre></div>
@@ -193,15 +271,34 @@
 <span><span class="co">## ├─age_group4</span></span>
 <span><span class="co">## ├─age_group5</span></span>
 <span><span class="co">## └─age_group6</span></span></code></pre>
-<p>The idea of <a href="https://github.com/bernhard-da/sdcHierarchies" class="external-link"><strong>sdcHierarchies</strong></a> is to create a tree object using <code><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_create.html" class="external-link">hier_create()</a></code> and then add (using <code><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_add.html" class="external-link">hier_add()</a></code>), delete (with <code><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_delete.html" class="external-link">hier_delete()</a></code>) or rename (using <code><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_rename.html" class="external-link">hier_rename()</a></code>) elements from this hierarchical structure. For more examples have a look at the package vignette of the package which can be accessed with <code><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_vignette.html" class="external-link">sdcHierarchies::hier_vignette()</a></code>. <a href="https://github.com/bernhard-da/sdcHierarchies" class="external-link"><strong>sdcHierarchies</strong></a> also contains a shiny-based app that can be called with <code><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_app.html" class="external-link">hier_app()</a></code> which allows to interactively change and modify a hierarchy and allows to convert tree- and data.frame based inputs into various formats. For more information, have a look at <code><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_app.html" class="external-link">?hier_app</a></code> and the other help-files of the package.</p>
-<p>After all dimensions have been specified, these inputs must then be combined into a named list. In this object, the list-names refer to variable names of the input data set and the elements the data objects that hold the hierarchy specification itself. This is why the list elements of <code>dims</code> in this example have to be named <code>sex</code> and <code>age</code> as the specification refers to variables <code>age</code> and <code>sex</code> in input set <code>dat</code>.</p>
+<p>The idea of <a href="https://github.com/bernhard-da/sdcHierarchies" class="external-link"><strong>sdcHierarchies</strong></a>
+is to create a tree object using <code><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_create.html" class="external-link">hier_create()</a></code> and then add
+(using <code><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_add.html" class="external-link">hier_add()</a></code>), delete (with
+<code><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_delete.html" class="external-link">hier_delete()</a></code>) or rename (using <code><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_rename.html" class="external-link">hier_rename()</a></code>)
+elements from this hierarchical structure. For more examples have a look
+at the package vignette of the package which can be accessed with
+<code><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_vignette.html" class="external-link">sdcHierarchies::hier_vignette()</a></code>. <a href="https://github.com/bernhard-da/sdcHierarchies" class="external-link"><strong>sdcHierarchies</strong></a>
+also contains a shiny-based app that can be called with
+<code><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_app.html" class="external-link">hier_app()</a></code> which allows to interactively change and modify
+a hierarchy and allows to convert tree- and data.frame based inputs into
+various formats. For more information, have a look at
+<code><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_app.html" class="external-link">?hier_app</a></code> and the other help-files of the package.</p>
+<p>After all dimensions have been specified, these inputs must then be
+combined into a named list. In this object, the list-names refer to
+variable names of the input data set and the elements the data objects
+that hold the hierarchy specification itself. This is why the list
+elements of <code>dims</code> in this example have to be named
+<code>sex</code> and <code>age</code> as the specification refers to
+variables <code>age</code> and <code>sex</code> in input set
+<code>dat</code>.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dims</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>sex <span class="op">=</span> <span class="va">dim_sex</span>, age <span class="op">=</span> <span class="va">dim_age</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="setup-a-table-instance">Setup a table instance<a class="anchor" aria-label="anchor" href="#setup-a-table-instance"></a>
 </h3>
-<p>We now have prepared the inputs and can define a generic statistical table using <code><a href="../reference/cellkey_pkg.html">ck_setup()</a></code> as shown below:</p>
+<p>We now have prepared the inputs and can define a generic statistical
+table using <code><a href="../reference/cellkey_pkg.html">ck_setup()</a></code> as shown below:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cellkey_pkg.html">ck_setup</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">dat</span>,</span>
@@ -210,8 +307,12 @@
 <span>  w <span class="op">=</span> <span class="st">"sampling_weight"</span>,</span>
 <span>  countvars <span class="op">=</span> <span class="st">"cnt_highincome"</span>,</span>
 <span>  numvars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"income"</span>, <span class="st">"savings"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="../reference/cellkey_pkg.html">ck_setup()</a></code> returns a <code>R6</code> class object that contains not only the relevant data but also all available methods. Thus, it is not required to assign the results of such methods to new objects, instead, the object itself is automatically updated.</p>
-<p>These objects also have a custom print method, showing some general information about the object:</p>
+<p><code><a href="../reference/cellkey_pkg.html">ck_setup()</a></code> returns a <code>R6</code> class object that
+contains not only the relevant data but also all available methods.
+Thus, it is not required to assign the results of such methods to new
+objects, instead, the object itself is automatically updated.</p>
+<p>These objects also have a custom print method, showing some general
+information about the object:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">tab</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## ── Table Information ───────────────────────────────────────────────────────────</span></span>
@@ -230,21 +331,35 @@
 <div class="section level4">
 <h4 id="perturbation-parameters-for-count-variables">Perturbation parameters for count variables<a class="anchor" aria-label="anchor" href="#perturbation-parameters-for-count-variables"></a>
 </h4>
-<p>The next task is to define parameters that are used to perturb count variables which can be achieved with <code>ck_params_cnts</code>. This function requires as input the result of either <code>pt_create_pParams</code>, <code>pt_create_pTable</code> or <code>create_cnt_ptable</code> from the <a href="https://github.com/sdcTools/ptable" class="external-link"><strong>ptable</strong></a> package. Please refer also to the documentation of this package for information on the required parameters. In this example we are going to use - amongst others - exemplary ptables that can are provided by the <code>ptable</code>-pkg for demonstration purposes:</p>
+<p>The next task is to define parameters that are used to perturb count
+variables which can be achieved with <code>ck_params_cnts</code>. This
+function requires as input the result of either
+<code>pt_create_pParams</code>, <code>pt_create_pTable</code> or
+<code>create_cnt_ptable</code> from the <a href="https://github.com/sdcTools/ptable" class="external-link"><strong>ptable</strong></a>
+package. Please refer also to the documentation of this package for
+information on the required parameters. In this example we are going to
+use - amongst others - exemplary ptables that can are provided by the
+<code>ptable</code>-pkg for demonstration purposes:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># two different perturbation parameter sets from the ptable-pkg</span></span>
 <span><span class="co"># an example ptable provided directly</span></span>
 <span><span class="va">ptab1</span> <span class="op">&lt;-</span> <span class="fu">ptable</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ptable/man/pt_ex_cnts.html" class="external-link">pt_ex_cnts</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># creating a ptable by specifying parameters</span></span>
-<span><span class="va">para2</span> <span class="op">&lt;-</span> <span class="fu">ptable</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ptable/man/create_cnt_ptable.html" class="external-link">create_cnt_ptable</a></span><span class="op">(</span></span>
+<span><span class="va">para2</span> <span class="op">&lt;-</span> <span class="fu">ptable</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ptable/man/ptable_pkg.html" class="external-link">create_cnt_ptable</a></span><span class="op">(</span></span>
 <span>  D <span class="op">=</span> <span class="fl">8</span>, V <span class="op">=</span> <span class="fl">3</span>, js <span class="op">=</span> <span class="fl">2</span>, pstay <span class="op">=</span> <span class="fl">0.5</span>, </span>
 <span>  optim <span class="op">=</span> <span class="fl">1</span>, mono <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>We then need to create the required inputs for the cellKey package.</p>
+<p>We then need to create the required inputs for the cellKey
+package.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_cnts1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ck_params_cnts.html">ck_params_cnts</a></span><span class="op">(</span>ptab <span class="op">=</span> <span class="va">ptab1</span><span class="op">)</span></span>
 <span><span class="va">p_cnts2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ck_params_cnts.html">ck_params_cnts</a></span><span class="op">(</span>ptab <span class="op">=</span> <span class="va">para2</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="../reference/ck_params_cnts.html">ck_params_cnts()</a></code> returns objects that can be used as inputs in method <code>params_cnts_set()</code>. In argument <code>v</code> one may specify count variables for which the supplied perturbation parameters should be used. If <code>v</code> is not specified, the perturbation parameters are used for all count variables.</p>
+<p><code><a href="../reference/ck_params_cnts.html">ck_params_cnts()</a></code> returns objects that can be used as
+inputs in method <code>params_cnts_set()</code>. In argument
+<code>v</code> one may specify count variables for which the supplied
+perturbation parameters should be used. If <code>v</code> is not
+specified, the perturbation parameters are used for all count
+variables.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># use `p_cnts1` for variable "total" (which always exists)</span></span>
 <span><span class="va">tab</span><span class="op">$</span><span class="fu">params_cnts_set</span><span class="op">(</span>val <span class="op">=</span> <span class="va">p_cnts1</span>, v <span class="op">=</span> <span class="st">"total"</span><span class="op">)</span></span></code></pre></div>
@@ -253,20 +368,49 @@
 <code class="sourceCode R"><span><span class="co"># use `p_cnts2` for "cnt_highincome"</span></span>
 <span><span class="va">tab</span><span class="op">$</span><span class="fu">params_cnts_set</span><span class="op">(</span>val <span class="op">=</span> <span class="va">p_cnts2</span>, v <span class="op">=</span> <span class="st">"cnt_highincome"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## --&gt; setting perturbation parameters for variable 'cnt_highincome'</span></span></code></pre>
-<p>It is therefore entirely possible to use different parameter sets for different variables. Modifying perturbation parameters for some variables is easy, too. It is only required to apply the <code>params_cnts_set()</code>-method again which will replace any previously defined parameters.</p>
+<p>It is therefore entirely possible to use different parameter sets for
+different variables. Modifying perturbation parameters for some
+variables is easy, too. It is only required to apply the
+<code>params_cnts_set()</code>-method again which will replace any
+previously defined parameters.</p>
 </div>
 <div class="section level4">
 <h4 id="perturbation-parameters-for-continuous-variables">Perturbation parameters for continuous variables<a class="anchor" aria-label="anchor" href="#perturbation-parameters-for-continuous-variables"></a>
 </h4>
-<p>Setting and defining perturbation parameters for continuous variables works similarily. The required functions are <code>ck_params_num()</code> to create input objects that can be set with the <code>params_nums_set</code> method. Please note that it is possibly by specifying the <code>path</code> argument in both <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> and <code><a href="../reference/ck_params_cnts.html">ck_params_cnts()</a></code> to save the parameters additionally as yaml-file. Using <code><a href="../reference/ck_read_yaml.html">ck_read_yaml()</a></code>, these files can later be imported again. This feature is useful for re-using parameter settings.</p>
-<p>The underlying framework on how to perturb continuous tables differs from the proposed method from <code>ABS</code>. One possible approach is based on a <em>“flex function”</em>. This approach (which is described in deliverable <code>D4.2</code> in the project <a href="https://ec.europa.eu/eurostat/cros/content/perturbative-confidentiality-methods_en" class="external-link">perturbative confidentiality methods</a> allowes to apply different magnitude of noise to larger and smaller cells. Users can define the required parameters for the flex-approach with function <code><a href="../reference/ck_flexparams.html">ck_flexparams()</a></code>. The required inputs are:</p>
+<p>Setting and defining perturbation parameters for continuous variables
+works similarily. The required functions are
+<code>ck_params_num()</code> to create input objects that can be set
+with the <code>params_nums_set</code> method. Please note that it is
+possibly by specifying the <code>path</code> argument in both
+<code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> and <code><a href="../reference/ck_params_cnts.html">ck_params_cnts()</a></code> to save
+the parameters additionally as yaml-file. Using
+<code><a href="../reference/ck_read_yaml.html">ck_read_yaml()</a></code>, these files can later be imported again.
+This feature is useful for re-using parameter settings.</p>
+<p>The underlying framework on how to perturb continuous tables differs
+from the proposed method from <code>ABS</code>. One possible approach is
+based on a <em>“flex function”</em>. This approach (which is described
+in deliverable <code>D4.2</code> in the project <a href="https://ec.europa.eu/eurostat/cros/content/perturbative-confidentiality-methods_en" class="external-link">perturbative
+confidentiality methods</a> allowes to apply different magnitude of
+noise to larger and smaller cells. Users can define the required
+parameters for the flex-approach with function
+<code><a href="../reference/ck_flexparams.html">ck_flexparams()</a></code>. The required inputs are:</p>
 <ul>
 <li>
-<code>fp</code>: the flexpoint defining at which point should the underlying noise coefficient function reach its desired maximum (which is defined by the first element of <code>p</code>)</li>
+<code>fp</code>: the flexpoint defining at which point should the
+underlying noise coefficient function reach its desired maximum (which
+is defined by the first element of <code>p</code>)</li>
 <li>
-<code>p</code>: numeric vector of length <code>2</code> with <code>p[1] &gt; p[2]</code> where both elements specify a percentage. The first value refers to the desired maximum perturbation percentage for small cells (depending on fp) while the second element refers to the desired maximum perturbation percentage for large cells.</li>
+<code>p</code>: numeric vector of length <code>2</code> with
+<code>p[1] &gt; p[2]</code> where both elements specify a percentage.
+The first value refers to the desired maximum perturbation percentage
+for small cells (depending on fp) while the second element refers to the
+desired maximum perturbation percentage for large cells.</li>
 <li>
-<code>epsilon</code>: a numeric vector in descending order with all values in <code>[0; 1]</code> and with the first element forced to equal <code>1</code>. The length of this parameter must correspond with the number of <code>top_k</code> specified in <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> (which will be discussed later).</li>
+<code>epsilon</code>: a numeric vector in descending order with all
+values in <code>[0; 1]</code> and with the first element forced to equal
+<code>1</code>. The length of this parameter must correspond with the
+number of <code>top_k</code> specified in <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code>
+(which will be discussed later).</li>
 </ul>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># parameters for the flex-function</span></span>
@@ -274,50 +418,100 @@
 <span>  fp <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">0.03</span><span class="op">)</span>,</span>
 <span>  epsilon <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.5</span>, <span class="fl">0.2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>In the <a href="https://github.com/sdcTools/cellKey" class="external-link"><strong>cellKey</strong></a> package it is possible to select the underlying data that form the base for the perturbation differently. In <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> the specific approach can be selected in argument <code>type</code>. The valid choices for this argument are:</p>
+<p>In the <a href="https://github.com/sdcTools/cellKey" class="external-link"><strong>cellKey</strong></a>
+package it is possible to select the underlying data that form the base
+for the perturbation differently. In <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> the
+specific approach can be selected in argument <code>type</code>. The
+valid choices for this argument are:</p>
 <ul>
 <li>
-<code>"top_contr"</code>: the <code>k</code> largest contributions to each cell are used in the perturbation procedure with the number <code>k</code> required to be specified in argument <code>top_k</code>
+<code>"top_contr"</code>: the <code>k</code> largest contributions
+to each cell are used in the perturbation procedure with the number
+<code>k</code> required to be specified in argument
+<code>top_k</code>
 </li>
 <li>
-<code>"mean"</code>: weighted cellmeans are used as starting points</li>
+<code>"mean"</code>: weighted cellmeans are used as starting
+points</li>
 <li>
-<code>"range"</code>: the difference between largest and smallest unweighted contributions for each cell are used as base for the perturbation procedure</li>
+<code>"range"</code>: the difference between largest and smallest
+unweighted contributions for each cell are used as base for the
+perturbation procedure</li>
 <li>
-<code>"sum"</code>: weighted cellvalues are used as starting points for the perturbation</li>
+<code>"sum"</code>: weighted cellvalues are used as starting points
+for the perturbation</li>
 </ul>
-<p>Another, more basic approach, is to use a constant perturbation magnitude for all cells, independent on their (weighted) values. The required parameters can be defined with <code><a href="../reference/ck_simpleparams.html">ck_simpleparams()</a></code> as shown below:</p>
+<p>Another, more basic approach, is to use a constant perturbation
+magnitude for all cells, independent on their (weighted) values. The
+required parameters can be defined with <code><a href="../reference/ck_simpleparams.html">ck_simpleparams()</a></code>
+as shown below:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># parameters for the simple approach</span></span>
 <span><span class="va">p_simple</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ck_simpleparams.html">ck_simpleparams</a></span><span class="op">(</span></span>
 <span>  p <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  epsilon <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<p>In this appraoch it is only required to specify a single percentage value <code>p</code> and - as in the case for the flex function - a vector of epsilons that are used in the case when <code>top_k &gt; 1</code>.</p>
-<p>Further important parameters for <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> are:</p>
+<p>In this appraoch it is only required to specify a single percentage
+value <code>p</code> and - as in the case for the flex function - a
+vector of epsilons that are used in the case when
+<code>top_k &gt; 1</code>.</p>
+<p>Further important parameters for <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code>
+are:</p>
 <ul>
 <li>
-<code>mu_c</code>: an extra amount of perturbation applied to sensitive cells (restricted to the first of <code>top_k</code> noise components). In the following example we demonstrate how to identify sensitive cells for numeric variables.</li>
+<code>mu_c</code>: an extra amount of perturbation applied to
+sensitive cells (restricted to the first of <code>top_k</code> noise
+components). In the following example we demonstrate how to identify
+sensitive cells for numeric variables.</li>
 <li>
-<code>same_key</code>: a logical value specifying if the original cell key (<code>TRUE</code>) should be used for the lookup of the largest contributor of a cell or if a perturbation of the cellkey itself (<code>FALSE</code>) should take place.</li>
+<code>same_key</code>: a logical value specifying if the original
+cell key (<code>TRUE</code>) should be used for the lookup of the
+largest contributor of a cell or if a perturbation of the cellkey itself
+(<code>FALSE</code>) should take place.</li>
 <li>
-<code>use_zero_rkeys</code>: a logical value defining if record keys of units not contributing to a specific numeric variables should be used (<code>TRUE</code>) or ignored (<code>FALSE</code>) when cell keys are computed.</li>
+<code>use_zero_rkeys</code>: a logical value defining if record keys
+of units not contributing to a specific numeric variables should be used
+(<code>TRUE</code>) or ignored (<code>FALSE</code>) when cell keys are
+computed.</li>
 </ul>
-<p>A very important parameter is <code>ptab</code> which actually holds the perturbation tables in which perturbation values are looked up. This input can be specified differently in the case when numeric variables should be perturbed. It can be either an object derived from <code>ptable::pt_create_pTable(..., table = "nums")</code> in the most simple case. More advanced is to supply a named list, where the allowed names are shown below and each element must be the output of <code>ptable::pt_create_pTable(..., table = "nums")</code>.</p>
+<p>A very important parameter is <code>ptab</code> which actually holds
+the perturbation tables in which perturbation values are looked up. This
+input can be specified differently in the case when numeric variables
+should be perturbed. It can be either an object derived from
+<code>ptable::pt_create_pTable(..., table = "nums")</code> in the most
+simple case. More advanced is to supply a named list, where the allowed
+names are shown below and each element must be the output of
+<code>ptable::pt_create_pTable(..., table = "nums")</code>.</p>
 <ul>
 <li>
-<code>"all"</code>: this ptable will be used for all cells; if specified, list-elements named <code>"even"</code>or <code>"odd"</code> are ignored</li>
+<code>"all"</code>: this ptable will be used for all cells; if
+specified, list-elements named <code>"even"</code>or <code>"odd"</code>
+are ignored</li>
 <li>
-<code>"even"</code>: this perturbation table will be used to look up perturbation values for cells with an even number of contributors</li>
+<code>"even"</code>: this perturbation table will be used to look up
+perturbation values for cells with an even number of contributors</li>
 <li>
-<code>"odd"</code>: will be used to look up perturbation values for cells with an odd number of contributors</li>
+<code>"odd"</code>: will be used to look up perturbation values for
+cells with an odd number of contributors</li>
 <li>
-<code>"small_cells"</code>: if specified, this ptable will be used to extract perturbation values for very small cells</li>
+<code>"small_cells"</code>: if specified, this ptable will be used
+to extract perturbation values for very small cells</li>
 </ul>
-<p>Please note, that if the goal is to have different perturbation tables for cells with an even/odd number of contributors, both <code>"even"</code> or <code>"odd"</code> must be available in the input list. In the chunk below we create four different perturbation tables. For details on the parameters, please look at the documentation of the <a href="https://github.com/sdcTools/ptable" class="external-link"><code>ptable</code></a> package, especially in <code><a href="https://rdrr.io/pkg/ptable/man/create_num_ptable.html" class="external-link">ptable::create_num_ptable()</a></code>.</p>
+<p>Please note, that if the goal is to have different perturbation
+tables for cells with an even/odd number of contributors, both
+<code>"even"</code> or <code>"odd"</code> must be available in the input
+list. In the chunk below we create four different perturbation tables.
+For details on the parameters, please look at the documentation of the
+<a href="https://github.com/sdcTools/ptable" class="external-link"><code>ptable</code></a>
+package, especially in <code><a href="https://rdrr.io/pkg/ptable/man/ptable_pkg.html" class="external-link">ptable::create_num_ptable()</a></code>.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># same ptable for all cells except for very small ones</span></span>
 <span><span class="va">ex_ptab1</span> <span class="op">&lt;-</span> <span class="fu">ptable</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ptable/man/pt_ex_nums.html" class="external-link">pt_ex_nums</a></span><span class="op">(</span>parity <span class="op">=</span> <span class="cn">TRUE</span>, separation <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>We can now use these tables to finally create objects containing all the required information to create perturbed magnitude tables using <code>ck_params_nums</code>. In the first case we want the same perturbation table (<code>ptab_all</code>) for cells with an even/odd number of contributors but want to use <code>ptab_sc</code> for very small cells.</p>
+<p>We can now use these tables to finally create objects containing all
+the required information to create perturbed magnitude tables using
+<code>ck_params_nums</code>. In the first case we want the same
+perturbation table (<code>ptab_all</code>) for cells with an even/odd
+number of contributors but want to use <code>ptab_sc</code> for very
+small cells.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_nums1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ck_params_nums.html">ck_params_nums</a></span><span class="op">(</span></span>
 <span>  type <span class="op">=</span> <span class="st">"top_contr"</span>,</span>
@@ -327,10 +521,14 @@
 <span>  mu_c <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  same_key <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  use_zero_rkeys <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>The second input we generate should use different ptables for cells with an even/odd number of contributing units (<code>ptab_even</code> and <code>ptab_odd</code>) but should not use a specific perturbation table for very small cells.</p>
+<p>The second input we generate should use different ptables for cells
+with an even/odd number of contributing units (<code>ptab_even</code>
+and <code>ptab_odd</code>) but should not use a specific perturbation
+table for very small cells.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ex_ptab2</span> <span class="op">&lt;-</span> <span class="fu">ptable</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ptable/man/pt_ex_nums.html" class="external-link">pt_ex_nums</a></span><span class="op">(</span>parity <span class="op">=</span> <span class="cn">FALSE</span>, separation <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p>As above, we need to use <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> to compute suitable inputs.</p>
+<p>As above, we need to use <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> to compute
+suitable inputs.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_nums2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ck_params_nums.html">ck_params_nums</a></span><span class="op">(</span></span>
 <span>  type <span class="op">=</span> <span class="st">"mean"</span>,</span>
@@ -339,34 +537,55 @@
 <span>  mu_c <span class="op">=</span> <span class="fl">1.5</span>,</span>
 <span>  same_key <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  use_zero_rkeys <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>The package internally computes the separation point that is used for very small cells in case this is required. Details on this can also be found in deliverable <a href="(https://ec.europa.eu/eurostat/cros/content/perturbative-confidentiality-methods_en)" class="external-link"><code>D4.2</code></a>.</p>
-<p>Now we can attach the results from <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> to numeric variables using the <code>params_nums_set()</code>-method as shown below:</p>
+<p>The package internally computes the separation point that is used for
+very small cells in case this is required. Details on this can also be
+found in deliverable <a href="(https://ec.europa.eu/eurostat/cros/content/perturbative-confidentiality-methods_en)" class="external-link"><code>D4.2</code></a>.</p>
+<p>Now we can attach the results from <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> to
+numeric variables using the <code>params_nums_set()</code>-method as
+shown below:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab</span><span class="op">$</span><span class="fu">params_nums_set</span><span class="op">(</span>v <span class="op">=</span> <span class="st">"income"</span>, val <span class="op">=</span> <span class="va">p_nums1</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## --&gt; setting perturbation parameters for variable 'income'</span></span></code></pre>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab</span><span class="op">$</span><span class="fu">params_nums_set</span><span class="op">(</span>v <span class="op">=</span> <span class="st">"savings"</span>, val <span class="op">=</span> <span class="va">p_nums1</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## --&gt; setting perturbation parameters for variable 'savings'</span></span></code></pre>
-<p>In order to make use of parameter <code>mu_c</code> that allows ab add extra amount of protection to sensitive cells, one may identify sensitive cells according to some rules. The following methods to identify sensitive cells are implemented:</p>
+<p>In order to make use of parameter <code>mu_c</code> that allows ab
+add extra amount of protection to sensitive cells, one may identify
+sensitive cells according to some rules. The following methods to
+identify sensitive cells are implemented:</p>
 <ul>
 <li>
-<code>supp_p()</code>: identify sensitive cells based on p%-rule</li>
+<code>supp_p()</code>: identify sensitive cells based on
+p%-rule</li>
 <li>
-<code>supp_pp()</code>: identify sensitive cells based on pq%-rule</li>
+<code>supp_pp()</code>: identify sensitive cells based on
+pq%-rule</li>
 <li>
-<code>supp_nk()</code>: identify sensitive cells based on nk-dominance rule</li>
+<code>supp_nk()</code>: identify sensitive cells based on
+nk-dominance rule</li>
 <li>
-<code>supp_freq()</code>: identify sensitive cells based on minimal frequencies for (weighted) number of contributors</li>
+<code>supp_freq()</code>: identify sensitive cells based on minimal
+frequencies for (weighted) number of contributors</li>
 <li>
-<code>supp_val()</code>: identify sensitive cells based on (weighted) cell values</li>
+<code>supp_val()</code>: identify sensitive cells based on
+(weighted) cell values</li>
 <li>
-<code>supp_cells()</code>: identify sensitive cells based on their “names”</li>
+<code>supp_cells()</code>: identify sensitive cells based on their
+“names”</li>
 </ul>
-<p>We now want to set all cells for variable <code>income</code> as sensitive to which less than <code>15</code> units contribute.</p>
+<p>We now want to set all cells for variable <code>income</code> as
+sensitive to which less than <code>15</code> units contribute.</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab</span><span class="op">$</span><span class="fu">supp_freq</span><span class="op">(</span>v <span class="op">=</span> <span class="st">"income"</span>, n <span class="op">=</span> <span class="fl">15</span>, weighted <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## freq-rule: 3 new sensitive cells (incl. duplicates) found (total: 3)</span></span></code></pre>
-<p>To set specific cells independent on values but their names, one may use the <code>$supp_cells()</code>-method. This cell requires a <code>data.frame</code> as input that contains a column for each dimensional variable specified. Each row of this input is considered as a cell where <code>NAs</code> are used as placeholders that match any characteristic of the relevant variable. Using the <code>data.frame</code> <code>inp</code> show below, the programm would suppress the following cells:</p>
+<p>To set specific cells independent on values but their names, one may
+use the <code>$supp_cells()</code>-method. This cell requires a
+<code>data.frame</code> as input that contains a column for each
+dimensional variable specified. Each row of this input is considered as
+a cell where <code>NAs</code> are used as placeholders that match any
+characteristic of the relevant variable. Using the
+<code>data.frame</code> <code>inp</code> show below, the programm would
+suppress the following cells:</p>
 <ul>
 <li>
 <code>female</code> x <code>age_group1</code>
@@ -387,21 +606,31 @@
 <div class="section level3">
 <h3 id="compute-perturbed-tables">Compute perturbed tables<a class="anchor" aria-label="anchor" href="#compute-perturbed-tables"></a>
 </h3>
-<p>It is now possible to finally perturbed variables using the <code>perturb()</code>-method. As <code>tab</code> - the object created with <code><a href="../reference/cellkey_pkg.html">ck_setup()</a></code> - already contains all possible data, the only required input is the name of a variable that should be perturbed.</p>
+<p>It is now possible to finally perturbed variables using the
+<code>perturb()</code>-method. As <code>tab</code> - the object created
+with <code><a href="../reference/cellkey_pkg.html">ck_setup()</a></code> - already contains all possible data, the
+only required input is the name of a variable that should be
+perturbed.</p>
 <ul>
 <li>
-<code>v</code>: a character vector specifying one or more variables that should be perturbed.</li>
+<code>v</code>: a character vector specifying one or more variables
+that should be perturbed.</li>
 </ul>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab</span><span class="op">$</span><span class="fu">perturb</span><span class="op">(</span>v <span class="op">=</span> <span class="st">"total"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Count variable 'total' was perturbed.</span></span></code></pre>
-<p>After this call, object <code>tab</code> is updated and contains now also perturbed values for variable <code>total</code>. We note that no explicit assignment is required. The following code shows that we also can perturb cnt- and numerical variables in one single call.</p>
+<p>After this call, object <code>tab</code> is updated and contains now
+also perturbed values for variable <code>total</code>. We note that no
+explicit assignment is required. The following code shows that we also
+can perturb cnt- and numerical variables in one single call.</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab</span><span class="op">$</span><span class="fu">perturb</span><span class="op">(</span>v <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cnt_highincome"</span>, <span class="st">"savings"</span>, <span class="st">"income"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Count variable 'cnt_highincome' was perturbed.</span></span></code></pre>
 <pre><code><span><span class="co">## Numeric variable 'savings' was perturbed.</span></span></code></pre>
 <pre><code><span><span class="co">## Numeric variable 'income' was perturbed.</span></span></code></pre>
-<p>A <code>data.table</code> containing original and perturbed values can now be extracted using the <code>freqtab()</code>- and <code>numtab()</code> methods as discussed next.</p>
+<p>A <code>data.table</code> containing original and perturbed values
+can now be extracted using the <code>freqtab()</code>- and
+<code>numtab()</code> methods as discussed next.</p>
 </div>
 <div class="section level3">
 <h3 id="extracting-results">Extracting results<a class="anchor" aria-label="anchor" href="#extracting-results"></a>
@@ -409,14 +638,23 @@
 <div class="section level4">
 <h4 id="obtain-perturbed-tables-for-count-tables">Obtain perturbed tables for count tables<a class="anchor" aria-label="anchor" href="#obtain-perturbed-tables-for-count-tables"></a>
 </h4>
-<p>Applying the <code>freqtab()</code>-method to one ore more already perturbed variables returns a <code>data.table</code> that contains for each table cell the unpertubed and perturbed (weighted and/or unweighted) counts. This function has the following arguments:</p>
+<p>Applying the <code>freqtab()</code>-method to one ore more already
+perturbed variables returns a <code>data.table</code> that contains for
+each table cell the unpertubed and perturbed (weighted and/or
+unweighted) counts. This function has the following arguments:</p>
 <ul>
 <li>
-<code>v</code>: one or more variable names of already perturbed count variables</li>
+<code>v</code>: one or more variable names of already perturbed
+count variables</li>
 <li>
-<code>path</code>: if not <code>NULL</code>, a (relative or absolute) path to which the resulting output table should be written. A <code>csv</code> file will be generated and <code>.csv</code> will be appended to the value provided.</li>
+<code>path</code>: if not <code>NULL</code>, a (relative or
+absolute) path to which the resulting output table should be written. A
+<code>csv</code> file will be generated and <code>.csv</code> will be
+appended to the value provided.</li>
 </ul>
-<p>The method returns a <code>data.table</code> with all combinations of the dimensional variables in the first <span class="math inline">\(n\)</span> columns and after those the following columns:</p>
+<p>The method returns a <code>data.table</code> with all combinations of
+the dimensional variables in the first <span class="math inline">\(n\)</span> columns and after those the following
+columns:</p>
 <ul>
 <li>
 <code>vname</code>: name of the perturbed variable</li>
@@ -432,54 +670,59 @@
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab</span><span class="op">$</span><span class="fu">freqtab</span><span class="op">(</span>v <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"total"</span>, <span class="st">"cnt_highincome"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##        sex        age          vname  uwc     wc puwc         pwc</span></span>
-<span><span class="co">##  1:  Total      Total          total 4580 273481 4582 273600.4240</span></span>
-<span><span class="co">##  2:  Total age_group1          total 1969 117289 1969 117289.0000</span></span>
-<span><span class="co">##  3:  Total age_group2          total 1143  68445 1144  68504.8819</span></span>
-<span><span class="co">##  4:  Total age_group3          total  864  51679  864  51679.0000</span></span>
-<span><span class="co">##  5:  Total age_group4          total  423  25253  425  25372.3995</span></span>
-<span><span class="co">##  6:  Total age_group5          total  168   9897  169   9955.9107</span></span>
-<span><span class="co">##  7:  Total age_group6          total   13    918   13    918.0000</span></span>
-<span><span class="co">##  8:   male      Total          total 2296 136511 2296 136511.0000</span></span>
-<span><span class="co">##  9:   male age_group1          total 1015  60415 1015  60415.0000</span></span>
-<span><span class="co">## 10:   male age_group2          total  571  33968  572  34027.4886</span></span>
-<span><span class="co">## 11:   male age_group3          total  424  25212  425  25271.4623</span></span>
-<span><span class="co">## 12:   male age_group4          total  195  11396  194  11337.5590</span></span>
-<span><span class="co">## 13:   male age_group5          total   84   4922   85   4980.5952</span></span>
-<span><span class="co">## 14:   male age_group6          total    7    598    6    512.5714</span></span>
-<span><span class="co">## 15: female      Total          total 2284 136970 2284 136970.0000</span></span>
-<span><span class="co">## 16: female age_group1          total  954  56874  954  56874.0000</span></span>
-<span><span class="co">## 17: female age_group2          total  572  34477  570  34356.4510</span></span>
-<span><span class="co">## 18: female age_group3          total  440  26467  441  26527.1523</span></span>
-<span><span class="co">## 19: female age_group4          total  228  13857  228  13857.0000</span></span>
-<span><span class="co">## 20: female age_group5          total   84   4975   86   5093.4524</span></span>
-<span><span class="co">## 21: female age_group6          total    6    320    6    320.0000</span></span>
-<span><span class="co">## 22:  Total      Total cnt_highincome  445  27031  447  27152.4876</span></span>
-<span><span class="co">## 23:  Total age_group1 cnt_highincome  192  11949  192  11949.0000</span></span>
-<span><span class="co">## 24:  Total age_group2 cnt_highincome  123   7665  123   7665.0000</span></span>
-<span><span class="co">## 25:  Total age_group3 cnt_highincome   82   4641   82   4641.0000</span></span>
-<span><span class="co">## 26:  Total age_group4 cnt_highincome   34   1952   37   2124.2353</span></span>
-<span><span class="co">## 27:  Total age_group5 cnt_highincome   14    824   15    882.8571</span></span>
+<span><span class="co">##  1:  Total      Total          total 4580 274619 4580 274619.0000</span></span>
+<span><span class="co">##  2:  Total age_group1          total 1969 117549 1968 117489.3002</span></span>
+<span><span class="co">##  3:  Total age_group2          total 1143  68497 1142  68437.0726</span></span>
+<span><span class="co">##  4:  Total age_group3          total  864  52138  864  52138.0000</span></span>
+<span><span class="co">##  5:  Total age_group4          total  423  25653  425  25774.2908</span></span>
+<span><span class="co">##  6:  Total age_group5          total  168   9949  166   9830.5595</span></span>
+<span><span class="co">##  7:  Total age_group6          total   13    833   13    833.0000</span></span>
+<span><span class="co">##  8:   male      Total          total 2296 136548 2297 136607.4721</span></span>
+<span><span class="co">##  9:   male age_group1          total 1015  59878 1014  59819.0069</span></span>
+<span><span class="co">## 10:   male age_group2          total  571  34296  571  34296.0000</span></span>
+<span><span class="co">## 11:   male age_group3          total  424  25219  423  25159.5212</span></span>
+<span><span class="co">## 12:   male age_group4          total  195  11716  196  11776.0821</span></span>
+<span><span class="co">## 13:   male age_group5          total   84   4966   84   4966.0000</span></span>
+<span><span class="co">## 14:   male age_group6          total    7    473    8    540.5714</span></span>
+<span><span class="co">## 15: female      Total          total 2284 138071 2284 138071.0000</span></span>
+<span><span class="co">## 16: female age_group1          total  954  57671  953  57610.5482</span></span>
+<span><span class="co">## 17: female age_group2          total  572  34201  573  34260.7920</span></span>
+<span><span class="co">## 18: female age_group3          total  440  26919  440  26919.0000</span></span>
+<span><span class="co">## 19: female age_group4          total  228  13937  227  13875.8728</span></span>
+<span><span class="co">## 20: female age_group5          total   84   4983   84   4983.0000</span></span>
+<span><span class="co">## 21: female age_group6          total    6    360    6    360.0000</span></span>
+<span><span class="co">## 22:  Total      Total cnt_highincome  445  26306  443  26187.7708</span></span>
+<span><span class="co">## 23:  Total age_group1 cnt_highincome  192  11595  192  11595.0000</span></span>
+<span><span class="co">## 24:  Total age_group2 cnt_highincome  123   6931  123   6931.0000</span></span>
+<span><span class="co">## 25:  Total age_group3 cnt_highincome   82   5066   79   4880.6585</span></span>
+<span><span class="co">## 26:  Total age_group4 cnt_highincome   34   2015   35   2074.2647</span></span>
+<span><span class="co">## 27:  Total age_group5 cnt_highincome   14    699   14    699.0000</span></span>
 <span><span class="co">## 28:  Total age_group6 cnt_highincome    0      0    0      0.0000</span></span>
-<span><span class="co">## 29:   male      Total cnt_highincome  219  13099  216  12919.5616</span></span>
-<span><span class="co">## 30:   male age_group1 cnt_highincome   90   5543   90   5543.0000</span></span>
-<span><span class="co">## 31:   male age_group2 cnt_highincome   66   4083   66   4083.0000</span></span>
-<span><span class="co">## 32:   male age_group3 cnt_highincome   41   2275   41   2275.0000</span></span>
-<span><span class="co">## 33:   male age_group4 cnt_highincome   15    813   15    813.0000</span></span>
-<span><span class="co">## 34:   male age_group5 cnt_highincome    7    385    9    495.0000</span></span>
+<span><span class="co">## 29:   male      Total cnt_highincome  219  12660  218  12602.1918</span></span>
+<span><span class="co">## 30:   male age_group1 cnt_highincome   90   5343   87   5164.9000</span></span>
+<span><span class="co">## 31:   male age_group2 cnt_highincome   66   3665   68   3776.0606</span></span>
+<span><span class="co">## 32:   male age_group3 cnt_highincome   41   2450   38   2270.7317</span></span>
+<span><span class="co">## 33:   male age_group4 cnt_highincome   15    820   12    656.0000</span></span>
+<span><span class="co">## 34:   male age_group5 cnt_highincome    7    382    6    327.4286</span></span>
 <span><span class="co">## 35:   male age_group6 cnt_highincome    0      0    0      0.0000</span></span>
-<span><span class="co">## 36: female      Total cnt_highincome  226  13932  228  14055.2920</span></span>
-<span><span class="co">## 37: female age_group1 cnt_highincome  102   6406  102   6406.0000</span></span>
-<span><span class="co">## 38: female age_group2 cnt_highincome   57   3582   53   3330.6316</span></span>
-<span><span class="co">## 39: female age_group3 cnt_highincome   41   2366   41   2366.0000</span></span>
-<span><span class="co">## 40: female age_group4 cnt_highincome   19   1139   19   1139.0000</span></span>
-<span><span class="co">## 41: female age_group5 cnt_highincome    7    439    8    501.7143</span></span>
+<span><span class="co">## 36: female      Total cnt_highincome  226  13646  228  13766.7611</span></span>
+<span><span class="co">## 37: female age_group1 cnt_highincome  102   6252  101   6190.7059</span></span>
+<span><span class="co">## 38: female age_group2 cnt_highincome   57   3266   57   3266.0000</span></span>
+<span><span class="co">## 39: female age_group3 cnt_highincome   41   2616   37   2360.7805</span></span>
+<span><span class="co">## 40: female age_group4 cnt_highincome   19   1195   19   1195.0000</span></span>
+<span><span class="co">## 41: female age_group5 cnt_highincome    7    317    7    317.0000</span></span>
 <span><span class="co">## 42: female age_group6 cnt_highincome    0      0    0      0.0000</span></span>
 <span><span class="co">##        sex        age          vname  uwc     wc puwc         pwc</span></span></code></pre>
 </div>
 <div class="section level4">
 <h4 id="obtain-perturbed-tables-for-magnitude-tables">Obtain perturbed tables for magnitude tables<a class="anchor" aria-label="anchor" href="#obtain-perturbed-tables-for-magnitude-tables"></a>
 </h4>
-<p>Using the <code>numtab()</code>-method allows to extract results for continuous variables. The required inputs are the same as for the <code>freqtab()</code>-method and the output returns a <code>data.table</code> with all combinations of the dimensional variables in the first <span class="math inline">\(n\)</span> columns and the following additional columns:</p>
+<p>Using the <code>numtab()</code>-method allows to extract results for
+continuous variables. The required inputs are the same as for the
+<code>freqtab()</code>-method and the output returns a
+<code>data.table</code> with all combinations of the dimensional
+variables in the first <span class="math inline">\(n\)</span> columns
+and the following additional columns:</p>
 <ul>
 <li>
 <code>vname</code>: name of the perturbed variable</li>
@@ -490,52 +733,54 @@
 <li>
 <code>pws</code>: perturbed weighted sum of the given cell</li>
 </ul>
-<p>We now have a look at the results of the variables <code>savings</code> and <code>income</code> that we already have perturbed.</p>
+<p>We now have a look at the results of the variables
+<code>savings</code> and <code>income</code> that we already have
+perturbed.</p>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab</span><span class="op">$</span><span class="fu">numtab</span><span class="op">(</span>v <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"savings"</span>, <span class="st">"income"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##        sex        age   vname      uws         ws          pws</span></span>
-<span><span class="co">##  1:  Total      Total savings  2273532  136577382  136575615.3</span></span>
-<span><span class="co">##  2:  Total age_group1 savings   982386   58489091   58489711.1</span></span>
-<span><span class="co">##  3:  Total age_group2 savings   552336   33447125   33443486.2</span></span>
-<span><span class="co">##  4:  Total age_group3 savings   437101   26306556   26305370.3</span></span>
-<span><span class="co">##  5:  Total age_group4 savings   214661   13051426   13052474.3</span></span>
-<span><span class="co">##  6:  Total age_group5 savings    80451    4781067    4781578.9</span></span>
-<span><span class="co">##  7:  Total age_group6 savings     6597     502117     503546.3</span></span>
-<span><span class="co">##  8:   male      Total savings  1159816   69558212   69550570.3</span></span>
-<span><span class="co">##  9:   male age_group1 savings   517660   30940379   30941069.2</span></span>
-<span><span class="co">## 10:   male age_group2 savings   280923   16677403   16682288.9</span></span>
-<span><span class="co">## 11:   male age_group3 savings   214970   13129331   13132249.0</span></span>
-<span><span class="co">## 12:   male age_group4 savings    99420    5910130    5912425.4</span></span>
-<span><span class="co">## 13:   male age_group5 savings    43233    2598648    2601774.0</span></span>
-<span><span class="co">## 14:   male age_group6 savings     3610     302321     304502.7</span></span>
-<span><span class="co">## 15: female      Total savings  1113716   67019170   67020768.4</span></span>
-<span><span class="co">## 16: female age_group1 savings   464726   27548712   27553193.2</span></span>
-<span><span class="co">## 17: female age_group2 savings   271413   16769722   16769189.8</span></span>
-<span><span class="co">## 18: female age_group3 savings   222131   13177225   13178706.1</span></span>
-<span><span class="co">## 19: female age_group4 savings   115241    7141296    7144683.2</span></span>
-<span><span class="co">## 20: female age_group5 savings    37218    2182419    2181279.4</span></span>
-<span><span class="co">## 21: female age_group6 savings     2987     199796     208118.1</span></span>
-<span><span class="co">## 22:  Total      Total  income 22952978 1376562410 1376540807.4</span></span>
-<span><span class="co">## 23:  Total age_group1  income  9810547  586589204  586594963.0</span></span>
-<span><span class="co">## 24:  Total age_group2  income  5692119  342051678  341989272.0</span></span>
-<span><span class="co">## 25:  Total age_group3  income  4406946  263728127  263706891.8</span></span>
-<span><span class="co">## 26:  Total age_group4  income  2133543  129217004  129225188.2</span></span>
-<span><span class="co">## 27:  Total age_group5  income   848151   50246358   50247222.3</span></span>
-<span><span class="co">## 28:  Total age_group6  income    61672    4730039    4775840.0</span></span>
-<span><span class="co">## 29:   male      Total  income 11262049  673088804  673007911.5</span></span>
-<span><span class="co">## 30:   male age_group1  income  4877164  291041187  291051162.4</span></span>
-<span><span class="co">## 31:   male age_group2  income  2811379  168945610  168995970.4</span></span>
-<span><span class="co">## 32:   male age_group3  income  2168169  129180303  129201500.5</span></span>
-<span><span class="co">## 33:   male age_group4  income   978510   58190433   58203583.8</span></span>
-<span><span class="co">## 34:   male age_group5  income   393134   22659924   22668895.1</span></span>
-<span><span class="co">## 35:   male age_group6  income    33693    3071347    3152791.3</span></span>
-<span><span class="co">## 36: female      Total  income 11690929  703473606  703498558.3</span></span>
-<span><span class="co">## 37: female age_group1  income  4933383  295548017  295582908.2</span></span>
-<span><span class="co">## 38: female age_group2  income  2880740  173106068  173091134.9</span></span>
-<span><span class="co">## 39: female age_group3  income  2238777  134547824  134558854.0</span></span>
-<span><span class="co">## 40: female age_group4  income  1155033   71026571   71040637.5</span></span>
-<span><span class="co">## 41: female age_group5  income   455017   27586434   27628249.7</span></span>
-<span><span class="co">## 42: female age_group6  income    27979    1658692    1775319.4</span></span>
+<span><span class="co">##  1:  Total      Total savings  2273532  136080476  136079883.8</span></span>
+<span><span class="co">##  2:  Total age_group1 savings   982386   58448230   58449365.8</span></span>
+<span><span class="co">##  3:  Total age_group2 savings   552336   33050046   33046450.5</span></span>
+<span><span class="co">##  4:  Total age_group3 savings   437101   26471270   26473898.9</span></span>
+<span><span class="co">##  5:  Total age_group4 savings   214661   13064845   13063083.1</span></span>
+<span><span class="co">##  6:  Total age_group5 savings    80451    4644039    4646212.0</span></span>
+<span><span class="co">##  7:  Total age_group6 savings     6597     402046     401597.7</span></span>
+<span><span class="co">##  8:   male      Total savings  1159816   69402081   69396650.5</span></span>
+<span><span class="co">##  9:   male age_group1 savings   517660   30635861   30634760.4</span></span>
+<span><span class="co">## 10:   male age_group2 savings   280923   16925471   16922405.1</span></span>
+<span><span class="co">## 11:   male age_group3 savings   214970   12990062   12986215.1</span></span>
+<span><span class="co">## 12:   male age_group4 savings    99420    6163311    6168275.1</span></span>
+<span><span class="co">## 13:   male age_group5 savings    43233    2448515    2449660.7</span></span>
+<span><span class="co">## 14:   male age_group6 savings     3610     238861     239465.0</span></span>
+<span><span class="co">## 15: female      Total savings  1113716   66678395   66678673.0</span></span>
+<span><span class="co">## 16: female age_group1 savings   464726   27812369   27815281.9</span></span>
+<span><span class="co">## 17: female age_group2 savings   271413   16124575   16121458.0</span></span>
+<span><span class="co">## 18: female age_group3 savings   222131   13481208   13478900.9</span></span>
+<span><span class="co">## 19: female age_group4 savings   115241    6901534    6900669.5</span></span>
+<span><span class="co">## 20: female age_group5 savings    37218    2195524    2197745.0</span></span>
+<span><span class="co">## 21: female age_group6 savings     2987     163185     160902.6</span></span>
+<span><span class="co">## 22:  Total      Total  income 22952978 1383503215 1383499674.2</span></span>
+<span><span class="co">## 23:  Total age_group1  income  9810547  590242255  590247239.1</span></span>
+<span><span class="co">## 24:  Total age_group2  income  5692119  339643572  339620743.0</span></span>
+<span><span class="co">## 25:  Total age_group3  income  4406946  268738787  268751666.8</span></span>
+<span><span class="co">## 26:  Total age_group4  income  2133543  131135079  131108100.3</span></span>
+<span><span class="co">## 27:  Total age_group5  income   848151   49687660   49704032.3</span></span>
+<span><span class="co">## 28:  Total age_group6  income    61672    4055862    4103510.1</span></span>
+<span><span class="co">## 29:   male      Total  income 11262049  672190259  672058318.4</span></span>
+<span><span class="co">## 30:   male age_group1  income  4877164  289493232  289496601.0</span></span>
+<span><span class="co">## 31:   male age_group2  income  2811379  167319495  167298112.9</span></span>
+<span><span class="co">## 32:   male age_group3  income  2168169  131075423  131042446.1</span></span>
+<span><span class="co">## 33:   male age_group4  income   978510   58370097   58452128.1</span></span>
+<span><span class="co">## 34:   male age_group5  income   393134   23580304   23584658.1</span></span>
+<span><span class="co">## 35:   male age_group6  income    33693    2351708    2335669.9</span></span>
+<span><span class="co">## 36: female      Total  income 11690929  711312956  711315024.3</span></span>
+<span><span class="co">## 37: female age_group1  income  4933383  300749023  300777924.8</span></span>
+<span><span class="co">## 38: female age_group2  income  2880740  172324077  172286889.2</span></span>
+<span><span class="co">## 39: female age_group3  income  2238777  137663364  137640704.4</span></span>
+<span><span class="co">## 40: female age_group4  income  1155033   72764982   72754840.2</span></span>
+<span><span class="co">## 41: female age_group5  income   455017   26107356   26136225.4</span></span>
+<span><span class="co">## 42: female age_group6  income    27979    1704154    1671415.0</span></span>
 <span><span class="co">##        sex        age   vname      uws         ws          pws</span></span></code></pre>
 </div>
 </div>
@@ -545,15 +790,17 @@
 <div class="section level4">
 <h4 id="utility-measures-for-count-variables">Utility measures for count variables<a class="anchor" aria-label="anchor" href="#utility-measures-for-count-variables"></a>
 </h4>
-<p>Method <code>measures_cnts()</code> allows to compute information loss measures for perturbed count variables. Its application is as simple as:</p>
+<p>Method <code>measures_cnts()</code> allows to compute information
+loss measures for perturbed count variables. Its application is as
+simple as:</p>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab</span><span class="op">$</span><span class="fu">measures_cnts</span><span class="op">(</span>v <span class="op">=</span> <span class="st">"total"</span>, exclude_zeros <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $overview</span></span>
 <span><span class="co">##    noise cnt        pct</span></span>
-<span><span class="co">## 1:    -2   3 0.14285714</span></span>
-<span><span class="co">## 2:    -1   6 0.28571429</span></span>
+<span><span class="co">## 1:    -2   1 0.04761905</span></span>
+<span><span class="co">## 2:    -1   4 0.19047619</span></span>
 <span><span class="co">## 3:     0   9 0.42857143</span></span>
-<span><span class="co">## 4:     1   2 0.09523810</span></span>
+<span><span class="co">## 4:     1   6 0.28571429</span></span>
 <span><span class="co">## 5:     2   1 0.04761905</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $measures</span></span>
@@ -563,38 +810,38 @@
 <span><span class="co">##  3:    Q20 0.000 0.000 0.000</span></span>
 <span><span class="co">##  4:    Q30 0.000 0.000 0.000</span></span>
 <span><span class="co">##  5:    Q40 0.000 0.000 0.000</span></span>
-<span><span class="co">##  6:   Mean 0.762 0.010 0.030</span></span>
-<span><span class="co">##  7: Median 1.000 0.001 0.015</span></span>
-<span><span class="co">##  8:    Q60 1.000 0.002 0.024</span></span>
-<span><span class="co">##  9:    Q70 1.000 0.003 0.036</span></span>
-<span><span class="co">## 10:    Q80 1.000 0.005 0.042</span></span>
-<span><span class="co">## 11:    Q90 2.000 0.012 0.054</span></span>
-<span><span class="co">## 12:    Q95 2.000 0.024 0.108</span></span>
-<span><span class="co">## 13:    Q99 2.000 0.119 0.179</span></span>
-<span><span class="co">## 14:    Max 2.000 0.143 0.196</span></span>
+<span><span class="co">##  6:   Mean 0.667 0.008 0.023</span></span>
+<span><span class="co">##  7: Median 1.000 0.001 0.011</span></span>
+<span><span class="co">##  8:    Q60 1.000 0.001 0.016</span></span>
+<span><span class="co">##  9:    Q70 1.000 0.002 0.021</span></span>
+<span><span class="co">## 10:    Q80 1.000 0.004 0.033</span></span>
+<span><span class="co">## 11:    Q90 1.000 0.005 0.049</span></span>
+<span><span class="co">## 12:    Q95 2.000 0.012 0.077</span></span>
+<span><span class="co">## 13:    Q99 2.000 0.117 0.162</span></span>
+<span><span class="co">## 14:    Max 2.000 0.143 0.183</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $cumdistr_d1</span></span>
 <span><span class="co">##    cat cnt       pct</span></span>
 <span><span class="co">## 1:   0   9 0.4285714</span></span>
-<span><span class="co">## 2:   1  17 0.8095238</span></span>
+<span><span class="co">## 2:   1  19 0.9047619</span></span>
 <span><span class="co">## 3:   2  21 1.0000000</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $cumdistr_d2</span></span>
-<span><span class="co">##            cat cnt       pct</span></span>
-<span><span class="co">## 1:    [0,0.02]  19 0.9047619</span></span>
-<span><span class="co">## 2: (0.02,0.05]  20 0.9523810</span></span>
-<span><span class="co">## 3:  (0.05,0.1]  20 0.9523810</span></span>
-<span><span class="co">## 4:   (0.1,0.2]  21 1.0000000</span></span>
-<span><span class="co">## 5:   (0.2,0.3]  21 1.0000000</span></span>
-<span><span class="co">## 6:   (0.3,0.4]  21 1.0000000</span></span>
-<span><span class="co">## 7:   (0.4,0.5]  21 1.0000000</span></span>
-<span><span class="co">## 8:   (0.5,Inf]  21 1.0000000</span></span>
+<span><span class="co">##            cat cnt      pct</span></span>
+<span><span class="co">## 1:    [0,0.02]  20 0.952381</span></span>
+<span><span class="co">## 2: (0.02,0.05]  20 0.952381</span></span>
+<span><span class="co">## 3:  (0.05,0.1]  20 0.952381</span></span>
+<span><span class="co">## 4:   (0.1,0.2]  21 1.000000</span></span>
+<span><span class="co">## 5:   (0.2,0.3]  21 1.000000</span></span>
+<span><span class="co">## 6:   (0.3,0.4]  21 1.000000</span></span>
+<span><span class="co">## 7:   (0.4,0.5]  21 1.000000</span></span>
+<span><span class="co">## 8:   (0.5,Inf]  21 1.000000</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $cumdistr_d3</span></span>
 <span><span class="co">##            cat cnt       pct</span></span>
-<span><span class="co">## 1:    [0,0.02]  11 0.5238095</span></span>
-<span><span class="co">## 2: (0.02,0.05]  18 0.8571429</span></span>
-<span><span class="co">## 3:  (0.05,0.1]  19 0.9047619</span></span>
+<span><span class="co">## 1:    [0,0.02]  14 0.6666667</span></span>
+<span><span class="co">## 2: (0.02,0.05]  19 0.9047619</span></span>
+<span><span class="co">## 3:  (0.05,0.1]  20 0.9523810</span></span>
 <span><span class="co">## 4:   (0.1,0.2]  21 1.0000000</span></span>
 <span><span class="co">## 5:   (0.2,0.3]  21 1.0000000</span></span>
 <span><span class="co">## 6:   (0.3,0.4]  21 1.0000000</span></span>
@@ -609,56 +856,82 @@
 <span><span class="co">## </span></span>
 <span><span class="co">## $exclude_zeros</span></span>
 <span><span class="co">## [1] TRUE</span></span></code></pre>
-<p>This function returns a list with several utility measures that are now discussed. For further information have a look at <code><a href="../reference/ck_cnt_measures.html">?ck_cnt_measures</a></code> as the same set of measures can also be computed for two vectors containing original and perturbed values.</p>
+<p>This function returns a list with several utility measures that are
+now discussed. For further information have a look at
+<code><a href="../reference/ck_cnt_measures.html">?ck_cnt_measures</a></code> as the same set of measures can also be
+computed for two vectors containing original and perturbed values.</p>
 <ul>
 <li>
-<code>overview</code>: a <code>data.table</code> with the following three columns:
+<code>overview</code>: a <code>data.table</code> with the following
+three columns:
 <ul>
 <li>noise: amount of noise computed as orig - pert</li>
-<li>cnt: number of cells perturbed with the value given in column noise</li>
-<li>pct: percentage of cells perturbed with the value given in column noise</li>
+<li>cnt: number of cells perturbed with the value given in column
+noise</li>
+<li>pct: percentage of cells perturbed with the value given in column
+noise</li>
 </ul>
 </li>
 <li>
-<code>measures</code>: a <code>data.table</code> containing measures of the distribution of three different distances between original and perturbed values of the unweighted counts. Column <code>what</code> specifies the computed measure. The three distances considered are:
+<code>measures</code>: a <code>data.table</code> containing measures
+of the distribution of three different distances between original and
+perturbed values of the unweighted counts. Column <code>what</code>
+specifies the computed measure. The three distances considered are:
 <ul>
 <li>
-<code>d1</code>: absolute distance between original and masked values</li>
+<code>d1</code>: absolute distance between original and masked
+values</li>
 <li>
-<code>d2</code>: relative absolute distance between original and masked values</li>
+<code>d2</code>: relative absolute distance between original and
+masked values</li>
 <li>
-<code>d3</code>: absolute distance between square-roots of original and perturbed values</li>
+<code>d3</code>: absolute distance between square-roots of original
+and perturbed values</li>
 </ul>
 </li>
 <li>
-<code>cumdistr_d1</code>, <code>cumdistr_d2</code> and <code>cumdistr_d3</code>: for each distance d1, d2 and d3, a data.table with the following three columns:
+<code>cumdistr_d1</code>, <code>cumdistr_d2</code> and
+<code>cumdistr_d3</code>: for each distance d1, d2 and d3, a data.table
+with the following three columns:
 <ul>
 <li>
-<code>cat</code>: a specific value (for d1) or interval (for distances d2 and d3)</li>
+<code>cat</code>: a specific value (for d1) or interval (for
+distances d2 and d3)</li>
 <li>
-<code>cnt</code>: number of records smaller or equal the value in column cat for the given distance</li>
+<code>cnt</code>: number of records smaller or equal the value in
+column cat for the given distance</li>
 <li>
-<code>pct</code>: proportion of records smaller or equal the value in column cat for the selected distance</li>
+<code>pct</code>: proportion of records smaller or equal the value
+in column cat for the selected distance</li>
 </ul>
 </li>
 <li>
-<code>false_zero</code>: number of cells that were perturbed to zero</li>
+<code>false_zero</code>: number of cells that were perturbed to
+zero</li>
 <li>
-<code>false_nonzero</code>: number of cells that were initially zero but have been perturbed to a number different from zero</li>
+<code>false_nonzero</code>: number of cells that were initially zero
+but have been perturbed to a number different from zero</li>
 </ul>
-<p>If argument <code>exclude_zeros</code> is <code>TRUE</code> (the default setting), empty cells are excluded when computing distance-based measures <code>d1</code>, <code>d2</code> and <code>d3</code>.</p>
+<p>If argument <code>exclude_zeros</code> is <code>TRUE</code> (the
+default setting), empty cells are excluded when computing distance-based
+measures <code>d1</code>, <code>d2</code> and <code>d3</code>.</p>
 </div>
 <div class="section level4">
 <h4 id="utility-measures-for-continuous-variables">Utility measures for continuous variables<a class="anchor" aria-label="anchor" href="#utility-measures-for-continuous-variables"></a>
 </h4>
-<p>For now, no utility measures for continuous variables are available. This will change in a future version.</p>
+<p>For now, no utility measures for continuous variables are available.
+This will change in a future version.</p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="additional-features">Additional Features<a class="anchor" aria-label="anchor" href="#additional-features"></a>
 </h3>
-<p>Finally we note that there are <code>print</code> and <code>summary</code> methods implemented for objects created with from <code><a href="../reference/cellkey_pkg.html">ck_setup()</a></code> which can be used as shown below:</p>
-<p>The <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>-method shows the dimension of the table as well as the variables that are (or possibly can be) perturbed. It is also displayed if the table was constructed using weights.</p>
+<p>Finally we note that there are <code>print</code> and
+<code>summary</code> methods implemented for objects created with from
+<code><a href="../reference/cellkey_pkg.html">ck_setup()</a></code> which can be used as shown below:</p>
+<p>The <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>-method shows the dimension of the table as
+well as the variables that are (or possibly can be) perturbed. It is
+also displayed if the table was constructed using weights.</p>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab</span><span class="op">$</span><span class="fu">print</span><span class="op">(</span><span class="op">)</span> <span class="co"># same as (print(tab))</span></span></code></pre></div>
 <pre><code><span><span class="co">## ── Table Information ───────────────────────────────────────────────────────────</span></span>
@@ -670,16 +943,17 @@
 <span><span class="co">## ── Tabulated / Perturbed numvars ───────────────────────────────────────────────</span></span>
 <span><span class="co">## ☒ 'income' (perturbed)</span></span>
 <span><span class="co">## ☒ 'savings' (perturbed)</span></span></code></pre>
-<p>The <code>summary</code>-method shows some utility statistics for already perturbed variables as shown below:</p>
+<p>The <code>summary</code>-method shows some utility statistics for
+already perturbed variables as shown below:</p>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab</span><span class="op">$</span><span class="fu">summary</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## ┌──────────────────────────────────────────────┐</span></span>
 <span><span class="co">## │Utility measures for perturbed count variables│</span></span>
 <span><span class="co">## └──────────────────────────────────────────────┘</span></span>
 <span><span class="co">## ── Distribution statistics of perturbations ────────────────────────────────────</span></span>
-<span><span class="co">##          countvar Min Q10 Q20 Q30 Q40  Mean Median Q60 Q70 Q80 Q90 Q95 Q99 Max</span></span>
-<span><span class="co">## 1:          total  -2  -1   0   0   0 0.381      0   1   1   1   2   2 2.0   2</span></span>
-<span><span class="co">## 2: cnt_highincome  -4   0   0   0   0 0.190      0   0   0   1   2   2 2.8   3</span></span>
+<span><span class="co">##          countvar Min Q10 Q20 Q30 Q40   Mean Median Q60 Q70 Q80 Q90 Q95 Q99 Max</span></span>
+<span><span class="co">## 1:          total  -2  -1  -1  -1   0 -0.095      0   0   0   1   1   1 1.8   2</span></span>
+<span><span class="co">## 2: cnt_highincome  -4  -3  -3  -1  -1 -0.762      0   0   0   0   1   2 2.0   2</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## ── Distance-based measures ─────────────────────────────────────────────────────</span></span>
 <span><span class="co">## ✔ Variable: 'total'</span></span>
@@ -690,50 +964,56 @@
 <span><span class="co">##  3:    Q20 0.000 0.000 0.000</span></span>
 <span><span class="co">##  4:    Q30 0.000 0.000 0.000</span></span>
 <span><span class="co">##  5:    Q40 0.000 0.000 0.000</span></span>
-<span><span class="co">##  6:   Mean 0.762 0.010 0.030</span></span>
-<span><span class="co">##  7: Median 1.000 0.001 0.015</span></span>
-<span><span class="co">##  8:    Q60 1.000 0.002 0.024</span></span>
-<span><span class="co">##  9:    Q70 1.000 0.003 0.036</span></span>
-<span><span class="co">## 10:    Q80 1.000 0.005 0.042</span></span>
-<span><span class="co">## 11:    Q90 2.000 0.012 0.054</span></span>
-<span><span class="co">## 12:    Q95 2.000 0.024 0.108</span></span>
-<span><span class="co">## 13:    Q99 2.000 0.119 0.179</span></span>
-<span><span class="co">## 14:    Max 2.000 0.143 0.196</span></span>
+<span><span class="co">##  6:   Mean 0.667 0.008 0.023</span></span>
+<span><span class="co">##  7: Median 1.000 0.001 0.011</span></span>
+<span><span class="co">##  8:    Q60 1.000 0.001 0.016</span></span>
+<span><span class="co">##  9:    Q70 1.000 0.002 0.021</span></span>
+<span><span class="co">## 10:    Q80 1.000 0.004 0.033</span></span>
+<span><span class="co">## 11:    Q90 1.000 0.005 0.049</span></span>
+<span><span class="co">## 12:    Q95 2.000 0.012 0.077</span></span>
+<span><span class="co">## 13:    Q99 2.000 0.117 0.162</span></span>
+<span><span class="co">## 14:    Max 2.000 0.143 0.183</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## ✔ Variable: 'cnt_highincome'</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">##       what   d1    d2    d3</span></span>
-<span><span class="co">##  1:    Min 0.00 0.000 0.000</span></span>
-<span><span class="co">##  2:    Q10 0.00 0.000 0.000</span></span>
-<span><span class="co">##  3:    Q20 0.00 0.000 0.000</span></span>
-<span><span class="co">##  4:    Q30 0.00 0.000 0.000</span></span>
-<span><span class="co">##  5:    Q40 0.00 0.000 0.000</span></span>
-<span><span class="co">##  6:   Mean 1.00 0.038 0.078</span></span>
-<span><span class="co">##  7: Median 0.00 0.000 0.000</span></span>
-<span><span class="co">##  8:    Q60 1.00 0.005 0.051</span></span>
-<span><span class="co">##  9:    Q70 1.90 0.013 0.098</span></span>
-<span><span class="co">## 10:    Q80 2.00 0.071 0.162</span></span>
-<span><span class="co">## 11:    Q90 3.00 0.105 0.257</span></span>
-<span><span class="co">## 12:    Q95 3.15 0.164 0.282</span></span>
-<span><span class="co">## 13:    Q99 3.83 0.261 0.340</span></span>
-<span><span class="co">## 14:    Max 4.00 0.286 0.354</span></span>
+<span><span class="co">##       what    d1    d2    d3</span></span>
+<span><span class="co">##  1:    Min 0.000 0.000 0.000</span></span>
+<span><span class="co">##  2:    Q10 0.000 0.000 0.000</span></span>
+<span><span class="co">##  3:    Q20 0.000 0.000 0.000</span></span>
+<span><span class="co">##  4:    Q30 0.100 0.000 0.003</span></span>
+<span><span class="co">##  5:    Q40 1.000 0.005 0.045</span></span>
+<span><span class="co">##  6:   Mean 1.444 0.037 0.105</span></span>
+<span><span class="co">##  7: Median 1.000 0.009 0.058</span></span>
+<span><span class="co">##  8:    Q60 2.000 0.030 0.093</span></span>
+<span><span class="co">##  9:    Q70 2.000 0.033 0.156</span></span>
+<span><span class="co">## 10:    Q80 3.000 0.059 0.185</span></span>
+<span><span class="co">## 11:    Q90 3.000 0.111 0.263</span></span>
+<span><span class="co">## 12:    Q95 3.150 0.151 0.334</span></span>
+<span><span class="co">## 13:    Q99 3.830 0.190 0.394</span></span>
+<span><span class="co">## 14:    Max 4.000 0.200 0.409</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## ┌──────────────────────────────────────────────────┐</span></span>
 <span><span class="co">## │Utility measures for perturbed numerical variables│</span></span>
 <span><span class="co">## └──────────────────────────────────────────────────┘</span></span>
 <span><span class="co">## ── Distribution statistics of perturbations ────────────────────────────────────</span></span>
-<span><span class="co">##      vname        Min       Q10        Q20      Q30      Q40      Mean   Median</span></span>
-<span><span class="co">## 1:  income -80892.475 -21602.59 -14933.063 5758.989 8971.124 13715.319 11029.95</span></span>
-<span><span class="co">## 2: savings  -7641.731  -1766.74  -1139.605  511.907  690.248  1098.668  1429.31</span></span>
-<span><span class="co">##          Q60       Q70       Q80       Q90       Q95        Q99        Max</span></span>
-<span><span class="co">## 1: 14066.462 24952.265 41815.655 50360.436 81444.338 109590.767 116627.375</span></span>
-<span><span class="co">## 2:  1598.359  2295.358  3126.042  4481.216  4885.922   7634.887   8322.128</span></span></code></pre>
+<span><span class="co">##      vname         Min        Q10        Q20        Q30        Q40      Mean</span></span>
+<span><span class="co">## 1:  income -131940.561 -32976.899 -26978.730 -22659.567 -16038.092 -6044.588</span></span>
+<span><span class="co">## 2: savings   -5430.544  -3595.506  -3065.908  -2282.361  -1100.604  -492.835</span></span>
+<span><span class="co">##       Median      Q60      Q70       Q80       Q90       Q95       Q99</span></span>
+<span><span class="co">## 1: -3540.809 3369.024 4984.057 16372.279 28901.785 47648.074 75154.518</span></span>
+<span><span class="co">## 2:  -592.163  277.976 1135.775  2172.964  2628.873  2912.876  4553.846</span></span>
+<span><span class="co">##          Max</span></span>
+<span><span class="co">## 1: 82031.129</span></span>
+<span><span class="co">## 2:  4964.089</span></span></code></pre>
 </div>
 </div>
 <div class="section level2">
 <h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
 </h2>
-<p>The package is <em>“work in progress”</em> and therefore, suggestions and/or bugreports are welcome. Please feel free to file an issue at <a href="https://github.com/sdcTools/cellKey/issues" class="external-link"><strong>our issue tracker</strong></a> or contribute to the package by filing a <a href="https://github.com/sdcTools/cellKey/pulls" class="external-link"><strong>pull request</strong></a> against the master branch.</p>
+<p>The package is <em>“work in progress”</em> and therefore, suggestions
+and/or bugreports are welcome. Please feel free to file an issue at <a href="https://github.com/sdcTools/cellKey/issues" class="external-link"><strong>our issue
+tracker</strong></a> or contribute to the package by filing a <a href="https://github.com/sdcTools/cellKey/pulls" class="external-link"><strong>pull
+request</strong></a> against the master branch.</p>
 </div>
   </div>
 
@@ -754,7 +1034,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

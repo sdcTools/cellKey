@@ -65,7 +65,8 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.19.1" id="cellkey-0191">cellKey 0.19.1<a class="anchor" aria-label="anchor" href="#cellkey-0191"></a></h2>
-<ul><li>performance improvement: do not compute max contributions if no numeric key variable was specified</li></ul></div>
+<ul><li>performance improvement: do not compute max contributions if no numeric key variable was specified</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.19.0" id="cellkey-0190">cellKey 0.19.0<a class="anchor" aria-label="anchor" href="#cellkey-0190"></a></h2>
 <ul><li>feature: new method <code>$supp_cells()</code> that allows to specifiy sensitive cells based on names</li>
@@ -100,9 +101,9 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.18.2" id="cellkey-0182">cellKey 0.18.2<a class="anchor" aria-label="anchor" href="#cellkey-0182"></a></h2>
-<ul><li>feature: allow objects from <code><a href="https://rdrr.io/pkg/ptable/man/pt_create_pParams.html" class="external-link">ptable::pt_create_pParams</a></code> as input in <code><a href="../reference/ck_params_cnts.html">ck_params_cnts()</a></code>
+<ul><li>feature: allow objects from <code>ptable::pt_create_pParams</code> as input in <code><a href="../reference/ck_params_cnts.html">ck_params_cnts()</a></code>
 </li>
-<li>feature: allow objects from <code><a href="https://rdrr.io/pkg/ptable/man/pt_create_pParams.html" class="external-link">ptable::pt_create_pParams</a></code> as input in <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code>
+<li>feature: allow objects from <code>ptable::pt_create_pParams</code> as input in <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code>
 </li>
 </ul></div>
     <div class="section level2">
@@ -127,21 +128,24 @@
 <li>allow return current active perturbation parameters for variables with <code>params_cnts_get()</code> and <code>params_nums_get()</code>
 </li>
 <li>added new convenience methods <code>allvars()</code>, <code>numvars()</code> and <code>cntvars()</code> returning variable names eligable for perturbation</li>
-<li>implemented the perturbation of numerical variables<ul><li>new method <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> to define perturbation parameters for continuous variables along with helper-functions <code><a href="../reference/ck_flexparams.html">ck_flexparams()</a></code> and <code><a href="../reference/ck_simpleparams.html">ck_simpleparams()</a></code>
+<li>implemented the perturbation of numerical variables
+<ul><li>new method <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> to define perturbation parameters for continuous variables along with helper-functions <code><a href="../reference/ck_flexparams.html">ck_flexparams()</a></code> and <code><a href="../reference/ck_simpleparams.html">ck_simpleparams()</a></code>
 </li>
 <li>new method <code>numtab()</code> to extract numerical tables</li>
 <li>new method <code>mod_nums()</code> returning modifications for numerical variables</li>
 </ul></li>
 <li>updated methods <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> and <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> to include information about perturbed continuous variables</li>
 <li>new methods <code>reset_cntvars()</code>, <code>reset_numvars()</code> and <code>reset_allvars()</code> to remove perturbation results and provided perturbation parameters</li>
-<li>new methods to identify sensitive cells<ul><li><code>$supp_freq(v, max_n)</code></li>
+<li>new methods to identify sensitive cells
+<ul><li><code>$supp_freq(v, max_n)</code></li>
 <li><code>$supp_nk(v, max_n)</code></li>
 <li><code>$supp_p(v, max_n)</code></li>
 <li><code>$supp_pq(v, max_n)</code></li>
 </ul></li>
 <li>added test-cases and improved coverage</li>
 <li>make use of ptables from <a href="https://github.com/sdctools/ptable" class="external-link"><code>ptable</code></a>-pkg</li>
-<li>Reproducibility:<ul><li>allow to write perturbation parameters as yaml in <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> and <code><a href="../reference/ck_params_cnts.html">ck_params_cnts()</a></code>
+<li>Reproducibility:
+<ul><li>allow to write perturbation parameters as yaml in <code><a href="../reference/ck_params_nums.html">ck_params_nums()</a></code> and <code><a href="../reference/ck_params_cnts.html">ck_params_cnts()</a></code>
 </li>
 <li>allow to import such parameters with <code><a href="../reference/ck_read_yaml.html">ck_read_yaml()</a></code>
 </li>
@@ -150,10 +154,12 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.17.3" id="cellkey-0173">cellKey 0.17.3<a class="anchor" aria-label="anchor" href="#cellkey-0173"></a></h2>
-<ul><li>correctly compute perturbed weighted counts</li></ul></div>
+<ul><li>correctly compute perturbed weighted counts</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.17.2" id="cellkey-0172">cellKey 0.17.2<a class="anchor" aria-label="anchor" href="#cellkey-0172"></a></h2>
-<ul><li>fixed issue in lookup up values for frequency tables</li></ul></div>
+<ul><li>fixed issue in lookup up values for frequency tables</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.17.1" id="cellkey-0171">cellKey 0.17.1<a class="anchor" aria-label="anchor" href="#cellkey-0171"></a></h2>
 <ul><li>adding parameter <code>exclude_zero_cells</code> to <code><a href="../reference/ck_cnt_measures.html">ck_cnt_measures()</a></code>
@@ -166,7 +172,8 @@
 <li>removed features to perturb magnitude tables for now as parametrisation from <code>ptable</code>-pkg is not yet defined</li>
 <li>removed possiblity to specify parameters for count variables using the <code>ABS</code> definition</li>
 <li>removed <code>by</code>-argument in <code>$perturb()</code> method</li>
-<li>rewrite frequency table perturbation using <code>R6</code> classes<ul><li>new function <code><a href="../reference/cellkey_pkg.html">ck_setup()</a></code> to define a table</li>
+<li>rewrite frequency table perturbation using <code>R6</code> classes
+<ul><li>new function <code><a href="../reference/cellkey_pkg.html">ck_setup()</a></code> to define a table</li>
 <li>allow multiple variables in method <code>$perturb()</code>-method</li>
 <li>removed <code>ck_export_table()</code> and added arguments to method <code>freqtab()</code>
 </li>
@@ -175,7 +182,8 @@
 <li>new method <code>$mod_cnts()</code> returning modifications for count variables</li>
 <li>new method <code>$params_cnts()</code> that allow to query and set count parameters</li>
 </ul></li>
-<li>updated <code><a href="../reference/ck_cnt_measures.html">ck_cnt_measures()</a></code><ul><li>renamed <code>false_positives</code> to <code>false_nonzero</code>
+<li>updated <code><a href="../reference/ck_cnt_measures.html">ck_cnt_measures()</a></code>
+<ul><li>renamed <code>false_positives</code> to <code>false_nonzero</code>
 </li>
 <li>improved documentation</li>
 <li>add table of to <code>ck_cnt_measures</code> showing exact perturbations</li>
@@ -187,14 +195,17 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.16.3" id="cellkey-0163">cellKey 0.16.3<a class="anchor" aria-label="anchor" href="#cellkey-0163"></a></h2>
-<ul><li>fix tests due to changes in R 3.6.0</li></ul></div>
+<ul><li>fix tests due to changes in R 3.6.0</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.16.2" id="cellkey-0162">cellKey 0.16.2<a class="anchor" aria-label="anchor" href="#cellkey-0162"></a></h2>
-<ul><li>install <code>ptable</code> from personal fork until <code>sdcTools/ptable</code> is updated</li></ul></div>
+<ul><li>install <code>ptable</code> from personal fork until <code>sdcTools/ptable</code> is updated</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.16.1" id="cellkey-0161">cellKey 0.16.1<a class="anchor" aria-label="anchor" href="#cellkey-0161"></a></h2>
 <ul><li>removed placeholder for <code>pThreshold</code> in <code>perturbTable()</code>
-</li></ul></div>
+</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.16.0" id="cellkey-0160">cellKey 0.16.0<a class="anchor" aria-label="anchor" href="#cellkey-0160"></a></h2>
 <ul><li>make use of new package <code>sdcHierarchies</code> to generate and update hierarchies</li>
@@ -240,24 +251,30 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.13.1" id="cellkey-0131">cellKey 0.13.1<a class="anchor" aria-label="anchor" href="#cellkey-0131"></a></h2>
 <ul><li>small updates to reflect changes in <a href="http://github.com/tenderle/ptable" class="external-link"><strong>ptable</strong></a>
-</li></ul></div>
+</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.13.0" id="cellkey-0130">cellKey 0.13.0<a class="anchor" aria-label="anchor" href="#cellkey-0130"></a></h2>
 <ul><li>depend on package <a href="http://github.com/sdcTools/ptable" class="external-link"><strong>ptable</strong></a> to generate the perturbation tables by rewriting <code>ck_create_pTable()</code>; thus the package must be installed, e.g using <code>devtools::install_github("sdcTools/ptable", build_vignette=FALSE)</code>
-</li></ul></div>
+</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.12.0" id="cellkey-0120">cellKey 0.12.0<a class="anchor" aria-label="anchor" href="#cellkey-0120"></a></h2>
-<ul><li>feature: use package <a href="http://github.com/sdcTools/ptable" class="external-link"><strong>ptable</strong></a> to generate pTables in destatis format</li></ul></div>
+<ul><li>feature: use package <a href="http://github.com/sdcTools/ptable" class="external-link"><strong>ptable</strong></a> to generate pTables in destatis format</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.11.0" id="cellkey-0110">cellKey 0.11.0<a class="anchor" aria-label="anchor" href="#cellkey-0110"></a></h2>
 <ul><li>feature: use functions to create hierarchies directly from <code>sdcTable</code> and bump version requirement of this package to <code>&gt;=0.23</code>
-</li></ul></div>
+</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.10.2" id="cellkey-0102">cellKey 0.10.2<a class="anchor" aria-label="anchor" href="#cellkey-0102"></a></h2>
-<ul><li>feature: if a (valid) variable is specified in argument <code>by</code> <code>in perturbTable()</code> it is automatically added to <code>countVars</code> even though not explicitely specified.</li></ul></div>
+<ul><li>feature: if a (valid) variable is specified in argument <code>by</code> <code>in perturbTable()</code> it is automatically added to <code>countVars</code> even though not explicitely specified.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.10.1" id="cellkey-0101">cellKey 0.10.1<a class="anchor" aria-label="anchor" href="#cellkey-0101"></a></h2>
-<ul><li>feature: <code>perturbTable()</code> gained an optional new argument <code>by</code>. In this argument one can use a variable that must also be listed in <code>countVars</code>. This variable is then used to compute the magnitute tables <em>by</em> the given 0/1 binary variable. For an example see <code>?perturbTable</code>.</li></ul></div>
+<ul><li>feature: <code>perturbTable()</code> gained an optional new argument <code>by</code>. In this argument one can use a variable that must also be listed in <code>countVars</code>. This variable is then used to compute the magnitute tables <em>by</em> the given 0/1 binary variable. For an example see <code>?perturbTable</code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.10.0" id="cellkey-0100">cellKey 0.10.0<a class="anchor" aria-label="anchor" href="#cellkey-0100"></a></h2>
 <ul><li>feature: new argument <code>countVars</code> in <code>perturbTable()</code> which allows to additionally tabulate any number or 0/1 variables. For such variables. In such case, the record-keys of non-contribution units are set to 0 prior to the lookup in the perturbation table</li>
@@ -269,19 +286,24 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.9.1" id="version-091">Version 0.9.1<a class="anchor" aria-label="anchor" href="#version-091"></a></h2>
-<ul><li>bugfix for continous tables using pre-specified record keys</li></ul></div>
+<ul><li>bugfix for continous tables using pre-specified record keys</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.9.0" id="cellkey-090">cellKey 0.9.0<a class="anchor" aria-label="anchor" href="#cellkey-090"></a></h2>
 <ul><li>
 <p>feature: new dynamic way to specify hierarchies for tables, for an example see <code>?ck_manage_hierarchies</code>. This functionality will eventually also find its way to <strong>sdcTable</strong></p>
 <h2 id="cellkey-082" class="page-header" data-toc-text="0.9.0">cellKey 0.8.2</h2>
-<ul><li>bugfix: rkeys need not to be integer if the “destatis”-method is used</li></ul></li></ul></div>
+<ul><li>bugfix: rkeys need not to be integer if the “destatis”-method is used</li>
+</ul></li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.1" id="cellkey-081">cellKey 0.8.1<a class="anchor" aria-label="anchor" href="#cellkey-081"></a></h2>
-<ul><li>small fixes and some exported function gained <code>verbose</code> arguments</li></ul></div>
+<ul><li>small fixes and some exported function gained <code>verbose</code> arguments</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.0" id="cellkey-080">cellKey 0.8.0<a class="anchor" aria-label="anchor" href="#cellkey-080"></a></h2>
-<ul><li>feature: perturbation tables (<code>pTable</code>) can now be specified in two different formats. The (default) way is to specify it as described in the original ABS-paper <em>Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics</em> (Thompson, Broadfoot, Elazar). An alternative way is to provide the perturbation tables for count tables in the <em>“destatis”</em>-format. <code>ck_create_pTable(type="destatis")</code> returns an exemplary pTable in this format. In the future, such pTables will likely be generated from another package. As the requirements regarding record keys are different in the following lookup-approach, we have already implemented some (basic) checks for validity of record keys when they are already available in the microdata used in <code>ck_create_input()</code>.</li></ul></div>
+<ul><li>feature: perturbation tables (<code>pTable</code>) can now be specified in two different formats. The (default) way is to specify it as described in the original ABS-paper <em>Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics</em> (Thompson, Broadfoot, Elazar). An alternative way is to provide the perturbation tables for count tables in the <em>“destatis”</em>-format. <code>ck_create_pTable(type="destatis")</code> returns an exemplary pTable in this format. In the future, such pTables will likely be generated from another package. As the requirements regarding record keys are different in the following lookup-approach, we have already implemented some (basic) checks for validity of record keys when they are already available in the microdata used in <code>ck_create_input()</code>.</li>
+</ul></div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -296,7 +318,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

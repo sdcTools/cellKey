@@ -98,12 +98,12 @@ Otherwise, a scalar number <code>&gt;0</code> is expected.</p></dd>
 
 <dt>ptab</dt>
 <dd><p>in this argument, one ore more perturbation tables are given as
-input. the following choices are possible:</p><ul><li><p>an object derived from <code><a href="https://rdrr.io/pkg/ptable/man/pt_create_pTable.html" class="external-link">ptable::pt_create_pTable()</a></code>, <code>pt_create_pParams()</code>
-or <code><a href="https://rdrr.io/pkg/ptable/man/create_num_ptable.html" class="external-link">ptable::create_num_ptable()</a></code>: this case is the same as specifying a named
+input. the following choices are possible:</p><ul><li><p>an object derived from <code><a href="https://rdrr.io/pkg/ptable/man/ptable_pkg.html" class="external-link">ptable::create_ptable()</a></code>
+or <code><a href="https://rdrr.io/pkg/ptable/man/ptable_pkg.html" class="external-link">ptable::create_num_ptable()</a></code>: this case is the same as specifying a named
 list with only a single element <code>"all"</code> (as described below)</p></li>
 <li><p>a named <code>list</code> where the allowed names are shown below and each element
-must be the output of <code><a href="https://rdrr.io/pkg/ptable/man/pt_create_pTable.html" class="external-link">ptable::pt_create_pTable()</a></code>, <code>pt_create_pParams()</code> or
-<code><a href="https://rdrr.io/pkg/ptable/man/create_num_ptable.html" class="external-link">ptable::create_num_ptable()</a></code></p><ul><li><p><code>"all"</code>: this ptable will be used for all cells; if specified, no
+must be the output of [ptable::create_ptable())] or
+<code><a href="https://rdrr.io/pkg/ptable/man/ptable_pkg.html" class="external-link">ptable::create_num_ptable()</a></code></p><ul><li><p><code>"all"</code>: this ptable will be used for all cells; if specified, no
 elements named <code>"even"</code> or <code>"odd"</code> must exist.</p></li>
 <li><p><code>"even"</code>: will be used to look up perturbation values for cells with an
 even number of contributors. if specified, also list-element <code>"odd"</code> must
@@ -114,7 +114,8 @@ exist.</p></li>
 <li><p><code>"small_cells"</code>: if specified, this ptable will be used to extract
 perturbation values for very small cells</p></li>
 </ul></li>
-</ul></dd>
+</ul><p>[ptable::create_ptable())]: R:ptable::create_ptable())
+<code><a href="https://rdrr.io/pkg/ptable/man/ptable_pkg.html" class="external-link">ptable::create_num_ptable()</a></code>: R:ptable::create_num_ptable()</p></dd>
 
 
 <dt>mult_params</dt>
@@ -264,7 +265,7 @@ perturbation of continous variables.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
