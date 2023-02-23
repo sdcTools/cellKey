@@ -1,18 +1,19 @@
 set.seed(120, sample.kind = "Reject")
 
-para <- ptable::pt_create_pParams(
+para <- ptable::create_cnt_ptable(
   D = 5,
   V = 3,
   js = 2,
   pstay = 0.5,
   optim = 1,
-  mono = TRUE)
-ptab <- ptable::pt_create_pTable(para)
+  mono = TRUE,
+  create = FALSE)
+ptab <- ptable::create_ptable(params = para)
 
 
 test_that("ptable params can be used too", {
-  p1 <- ptable::pt_create_pParams(D = 5, V = 2, table = "cnts")
-  p2 <- ptable::pt_create_pTable(p1)
+  p1 <- ptable::create_cnt_ptable(D = 5, V = 2, create = FALSE)
+  p2 <- ptable::create_ptable(params = p1)
   expect_identical(
     ck_params_cnts(ptab = p1),
     ck_params_cnts(ptab = p2))

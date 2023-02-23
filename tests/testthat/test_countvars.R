@@ -31,15 +31,16 @@ test_that("checking dimension and structure of generated testdata is ok", {
 
 ## perturbation parameters for count variables
 set.seed(120, sample.kind = "Reject")
-suppressMessages(para <- ptable::pt_create_pParams(
+suppressMessages(para <- ptable::create_cnt_ptable(
   D = 5,
   V = 3,
   js = 2,
   pstay = 0.5,
   optim = 1,
-  mono = TRUE))
+  mono = TRUE,
+  create = FALSE))
 
-params_cnts <- ck_params_cnts(ptab = ptable::pt_create_pTable(para))
+params_cnts <- ck_params_cnts(ptab = ptable::create_ptable(params = para))
 ptab <- params_cnts$params$ptable
 test_that("ck_params_cnts() is ok", {
   expect_is(params_cnts, "ck_params")

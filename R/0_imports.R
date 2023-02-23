@@ -8,7 +8,7 @@
 #' @importFrom digest sha1
 #' @importFrom cli cat_rule cat_line
 #' @importFrom sdcTable makeProblem sdcProb2df
-#' @importFrom ptable pt_create_pParams pt_create_pTable
+#' @importFrom ptable create_ptable
 #' @import sdcHierarchies
 Sys.setenv(".ck_nr_digits" = 8)
 .ck_digits <- function(digits = 8) {

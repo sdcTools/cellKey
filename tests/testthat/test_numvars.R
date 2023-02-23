@@ -37,14 +37,14 @@ flex <-  ck_flexparams(
   q = 2)
 
 test_that("ptable params can be used too", {
-  p1 <- ptable::pt_create_pParams(
+  p1 <- ptable::create_num_ptable(
     D = 5,
     V = 2,
-    table = "nums",
     step = 4,
-    icat = c(1, 3, 5)
+    icat = c(1, 3, 5),
+    create = FALSE
   )
-  p2 <- ptable::pt_create_pTable(p1)
+  p2 <- ptable::create_ptable(params = p1)
 
   expect_identical(
     ck_params_nums(

@@ -34,11 +34,11 @@ Otherwise, a scalar number \verb{>0} is expected.}
 \item{ptab}{in this argument, one ore more perturbation tables are given as
 input. the following choices are possible:
 \itemize{
-\item an object derived from \code{\link[ptable:pt_create_pTable]{ptable::pt_create_pTable()}}, \code{\link[=pt_create_pParams]{pt_create_pParams()}}
+\item an object derived from \code{\link[ptable:create_ptable]{ptable::create_ptable()}}
 or \code{\link[ptable:create_num_ptable]{ptable::create_num_ptable()}}: this case is the same as specifying a named
 list with only a single element \code{"all"} (as described below)
 \item a named \code{list} where the allowed names are shown below and each element
-must be the output of \code{\link[ptable:pt_create_pTable]{ptable::pt_create_pTable()}}, \code{\link[=pt_create_pParams]{pt_create_pParams()}} or
+must be the output of [ptable::create_ptable())] or
 \code{\link[ptable:create_num_ptable]{ptable::create_num_ptable()}}
 \itemize{
 \item \code{"all"}: this ptable will be used for all cells; if specified, no
@@ -52,7 +52,10 @@ exist.
 \item \code{"small_cells"}: if specified, this ptable will be used to extract
 perturbation values for very small cells
 }
-}}
+}
+
+[ptable::create_ptable())]: R:ptable::create_ptable())
+\code{\link[ptable:create_num_ptable]{ptable::create_num_ptable()}}: R:ptable::create_num_ptable()}
 
 \item{mult_params}{an object derived with \code{\link[=ck_flexparams]{ck_flexparams()}} or
 \code{\link[=ck_simpleparams]{ck_simpleparams()}} that contain required parameters for the computation of
