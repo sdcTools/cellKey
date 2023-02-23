@@ -1,3 +1,7 @@
+# cellKey 1.0.0
+- first version on CRAN
+- updated due to changes in Package `ptable`
+
 # cellKey 0.19.2
 - do not rename columns of ptable input object
 - fix vignette and tests
