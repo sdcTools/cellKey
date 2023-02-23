@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cellKey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.19.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
@@ -102,8 +102,8 @@ Statistics</em> (Thompson, Broadfoot, Elazar). This approach however was
 generalized and a new specification on how record keys are specified and
 the lookup-tables are defined is used. This package makes usage of
 perturbation tables that can be defined in the <a href="https://github.com/sdcTools/ptable" class="external-link"><strong>ptable</strong></a>
-package. This document describes the usage of version
-<code>0.19.2</code> of the package.</p>
+package. This document describes the usage of version <code>1.0.0</code>
+of the package.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -164,7 +164,7 @@ by running an example that</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sdcTools/cellKey" class="external-link">cellKey</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html" class="external-link">packageVersion</a></span><span class="op">(</span><span class="st">"cellKey"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] '0.19.2'</span></span></code></pre>
+<pre><code><span><span class="co">## [1] '1.0.0'</span></span></code></pre>
 <p>The first step in this approach is to generate a statistical table,
 which can be achieved using <code>ck_setup</code>. This function
 generates an object that contains all the information required to
@@ -223,12 +223,12 @@ shown below:</p>
 <code class="sourceCode R"><span><span class="va">dat</span><span class="op">$</span><span class="va">rkeys</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ck_generate_rkeys.html">ck_generate_rkeys</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat</span>, nr_digits <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##       sex        age savings income sampling_weight cnt_highincome     rkeys</span></span>
-<span><span class="co">## 1:   male age_group3      12   5780              43              0 0.1744599</span></span>
-<span><span class="co">## 2: female age_group3      28   2530              40              0 0.7145934</span></span>
-<span><span class="co">## 3:   male age_group1     550   6920              26              0 0.5520977</span></span>
-<span><span class="co">## 4:   male age_group1     870   7960              89              0 0.2323114</span></span>
-<span><span class="co">## 5:   male age_group4      20   9030              72              1 0.1014461</span></span>
-<span><span class="co">## 6: female age_group3     102   3290              92              0 0.6386603</span></span></code></pre>
+<span><span class="co">## 1:   male age_group3      12   5780              78              0 0.2925977</span></span>
+<span><span class="co">## 2: female age_group3      28   2530              34              0 0.3759445</span></span>
+<span><span class="co">## 3:   male age_group1     550   6920              74              0 0.8571972</span></span>
+<span><span class="co">## 4:   male age_group1     870   7960              71              0 0.2018112</span></span>
+<span><span class="co">## 5:   male age_group4      20   9030              90              1 0.3503296</span></span>
+<span><span class="co">## 6: female age_group3     102   3290              92              0 0.2476767</span></span></code></pre>
 <p>To ensure that the same record keys are computed each and every time
 for the same data set, a seed based on the sha1-hash of the input
 dataset is computed by default in <code>ck_generate_rkeys</code>. This
@@ -670,47 +670,47 @@ columns:</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab</span><span class="op">$</span><span class="fu">freqtab</span><span class="op">(</span>v <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"total"</span>, <span class="st">"cnt_highincome"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##        sex        age          vname  uwc     wc puwc         pwc</span></span>
-<span><span class="co">##  1:  Total      Total          total 4580 274619 4580 274619.0000</span></span>
-<span><span class="co">##  2:  Total age_group1          total 1969 117549 1968 117489.3002</span></span>
-<span><span class="co">##  3:  Total age_group2          total 1143  68497 1142  68437.0726</span></span>
-<span><span class="co">##  4:  Total age_group3          total  864  52138  864  52138.0000</span></span>
-<span><span class="co">##  5:  Total age_group4          total  423  25653  425  25774.2908</span></span>
-<span><span class="co">##  6:  Total age_group5          total  168   9949  166   9830.5595</span></span>
-<span><span class="co">##  7:  Total age_group6          total   13    833   13    833.0000</span></span>
-<span><span class="co">##  8:   male      Total          total 2296 136548 2297 136607.4721</span></span>
-<span><span class="co">##  9:   male age_group1          total 1015  59878 1014  59819.0069</span></span>
-<span><span class="co">## 10:   male age_group2          total  571  34296  571  34296.0000</span></span>
-<span><span class="co">## 11:   male age_group3          total  424  25219  423  25159.5212</span></span>
-<span><span class="co">## 12:   male age_group4          total  195  11716  196  11776.0821</span></span>
-<span><span class="co">## 13:   male age_group5          total   84   4966   84   4966.0000</span></span>
-<span><span class="co">## 14:   male age_group6          total    7    473    8    540.5714</span></span>
-<span><span class="co">## 15: female      Total          total 2284 138071 2284 138071.0000</span></span>
-<span><span class="co">## 16: female age_group1          total  954  57671  953  57610.5482</span></span>
-<span><span class="co">## 17: female age_group2          total  572  34201  573  34260.7920</span></span>
-<span><span class="co">## 18: female age_group3          total  440  26919  440  26919.0000</span></span>
-<span><span class="co">## 19: female age_group4          total  228  13937  227  13875.8728</span></span>
-<span><span class="co">## 20: female age_group5          total   84   4983   84   4983.0000</span></span>
-<span><span class="co">## 21: female age_group6          total    6    360    6    360.0000</span></span>
-<span><span class="co">## 22:  Total      Total cnt_highincome  445  26306  443  26187.7708</span></span>
-<span><span class="co">## 23:  Total age_group1 cnt_highincome  192  11595  192  11595.0000</span></span>
-<span><span class="co">## 24:  Total age_group2 cnt_highincome  123   6931  123   6931.0000</span></span>
-<span><span class="co">## 25:  Total age_group3 cnt_highincome   82   5066   79   4880.6585</span></span>
-<span><span class="co">## 26:  Total age_group4 cnt_highincome   34   2015   35   2074.2647</span></span>
-<span><span class="co">## 27:  Total age_group5 cnt_highincome   14    699   14    699.0000</span></span>
+<span><span class="co">##  1:  Total      Total          total 4580 276090 4580 276090.0000</span></span>
+<span><span class="co">##  2:  Total age_group1          total 1969 116942 1969 116942.0000</span></span>
+<span><span class="co">##  3:  Total age_group2          total 1143  71424 1144  71486.4882</span></span>
+<span><span class="co">##  4:  Total age_group3          total  864  51522  862  51402.7361</span></span>
+<span><span class="co">##  5:  Total age_group4          total  423  25260  422  25200.2837</span></span>
+<span><span class="co">##  6:  Total age_group5          total  168  10300  168  10300.0000</span></span>
+<span><span class="co">##  7:  Total age_group6          total   13    642   12    592.6154</span></span>
+<span><span class="co">##  8:   male      Total          total 2296 138007 2297 138067.1076</span></span>
+<span><span class="co">##  9:   male age_group1          total 1015  60478 1014  60418.4158</span></span>
+<span><span class="co">## 10:   male age_group2          total  571  35580  570  35517.6883</span></span>
+<span><span class="co">## 11:   male age_group3          total  424  24847  423  24788.3986</span></span>
+<span><span class="co">## 12:   male age_group4          total  195  11627  194  11567.3744</span></span>
+<span><span class="co">## 13:   male age_group5          total   84   5094   83   5033.3571</span></span>
+<span><span class="co">## 14:   male age_group6          total    7    381    5    272.1429</span></span>
+<span><span class="co">## 15: female      Total          total 2284 138083 2284 138083.0000</span></span>
+<span><span class="co">## 16: female age_group1          total  954  56464  953  56404.8134</span></span>
+<span><span class="co">## 17: female age_group2          total  572  35844  573  35906.6643</span></span>
+<span><span class="co">## 18: female age_group3          total  440  26675  441  26735.6250</span></span>
+<span><span class="co">## 19: female age_group4          total  228  13633  227  13573.2061</span></span>
+<span><span class="co">## 20: female age_group5          total   84   5206   84   5206.0000</span></span>
+<span><span class="co">## 21: female age_group6          total    6    261    5    217.5000</span></span>
+<span><span class="co">## 22:  Total      Total cnt_highincome  445  26683  446  26742.9618</span></span>
+<span><span class="co">## 23:  Total age_group1 cnt_highincome  192  11189  192  11189.0000</span></span>
+<span><span class="co">## 24:  Total age_group2 cnt_highincome  123   7573  123   7573.0000</span></span>
+<span><span class="co">## 25:  Total age_group3 cnt_highincome   82   4895   82   4895.0000</span></span>
+<span><span class="co">## 26:  Total age_group4 cnt_highincome   34   2126   34   2126.0000</span></span>
+<span><span class="co">## 27:  Total age_group5 cnt_highincome   14    900   18   1157.1429</span></span>
 <span><span class="co">## 28:  Total age_group6 cnt_highincome    0      0    0      0.0000</span></span>
-<span><span class="co">## 29:   male      Total cnt_highincome  219  12660  218  12602.1918</span></span>
-<span><span class="co">## 30:   male age_group1 cnt_highincome   90   5343   87   5164.9000</span></span>
-<span><span class="co">## 31:   male age_group2 cnt_highincome   66   3665   68   3776.0606</span></span>
-<span><span class="co">## 32:   male age_group3 cnt_highincome   41   2450   38   2270.7317</span></span>
-<span><span class="co">## 33:   male age_group4 cnt_highincome   15    820   12    656.0000</span></span>
-<span><span class="co">## 34:   male age_group5 cnt_highincome    7    382    6    327.4286</span></span>
+<span><span class="co">## 29:   male      Total cnt_highincome  219  13056  219  13056.0000</span></span>
+<span><span class="co">## 30:   male age_group1 cnt_highincome   90   5256   90   5256.0000</span></span>
+<span><span class="co">## 31:   male age_group2 cnt_highincome   66   4102   66   4102.0000</span></span>
+<span><span class="co">## 32:   male age_group3 cnt_highincome   41   2373   41   2373.0000</span></span>
+<span><span class="co">## 33:   male age_group4 cnt_highincome   15    876   21   1226.4000</span></span>
+<span><span class="co">## 34:   male age_group5 cnt_highincome    7    449    7    449.0000</span></span>
 <span><span class="co">## 35:   male age_group6 cnt_highincome    0      0    0      0.0000</span></span>
-<span><span class="co">## 36: female      Total cnt_highincome  226  13646  228  13766.7611</span></span>
-<span><span class="co">## 37: female age_group1 cnt_highincome  102   6252  101   6190.7059</span></span>
-<span><span class="co">## 38: female age_group2 cnt_highincome   57   3266   57   3266.0000</span></span>
-<span><span class="co">## 39: female age_group3 cnt_highincome   41   2616   37   2360.7805</span></span>
-<span><span class="co">## 40: female age_group4 cnt_highincome   19   1195   19   1195.0000</span></span>
-<span><span class="co">## 41: female age_group5 cnt_highincome    7    317    7    317.0000</span></span>
+<span><span class="co">## 36: female      Total cnt_highincome  226  13627  226  13627.0000</span></span>
+<span><span class="co">## 37: female age_group1 cnt_highincome  102   5933  103   5991.1667</span></span>
+<span><span class="co">## 38: female age_group2 cnt_highincome   57   3471   57   3471.0000</span></span>
+<span><span class="co">## 39: female age_group3 cnt_highincome   41   2522   35   2152.9268</span></span>
+<span><span class="co">## 40: female age_group4 cnt_highincome   19   1250   19   1250.0000</span></span>
+<span><span class="co">## 41: female age_group5 cnt_highincome    7    451    7    451.0000</span></span>
 <span><span class="co">## 42: female age_group6 cnt_highincome    0      0    0      0.0000</span></span>
 <span><span class="co">##        sex        age          vname  uwc     wc puwc         pwc</span></span></code></pre>
 </div>
@@ -739,48 +739,48 @@ perturbed.</p>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab</span><span class="op">$</span><span class="fu">numtab</span><span class="op">(</span>v <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"savings"</span>, <span class="st">"income"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##        sex        age   vname      uws         ws          pws</span></span>
-<span><span class="co">##  1:  Total      Total savings  2273532  136080476  136079883.8</span></span>
-<span><span class="co">##  2:  Total age_group1 savings   982386   58448230   58449365.8</span></span>
-<span><span class="co">##  3:  Total age_group2 savings   552336   33050046   33046450.5</span></span>
-<span><span class="co">##  4:  Total age_group3 savings   437101   26471270   26473898.9</span></span>
-<span><span class="co">##  5:  Total age_group4 savings   214661   13064845   13063083.1</span></span>
-<span><span class="co">##  6:  Total age_group5 savings    80451    4644039    4646212.0</span></span>
-<span><span class="co">##  7:  Total age_group6 savings     6597     402046     401597.7</span></span>
-<span><span class="co">##  8:   male      Total savings  1159816   69402081   69396650.5</span></span>
-<span><span class="co">##  9:   male age_group1 savings   517660   30635861   30634760.4</span></span>
-<span><span class="co">## 10:   male age_group2 savings   280923   16925471   16922405.1</span></span>
-<span><span class="co">## 11:   male age_group3 savings   214970   12990062   12986215.1</span></span>
-<span><span class="co">## 12:   male age_group4 savings    99420    6163311    6168275.1</span></span>
-<span><span class="co">## 13:   male age_group5 savings    43233    2448515    2449660.7</span></span>
-<span><span class="co">## 14:   male age_group6 savings     3610     238861     239465.0</span></span>
-<span><span class="co">## 15: female      Total savings  1113716   66678395   66678673.0</span></span>
-<span><span class="co">## 16: female age_group1 savings   464726   27812369   27815281.9</span></span>
-<span><span class="co">## 17: female age_group2 savings   271413   16124575   16121458.0</span></span>
-<span><span class="co">## 18: female age_group3 savings   222131   13481208   13478900.9</span></span>
-<span><span class="co">## 19: female age_group4 savings   115241    6901534    6900669.5</span></span>
-<span><span class="co">## 20: female age_group5 savings    37218    2195524    2197745.0</span></span>
-<span><span class="co">## 21: female age_group6 savings     2987     163185     160902.6</span></span>
-<span><span class="co">## 22:  Total      Total  income 22952978 1383503215 1383499674.2</span></span>
-<span><span class="co">## 23:  Total age_group1  income  9810547  590242255  590247239.1</span></span>
-<span><span class="co">## 24:  Total age_group2  income  5692119  339643572  339620743.0</span></span>
-<span><span class="co">## 25:  Total age_group3  income  4406946  268738787  268751666.8</span></span>
-<span><span class="co">## 26:  Total age_group4  income  2133543  131135079  131108100.3</span></span>
-<span><span class="co">## 27:  Total age_group5  income   848151   49687660   49704032.3</span></span>
-<span><span class="co">## 28:  Total age_group6  income    61672    4055862    4103510.1</span></span>
-<span><span class="co">## 29:   male      Total  income 11262049  672190259  672058318.4</span></span>
-<span><span class="co">## 30:   male age_group1  income  4877164  289493232  289496601.0</span></span>
-<span><span class="co">## 31:   male age_group2  income  2811379  167319495  167298112.9</span></span>
-<span><span class="co">## 32:   male age_group3  income  2168169  131075423  131042446.1</span></span>
-<span><span class="co">## 33:   male age_group4  income   978510   58370097   58452128.1</span></span>
-<span><span class="co">## 34:   male age_group5  income   393134   23580304   23584658.1</span></span>
-<span><span class="co">## 35:   male age_group6  income    33693    2351708    2335669.9</span></span>
-<span><span class="co">## 36: female      Total  income 11690929  711312956  711315024.3</span></span>
-<span><span class="co">## 37: female age_group1  income  4933383  300749023  300777924.8</span></span>
-<span><span class="co">## 38: female age_group2  income  2880740  172324077  172286889.2</span></span>
-<span><span class="co">## 39: female age_group3  income  2238777  137663364  137640704.4</span></span>
-<span><span class="co">## 40: female age_group4  income  1155033   72764982   72754840.2</span></span>
-<span><span class="co">## 41: female age_group5  income   455017   26107356   26136225.4</span></span>
-<span><span class="co">## 42: female age_group6  income    27979    1704154    1671415.0</span></span>
+<span><span class="co">##  1:  Total      Total savings  2273532  136765184  136763097.6</span></span>
+<span><span class="co">##  2:  Total age_group1 savings   982386   58435735   58434223.2</span></span>
+<span><span class="co">##  3:  Total age_group2 savings   552336   34271389   34268580.9</span></span>
+<span><span class="co">##  4:  Total age_group3 savings   437101   25682631   25684687.1</span></span>
+<span><span class="co">##  5:  Total age_group4 savings   214661   13084717   13079805.2</span></span>
+<span><span class="co">##  6:  Total age_group5 savings    80451    4924462    4925265.1</span></span>
+<span><span class="co">##  7:  Total age_group6 savings     6597     366250     368451.8</span></span>
+<span><span class="co">##  8:   male      Total savings  1159816   69358252   69365076.0</span></span>
+<span><span class="co">##  9:   male age_group1 savings   517660   30994250   31002472.3</span></span>
+<span><span class="co">## 10:   male age_group2 savings   280923   17256104   17249889.5</span></span>
+<span><span class="co">## 11:   male age_group3 savings   214970   12206128   12203252.5</span></span>
+<span><span class="co">## 12:   male age_group4 savings    99420    6117636    6127065.5</span></span>
+<span><span class="co">## 13:   male age_group5 savings    43233    2562053    2560169.2</span></span>
+<span><span class="co">## 14:   male age_group6 savings     3610     222081     222018.7</span></span>
+<span><span class="co">## 15: female      Total savings  1113716   67406932   67407195.7</span></span>
+<span><span class="co">## 16: female age_group1 savings   464726   27441485   27442869.6</span></span>
+<span><span class="co">## 17: female age_group2 savings   271413   17015285   17009965.8</span></span>
+<span><span class="co">## 18: female age_group3 savings   222131   13476503   13475370.8</span></span>
+<span><span class="co">## 19: female age_group4 savings   115241    6967081    6962122.3</span></span>
+<span><span class="co">## 20: female age_group5 savings    37218    2362409    2358246.8</span></span>
+<span><span class="co">## 21: female age_group6 savings     2987     144169     144169.0</span></span>
+<span><span class="co">## 22:  Total      Total  income 22952978 1381879746 1381855472.4</span></span>
+<span><span class="co">## 23:  Total age_group1  income  9810547  579610338  579593059.4</span></span>
+<span><span class="co">## 24:  Total age_group2  income  5692119  355253306  355229846.8</span></span>
+<span><span class="co">## 25:  Total age_group3  income  4406946  263725264  263743289.8</span></span>
+<span><span class="co">## 26:  Total age_group4  income  2133543  126784285  126737480.4</span></span>
+<span><span class="co">## 27:  Total age_group5  income   848151   53505169   53517911.4</span></span>
+<span><span class="co">## 28:  Total age_group6  income    61672    3001384    3006471.6</span></span>
+<span><span class="co">## 29:   male      Total  income 11262049  677841479  677908387.9</span></span>
+<span><span class="co">## 30:   male age_group1  income  4877164  289309680  289384834.8</span></span>
+<span><span class="co">## 31:   male age_group2  income  2811379  175956537  175906004.6</span></span>
+<span><span class="co">## 32:   male age_group3  income  2168169  128178686  128143764.2</span></span>
+<span><span class="co">## 33:   male age_group4  income   978510   58432926   58529961.0</span></span>
+<span><span class="co">## 34:   male age_group5  income   393134   24308230   24307499.6</span></span>
+<span><span class="co">## 35:   male age_group6  income    33693    1655420    1647998.1</span></span>
+<span><span class="co">## 36: female      Total  income 11690929  704038267  704040019.5</span></span>
+<span><span class="co">## 37: female age_group1  income  4933383  290300658  290304243.4</span></span>
+<span><span class="co">## 38: female age_group2  income  2880740  179296769  179218640.3</span></span>
+<span><span class="co">## 39: female age_group3  income  2238777  135546578  135542844.8</span></span>
+<span><span class="co">## 40: female age_group4  income  1155033   68351359   68292696.5</span></span>
+<span><span class="co">## 41: female age_group5  income   455017   29196939   29177719.2</span></span>
+<span><span class="co">## 42: female age_group6  income    27979    1345964    1385295.2</span></span>
 <span><span class="co">##        sex        age   vname      uws         ws          pws</span></span></code></pre>
 </div>
 </div>
@@ -796,55 +796,54 @@ simple as:</p>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab</span><span class="op">$</span><span class="fu">measures_cnts</span><span class="op">(</span>v <span class="op">=</span> <span class="st">"total"</span>, exclude_zeros <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $overview</span></span>
-<span><span class="co">##    noise cnt        pct</span></span>
-<span><span class="co">## 1:    -2   1 0.04761905</span></span>
-<span><span class="co">## 2:    -1   4 0.19047619</span></span>
-<span><span class="co">## 3:     0   9 0.42857143</span></span>
-<span><span class="co">## 4:     1   6 0.28571429</span></span>
-<span><span class="co">## 5:     2   1 0.04761905</span></span>
+<span><span class="co">##    noise cnt       pct</span></span>
+<span><span class="co">## 1:    -1   4 0.1904762</span></span>
+<span><span class="co">## 2:     0   5 0.2380952</span></span>
+<span><span class="co">## 3:     1  10 0.4761905</span></span>
+<span><span class="co">## 4:     2   2 0.0952381</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $measures</span></span>
 <span><span class="co">##       what    d1    d2    d3</span></span>
 <span><span class="co">##  1:    Min 0.000 0.000 0.000</span></span>
 <span><span class="co">##  2:    Q10 0.000 0.000 0.000</span></span>
 <span><span class="co">##  3:    Q20 0.000 0.000 0.000</span></span>
-<span><span class="co">##  4:    Q30 0.000 0.000 0.000</span></span>
-<span><span class="co">##  5:    Q40 0.000 0.000 0.000</span></span>
-<span><span class="co">##  6:   Mean 0.667 0.008 0.023</span></span>
-<span><span class="co">##  7: Median 1.000 0.001 0.011</span></span>
-<span><span class="co">##  8:    Q60 1.000 0.001 0.016</span></span>
-<span><span class="co">##  9:    Q70 1.000 0.002 0.021</span></span>
-<span><span class="co">## 10:    Q80 1.000 0.004 0.033</span></span>
-<span><span class="co">## 11:    Q90 1.000 0.005 0.049</span></span>
-<span><span class="co">## 12:    Q95 2.000 0.012 0.077</span></span>
-<span><span class="co">## 13:    Q99 2.000 0.117 0.162</span></span>
-<span><span class="co">## 14:    Max 2.000 0.143 0.183</span></span>
+<span><span class="co">##  4:    Q30 1.000 0.001 0.015</span></span>
+<span><span class="co">##  5:    Q40 1.000 0.001 0.016</span></span>
+<span><span class="co">##  6:   Mean 0.857 0.027 0.052</span></span>
+<span><span class="co">##  7: Median 1.000 0.002 0.021</span></span>
+<span><span class="co">##  8:    Q60 1.000 0.002 0.024</span></span>
+<span><span class="co">##  9:    Q70 1.000 0.002 0.033</span></span>
+<span><span class="co">## 10:    Q80 1.000 0.005 0.036</span></span>
+<span><span class="co">## 11:    Q90 1.000 0.077 0.141</span></span>
+<span><span class="co">## 12:    Q95 2.000 0.167 0.213</span></span>
+<span><span class="co">## 13:    Q99 2.000 0.262 0.370</span></span>
+<span><span class="co">## 14:    Max 2.000 0.286 0.410</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $cumdistr_d1</span></span>
 <span><span class="co">##    cat cnt       pct</span></span>
-<span><span class="co">## 1:   0   9 0.4285714</span></span>
+<span><span class="co">## 1:   0   5 0.2380952</span></span>
 <span><span class="co">## 2:   1  19 0.9047619</span></span>
 <span><span class="co">## 3:   2  21 1.0000000</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $cumdistr_d2</span></span>
-<span><span class="co">##            cat cnt      pct</span></span>
-<span><span class="co">## 1:    [0,0.02]  20 0.952381</span></span>
-<span><span class="co">## 2: (0.02,0.05]  20 0.952381</span></span>
-<span><span class="co">## 3:  (0.05,0.1]  20 0.952381</span></span>
-<span><span class="co">## 4:   (0.1,0.2]  21 1.000000</span></span>
-<span><span class="co">## 5:   (0.2,0.3]  21 1.000000</span></span>
-<span><span class="co">## 6:   (0.3,0.4]  21 1.000000</span></span>
-<span><span class="co">## 7:   (0.4,0.5]  21 1.000000</span></span>
-<span><span class="co">## 8:   (0.5,Inf]  21 1.000000</span></span>
+<span><span class="co">##            cat cnt       pct</span></span>
+<span><span class="co">## 1:    [0,0.02]  18 0.8571429</span></span>
+<span><span class="co">## 2: (0.02,0.05]  18 0.8571429</span></span>
+<span><span class="co">## 3:  (0.05,0.1]  19 0.9047619</span></span>
+<span><span class="co">## 4:   (0.1,0.2]  20 0.9523810</span></span>
+<span><span class="co">## 5:   (0.2,0.3]  21 1.0000000</span></span>
+<span><span class="co">## 6:   (0.3,0.4]  21 1.0000000</span></span>
+<span><span class="co">## 7:   (0.4,0.5]  21 1.0000000</span></span>
+<span><span class="co">## 8:   (0.5,Inf]  21 1.0000000</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $cumdistr_d3</span></span>
 <span><span class="co">##            cat cnt       pct</span></span>
-<span><span class="co">## 1:    [0,0.02]  14 0.6666667</span></span>
-<span><span class="co">## 2: (0.02,0.05]  19 0.9047619</span></span>
-<span><span class="co">## 3:  (0.05,0.1]  20 0.9523810</span></span>
-<span><span class="co">## 4:   (0.1,0.2]  21 1.0000000</span></span>
-<span><span class="co">## 5:   (0.2,0.3]  21 1.0000000</span></span>
-<span><span class="co">## 6:   (0.3,0.4]  21 1.0000000</span></span>
+<span><span class="co">## 1:    [0,0.02]   9 0.4285714</span></span>
+<span><span class="co">## 2: (0.02,0.05]  17 0.8095238</span></span>
+<span><span class="co">## 3:  (0.05,0.1]  18 0.8571429</span></span>
+<span><span class="co">## 4:   (0.1,0.2]  19 0.9047619</span></span>
+<span><span class="co">## 5:   (0.2,0.3]  20 0.9523810</span></span>
+<span><span class="co">## 6:   (0.3,0.4]  20 0.9523810</span></span>
 <span><span class="co">## 7:   (0.4,0.5]  21 1.0000000</span></span>
 <span><span class="co">## 8:   (0.5,Inf]  21 1.0000000</span></span>
 <span><span class="co">## </span></span>
@@ -952,8 +951,8 @@ already perturbed variables as shown below:</p>
 <span><span class="co">## └──────────────────────────────────────────────┘</span></span>
 <span><span class="co">## ── Distribution statistics of perturbations ────────────────────────────────────</span></span>
 <span><span class="co">##          countvar Min Q10 Q20 Q30 Q40   Mean Median Q60 Q70 Q80 Q90 Q95 Q99 Max</span></span>
-<span><span class="co">## 1:          total  -2  -1  -1  -1   0 -0.095      0   0   0   1   1   1 1.8   2</span></span>
-<span><span class="co">## 2: cnt_highincome  -4  -3  -3  -1  -1 -0.762      0   0   0   0   1   2 2.0   2</span></span>
+<span><span class="co">## 1:          total  -2  -1  -1  -1  -1 -0.476     -1   0   0   0   1   1 1.0   1</span></span>
+<span><span class="co">## 2: cnt_highincome  -6   0   0   0   0  0.286      0   0   0   0   1   4 5.6   6</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## ── Distance-based measures ─────────────────────────────────────────────────────</span></span>
 <span><span class="co">## ✔ Variable: 'total'</span></span>
@@ -962,49 +961,49 @@ already perturbed variables as shown below:</p>
 <span><span class="co">##  1:    Min 0.000 0.000 0.000</span></span>
 <span><span class="co">##  2:    Q10 0.000 0.000 0.000</span></span>
 <span><span class="co">##  3:    Q20 0.000 0.000 0.000</span></span>
-<span><span class="co">##  4:    Q30 0.000 0.000 0.000</span></span>
-<span><span class="co">##  5:    Q40 0.000 0.000 0.000</span></span>
-<span><span class="co">##  6:   Mean 0.667 0.008 0.023</span></span>
-<span><span class="co">##  7: Median 1.000 0.001 0.011</span></span>
-<span><span class="co">##  8:    Q60 1.000 0.001 0.016</span></span>
-<span><span class="co">##  9:    Q70 1.000 0.002 0.021</span></span>
-<span><span class="co">## 10:    Q80 1.000 0.004 0.033</span></span>
-<span><span class="co">## 11:    Q90 1.000 0.005 0.049</span></span>
-<span><span class="co">## 12:    Q95 2.000 0.012 0.077</span></span>
-<span><span class="co">## 13:    Q99 2.000 0.117 0.162</span></span>
-<span><span class="co">## 14:    Max 2.000 0.143 0.183</span></span>
+<span><span class="co">##  4:    Q30 1.000 0.001 0.015</span></span>
+<span><span class="co">##  5:    Q40 1.000 0.001 0.016</span></span>
+<span><span class="co">##  6:   Mean 0.857 0.027 0.052</span></span>
+<span><span class="co">##  7: Median 1.000 0.002 0.021</span></span>
+<span><span class="co">##  8:    Q60 1.000 0.002 0.024</span></span>
+<span><span class="co">##  9:    Q70 1.000 0.002 0.033</span></span>
+<span><span class="co">## 10:    Q80 1.000 0.005 0.036</span></span>
+<span><span class="co">## 11:    Q90 1.000 0.077 0.141</span></span>
+<span><span class="co">## 12:    Q95 2.000 0.167 0.213</span></span>
+<span><span class="co">## 13:    Q99 2.000 0.262 0.370</span></span>
+<span><span class="co">## 14:    Max 2.000 0.286 0.410</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## ✔ Variable: 'cnt_highincome'</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">##       what    d1    d2    d3</span></span>
-<span><span class="co">##  1:    Min 0.000 0.000 0.000</span></span>
-<span><span class="co">##  2:    Q10 0.000 0.000 0.000</span></span>
-<span><span class="co">##  3:    Q20 0.000 0.000 0.000</span></span>
-<span><span class="co">##  4:    Q30 0.100 0.000 0.003</span></span>
-<span><span class="co">##  5:    Q40 1.000 0.005 0.045</span></span>
-<span><span class="co">##  6:   Mean 1.444 0.037 0.105</span></span>
-<span><span class="co">##  7: Median 1.000 0.009 0.058</span></span>
-<span><span class="co">##  8:    Q60 2.000 0.030 0.093</span></span>
-<span><span class="co">##  9:    Q70 2.000 0.033 0.156</span></span>
-<span><span class="co">## 10:    Q80 3.000 0.059 0.185</span></span>
-<span><span class="co">## 11:    Q90 3.000 0.111 0.263</span></span>
-<span><span class="co">## 12:    Q95 3.150 0.151 0.334</span></span>
-<span><span class="co">## 13:    Q99 3.830 0.190 0.394</span></span>
-<span><span class="co">## 14:    Max 4.000 0.200 0.409</span></span>
+<span><span class="co">##       what  d1    d2    d3</span></span>
+<span><span class="co">##  1:    Min 0.0 0.000 0.000</span></span>
+<span><span class="co">##  2:    Q10 0.0 0.000 0.000</span></span>
+<span><span class="co">##  3:    Q20 0.0 0.000 0.000</span></span>
+<span><span class="co">##  4:    Q30 0.0 0.000 0.000</span></span>
+<span><span class="co">##  5:    Q40 0.0 0.000 0.000</span></span>
+<span><span class="co">##  6:   Mean 1.0 0.047 0.098</span></span>
+<span><span class="co">##  7: Median 0.0 0.000 0.000</span></span>
+<span><span class="co">##  8:    Q60 0.0 0.000 0.000</span></span>
+<span><span class="co">##  9:    Q70 0.0 0.000 0.000</span></span>
+<span><span class="co">## 10:    Q80 1.0 0.007 0.039</span></span>
+<span><span class="co">## 11:    Q90 4.6 0.188 0.491</span></span>
+<span><span class="co">## 12:    Q95 6.0 0.303 0.532</span></span>
+<span><span class="co">## 13:    Q99 6.0 0.381 0.674</span></span>
+<span><span class="co">## 14:    Max 6.0 0.400 0.710</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## ┌──────────────────────────────────────────────────┐</span></span>
 <span><span class="co">## │Utility measures for perturbed numerical variables│</span></span>
 <span><span class="co">## └──────────────────────────────────────────────────┘</span></span>
 <span><span class="co">## ── Distribution statistics of perturbations ────────────────────────────────────</span></span>
-<span><span class="co">##      vname         Min        Q10        Q20        Q30        Q40      Mean</span></span>
-<span><span class="co">## 1:  income -131940.561 -32976.899 -26978.730 -22659.567 -16038.092 -6044.588</span></span>
-<span><span class="co">## 2: savings   -5430.544  -3595.506  -3065.908  -2282.361  -1100.604  -492.835</span></span>
+<span><span class="co">##      vname       Min        Q10        Q20        Q30        Q40      Mean</span></span>
+<span><span class="co">## 1:  income -78128.67 -50532.375 -34921.798 -23459.168 -17278.644 -2168.718</span></span>
+<span><span class="co">## 2: savings  -6214.54  -4958.749  -4162.237  -2808.117  -1883.827  -321.024</span></span>
 <span><span class="co">##       Median      Q60      Q70       Q80       Q90       Q95       Q99</span></span>
-<span><span class="co">## 1: -3540.809 3369.024 4984.057 16372.279 28901.785 47648.074 75154.518</span></span>
-<span><span class="co">## 2:  -592.163  277.976 1135.775  2172.964  2628.873  2912.876  4553.846</span></span>
+<span><span class="co">## 1: -3733.218 1752.471 5087.567 18025.845 66908.942 75154.766 92658.914</span></span>
+<span><span class="co">## 2: -1132.222    0.000  803.088  2056.148  6823.971  8222.286  9188.054</span></span>
 <span><span class="co">##          Max</span></span>
-<span><span class="co">## 1: 82031.129</span></span>
-<span><span class="co">## 2:  4964.089</span></span></code></pre>
+<span><span class="co">## 1: 97034.951</span></span>
+<span><span class="co">## 2:  9429.496</span></span></code></pre>
 </div>
 </div>
 <div class="section level2">
