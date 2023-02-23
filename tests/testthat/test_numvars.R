@@ -85,7 +85,7 @@ p2 <- ck_params_nums(
 test_that("checking perturbation parameters", {
   expect_is(p1, "ck_params")
   expect_equal(p1$type, "params_m_flex")
-  expect_identical(digest::sha1(p1), "711d258e565cc94e61f9271189b7b73aeced42e6")
+  expect_identical(digest::sha1(p1), "53299f7eab1d919060e12311955ed3eb02f0b38b")
 })
 
 # set up problem
