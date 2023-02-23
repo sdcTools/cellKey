@@ -84,7 +84,7 @@ p_cnts1 <- ck_read_yaml(path = f_yaml)
 tab$params_cnts_set(val = p_cnts1, v = "total")
 
 # create alternative perturbation parameters by specifying parameters
-para2 <- ptable::create_num_ptable(
+para2 <- ptable::create_cnt_ptable(
   D = 8, V = 3, js = 2, create = FALSE)
 
 p_cnts2 <- ck_params_cnts(ptab = para2)

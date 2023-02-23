@@ -7,8 +7,8 @@
 ck_params_cnts(ptab, path = NULL)
 }
 \arguments{
-\item{ptab}{an object created with \code{\link[ptable:create_ptable]{ptable::create_ptable()}},
-or \code{\link[ptable:create_cnt_ptable]{ptable::create_cnt_ptable()}}}
+\item{ptab}{an object created with \code{\link[ptable:ptable_pkg]{ptable::create_ptable()}},
+or \code{\link[ptable:ptable_pkg]{ptable::create_cnt_ptable()}}}
 
 \item{path}{a scalar character specifying a path to which the parameters
 created with this functions should be written to (in yaml format)}
@@ -86,7 +86,7 @@ p_cnts1 <- ck_read_yaml(path = f_yaml)
 tab$params_cnts_set(val = p_cnts1, v = "total")
 
 # create alternative perturbation parameters by specifying parameters
-para2 <- ptable::create_num_ptable(
+para2 <- ptable::create_cnt_ptable(
   D = 8, V = 3, js = 2, create = FALSE)
 
 p_cnts2 <- ck_params_cnts(ptab = para2)
@@ -211,7 +211,7 @@ tab$summary()
 \seealso{
 This function uses functionality from package
 \code{ptable} (https://github.com/sdcTools/ptable), expecially
-\code{\link[ptable:create_ptable]{ptable::create_ptable()}} and
-\code{\link[ptable:create_cnt_ptable]{ptable::create_cnt_ptable()}}. More detailed information on the parameters
+\code{\link[ptable:ptable_pkg]{ptable::create_ptable()}} and
+\code{\link[ptable:ptable_pkg]{ptable::create_cnt_ptable()}}. More detailed information on the parameters
 is available from the respective help-pages of these functions.
 }
