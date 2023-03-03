@@ -72,7 +72,7 @@ To ensure that the same record keys are computed each and every time for the sam
 The goal of this introduction is to create a perturbed table of counts of variables `sex` by `age` for all observations as well as for the subgroups given by `cnt_highincome` that are non-zero. We also want to create perturbed tables of continously scaled variables `savings` and `income` also giving the hierarchical structure defined by `sex` by `age`.
 
 ### Specifying dimensions
-It is required to define hierarchies for each of the classifying variables of the desired table. There are two ways how the hierarchical structure of these variables (including sub-totals) can be specified. One way is to use `"@; value` format as (also) used in [**sdcTable**](ttps://cran.r-project.org/package=sdcTable). We would suggest however, to use the second alternative which is using functionality from package [**sdcHierarchies**](ttps://cran.r-project.org/package=sdcHierarchies). In this vignette, we only show the preferred way to generate hierarchies for categorical variables `age` and `sex` below:
+It is required to define hierarchies for each of the classifying variables of the desired table. There are two ways how the hierarchical structure of these variables (including sub-totals) can be specified. One way is to use `"@; value` format as (also) used in [**sdcTable**](https://cran.r-project.org/package=sdcTable). We would suggest however, to use the second alternative which is using functionality from package [**sdcHierarchies**](https://cran.r-project.org/package=sdcHierarchies). In this vignette, we only show the preferred way to generate hierarchies for categorical variables `age` and `sex` below:
 
 ```{r}
 dim_sex <- hier_create(root = "Total", nodes = c("male", "female"))
