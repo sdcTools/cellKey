@@ -235,7 +235,7 @@ p_nums2 <- ck_params_nums(
   use_zero_rkeys = TRUE)
 ```
 
-The package internally computes the separation point that is used for very small cells in case this is required. Details on this can also be found in deliverable [`D4.2`]((https://ec.europa.eu/eurostat/cros/content/perturbative-confidentiality-methods_en)).
+The package internally computes the separation point that is used for very small cells in case this is required. Details on this can also be found in deliverable [`D4.2`](https://ec.europa.eu/eurostat/cros/content/perturbative-confidentiality-methods_en).
 
 Now we can attach the results from `ck_params_nums()` to numeric variables using the `params_nums_set()`-method as shown below:
 
