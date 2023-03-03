@@ -20,28 +20,10 @@ library(rmarkdown)
 ## About the cellKey package
 This package implements methods to provide perturbation for statistical tables. The implementation if greatly inspired by the the paper *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar). This approach however was generalized and a new specification on how record keys are specified and the lookup-tables are defined is used. This package makes usage of perturbation tables that can be defined in the [**ptable**](https://github.com/sdcTools/ptable) package. This document describes the usage of version ``r packageVersion("cellKey")`` of the package.
 
-## Installation
-Package [**cellKey**](https://github.com/sdcTools/cellKey) is not yet on `CRAN` and therefore needs to be installed from source. The following code gives instructions on how to install the latest version of the package directly from [**github.com**](https://www.github.com):
-
-```{r, eval = FALSE}
-# update your R installation
-update.packages(ask = FALSE)
-
-# install cellKey from github.com
-if (!requireNamespace("remotes", quietly = TRUE)) {
-  install.packages("remotes")
-}
-remotes::install_github(
-  repo = "sdcTools/cellKey",
-  dependencies = TRUE,
-  build_opts = "--no-resave-data",
-  force = TRUE)
-```
-
 ## Main Features
 In the **cellKey** package it is possible to pertub multidimensional count and magnitude tables. Functionality to generate suitable record keys is provided in function `ck_generate_rkeys()`. Using sha1-checksums on the input datasets, we can make sure that the same record keys are generated whenever the same input data set is used for which record keys should be generated. However, it is also possible of course to use already pre-generated record keys available as variable in the microdata set.
 
-The package allows to make use of sampling weights. Thus, both weighted and unweighted count and magnitude tables can be perturbed. The hierarchical structure of the variables spanning the table can be arbitrarily complex. To generate these hierarchies, the **cellKey** packages depends on functionality available in package [**sdcHierarchies**](https://cran.r-project.org/package=sdcHierarchies). Finally, auxiliary methods are provided that allow to extract valueable information from objects created by the main function of this package `perturbTable()`. For example `mod_counts()` returns a data object showing for each cell the perturbation value and where it was found in the lookup table.
+The package allows to make use of sampling weights. Thus, both weighted and unweighted count and magnitude tables can be perturbed. The hierarchical structure of the variables spanning the table can be arbitrarily complex. To generate these hierarchies, the **cellKey** packages depends on functionality available in package [**sdcHierarchies**](https://cran.r-project.org/package=sdcHierarchies). Finally, auxiliary methods are provided that allow to extract valuable information from objects created by the main function of this package `perturbTable()`. For example `mod_counts()` returns a data object showing for each cell the perturbation value and where it was found in the lookup table.
 
 What is left is of course identifying bugs and issues and also to optimize performance of the package as well as to include some real world examples, eg. census tables.
 
@@ -63,7 +45,7 @@ The first step in this approach is to generate a statistical table, which can be
 
 - `x`: a `data.frame` or `data.table` containing microdata
 - `rkey`: defines where to find or how to compute record keys. It is possible to either specify a scalar character name or a number. If a number is specified, record keys are internally created by sampling from a uniform distribution between 0 and 1 with the random numbers rounded to the specified value of digits. If a name is specified, this name is interpreted as a variable name within `x` already containing record keys.
-- `dims`: a named list where each list element contains a hierarchy created with functionality from package [**sdcHierarchies**](ttps://cran.r-project.org/package=sdcHierarchies) and each name refers to a variable in `x`
+- `dims`: a named list where each list element contains a hierarchy created with functionality from package [**sdcHierarchies**](https://cran.r-project.org/package=sdcHierarchies) and each name refers to a variable in `x`
 - `w`: either `NULL` (no weights) or the name of a variable in `x` that contains weights
 - `countvars`: an optional character vector of variables in `x` holding counts. In any case a special count variable `total` is internally generated that is `1` for each row of `x`
 - `numvars`: an optional character vector of variables in `x` holding numerical variables that can later be perturbed.
@@ -391,4 +373,4 @@ tab$summary()
 ```
 
 ## Summary
-The package is *"work in progress"* and therefore, suggestions and/or bugreports are welcome. Please feel free to file an issue at [**our issue tracker**](https://github.com/sdcTools/cellKey/issues) or contribute to the package by filing a [**pull request**](https://github.com/sdcTools/cellKey/pulls) against the master branch.
+The package is *"work in progress"* and therefore, suggestions and/or bugreports are welcome. Please feel free to file an issue at [**our issue tracker**](https://github.com/sdcTools/userSupport/issues) or contribute to the package by filing a [**pull request**](https://github.com/sdcTools/cellKey/pulls) against the master branch.
