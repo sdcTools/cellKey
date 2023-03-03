@@ -5,8 +5,7 @@ Title: Implementing ABS Cell-Key Method for Adding Noise to Frequency and Contin
 Version: 1.0.0
 Authors@R: c(
   person(
-    given="Bernhard", 
-    family="Meindl", 
+    given="Bernhard", family="Meindl", 
     email="bernhard.meindl@statistik.gv.at", 
     role=c("aut", "cre")))
 Description: This packages provides functionality to add noise to or rather perturb statistical tables.
