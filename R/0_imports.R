@@ -19,12 +19,31 @@ Sys.setenv(".ck_nr_digits" = 8)
   return(d)
 }
 
+
+Sys.setenv("CK_RUN_PARALLEL" = FALSE)
+.ck_parallel_enabled <- function() {
+  ee <- "CK_RUN_PARALLEL"
+  env_val <- as.logical(Sys.getenv(ee))
+  if (is.na(env_val)) {
+    return(FALSE)
+  }
+  if (!env_val) {
+    return(FALSE)
+  }
+  TRUE
+}
+
 # number of cores for parallel processing
 # number of cores to be used when doing parallel computing
 .ck_cores <- function() {
   if (Sys.info()["sysname"] == "Windows") {
     return(1)
   }
+
+  if (!.ck_parallel_enabled()) {
+    return(1)
+  }
+
   available_cores <- parallel::detectCores() - 2
   chk <- Sys.getenv("_R_CHECK_LIMIT_CORES_", "")
   if (nzchar(chk) && chk == "TRUE") {

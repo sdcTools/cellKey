@@ -1,9 +1,12 @@
 # cellKey 1.0.0
 - first version on CRAN
 - updated due to changes in Package `ptable`
+- parallel computation is controlled using environment-variable `CK_RUN_PARALLEL`. If this is set
+to `TRUE`, parallel computation is enabled, otherwise it is disabled. By default, parallel computing is
+disabled.
 
 # cellKey 0.19.2
-- do not rename columns of ptable input object
+- do not rename columns of `ptable` input object
 - fix vignette and tests
 - bump requirements
 
