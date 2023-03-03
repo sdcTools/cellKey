@@ -1,7 +1,7 @@
 Package: cellKey
 Type: Package
 Date: 2023-03-03
-Title: Implementing ABS Cell-Key Method for Adding Noise to Frequency and Continous Tables
+Title: Implementing ABS Cell-Key Method for Adding Noise to Frequency and Continuous Tables
 Version: 1.0.0
 Authors@R: c(
   person(
