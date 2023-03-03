@@ -145,13 +145,13 @@
 - feature: new method `summary()` for objects returned from `perturbTable()`
 
 # cellKey 0.13.1
-- small updates to reflect changes in [**ptable**](http://github.com/tenderle/ptable)
+- small updates to reflect changes in [**ptable**](https://github.com/tenderle/ptable)
 
 # cellKey 0.13.0
-- depend on package [**ptable**](http://github.com/sdcTools/ptable) to generate the perturbation tables by rewriting `ck_create_pTable()`; thus the package must be installed, e.g using `devtools::install_github("sdcTools/ptable", build_vignette=FALSE)`
+- depend on package [**ptable**](https://github.com/sdcTools/ptable) to generate the perturbation tables by rewriting `ck_create_pTable()`; thus the package must be installed, e.g using `devtools::install_github("sdcTools/ptable", build_vignette=FALSE)`
 
 # cellKey 0.12.0
-- feature: use package [**ptable**](http://github.com/sdcTools/ptable) to generate pTables in destatis format
+- feature: use package [**ptable**](https://github.com/sdcTools/ptable) to generate pTables in destatis format
 
 # cellKey 0.11.0
 - feature: use functions to create hierarchies directly from `sdcTable` and bump version requirement of this package to `>=0.23`
