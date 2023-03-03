@@ -1,8 +1,7 @@
 Package: cellKey
 Type: Package
-Date: 2022-07-08
-Title: Implementing ABS cell-key method for adding noise to frequency
-        and continous tables
+Date: 2023-03-03
+Title: Implementing ABS Cell-Key Method for Adding Noise to Frequency and Continous Tables
 Version: 1.0.0
 Authors@R: c(
   person(
@@ -17,7 +16,7 @@ Imports:
     methods,
     digest (>= 0.6.23),
     sdcTable (>= 0.32.2),
-    ptable (>= 0.4.0),
+    ptable (>= 1.0.0),
     cli,
     utils,
     yaml,
@@ -30,11 +29,10 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-Remotes: sdcTools/ptable@master
 NeedsCompilation: no
 Author: Bernhard Meindl [aut, cre]
 Maintainer: Bernhard Meindl <bernhard.meindl@statistik.gv.at>
 LazyData: true
 LazyDataCompression: xz
-BugReports: https://github.com/sdcTools/cellKey/issues
+BugReports: https://github.com/sdcTools/userSupport/issues
 URL: https://github.com/sdcTools/cellKey
