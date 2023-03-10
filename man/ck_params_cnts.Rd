@@ -22,6 +22,7 @@ This function allows to generate required perturbation parameters that are used
 to perturb count variables.
 }
 \examples{
+\donttest{
 x <- ck_create_testdata()
 
 # create some 0/1 variables that should be perturbed later
@@ -189,12 +190,14 @@ tab$reset_cntvars(v = "cnt_males")
 
 # we can then set other parameters and perturb again
 tab$params_cnts_set(val = p_cnts1, v = "cnt_males")
+
 tab$perturb(v = "cnt_males")
 
-# write to a file "outtab.csv" (.csv is automatically added to the path)
-\dontrun{
-tab$freqtab(v = c("total", "cnt_males"), path = "outtab.csv")
-}
+# write results to a .csv file
+tab$freqtab(
+  v = c("total", "cnt_males"),
+  path = file.path(tempdir(), "outtab.csv")
+)
 
 # show results containing weighted and unweighted results
 tab$freqtab(v = c("total", "cnt_males"))
@@ -207,6 +210,7 @@ tab$mod_cnts()
 
 # display a summary about utility measures
 tab$summary()
+}
 }
 \seealso{
 This function uses functionality from package

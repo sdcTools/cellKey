@@ -28,6 +28,12 @@ These variables can later be perturbed.}
 
 \item{numvars}{(character) an optional vector of numerical variables that can later be tabulated.}
 }
+\value{
+A new \code{cellkey_obj} object. Such objects (internally) contain the fully computed
+statistical tables given input microdata (\code{x}), the hierarchical definitionals (\code{dims}) as
+well as the remaining inputs. Intermediate results are stored internally and can only be
+modified / accessed via the exported public methods described below.
+}
 \description{
 This class allows to define statistical tables and perturb both
 count and numerical variables.
@@ -36,6 +42,7 @@ count and numerical variables.
 Such objects are typically generated using \code{\link[=ck_setup]{ck_setup()}}.
 }
 \examples{
+\donttest{
 x <- ck_create_testdata()
 
 # create some 0/1 variables that should be perturbed later
@@ -203,12 +210,14 @@ tab$reset_cntvars(v = "cnt_males")
 
 # we can then set other parameters and perturb again
 tab$params_cnts_set(val = p_cnts1, v = "cnt_males")
+
 tab$perturb(v = "cnt_males")
 
-# write to a file "outtab.csv" (.csv is automatically added to the path)
-\dontrun{
-tab$freqtab(v = c("total", "cnt_males"), path = "outtab.csv")
-}
+# write results to a .csv file
+tab$freqtab(
+  v = c("total", "cnt_males"),
+  path = file.path(tempdir(), "outtab.csv")
+)
 
 # show results containing weighted and unweighted results
 tab$freqtab(v = c("total", "cnt_males"))
@@ -221,6 +230,7 @@ tab$mod_cnts()
 
 # display a summary about utility measures
 tab$summary()
+}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -288,7 +298,10 @@ These variables can later be perturbed.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A new \code{cellkey_obj} object.
+A new \code{cellkey_obj} object. Such objects (internally) contain the fully computed
+statistical tables given input microdata (\code{x}), the hierarchical definitionals (\code{dims}) as
+well as the remaining inputs. Intermediate results are stored internally and can only be
+modified / accessed via the exported public methods described below.
 }
 }
 \if{html}{\out{<hr>}}
@@ -306,6 +319,11 @@ Perturb a count- or magnitude variable
 \item{\code{v}}{name(s) of count- or magnitude variables that should be perturbed.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A modified \code{cellkey_obj} object in which private slots were
+updated for side-effects. Updated data can be accessed using other exported
+methods like \verb{$freqtab()} or \verb{$numtab()}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -429,16 +447,26 @@ Utility measures for continuous variables (not yet implemented)
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{v}}{name of a continuosu variable for which utility measures
+\item{\code{v}}{name of a continuous variable for which utility measures
 should be computed.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+for (now) an empty list; In future versions of the package, the
+Method will return utility measures for perturbed magnitude tables.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-cellkey_obj-allvars"></a>}}
 \if{latex}{\out{\hypertarget{method-cellkey_obj-allvars}{}}}
 \subsection{Method \code{allvars()}}{
+Names of variables that can be perturbed / tabulated
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ck_class$allvars()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
 returns a \code{list} with the following two elements:
 \itemize{
 \item \code{cntvars}: character vector with names of available count
@@ -446,32 +474,33 @@ variables for perturbation
 \item \code{numvars}: character vector with names of available numerical
 variables for perturbation
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ck_class$allvars()}\if{html}{\out{</div>}}
 }
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-cellkey_obj-cntvars"></a>}}
 \if{latex}{\out{\hypertarget{method-cellkey_obj-cntvars}{}}}
 \subsection{Method \code{cntvars()}}{
-character vector with names of count variables that
-could be perturbed
+Names of count variables that can be perturbed
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ck_class$cntvars()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+a character vector containing variable names
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-cellkey_obj-numvars"></a>}}
 \if{latex}{\out{\hypertarget{method-cellkey_obj-numvars}{}}}
 \subsection{Method \code{numvars()}}{
-character vector with names of continuous variables that
-could be perturbed
+Names of continuous variables that can be perturbed
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ck_class$numvars()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+a character vector containing variable names
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-cellkey_obj-hierarchy_info"></a>}}
@@ -544,6 +573,10 @@ the threshold specified in \code{n} (default); else the unweighted number of con
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+A modified \code{cellkey_obj} object in which private slots were
+updated for side-effects. These updated values are used by other methods (e.g \verb{$perturb()}).
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-cellkey_obj-supp_val"></a>}}
@@ -566,6 +599,10 @@ the threshold specified in \code{n} (default); else the unweighted number is use
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+A modified \code{cellkey_obj} object in which private slots were
+updated for side-effects. These updated values are used by other methods (e.g \verb{$perturb()}).
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-cellkey_obj-supp_cells"></a>}}
@@ -587,6 +624,10 @@ this input is then used to compute the relevant cells to be identified as sensit
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+A modified \code{cellkey_obj} object in which private slots were
+updated for side-effects. These updated values are used by other methods (e.g \verb{$perturb()}).
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-cellkey_obj-supp_p"></a>}}
@@ -606,6 +647,10 @@ can only be applied to positive-only variables.
 \item{\code{p}}{a number defining a percentage between \code{1} and \code{99}.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A modified \code{cellkey_obj} object in which private slots were
+updated for side-effects. These updated values are used by other methods (e.g \verb{$perturb()}).
 }
 }
 \if{html}{\out{<hr>}}
@@ -629,6 +674,10 @@ can only be applied to positive-only variables.
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+A modified \code{cellkey_obj} object in which private slots were
+updated for side-effects. These updated values are used by other methods (e.g \verb{$perturb()}).
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-cellkey_obj-supp_nk"></a>}}
@@ -651,6 +700,10 @@ can only be applied to positive-only variables.
 contributers contribute more than \verb{k\%} is considered unsafe}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A modified \code{cellkey_obj} object in which private slots were
+updated for side-effects. These updated values are used by other methods (e.g \verb{$perturb()}).
 }
 }
 \if{html}{\out{<hr>}}
@@ -689,6 +742,11 @@ the count variables for which the parameters should be set.}
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+A modified \code{cellkey_obj} object in which private slots were
+updated for side-effects. These updated values are used by other
+methods (e.g \verb{$perturb()}).
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-cellkey_obj-reset_cntvars"></a>}}
@@ -708,6 +766,11 @@ for all perturbed count variables; otherwise it is possible to specify
 the names of already perturbed count variables.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A modified \code{cellkey_obj} object in which private slots were
+updated for side-effects. These updated values are used by other
+methods (e.g \verb{$perturb()} or \verb{$freqtab()}).
 }
 }
 \if{html}{\out{<hr>}}
@@ -729,6 +792,11 @@ perturbed continuous variables.}
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+A modified \code{cellkey_obj} object in which private slots were
+updated for side-effects. These updated values are used by other
+methods (e.g \verb{$perturb()} or \verb{$numtab()}).
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-cellkey_obj-reset_allvars"></a>}}
@@ -739,6 +807,11 @@ reset results and parameters for all already perturbed variables.
 \if{html}{\out{<div class="r">}}\preformatted{ck_class$reset_allvars()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+A modified \code{cellkey_obj} object in which private slots were
+updated for side-effects. These updated values are used by other
+methods (e.g \verb{$perturb()}, \verb{$freqtab()} or \verb{$numtab()}).
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-cellkey_obj-params_nums_get"></a>}}
@@ -776,6 +849,11 @@ which the parameters should be set.}
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+A modified \code{cellkey_obj} object in which private slots were
+updated for side-effects. These updated values are used by other
+methods (e.g \verb{$perturb()}).
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-cellkey_obj-summary"></a>}}
@@ -786,6 +864,9 @@ some aggregated summary statistics about perturbed variables
 \if{html}{\out{<div class="r">}}\preformatted{ck_class$summary()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+invisible \code{NULL}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-cellkey_obj-print"></a>}}
@@ -796,5 +877,8 @@ prints information about the current table
 \if{html}{\out{<div class="r">}}\preformatted{ck_class$print()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+invisible \code{NULL}
+}
 }
 }
