@@ -19,7 +19,10 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     #' variables withing `x` that should be included in the problem instance.
     #' These variables can later be perturbed.
     #' @param numvars (character) an optional vector of numerical variables that can later be tabulated.
-    #' @return A new `cellkey_obj` object.
+    #' @return A new `cellkey_obj` object. Such objects (internally) contain the fully computed
+    #' statistical tables given input microdata (`x`), the hierarchical definitionals (`dims`) as
+    #' well as the remaining inputs. Intermediate results are stored internally and can only be
+    #' modified / accessed via the exported public methods described below.
     initialize = function(x, rkey, dims, w = NULL, countvars = NULL, numvars = NULL) {
       type <- is_perturbed <- NULL
 
@@ -505,6 +508,9 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 
     #' @description Perturb a count- or magnitude variable
     #' @param v name(s) of count- or magnitude variables that should be perturbed.
+    #' @return A modified `cellkey_obj` object in which private slots were
+    #' updated for side-effects. Updated data can be accessed using other exported
+    #' methods like `$freqtab()` or `$numtab()`.
     perturb = function(v) {
       # important variables
       countvars <- self$cntvars()
@@ -546,7 +552,7 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     #' - `pwc`: perturbed weighted counts or `NA` if `vname` was not yet perturbed
     freqtab = function(v = NULL, path = NULL) {
       if (!is.null(path)) {
-        .valid_path(path, ext = "csv")
+        .valid_path(path, ext = "csv", check_exists = FALSE)
       }
 
       avail <- self$cntvars()
@@ -595,6 +601,9 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       }))
 
       if (!is.null(path)) {
+        if (file.exists(path)) {
+          file.remove(path)
+        }
         res <- tryCatch(fwrite(res, file = path, sep = ";"), error = function(e) e)
         if (inherits(res, "error")) {
           warning("File ", shQuote(path), " could not be written to disk", call. = FALSE)
@@ -630,7 +639,7 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     #' has not not perturbed
     numtab = function(v = NULL, mean_before_sum = FALSE, path = NULL) {
       if (!is.null(path)) {
-        .valid_path(path, ext = "csv")
+        .valid_path(path, ext = "csv", check_exists = FALSE)
       }
 
       if (!rlang::is_scalar_logical(mean_before_sum)) {
@@ -675,6 +684,9 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       }
 
       if (!is.null(path)) {
+        if (file.exists(path)) {
+          file.remove(path)
+        }
         res <- tryCatch(fwrite(tab, file = path, sep = ";"), error = function(e) e)
         if (inherits(res, "error")) {
           warning("File ", shQuote(path), " could not be written to disk", call. = FALSE)
@@ -719,13 +731,17 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     },
 
     #' @description Utility measures for continuous variables (not yet implemented)
-    #' @param v name of a continuosu variable for which utility measures
+    #' @param v name of a continuous variable for which utility measures
     #' should be computed.
+    #' @return for (now) an empty list; In future versions of the package, the
+    #' Method will return utility measures for perturbed magnitude tables.
     measures_nums = function(v) {
-      stop("No utility measures for continuous variables are available yet.", call. = FALSE)
+      warning("No utility measures for continuous variables are available yet.", call. = FALSE)
+      return(list())
     },
 
-    #' @description returns a `list` with the following two elements:
+    #' @description Names of variables that can be perturbed / tabulated
+    #' @return returns a `list` with the following two elements:
     #' - `cntvars`: character vector with names of available count
     #' variables for perturbation
     #' - `numvars`: character vector with names of available numerical
@@ -737,14 +753,14 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       )
     },
 
-    #' @description character vector with names of count variables that
-    #' could be perturbed
+    #' @description Names of count variables that can be perturbed
+    #' @return a character vector containing variable names
     cntvars = function() {
       private$.ck_vars("countvars")
     },
 
-    #' @description character vector with names of continuous variables that
-    #' could be perturbed
+    #' @description Names of continuous variables that can be perturbed
+    #' @return a character vector containing variable names
     numvars = function() {
       private$.ck_vars("numvars")
     },
@@ -782,6 +798,8 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     #' @param n a number defining the threshold. All cells `<= n` are considered as unsafe.
     #' @param weighted if `TRUE`, the weighted number of contributors to a cell are compared to
     #' the threshold specified in `n` (default); else the unweighted number of contributors is used.
+    #' @return A modified `cellkey_obj` object in which private slots were
+    #' updated for side-effects. These updated values are used by other methods (e.g `$perturb()`).
     supp_freq = function(v, n, weighted = TRUE) {
       if (!rlang::is_scalar_logical(weighted)) {
         stop("argument `weighted` is not a logical value.", call. = FALSE)
@@ -812,6 +830,8 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     #' @param n a number defining the threshold. All cells `<= n` are considered as unsafe.
     #' @param weighted if `TRUE`, the weighted cell value of variable `v` is compared to
     #' the threshold specified in `n` (default); else the unweighted number is used.
+    #' @return A modified `cellkey_obj` object in which private slots were
+    #' updated for side-effects. These updated values are used by other methods (e.g `$perturb()`).
     supp_val = function(v, n, weighted = TRUE) {
       if (!rlang::is_scalar_logical(weighted)) {
         stop("argument `weighted` is not a logical value.", call. = FALSE)
@@ -842,6 +862,8 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     #' @param inp a `data.frame` where each colum represents a dimensional variable. Each row of
     #' this input is then used to compute the relevant cells to be identified as sensitive where
     #' `NA`-values are possible and used to match any characteristics of the dimensional variable.
+    #' @return A modified `cellkey_obj` object in which private slots were
+    #' updated for side-effects. These updated values are used by other methods (e.g `$perturb()`).
     supp_cells = function(v, inp) {
       .check_avail(
         v = v,
@@ -895,6 +917,8 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     #' can only be applied to positive-only variables.
     #' @param v a single variable name of a continuous variable (see method `numvars()`)
     #' @param p a number defining a percentage between `1` and `99`.
+    #' @return A modified `cellkey_obj` object in which private slots were
+    #' updated for side-effects. These updated values are used by other methods (e.g `$perturb()`).
     supp_p = function(v, p) {
       .check_avail(
         v = v,
@@ -928,6 +952,8 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     #' @param v a single variable name of a continuous variable (see method `numvars()`)
     #' @param p a number defining a percentage between `1` and `99`.
     #' @param q a number defining a percentage between `1` and `99`. This value must be larger than `p`.
+    #' @return A modified `cellkey_obj` object in which private slots were
+    #' updated for side-effects. These updated values are used by other methods (e.g `$perturb()`).
     supp_pq = function(v, p, q) {
       .check_avail(
         v = v,
@@ -969,6 +995,8 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     #' @param n an integerish number `>= 2`
     #' @param k a number defining a percentage between `1` and `99`. All cells to which the top `n`
     #' contributers contribute more than `k%` is considered unsafe
+    #' @return A modified `cellkey_obj` object in which private slots were
+    #' updated for side-effects. These updated values are used by other methods (e.g `$perturb()`).
     supp_nk = function(v, n, k) {
       .check_avail(
         v = v,
@@ -1015,6 +1043,9 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     #' the perturbation parameters provided in `val` are set for all
     #' count variables; otherwise one may specify the names of
     #' the count variables for which the parameters should be set.
+    #' @return A modified `cellkey_obj` object in which private slots were
+    #' updated for side-effects. These updated values are used by other
+    #' methods (e.g `$perturb()`).
     params_cnts_set = function(val, v = NULL) {
       if (!inherits(val, "ck_params")) {
         stop("Please create the input using `ck_params_cnts()`", call. = FALSE)
@@ -1059,6 +1090,9 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     #' @param v if `v` equals `NULL` (the default), the results are reset
     #' for all perturbed count variables; otherwise it is possible to specify
     #' the names of already perturbed count variables.
+    #' @return A modified `cellkey_obj` object in which private slots were
+    #' updated for side-effects. These updated values are used by other
+    #' methods (e.g `$perturb()` or `$freqtab()`).
     reset_cntvars = function(v = NULL) {
       avail <- private$.ck_perturbed_vars(what = "countvars")
       if (length(avail) == 0) {
@@ -1082,6 +1116,9 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     #' @param v if `v` equals `NULL` (the default), the results are reset for all perturbed
     #' numerical variables; otherwise it is possible to specify the names of already
     #' perturbed continuous variables.
+    #' @return A modified `cellkey_obj` object in which private slots were
+    #' updated for side-effects. These updated values are used by other
+    #' methods (e.g `$perturb()` or `$numtab()`).
     reset_numvars = function(v = NULL) {
       avail <- private$.ck_perturbed_vars(what = "numvars")
       if (length(avail) == 0) {
@@ -1100,7 +1137,10 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
       return(invisible(self))
     },
 
-    #' @description  reset results and parameters for all already perturbed variables.
+    #' @description reset results and parameters for all already perturbed variables.
+    #' @return A modified `cellkey_obj` object in which private slots were
+    #' updated for side-effects. These updated values are used by other
+    #' methods (e.g `$perturb()`, `$freqtab()` or `$numtab()`).
     reset_allvars = function() {
       avail <- c(private$.ck_perturbed_vars(what = "countvars"), private$.ck_perturbed_vars(what = "numvars"))
       if (length(avail) == 0) {
@@ -1124,6 +1164,9 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     #' perturbation parameters provided in `val` are set for all continuous
     #' variables; otherwise one may specify the names of the numeric variables for
     #' which the parameters should be set.
+    #' @return A modified `cellkey_obj` object in which private slots were
+    #' updated for side-effects. These updated values are used by other
+    #' methods (e.g `$perturb()`).
     params_nums_set = function(val, v = NULL) {
       nv <- self$numvars()
       if (length(nv) == 0) {
@@ -1169,6 +1212,7 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     },
 
     #' @description some aggregated summary statistics about perturbed variables
+    #' @return invisible `NULL`
     summary = function() {
       cli::cat_line(cli::boxx("Utility measures for perturbed count variables", padding = 0))
 
@@ -1220,6 +1264,7 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
     },
 
     #' @description prints information about the current table
+    #' @return invisible `NULL`
     print = function() {
       cli::cat_rule("Table Information")
       nr_dims <- ncol(private$.results$dims) - 1
@@ -1694,8 +1739,13 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #' variables withing `x` that should be included in the problem instance.
 #' These variables can later be perturbed.
 #' @param numvars (character) an optional vector of numerical variables that can later be tabulated.
+#' @return A new `cellkey_obj` object. Such objects (internally) contain the fully computed
+#' statistical tables given input microdata (`x`), the hierarchical definitionals (`dims`) as
+#' well as the remaining inputs. Intermediate results are stored internally and can only be
+#' modified / accessed via the exported public methods described below.
 #' @export
 #' @examples
+#' \donttest{
 #' x <- ck_create_testdata()
 #'
 #' # create some 0/1 variables that should be perturbed later
@@ -1863,12 +1913,14 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'
 #' # we can then set other parameters and perturb again
 #' tab$params_cnts_set(val = p_cnts1, v = "cnt_males")
+#'
 #' tab$perturb(v = "cnt_males")
 #'
-#' # write to a file "outtab.csv" (.csv is automatically added to the path)
-#' \dontrun{
-#' tab$freqtab(v = c("total", "cnt_males"), path = "outtab.csv")
-#' }
+#' # write results to a .csv file
+#' tab$freqtab(
+#'   v = c("total", "cnt_males"),
+#'   path = file.path(tempdir(), "outtab.csv")
+#' )
 #'
 #' # show results containing weighted and unweighted results
 #' tab$freqtab(v = c("total", "cnt_males"))
@@ -1881,6 +1933,7 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
 #'
 #' # display a summary about utility measures
 #' tab$summary()
+#' }
 ck_setup <- function(x, rkey, dims, w = NULL, countvars = NULL, numvars = NULL) {
   ck_class$new(
     x = x,
