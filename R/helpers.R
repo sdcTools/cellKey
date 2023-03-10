@@ -80,9 +80,8 @@ ck_log <- function(..., br = TRUE) {
   }
 }
 
-
-# checks if file has a given extension and does not exist
-.valid_path <- function(path, ext = "yaml") {
+# checks if file has a given extension and optionally if it does not exist
+.valid_path <- function(path, ext = "yaml", check_exists = TRUE) {
   if (!rlang::is_scalar_character(path)) {
     stop("`path` is not a scalar character.", call. = FALSE)
   }
@@ -91,8 +90,10 @@ ck_log <- function(..., br = TRUE) {
     stop("file-exension of argument `path` is not ", shQuote(ext), call. = FALSE)
   }
 
-  if (file.exists(path)) {
-    stop("the provided file ", shQuote(path), " already exists.", call. = FALSE)
+  if (check_exists == TRUE) {
+    if (file.exists(path)) {
+      stop("the provided file ", shQuote(path), " already exists.", call. = FALSE)
+    }
   }
   invisible(NULL)
 }
