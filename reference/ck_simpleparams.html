@@ -42,7 +42,7 @@ ck_params_nums().'><!-- mathjax --><script src="https://cdnjs.cloudflare.com/aja
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/sdcTools/cellKey/" class="external-link">
+  <a href="https://github.com/sdcTools/userSupport/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -57,7 +57,7 @@ ck_params_nums().'><!-- mathjax --><script src="https://cdnjs.cloudflare.com/aja
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Set parameters required to perturb numeric variables using a simple approach</h1>
-    <small class="dont-index">Source: <a href="https://github.com/sdcTools/cellKey/blob/HEAD/R/ck_params_nums.R" class="external-link"><code>R/ck_params_nums.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/sdcTools/userSupport/blob/HEAD/R/ck_params_nums.R" class="external-link"><code>R/ck_params_nums.R</code></a></small>
     <div class="hidden name"><code>ck_simpleparams.Rd</code></div>
     </div>
 
@@ -103,7 +103,8 @@ SGA <em>"Open Source tools for perturbative confidentiality methods"</em></p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="ck_create_testdata.html">ck_create_testdata</a></span><span class="op">(</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="ck_create_testdata.html">ck_create_testdata</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># create some 0/1 variables that should be perturbed later</span></span></span>
 <span class="r-in"><span><span class="va">x</span><span class="op">[</span>, <span class="va">cnt_females</span> <span class="op">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"male"</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">]</span></span></span>
@@ -120,17 +121,17 @@ SGA <em>"Open Source tools for perturbative confidentiality methods"</em></p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4579:      2    4     3     4        1     3 female age_group1       1   6258</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4580:      2    4     3     4        1     3   male age_group1       1   7019</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       income savings ori_hid sampling_weight household_weights cnt_females</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:   5780      12       1              98          25.00000           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:   2530      28       1              40          25.00000           1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:   6920     550       1              25          25.00000           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:   7960     870       1              81          25.00000           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:   9030      20       2              77          16.66667           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:   5780      12       1              32          25.00000           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:   2530      28       1              83          25.00000           1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:   6920     550       1              79          25.00000           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:   7960     870       1              53          25.00000           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5:   9030      20       2              74          16.66667           0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                                     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4576:   7900     278    1000              46          16.66667           1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4577:   1420     987    1000              62          16.66667           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4578:   8900     684    1000              95          16.66667           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4579:   3880     294    1000              86          16.66667           1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4580:   4830     911    1000              62          16.66667           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4576:   7900     278    1000              90          16.66667           1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4577:   1420     987    1000              36          16.66667           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4578:   8900     684    1000              89          16.66667           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4579:   3880     294    1000              30          16.66667           1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4580:   4830     911    1000              93          16.66667           0</span>
 <span class="r-in"><span><span class="va">x</span><span class="op">[</span>, <span class="va">cnt_males</span> <span class="op">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"male"</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       urbrur roof walls water electcon relat    sex        age hhcivil expend</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    1:      2    4     3     3        1     1   male age_group3       2   9093</span>
@@ -145,17 +146,17 @@ SGA <em>"Open Source tools for perturbative confidentiality methods"</em></p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4579:      2    4     3     4        1     3 female age_group1       1   6258</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4580:      2    4     3     4        1     3   male age_group1       1   7019</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       income savings ori_hid sampling_weight household_weights cnt_females</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:   5780      12       1              98          25.00000           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:   2530      28       1              40          25.00000           1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:   6920     550       1              25          25.00000           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:   7960     870       1              81          25.00000           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:   9030      20       2              77          16.66667           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:   5780      12       1              32          25.00000           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:   2530      28       1              83          25.00000           1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:   6920     550       1              79          25.00000           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:   7960     870       1              53          25.00000           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5:   9030      20       2              74          16.66667           0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                                     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4576:   7900     278    1000              46          16.66667           1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4577:   1420     987    1000              62          16.66667           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4578:   8900     684    1000              95          16.66667           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4579:   3880     294    1000              86          16.66667           1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4580:   4830     911    1000              62          16.66667           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4576:   7900     278    1000              90          16.66667           1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4577:   1420     987    1000              36          16.66667           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4578:   8900     684    1000              89          16.66667           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4579:   3880     294    1000              30          16.66667           1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4580:   4830     911    1000              93          16.66667           0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       cnt_males</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    1:         1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    2:         0</span>
@@ -182,17 +183,17 @@ SGA <em>"Open Source tools for perturbative confidentiality methods"</em></p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4579:      2    4     3     4        1     3 female age_group1       1   6258</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4580:      2    4     3     4        1     3   male age_group1       1   7019</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       income savings ori_hid sampling_weight household_weights cnt_females</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:   5780      12       1              98          25.00000           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:   2530      28       1              40          25.00000           1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:   6920     550       1              25          25.00000           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:   7960     870       1              81          25.00000           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:   9030      20       2              77          16.66667           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:   5780      12       1              32          25.00000           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:   2530      28       1              83          25.00000           1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:   6920     550       1              79          25.00000           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:   7960     870       1              53          25.00000           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5:   9030      20       2              74          16.66667           0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                                     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4576:   7900     278    1000              46          16.66667           1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4577:   1420     987    1000              62          16.66667           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4578:   8900     684    1000              95          16.66667           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4579:   3880     294    1000              86          16.66667           1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4580:   4830     911    1000              62          16.66667           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4576:   7900     278    1000              90          16.66667           1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4577:   1420     987    1000              36          16.66667           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4578:   8900     684    1000              89          16.66667           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4579:   3880     294    1000              30          16.66667           1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4580:   4830     911    1000              93          16.66667           0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       cnt_males cnt_highincome</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    1:         1              0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    2:         0              0</span>
@@ -220,29 +221,29 @@ SGA <em>"Open Source tools for perturbative confidentiality methods"</em></p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4579:      2    4     3     4        1     3 female age_group1       1   6258</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4580:      2    4     3     4        1     3   male age_group1       1   7019</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       income savings ori_hid sampling_weight household_weights cnt_females</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:   5780      12       1              98          25.00000           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:   2530      28       1              40          25.00000           1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:   6920     550       1              25          25.00000           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:   7960     870       1              81          25.00000           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:   9030      20       2              77          16.66667           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:   5780      12       1              32          25.00000           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:   2530      28       1              83          25.00000           1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:   6920     550       1              79          25.00000           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:   7960     870       1              53          25.00000           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5:   9030      20       2              74          16.66667           0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                                     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4576:   7900     278    1000              46          16.66667           1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4577:   1420     987    1000              62          16.66667           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4578:   8900     684    1000              95          16.66667           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4579:   3880     294    1000              86          16.66667           1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4580:   4830     911    1000              62          16.66667           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4576:   7900     278    1000              90          16.66667           1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4577:   1420     987    1000              36          16.66667           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4578:   8900     684    1000              89          16.66667           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4579:   3880     294    1000              30          16.66667           1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4580:   4830     911    1000              93          16.66667           0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       cnt_males cnt_highincome mixed</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:         1              0     2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:         0              0     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:         1              0    -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:         1              0    -9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:         1              1    -6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:         1              0     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:         0              0     6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:         1              0     9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:         1              0     5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5:         1              1     4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ---                               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4576:         0              0    -8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4577:         1              0     9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4578:         1              0    -9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4579:         0              0    -6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4580:         1              0    -5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4576:         0              0     4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4577:         1              0    -6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4578:         1              0     5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4579:         0              0    -7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4580:         1              0    -3</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># create record keys</span></span></span>
 <span class="r-in"><span><span class="va">x</span><span class="op">$</span><span class="va">rkey</span> <span class="op">&lt;-</span> <span class="fu"><a href="ck_generate_rkeys.html">ck_generate_rkeys</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">x</span><span class="op">)</span></span></span>
@@ -333,7 +334,7 @@ SGA <em>"Open Source tools for perturbative confidentiality methods"</em></p>
 <span class="r-in"><span><span class="va">p_cnts1</span> <span class="op">&lt;-</span> <span class="fu"><a href="ck_params_cnts.html">ck_params_cnts</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  ptab <span class="op">=</span> <span class="fu">ptable</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ptable/man/pt_ex_cnts.html" class="external-link">pt_ex_cnts</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  path <span class="op">=</span> <span class="va">f_yaml</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> yaml configuration '/tmp/RtmpSL8ysM/file1e59693dd2ac.yaml' successfully written.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> yaml configuration '/tmp/RtmpCEVK6P/file1f0af86943e.yaml' successfully written.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># read parameters from yaml-file and set them for variable `"total"`</span></span></span>
 <span class="r-in"><span><span class="va">p_cnts1</span> <span class="op">&lt;-</span> <span class="fu"><a href="ck_read_yaml.html">ck_read_yaml</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">f_yaml</span><span class="op">)</span></span></span>
@@ -365,78 +366,78 @@ SGA <em>"Open Source tools for perturbative confidentiality methods"</em></p>
 <span class="r-in"><span><span class="co"># return weighted and unweighted results</span></span></span>
 <span class="r-in"><span><span class="va">tab</span><span class="op">$</span><span class="fu">freqtab</span><span class="op">(</span>v <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"total"</span>, <span class="st">"cnt_males"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        sex        age     vname  uwc     wc puwc         pwc</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1:  Total      Total     total 4580 276790 4581 276850.4345</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  2:  Total age_group1     total 1969 119139 1969 119139.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3:  Total       ag1a     total 1969 119139 1969 119139.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  4:  Total age_group2     total 1143  69516 1141  69394.3622</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  5:  Total       ag2a     total 1143  69516 1141  69394.3622</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  6:  Total age_group3     total  864  52113  866  52233.6319</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  7:  Total age_group4     total  423  25194  422  25134.4397</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  8:  Total age_group5     total  168  10150  167  10089.5833</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  9:  Total age_group6     total   13    678   12    625.8462</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10:   male      Total     total 2296 138967 2296 138967.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11:      m      Total     total 2296 138967 2296 138967.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12:   male age_group1     total 1015  61411 1013  61289.9931</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13:      m age_group1     total 1015  61411 1013  61289.9931</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14:   male       ag1a     total 1015  61411 1013  61289.9931</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15:      m       ag1a     total 1015  61411 1013  61289.9931</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16:   male age_group2     total  571  34588  572  34648.5744</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17:      m age_group2     total  571  34588  572  34648.5744</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18:   male       ag2a     total  571  34588  572  34648.5744</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19:      m       ag2a     total  571  34588  572  34648.5744</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20:   male age_group3     total  424  25925  422  25802.7123</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21:      m age_group3     total  424  25925  422  25802.7123</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22:   male age_group4     total  195  11667  196  11726.8308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23:      m age_group4     total  195  11667  196  11726.8308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24:   male age_group5     total   84   5026   84   5026.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25:      m age_group5     total   84   5026   84   5026.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26:   male age_group6     total    7    350    7    350.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27:      m age_group6     total    7    350    7    350.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28: female      Total     total 2284 137823 2283 137762.6572</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29:      f      Total     total 2284 137823 2283 137762.6572</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30: female age_group1     total  954  57728  954  57728.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 31:      f age_group1     total  954  57728  954  57728.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 32: female       ag1a     total  954  57728  954  57728.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 33:      f       ag1a     total  954  57728  954  57728.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 34: female age_group2     total  572  34928  571  34866.9371</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 35:      f age_group2     total  572  34928  571  34866.9371</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 36: female       ag2a     total  572  34928  571  34866.9371</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 37:      f       ag2a     total  572  34928  571  34866.9371</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 38: female age_group3     total  440  26188  442  26307.0364</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 39:      f age_group3     total  440  26188  442  26307.0364</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 40: female age_group4     total  228  13527  228  13527.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 41:      f age_group4     total  228  13527  228  13527.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 42: female age_group5     total   84   5124   84   5124.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43:      f age_group5     total   84   5124   84   5124.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 44: female age_group6     total    6    328    6    328.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 45:      f age_group6     total    6    328    6    328.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 46:  Total      Total cnt_males 2296 138967 2297 139027.5257</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 47:  Total age_group1 cnt_males 1015  61411 1012  61229.4897</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 48:  Total       ag1a cnt_males 1015  61411 1012  61229.4897</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 49:  Total age_group2 cnt_males  571  34588  573  34709.1489</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 50:  Total       ag2a cnt_males  571  34588  573  34709.1489</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 51:  Total age_group3 cnt_males  424  25925  421  25741.5684</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 52:  Total age_group4 cnt_males  195  11667  196  11726.8308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 53:  Total age_group5 cnt_males   84   5026   84   5026.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 54:  Total age_group6 cnt_males    7    350    7    350.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 55:   male      Total cnt_males 2296 138967 2297 139027.5257</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 56:      m      Total cnt_males 2296 138967 2297 139027.5257</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 57:   male age_group1 cnt_males 1015  61411 1012  61229.4897</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 58:      m age_group1 cnt_males 1015  61411 1012  61229.4897</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 59:   male       ag1a cnt_males 1015  61411 1012  61229.4897</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 60:      m       ag1a cnt_males 1015  61411 1012  61229.4897</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 61:   male age_group2 cnt_males  571  34588  573  34709.1489</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 62:      m age_group2 cnt_males  571  34588  573  34709.1489</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 63:   male       ag2a cnt_males  571  34588  573  34709.1489</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 64:      m       ag2a cnt_males  571  34588  573  34709.1489</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 65:   male age_group3 cnt_males  424  25925  421  25741.5684</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 66:      m age_group3 cnt_males  424  25925  421  25741.5684</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 67:   male age_group4 cnt_males  195  11667  196  11726.8308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 68:      m age_group4 cnt_males  195  11667  196  11726.8308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 69:   male age_group5 cnt_males   84   5026   84   5026.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 70:      m age_group5 cnt_males   84   5026   84   5026.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 71:   male age_group6 cnt_males    7    350    7    350.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 72:      m age_group6 cnt_males    7    350    7    350.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1:  Total      Total     total 4580 276899 4581 276959.4583</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  2:  Total age_group1     total 1969 118790 1970 118850.3301</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3:  Total       ag1a     total 1969 118790 1970 118850.3301</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  4:  Total age_group2     total 1143  69041 1144  69101.4033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  5:  Total       ag2a     total 1143  69041 1144  69101.4033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  6:  Total age_group3     total  864  52803  866  52925.2292</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  7:  Total age_group4     total  423  25708  423  25708.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  8:  Total age_group5     total  168   9868  169   9926.7381</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  9:  Total age_group6     total   13    689   14    742.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10:   male      Total     total 2296 138920 2295 138859.4948</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11:      m      Total     total 2296 138920 2295 138859.4948</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12:   male age_group1     total 1015  61322 1015  61322.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13:      m age_group1     total 1015  61322 1015  61322.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14:   male       ag1a     total 1015  61322 1015  61322.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15:      m       ag1a     total 1015  61322 1015  61322.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16:   male age_group2     total  571  34564  571  34564.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17:      m age_group2     total  571  34564  571  34564.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18:   male       ag2a     total  571  34564  571  34564.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19:      m       ag2a     total  571  34564  571  34564.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20:   male age_group3     total  424  25800  422  25678.3019</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21:      m age_group3     total  424  25800  422  25678.3019</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22:   male age_group4     total  195  11941  194  11879.7641</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23:      m age_group4     total  195  11941  194  11879.7641</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24:   male age_group5     total   84   4942   85   5000.8333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25:      m age_group5     total   84   4942   85   5000.8333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26:   male age_group6     total    7    351    7    351.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27:      m age_group6     total    7    351    7    351.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28: female      Total     total 2284 137979 2284 137979.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29:      f      Total     total 2284 137979 2284 137979.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30: female age_group1     total  954  57468  954  57468.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31:      f age_group1     total  954  57468  954  57468.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32: female       ag1a     total  954  57468  954  57468.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33:      f       ag1a     total  954  57468  954  57468.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34: female age_group2     total  572  34477  572  34477.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35:      f age_group2     total  572  34477  572  34477.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36: female       ag2a     total  572  34477  572  34477.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37:      f       ag2a     total  572  34477  572  34477.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38: female age_group3     total  440  27003  442  27125.7409</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39:      f age_group3     total  440  27003  442  27125.7409</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40: female age_group4     total  228  13767  228  13767.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41:      f age_group4     total  228  13767  228  13767.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42: female age_group5     total   84   4926   82   4808.7143</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43:      f age_group5     total   84   4926   82   4808.7143</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44: female age_group6     total    6    338    6    338.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45:      f age_group6     total    6    338    6    338.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46:  Total      Total cnt_males 2296 138920 2295 138859.4948</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47:  Total age_group1 cnt_males 1015  61322 1015  61322.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48:  Total       ag1a cnt_males 1015  61322 1015  61322.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49:  Total age_group2 cnt_males  571  34564  571  34564.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50:  Total       ag2a cnt_males  571  34564  571  34564.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 51:  Total age_group3 cnt_males  424  25800  420  25556.6038</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 52:  Total age_group4 cnt_males  195  11941  194  11879.7641</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 53:  Total age_group5 cnt_males   84   4942   85   5000.8333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 54:  Total age_group6 cnt_males    7    351    6    300.8571</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 55:   male      Total cnt_males 2296 138920 2295 138859.4948</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 56:      m      Total cnt_males 2296 138920 2295 138859.4948</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 57:   male age_group1 cnt_males 1015  61322 1015  61322.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 58:      m age_group1 cnt_males 1015  61322 1015  61322.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 59:   male       ag1a cnt_males 1015  61322 1015  61322.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 60:      m       ag1a cnt_males 1015  61322 1015  61322.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 61:   male age_group2 cnt_males  571  34564  571  34564.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 62:      m age_group2 cnt_males  571  34564  571  34564.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 63:   male       ag2a cnt_males  571  34564  571  34564.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 64:      m       ag2a cnt_males  571  34564  571  34564.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 65:   male age_group3 cnt_males  424  25800  420  25556.6038</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 66:      m age_group3 cnt_males  424  25800  420  25556.6038</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 67:   male age_group4 cnt_males  195  11941  194  11879.7641</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 68:      m age_group4 cnt_males  195  11941  194  11879.7641</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 69:   male age_group5 cnt_males   84   4942   85   5000.8333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 70:      m age_group5 cnt_males   84   4942   85   5000.8333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 71:   male age_group6 cnt_males    7    351    6    300.8571</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 72:      m age_group6 cnt_males    7    351    6    300.8571</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 73: female      Total cnt_males    0      0    0      0.0000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 74:      f      Total cnt_males    0      0    0      0.0000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 75: female age_group1 cnt_males    0      0    0      0.0000</span>
@@ -485,7 +486,7 @@ SGA <em>"Open Source tools for perturbative confidentiality methods"</em></p>
 <span class="r-in"><span>  same_key <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>  use_zero_rkeys <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>  path <span class="op">=</span> <span class="va">f_yaml</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> yaml configuration '/tmp/RtmpSL8ysM/file1e5966cb1a1.yaml' successfully written.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> yaml configuration '/tmp/RtmpCEVK6P/file1f0a6f9fb00e.yaml' successfully written.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># we read the parameters from the yaml-file</span></span></span>
 <span class="r-in"><span><span class="va">p_nums1</span> <span class="op">&lt;-</span> <span class="fu"><a href="ck_read_yaml.html">ck_read_yaml</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">f_yaml</span><span class="op">)</span></span></span>
@@ -552,147 +553,147 @@ SGA <em>"Open Source tools for perturbative confidentiality methods"</em></p>
 <span class="r-in"><span><span class="co"># extract results</span></span></span>
 <span class="r-in"><span><span class="va">tab</span><span class="op">$</span><span class="fu">numtab</span><span class="op">(</span><span class="st">"income"</span>, mean_before_sum <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        sex        age  vname      uws         ws        pws</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1:  Total      Total income 22952978 1388256296 1388241232</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  2:  Total age_group1 income  9810547  591868864  591921369</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3:  Total       ag1a income  9810547  591868864  591921369</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  4:  Total age_group2 income  5692119  349390058  349368522</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  5:  Total       ag2a income  5692119  349390058  349368522</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  6:  Total age_group3 income  4406946  265711341  265668360</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  7:  Total age_group4 income  2133543  126721607  126584580</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  8:  Total age_group5 income   848151   51673327   51724628</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  9:  Total age_group6 income    61672    2891099    2882598</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10:   male      Total income 11262049  683553276  683469398</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11:      m      Total income 11262049  683553276  683469398</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12:   male age_group1 income  4877164  294547592  294488908</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13:      m age_group1 income  4877164  294547592  294488908</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14:   male       ag1a income  4877164  294547592  294488908</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15:      m       ag1a income  4877164  294547592  294488908</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16:   male age_group2 income  2811379  172859934  172836835</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17:      m age_group2 income  2811379  172859934  172836835</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18:   male       ag2a income  2811379  172859934  172836835</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19:      m       ag2a income  2811379  172859934  172836835</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20:   male age_group3 income  2168169  131863576  131901055</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21:      m age_group3 income  2168169  131863576  131901055</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22:   male age_group4 income   978510   58723614   58808583</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23:      m age_group4 income   978510   58723614   58808583</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24:   male age_group5 income   393134   24034208   24004164</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25:      m age_group5 income   393134   24034208   24004164</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26:   male age_group6 income    33693    1524352    1629921</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27:      m age_group6 income    33693    1524352    1629921</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28: female      Total income 11690929  704703020  704686236</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29:      f      Total income 11690929  704703020  704686236</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30: female age_group1 income  4933383  297321272  297469203</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 31:      f age_group1 income  4933383  297321272  297469203</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 32: female       ag1a income  4933383  297321272  297469203</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 33:      f       ag1a income  4933383  297321272  297469203</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 34: female age_group2 income  2880740  176530124  176421163</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 35:      f age_group2 income  2880740  176530124  176421163</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 36: female       ag2a income  2880740  176530124  176421163</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 37:      f       ag2a income  2880740  176530124  176421163</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 38: female age_group3 income  2238777  133847765  133916503</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 39:      f age_group3 income  2238777  133847765  133916503</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 40: female age_group4 income  1155033   67997993   67977151</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 41:      f age_group4 income  1155033   67997993   67977151</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 42: female age_group5 income   455017   27639119   27602861</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43:      f age_group5 income   455017   27639119   27602861</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 44: female age_group6 income    27979    1366747    1404665</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 45:      f age_group6 income    27979    1366747    1404665</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1:  Total      Total income 22952978 1394507730 1394647008</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  2:  Total age_group1 income  9810547  597476195  597348259</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3:  Total       ag1a income  9810547  597476195  597348259</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  4:  Total age_group2 income  5692119  345503249  345590294</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  5:  Total       ag2a income  5692119  345503249  345590294</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  6:  Total age_group3 income  4406946  271523713  271564460</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  7:  Total age_group4 income  2133543  127985397  128096617</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  8:  Total age_group5 income   848151   48777417   48880725</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  9:  Total age_group6 income    61672    3241759    3295617</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10:   male      Total income 11262049  685745715  685574194</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11:      m      Total income 11262049  685745715  685574194</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12:   male age_group1 income  4877164  296354743  296325115</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13:      m age_group1 income  4877164  296354743  296325115</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14:   male       ag1a income  4877164  296354743  296325115</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15:      m       ag1a income  4877164  296354743  296325115</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16:   male age_group2 income  2811379  172390418  172396747</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17:      m age_group2 income  2811379  172390418  172396747</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18:   male       ag2a income  2811379  172390418  172396747</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19:      m       ag2a income  2811379  172390418  172396747</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20:   male age_group3 income  2168169  133076420  133214346</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21:      m age_group3 income  2168169  133076420  133214346</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22:   male age_group4 income   978510   59052758   58998710</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23:      m age_group4 income   978510   59052758   58998710</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24:   male age_group5 income   393134   23138970   23005936</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25:      m age_group5 income   393134   23138970   23005936</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26:   male age_group6 income    33693    1732406    1627369</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27:      m age_group6 income    33693    1732406    1627369</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28: female      Total income 11690929  708762015  708834906</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29:      f      Total income 11690929  708762015  708834906</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30: female age_group1 income  4933383  301121452  301069912</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31:      f age_group1 income  4933383  301121452  301069912</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32: female       ag1a income  4933383  301121452  301069912</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33:      f       ag1a income  4933383  301121452  301069912</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34: female age_group2 income  2880740  173112831  173039998</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35:      f age_group2 income  2880740  173112831  173039998</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36: female       ag2a income  2880740  173112831  173039998</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37:      f       ag2a income  2880740  173112831  173039998</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38: female age_group3 income  2238777  138447293  138455482</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39:      f age_group3 income  2238777  138447293  138455482</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40: female age_group4 income  1155033   68932639   68969024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41:      f age_group4 income  1155033   68932639   68969024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42: female age_group5 income   455017   25638447   25672698</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43:      f age_group5 income   455017   25638447   25672698</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44: female age_group6 income    27979    1509353    1381551</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45:      f age_group6 income    27979    1509353    1381551</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        sex        age  vname      uws         ws        pws</span>
 <span class="r-in"><span><span class="va">tab</span><span class="op">$</span><span class="fu">numtab</span><span class="op">(</span><span class="st">"income"</span>, mean_before_sum <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        sex        age  vname      uws         ws        pws</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1:  Total      Total income 22952978 1388256296 1388248764</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  2:  Total age_group1 income  9810547  591868864  591895116</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3:  Total       ag1a income  9810547  591868864  591895116</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  4:  Total age_group2 income  5692119  349390058  349379290</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  5:  Total       ag2a income  5692119  349390058  349379290</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  6:  Total age_group3 income  4406946  265711341  265689850</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  7:  Total age_group4 income  2133543  126721607  126653075</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  8:  Total age_group5 income   848151   51673327   51698971</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  9:  Total age_group6 income    61672    2891099    2886846</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10:   male      Total income 11262049  683553276  683511336</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11:      m      Total income 11262049  683553276  683511336</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12:   male age_group1 income  4877164  294547592  294518248</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13:      m age_group1 income  4877164  294547592  294518248</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14:   male       ag1a income  4877164  294547592  294518248</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15:      m       ag1a income  4877164  294547592  294518248</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16:   male age_group2 income  2811379  172859934  172848384</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17:      m age_group2 income  2811379  172859934  172848384</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18:   male       ag2a income  2811379  172859934  172848384</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19:      m       ag2a income  2811379  172859934  172848384</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20:   male age_group3 income  2168169  131863576  131882314</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21:      m age_group3 income  2168169  131863576  131882314</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22:   male age_group4 income   978510   58723614   58766083</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23:      m age_group4 income   978510   58723614   58766083</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24:   male age_group5 income   393134   24034208   24019181</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25:      m age_group5 income   393134   24034208   24019181</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26:   male age_group6 income    33693    1524352    1576253</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27:      m age_group6 income    33693    1524352    1576253</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28: female      Total income 11690929  704703020  704694628</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29:      f      Total income 11690929  704703020  704694628</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30: female age_group1 income  4933383  297321272  297395228</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 31:      f age_group1 income  4933383  297321272  297395228</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 32: female       ag1a income  4933383  297321272  297395228</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 33:      f       ag1a income  4933383  297321272  297395228</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 34: female age_group2 income  2880740  176530124  176475635</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 35:      f age_group2 income  2880740  176530124  176475635</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 36: female       ag2a income  2880740  176530124  176475635</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 37:      f       ag2a income  2880740  176530124  176475635</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 38: female age_group3 income  2238777  133847765  133882130</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 39:      f age_group3 income  2238777  133847765  133882130</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 40: female age_group4 income  1155033   67997993   67987571</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 41:      f age_group4 income  1155033   67997993   67987571</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 42: female age_group5 income   455017   27639119   27620984</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43:      f age_group5 income   455017   27639119   27620984</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 44: female age_group6 income    27979    1366747    1385576</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 45:      f age_group6 income    27979    1366747    1385576</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1:  Total      Total income 22952978 1394507730 1394577367</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  2:  Total age_group1 income  9810547  597476195  597412224</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3:  Total       ag1a income  9810547  597476195  597412224</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  4:  Total age_group2 income  5692119  345503249  345546769</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  5:  Total       ag2a income  5692119  345503249  345546769</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  6:  Total age_group3 income  4406946  271523713  271544086</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  7:  Total age_group4 income  2133543  127985397  128040995</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  8:  Total age_group5 income   848151   48777417   48829044</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  9:  Total age_group6 income    61672    3241759    3268577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10:   male      Total income 11262049  685745715  685659949</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11:      m      Total income 11262049  685745715  685659949</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12:   male age_group1 income  4877164  296354743  296339929</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13:      m age_group1 income  4877164  296354743  296339929</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14:   male       ag1a income  4877164  296354743  296339929</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15:      m       ag1a income  4877164  296354743  296339929</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16:   male age_group2 income  2811379  172390418  172393582</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17:      m age_group2 income  2811379  172390418  172393582</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18:   male       ag2a income  2811379  172390418  172393582</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19:      m       ag2a income  2811379  172390418  172393582</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20:   male age_group3 income  2168169  133076420  133145365</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21:      m age_group3 income  2168169  133076420  133145365</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22:   male age_group4 income   978510   59052758   59025728</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23:      m age_group4 income   978510   59052758   59025728</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24:   male age_group5 income   393134   23138970   23072357</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25:      m age_group5 income   393134   23138970   23072357</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26:   male age_group6 income    33693    1732406    1679066</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27:      m age_group6 income    33693    1732406    1679066</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28: female      Total income 11690929  708762015  708798460</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29:      f      Total income 11690929  708762015  708798460</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30: female age_group1 income  4933383  301121452  301095681</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31:      f age_group1 income  4933383  301121452  301095681</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32: female       ag1a income  4933383  301121452  301095681</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33:      f       ag1a income  4933383  301121452  301095681</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34: female age_group2 income  2880740  173112831  173076411</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35:      f age_group2 income  2880740  173112831  173076411</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36: female       ag2a income  2880740  173112831  173076411</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37:      f       ag2a income  2880740  173112831  173076411</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38: female age_group3 income  2238777  138447293  138451388</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39:      f age_group3 income  2238777  138447293  138451388</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40: female age_group4 income  1155033   68932639   68950829</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41:      f age_group4 income  1155033   68932639   68950829</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42: female age_group5 income   455017   25638447   25655567</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43:      f age_group5 income   455017   25638447   25655567</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44: female age_group6 income    27979    1509353    1444039</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45:      f age_group6 income    27979    1509353    1444039</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        sex        age  vname      uws         ws        pws</span>
 <span class="r-in"><span><span class="va">tab</span><span class="op">$</span><span class="fu">numtab</span><span class="op">(</span><span class="st">"savings"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        sex        age   vname     uws        ws         pws</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1:  Total      Total savings 2273532 137103339 137107484.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  2:  Total age_group1 savings  982386  59257217  59261674.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3:  Total       ag1a savings  982386  59257217  59261674.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  4:  Total age_group2 savings  552336  33295623  33295221.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  5:  Total       ag2a savings  552336  33295623  33295221.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  6:  Total age_group3 savings  437101  26603432  26611241.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  7:  Total age_group4 savings  214661  12759048  12753022.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  8:  Total age_group5 savings   80451   4876171   4879358.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  9:  Total age_group6 savings    6597    311848    313120.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10:   male      Total savings 1159816  69966113  69969466.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11:      m      Total savings 1159816  69966113  69969466.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12:   male age_group1 savings  517660  31329245  31327381.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13:      m age_group1 savings  517660  31329245  31327381.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14:   male       ag1a savings  517660  31329245  31327381.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15:      m       ag1a savings  517660  31329245  31327381.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16:   male age_group2 savings  280923  16794016  16793327.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17:      m age_group2 savings  280923  16794016  16793327.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18:   male       ag2a savings  280923  16794016  16793327.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19:      m       ag2a savings  280923  16794016  16793327.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20:   male age_group3 savings  214970  13047689  13043207.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21:      m age_group3 savings  214970  13047689  13043207.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22:   male age_group4 savings   99420   6025004   6027866.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23:      m age_group4 savings   99420   6025004   6027866.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24:   male age_group5 savings   43233   2586205   2584335.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25:      m age_group5 savings   43233   2586205   2584335.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26:   male age_group6 savings    3610    183954    185657.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27:      m age_group6 savings    3610    183954    185657.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28: female      Total savings 1113716  67137226  67146893.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29:      f      Total savings 1113716  67137226  67146893.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30: female age_group1 savings  464726  27927972  27924643.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 31:      f age_group1 savings  464726  27927972  27924643.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 32: female       ag1a savings  464726  27927972  27924643.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 33:      f       ag1a savings  464726  27927972  27924643.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 34: female age_group2 savings  271413  16501607  16498892.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 35:      f age_group2 savings  271413  16501607  16498892.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 36: female       ag2a savings  271413  16501607  16498892.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 37:      f       ag2a savings  271413  16501607  16498892.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 38: female age_group3 savings  222131  13555743  13558774.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 39:      f age_group3 savings  222131  13555743  13558774.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 40: female age_group4 savings  115241   6734044   6733404.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 41:      f age_group4 savings  115241   6734044   6733404.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 42: female age_group5 savings   37218   2289966   2286358.6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43:      f age_group5 savings   37218   2289966   2286358.6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 44: female age_group6 savings    2987    127894    128304.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 45:      f age_group6 savings    2987    127894    128304.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1:  Total      Total savings 2273532 137877502 137873100.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  2:  Total age_group1 savings  982386  59333302  59332784.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3:  Total       ag1a savings  982386  59333302  59332784.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  4:  Total age_group2 savings  552336  33382838  33385196.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  5:  Total       ag2a savings  552336  33382838  33385196.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  6:  Total age_group3 savings  437101  27114126  27116513.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  7:  Total age_group4 savings  214661  13041780  13046773.4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  8:  Total age_group5 savings   80451   4665530   4669369.4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  9:  Total age_group6 savings    6597    339926    339059.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10:   male      Total savings 1159816  70230533  70226778.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11:      m      Total savings 1159816  70230533  70226778.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12:   male age_group1 savings  517660  31293478  31291755.9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13:      m age_group1 savings  517660  31293478  31291755.9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14:   male       ag1a savings  517660  31293478  31291755.9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15:      m       ag1a savings  517660  31293478  31291755.9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16:   male age_group2 savings  280923  16964147  16966112.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17:      m age_group2 savings  280923  16964147  16966112.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18:   male       ag2a savings  280923  16964147  16966112.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19:      m       ag2a savings  280923  16964147  16966112.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20:   male age_group3 savings  214970  13170843  13165698.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21:      m age_group3 savings  214970  13170843  13165698.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22:   male age_group4 savings   99420   6097845   6094987.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23:      m age_group4 savings   99420   6097845   6094987.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24:   male age_group5 savings   43233   2523605   2518537.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25:      m age_group5 savings   43233   2523605   2518537.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26:   male age_group6 savings    3610    180615    178469.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27:      m age_group6 savings    3610    180615    178469.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28: female      Total savings 1113716  67646969  67654564.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29:      f      Total savings 1113716  67646969  67654564.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30: female age_group1 savings  464726  28039824  28039276.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31:      f age_group1 savings  464726  28039824  28039276.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32: female       ag1a savings  464726  28039824  28039276.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33:      f       ag1a savings  464726  28039824  28039276.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34: female age_group2 savings  271413  16418691  16416431.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35:      f age_group2 savings  271413  16418691  16416431.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36: female       ag2a savings  271413  16418691  16416431.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37:      f       ag2a savings  271413  16418691  16416431.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38: female age_group3 savings  222131  13943283  13945460.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39:      f age_group3 savings  222131  13943283  13945460.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40: female age_group4 savings  115241   6943935   6944918.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41:      f age_group4 savings  115241   6943935   6944918.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42: female age_group5 savings   37218   2141925   2143818.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43:      f age_group5 savings   37218   2141925   2143818.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44: female age_group6 savings    2987    159311    155087.4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45:      f age_group6 savings    2987    159311    155087.4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        sex        age   vname     uws        ws         pws</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># results can be resetted, too</span></span></span>
@@ -701,145 +702,149 @@ SGA <em>"Open Source tools for perturbative confidentiality methods"</em></p>
 <span class="r-in"><span><span class="co"># we can then set other parameters and perturb again</span></span></span>
 <span class="r-in"><span><span class="va">tab</span><span class="op">$</span><span class="fu">params_cnts_set</span><span class="op">(</span>val <span class="op">=</span> <span class="va">p_cnts1</span>, v <span class="op">=</span> <span class="st">"cnt_males"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> --&gt; setting perturbation parameters for variable 'cnt_males'</span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">tab</span><span class="op">$</span><span class="fu">perturb</span><span class="op">(</span>v <span class="op">=</span> <span class="st">"cnt_males"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Count variable 'cnt_males' was perturbed.</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># write to a file "outtab.csv" (.csv is automatically added to the path)</span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="va">tab</span><span class="op">$</span><span class="fu">freqtab</span><span class="op">(</span>v <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"total"</span>, <span class="st">"cnt_males"</span><span class="op">)</span>, path <span class="op">=</span> <span class="st">"outtab.csv"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span><span class="co"># write results to a .csv file</span></span></span>
+<span class="r-in"><span><span class="va">tab</span><span class="op">$</span><span class="fu">freqtab</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  v <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"total"</span>, <span class="st">"cnt_males"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"outtab.csv"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> File '/tmp/RtmpCEVK6P/outtab.csv' successfully written to disk.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># show results containing weighted and unweighted results</span></span></span>
 <span class="r-in"><span><span class="va">tab</span><span class="op">$</span><span class="fu">freqtab</span><span class="op">(</span>v <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"total"</span>, <span class="st">"cnt_males"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        sex        age     vname  uwc     wc puwc         pwc</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1:  Total      Total     total 4580 276790 4581 276850.4345</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  2:  Total age_group1     total 1969 119139 1969 119139.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3:  Total       ag1a     total 1969 119139 1969 119139.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  4:  Total age_group2     total 1143  69516 1141  69394.3622</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  5:  Total       ag2a     total 1143  69516 1141  69394.3622</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  6:  Total age_group3     total  864  52113  866  52233.6319</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  7:  Total age_group4     total  423  25194  422  25134.4397</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  8:  Total age_group5     total  168  10150  167  10089.5833</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  9:  Total age_group6     total   13    678   12    625.8462</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10:   male      Total     total 2296 138967 2296 138967.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11:      m      Total     total 2296 138967 2296 138967.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12:   male age_group1     total 1015  61411 1013  61289.9931</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13:      m age_group1     total 1015  61411 1013  61289.9931</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14:   male       ag1a     total 1015  61411 1013  61289.9931</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15:      m       ag1a     total 1015  61411 1013  61289.9931</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16:   male age_group2     total  571  34588  572  34648.5744</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17:      m age_group2     total  571  34588  572  34648.5744</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18:   male       ag2a     total  571  34588  572  34648.5744</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19:      m       ag2a     total  571  34588  572  34648.5744</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20:   male age_group3     total  424  25925  422  25802.7123</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21:      m age_group3     total  424  25925  422  25802.7123</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22:   male age_group4     total  195  11667  196  11726.8308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23:      m age_group4     total  195  11667  196  11726.8308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24:   male age_group5     total   84   5026   84   5026.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25:      m age_group5     total   84   5026   84   5026.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26:   male age_group6     total    7    350    7    350.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27:      m age_group6     total    7    350    7    350.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28: female      Total     total 2284 137823 2283 137762.6572</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29:      f      Total     total 2284 137823 2283 137762.6572</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30: female age_group1     total  954  57728  954  57728.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 31:      f age_group1     total  954  57728  954  57728.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 32: female       ag1a     total  954  57728  954  57728.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 33:      f       ag1a     total  954  57728  954  57728.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 34: female age_group2     total  572  34928  571  34866.9371</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 35:      f age_group2     total  572  34928  571  34866.9371</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 36: female       ag2a     total  572  34928  571  34866.9371</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 37:      f       ag2a     total  572  34928  571  34866.9371</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 38: female age_group3     total  440  26188  442  26307.0364</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 39:      f age_group3     total  440  26188  442  26307.0364</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 40: female age_group4     total  228  13527  228  13527.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 41:      f age_group4     total  228  13527  228  13527.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 42: female age_group5     total   84   5124   84   5124.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43:      f age_group5     total   84   5124   84   5124.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 44: female age_group6     total    6    328    6    328.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 45:      f age_group6     total    6    328    6    328.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 46:  Total      Total cnt_males 2296 138967 2296 138967.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 47:  Total age_group1 cnt_males 1015  61411 1013  61289.9931</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 48:  Total       ag1a cnt_males 1015  61411 1013  61289.9931</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 49:  Total age_group2 cnt_males  571  34588  572  34648.5744</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 50:  Total       ag2a cnt_males  571  34588  572  34648.5744</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 51:  Total age_group3 cnt_males  424  25925  422  25802.7123</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 52:  Total age_group4 cnt_males  195  11667  196  11726.8308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 53:  Total age_group5 cnt_males   84   5026   84   5026.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 54:  Total age_group6 cnt_males    7    350    7    350.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 55:   male      Total cnt_males 2296 138967 2296 138967.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 56:      m      Total cnt_males 2296 138967 2296 138967.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 57:   male age_group1 cnt_males 1015  61411 1013  61289.9931</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 58:      m age_group1 cnt_males 1015  61411 1013  61289.9931</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 59:   male       ag1a cnt_males 1015  61411 1013  61289.9931</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 60:      m       ag1a cnt_males 1015  61411 1013  61289.9931</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 61:   male age_group2 cnt_males  571  34588  572  34648.5744</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 62:      m age_group2 cnt_males  571  34588  572  34648.5744</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 63:   male       ag2a cnt_males  571  34588  572  34648.5744</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 64:      m       ag2a cnt_males  571  34588  572  34648.5744</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 65:   male age_group3 cnt_males  424  25925  422  25802.7123</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 66:      m age_group3 cnt_males  424  25925  422  25802.7123</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 67:   male age_group4 cnt_males  195  11667  196  11726.8308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 68:      m age_group4 cnt_males  195  11667  196  11726.8308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 69:   male age_group5 cnt_males   84   5026   84   5026.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 70:      m age_group5 cnt_males   84   5026   84   5026.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 71:   male age_group6 cnt_males    7    350    7    350.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 72:      m age_group6 cnt_males    7    350    7    350.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 73: female      Total cnt_males    0      0    0      0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 74:      f      Total cnt_males    0      0    0      0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 75: female age_group1 cnt_males    0      0    0      0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 76:      f age_group1 cnt_males    0      0    0      0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 77: female       ag1a cnt_males    0      0    0      0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 78:      f       ag1a cnt_males    0      0    0      0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 79: female age_group2 cnt_males    0      0    0      0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 80:      f age_group2 cnt_males    0      0    0      0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 81: female       ag2a cnt_males    0      0    0      0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 82:      f       ag2a cnt_males    0      0    0      0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 83: female age_group3 cnt_males    0      0    0      0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 84:      f age_group3 cnt_males    0      0    0      0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 85: female age_group4 cnt_males    0      0    0      0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 86:      f age_group4 cnt_males    0      0    0      0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 87: female age_group5 cnt_males    0      0    0      0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 88:      f age_group5 cnt_males    0      0    0      0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 89: female age_group6 cnt_males    0      0    0      0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 90:      f age_group6 cnt_males    0      0    0      0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        sex        age     vname  uwc     wc puwc         pwc</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        sex        age     vname  uwc     wc puwc        pwc</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1:  Total      Total     total 4580 276899 4581 276959.458</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  2:  Total age_group1     total 1969 118790 1970 118850.330</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3:  Total       ag1a     total 1969 118790 1970 118850.330</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  4:  Total age_group2     total 1143  69041 1144  69101.403</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  5:  Total       ag2a     total 1143  69041 1144  69101.403</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  6:  Total age_group3     total  864  52803  866  52925.229</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  7:  Total age_group4     total  423  25708  423  25708.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  8:  Total age_group5     total  168   9868  169   9926.738</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  9:  Total age_group6     total   13    689   14    742.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10:   male      Total     total 2296 138920 2295 138859.495</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11:      m      Total     total 2296 138920 2295 138859.495</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12:   male age_group1     total 1015  61322 1015  61322.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13:      m age_group1     total 1015  61322 1015  61322.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14:   male       ag1a     total 1015  61322 1015  61322.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15:      m       ag1a     total 1015  61322 1015  61322.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16:   male age_group2     total  571  34564  571  34564.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17:      m age_group2     total  571  34564  571  34564.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18:   male       ag2a     total  571  34564  571  34564.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19:      m       ag2a     total  571  34564  571  34564.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20:   male age_group3     total  424  25800  422  25678.302</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21:      m age_group3     total  424  25800  422  25678.302</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22:   male age_group4     total  195  11941  194  11879.764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23:      m age_group4     total  195  11941  194  11879.764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24:   male age_group5     total   84   4942   85   5000.833</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25:      m age_group5     total   84   4942   85   5000.833</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26:   male age_group6     total    7    351    7    351.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27:      m age_group6     total    7    351    7    351.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28: female      Total     total 2284 137979 2284 137979.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29:      f      Total     total 2284 137979 2284 137979.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30: female age_group1     total  954  57468  954  57468.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31:      f age_group1     total  954  57468  954  57468.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32: female       ag1a     total  954  57468  954  57468.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33:      f       ag1a     total  954  57468  954  57468.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34: female age_group2     total  572  34477  572  34477.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35:      f age_group2     total  572  34477  572  34477.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36: female       ag2a     total  572  34477  572  34477.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37:      f       ag2a     total  572  34477  572  34477.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38: female age_group3     total  440  27003  442  27125.741</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39:      f age_group3     total  440  27003  442  27125.741</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40: female age_group4     total  228  13767  228  13767.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41:      f age_group4     total  228  13767  228  13767.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42: female age_group5     total   84   4926   82   4808.714</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43:      f age_group5     total   84   4926   82   4808.714</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44: female age_group6     total    6    338    6    338.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45:      f age_group6     total    6    338    6    338.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46:  Total      Total cnt_males 2296 138920 2295 138859.495</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47:  Total age_group1 cnt_males 1015  61322 1015  61322.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48:  Total       ag1a cnt_males 1015  61322 1015  61322.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49:  Total age_group2 cnt_males  571  34564  571  34564.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50:  Total       ag2a cnt_males  571  34564  571  34564.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 51:  Total age_group3 cnt_males  424  25800  422  25678.302</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 52:  Total age_group4 cnt_males  195  11941  194  11879.764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 53:  Total age_group5 cnt_males   84   4942   85   5000.833</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 54:  Total age_group6 cnt_males    7    351    7    351.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 55:   male      Total cnt_males 2296 138920 2295 138859.495</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 56:      m      Total cnt_males 2296 138920 2295 138859.495</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 57:   male age_group1 cnt_males 1015  61322 1015  61322.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 58:      m age_group1 cnt_males 1015  61322 1015  61322.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 59:   male       ag1a cnt_males 1015  61322 1015  61322.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 60:      m       ag1a cnt_males 1015  61322 1015  61322.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 61:   male age_group2 cnt_males  571  34564  571  34564.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 62:      m age_group2 cnt_males  571  34564  571  34564.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 63:   male       ag2a cnt_males  571  34564  571  34564.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 64:      m       ag2a cnt_males  571  34564  571  34564.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 65:   male age_group3 cnt_males  424  25800  422  25678.302</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 66:      m age_group3 cnt_males  424  25800  422  25678.302</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 67:   male age_group4 cnt_males  195  11941  194  11879.764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 68:      m age_group4 cnt_males  195  11941  194  11879.764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 69:   male age_group5 cnt_males   84   4942   85   5000.833</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 70:      m age_group5 cnt_males   84   4942   85   5000.833</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 71:   male age_group6 cnt_males    7    351    7    351.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 72:      m age_group6 cnt_males    7    351    7    351.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 73: female      Total cnt_males    0      0    0      0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 74:      f      Total cnt_males    0      0    0      0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 75: female age_group1 cnt_males    0      0    0      0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 76:      f age_group1 cnt_males    0      0    0      0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 77: female       ag1a cnt_males    0      0    0      0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 78:      f       ag1a cnt_males    0      0    0      0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 79: female age_group2 cnt_males    0      0    0      0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 80:      f age_group2 cnt_males    0      0    0      0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 81: female       ag2a cnt_males    0      0    0      0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 82:      f       ag2a cnt_males    0      0    0      0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 83: female age_group3 cnt_males    0      0    0      0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 84:      f age_group3 cnt_males    0      0    0      0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 85: female age_group4 cnt_males    0      0    0      0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 86:      f age_group4 cnt_males    0      0    0      0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 87: female age_group5 cnt_males    0      0    0      0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 88:      f age_group5 cnt_males    0      0    0      0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 89: female age_group6 cnt_males    0      0    0      0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 90:      f age_group6 cnt_males    0      0    0      0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        sex        age     vname  uwc     wc puwc        pwc</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># utility measures for a count variable</span></span></span>
 <span class="r-in"><span><span class="va">tab</span><span class="op">$</span><span class="fu">measures_cnts</span><span class="op">(</span>v <span class="op">=</span> <span class="st">"total"</span>, exclude_zeros <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $overview</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    noise cnt        pct</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1:    -2   3 0.06666667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:    -1   7 0.15555556</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:     0  18 0.40000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4:     1   9 0.20000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5:     2   8 0.17777778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:    -1   9 0.20000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3:     0  25 0.55555556</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4:     1   4 0.08888889</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5:     2   4 0.08888889</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $measures</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       what    d1    d2    d3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1:    Min 0.000 0.000 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  2:    Q10 0.000 0.000 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3:    Q20 0.000 0.000 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  4:    Q30 0.000 0.000 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  5:    Q40 0.600 0.000 0.004</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  6:   Mean 0.844 0.003 0.020</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  7: Median 1.000 0.002 0.021</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  8:    Q60 1.000 0.002 0.021</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  9:    Q70 1.000 0.002 0.030</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10:    Q80 2.000 0.002 0.032</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11:    Q90 2.000 0.005 0.044</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12:    Q95 2.000 0.005 0.048</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13:    Q99 2.000 0.046 0.101</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14:    Max 2.000 0.077 0.141</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       what  d1    d2    d3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1:    Min 0.0 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  2:    Q10 0.0 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3:    Q20 0.0 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  4:    Q30 0.0 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  5:    Q40 0.0 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  6:   Mean 0.6 0.004 0.020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  7: Median 0.0 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  8:    Q60 1.0 0.000 0.010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  9:    Q70 1.0 0.001 0.015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10:    Q80 1.0 0.005 0.040</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11:    Q90 2.0 0.010 0.052</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12:    Q95 2.0 0.021 0.099</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13:    Q99 2.0 0.054 0.125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14:    Max 2.0 0.077 0.136</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $cumdistr_d1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    cat cnt       pct</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:   0  18 0.4000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:   1  34 0.7555556</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:   0  25 0.5555556</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:   1  38 0.8444444</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3:   2  45 1.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $cumdistr_d2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            cat cnt       pct</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:    [0,0.02]  44 0.9777778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:    [0,0.02]  42 0.9333333</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2: (0.02,0.05]  44 0.9777778</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3:  (0.05,0.1]  45 1.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4:   (0.1,0.2]  45 1.0000000</span>
@@ -850,9 +855,9 @@ SGA <em>"Open Source tools for perturbative confidentiality methods"</em></p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $cumdistr_d3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            cat cnt       pct</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:    [0,0.02]  21 0.4666667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: (0.02,0.05]  44 0.9777778</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:  (0.05,0.1]  44 0.9777778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:    [0,0.02]  32 0.7111111</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2: (0.02,0.05]  40 0.8888889</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3:  (0.05,0.1]  42 0.9333333</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4:   (0.1,0.2]  45 1.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5:   (0.2,0.3]  45 1.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6:   (0.3,0.4]  45 1.0000000</span>
@@ -871,18 +876,18 @@ SGA <em>"Open Source tools for perturbative confidentiality methods"</em></p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># modifications for perturbed count variables</span></span></span>
 <span class="r-in"><span><span class="va">tab</span><span class="op">$</span><span class="fu">mod_cnts</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         sex        age row_nr pert       ckey  countvar</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1:  Total      Total     16    1 0.83556845     total</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2:  Total age_group1     15    0 0.43993523     total</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3:  Total       ag1a     15    0 0.43993523     total</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   4:  Total age_group2     13   -2 0.06154037     total</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   5:  Total       ag2a     13   -2 0.06154037     total</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ---                                                   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 131:      f age_group4     -1    0 0.00000000 cnt_males</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 132: female age_group5     -1    0 0.00000000 cnt_males</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 133:      f age_group5     -1    0 0.00000000 cnt_males</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 134: female age_group6     -1    0 0.00000000 cnt_males</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 135:      f age_group6     -1    0 0.00000000 cnt_males</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         sex        age row_nr pert      ckey  countvar</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1:  Total      Total     16    1 0.8095872     total</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   2:  Total age_group1     16    1 0.8112842     total</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   3:  Total       ag1a     16    1 0.8112842     total</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   4:  Total age_group2     16    1 0.8938600     total</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   5:  Total       ag2a     16    1 0.8938600     total</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ---                                                  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 131:      f age_group4     -1    0 0.0000000 cnt_males</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 132: female age_group5     -1    0 0.0000000 cnt_males</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 133:      f age_group5     -1    0 0.0000000 cnt_males</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 134: female age_group6     -1    0 0.0000000 cnt_males</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 135:      f age_group6     -1    0 0.0000000 cnt_males</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># display a summary about utility measures</span></span></span>
 <span class="r-in"><span><span class="va">tab</span><span class="op">$</span><span class="fu">summary</span><span class="op">(</span><span class="op">)</span></span></span>
@@ -890,69 +895,69 @@ SGA <em>"Open Source tools for perturbative confidentiality methods"</em></p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │Utility measures for perturbed count variables│</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └──────────────────────────────────────────────┘</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ── Distribution statistics of perturbations ────────────────────────────────────</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          countvar Min Q10  Q20 Q30 Q40   Mean Median Q60 Q70 Q80 Q90 Q95 Q99</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:          total  -2  -2 -1.0  -1   0 -0.267      0   0   0 1.0   1 1.8   2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: cnt_highincome  -3  -1 -1.0   0   0  0.156      0   1   1 1.0   2 2.0   2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:      cnt_males  -2  -2 -0.4   0   0 -0.200      0   0   0 0.2   1 1.0   1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          countvar Min Q10  Q20 Q30  Q40   Mean Median Q60 Q70 Q80 Q90 Q95  Q99</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:          total  -2  -1  0.0   0  0.0  0.067      0   0   0   1   1 1.8 2.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2: cnt_highincome  -4  -2 -1.0  -1 -0.4 -0.267      0   0   0   1   2 2.0 2.56</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3:      cnt_males  -2  -1 -0.2   0  0.0 -0.200      0   0   0   0   0 0.8 1.00</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Max</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1:   2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:   2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:   3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3:   1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ── Distance-based measures ─────────────────────────────────────────────────────</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ✔ Variable: 'total'</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       what  d1    d2    d3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1:    Min 0.0 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  2:    Q10 0.0 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3:    Q20 0.0 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  4:    Q30 0.0 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  5:    Q40 0.0 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  6:   Mean 0.6 0.004 0.020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  7: Median 0.0 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  8:    Q60 1.0 0.000 0.010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  9:    Q70 1.0 0.001 0.015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10:    Q80 1.0 0.005 0.040</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11:    Q90 2.0 0.010 0.052</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12:    Q95 2.0 0.021 0.099</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13:    Q99 2.0 0.054 0.125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14:    Max 2.0 0.077 0.136</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ✔ Variable: 'cnt_males'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       what    d1    d2    d3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  1:    Min 0.000 0.000 0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  2:    Q10 0.000 0.000 0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  3:    Q20 0.000 0.000 0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  4:    Q30 0.000 0.000 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  5:    Q40 0.600 0.000 0.004</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  6:   Mean 0.844 0.003 0.020</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  7: Median 1.000 0.002 0.021</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  8:    Q60 1.000 0.002 0.021</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  9:    Q70 1.000 0.002 0.030</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10:    Q80 2.000 0.002 0.032</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11:    Q90 2.000 0.005 0.044</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12:    Q95 2.000 0.005 0.048</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13:    Q99 2.000 0.046 0.101</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14:    Max 2.000 0.077 0.141</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ✔ Variable: 'cnt_males'</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       what d1    d2    d3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1:    Min  0 0.000 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  2:    Q10  0 0.000 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3:    Q20  0 0.000 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  4:    Q30  0 0.000 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  5:    Q40  1 0.002 0.021</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  6:   Mean  1 0.002 0.021</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  7: Median  1 0.002 0.021</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  8:    Q60  1 0.002 0.031</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  9:    Q70  2 0.002 0.031</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10:    Q80  2 0.004 0.035</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11:    Q90  2 0.005 0.041</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12:    Q95  2 0.005 0.049</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13:    Q99  2 0.005 0.049</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14:    Max  2 0.005 0.049</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  5:    Q40 0.000 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  6:   Mean 0.556 0.002 0.017</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  7: Median 0.000 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  8:    Q60 1.000 0.000 0.010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  9:    Q70 1.000 0.005 0.036</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10:    Q80 1.000 0.005 0.046</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11:    Q90 1.400 0.008 0.051</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12:    Q95 2.000 0.012 0.054</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13:    Q99 2.000 0.012 0.054</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14:    Max 2.000 0.012 0.054</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ✔ Variable: 'cnt_highincome'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       what    d1    d2    d3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1:    Min 0.000 0.000 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  2:    Q10 0.000 0.000 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3:    Q20 0.800 0.004 0.027</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  4:    Q30 1.000 0.005 0.042</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  5:    Q40 1.000 0.011 0.053</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  6:   Mean 1.125 0.044 0.098</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  7: Median 1.000 0.015 0.061</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  8:    Q60 1.000 0.020 0.078</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  9:    Q70 1.000 0.024 0.099</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10:    Q80 2.000 0.050 0.120</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11:    Q90 2.000 0.079 0.172</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12:    Q95 2.050 0.157 0.219</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13:    Q99 3.000 0.429 0.646</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14:    Max 3.000 0.429 0.646</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       what   d1    d2    d3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1:    Min 0.00 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  2:    Q10 0.00 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3:    Q20 0.00 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  4:    Q30 1.00 0.005 0.042</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  5:    Q40 1.00 0.009 0.053</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  6:   Mean 1.25 0.036 0.093</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  7: Median 1.00 0.011 0.059</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  8:    Q60 1.00 0.014 0.064</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  9:    Q70 2.00 0.018 0.085</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10:    Q80 2.00 0.098 0.193</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11:    Q90 3.00 0.133 0.250</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12:    Q95 3.05 0.143 0.280</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13:    Q99 4.00 0.143 0.320</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14:    Max 4.00 0.143 0.320</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ┌──────────────────────────────────────────────────┐</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │Utility measures for perturbed numerical variables│</span>
@@ -962,21 +967,22 @@ SGA <em>"Open Source tools for perturbative confidentiality methods"</em></p>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>no non-missing arguments to max; returning -Inf</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>no non-missing arguments to min; returning Inf</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>no non-missing arguments to max; returning -Inf</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      vname        Min        Q10        Q20        Q30        Q40    Mean</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:  expend        Inf         NA         NA         NA         NA     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:  income -68532.074 -49469.479 -29343.646 -17513.505 -11549.889 308.209</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3: savings  -6025.843  -3495.967  -2837.325  -1869.219  -1863.821 110.546</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4:   mixed        Inf         NA         NA         NA         NA     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Median       Q60       Q70       Q80       Q90       Q95       Q99</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:         NA        NA        NA        NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: -10421.815 -6220.620 18829.418 34364.656 51901.007 73956.445 73956.445</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:   -688.286   -77.206  1702.958  3062.559  4332.259  7138.597  9666.987</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4:         NA        NA        NA        NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      vname        Min        Q10        Q20        Q30        Q40      Mean</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:  expend        Inf         NA         NA         NA         NA       NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:  income -85765.981 -65313.987 -53339.784 -34542.148 -25771.174 -9305.607</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3: savings  -5144.706  -4330.484  -3036.713  -2259.886  -1722.149  -482.556</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4:   mixed        Inf         NA         NA         NA         NA       NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Median      Q60       Q70       Q80       Q90       Q95       Q99</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:         NA       NA        NA        NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2: -14814.222 3164.379 17119.926 28743.459 48383.893 66275.570 69332.730</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3:   -547.911 -517.986  1893.231  2007.668  2375.442  4762.608  7595.591</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4:         NA       NA        NA        NA        NA        NA        NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          Max</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1:      -Inf</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 73956.445</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:  9666.987</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 69637.431</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3:  7595.591</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4:      -Inf</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </div>
