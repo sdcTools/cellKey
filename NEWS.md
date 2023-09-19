@@ -1,5 +1,6 @@
 # cellKey 1.0.1
 - Updated Unit-Tests to be compatible with CRAN checks for MacOs
+- Update References in Package Vignette
 
 # cellKey 1.0.0
 - first version on CRAN
