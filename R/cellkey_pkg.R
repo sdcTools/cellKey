@@ -244,12 +244,21 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
           })
 
           all_contr_codes <- lapply(dims_info, function(x) {
-            lapply(x, function(y) {
-              list(
-                is_root = y$is_rootnode,
-                contr_codes = y$contributing_codes
+            if ("is_rootnode" %in% names(x)) {
+              res <- list()
+              res[[x$name]] <- list(
+                is_root = x$is_rootnode,
+                contr_codes = x$contributing_codes
               )
-            })
+            } else {
+              res <- lapply(x, function(y) {
+                list(
+                  is_root = y$is_rootnode,
+                  contr_codes = y$contributing_codes
+                )
+              })
+            }
+            return(res)
           })
           all_contr_codes
         }
