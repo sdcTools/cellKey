@@ -1,3 +1,6 @@
+# cellKey 1.0.1
+- Updated Unit-Tests to be compatible with CRAN checks for MacOs
+
 # cellKey 1.0.0
 - first version on CRAN
 - updated due to changes in Package `ptable`

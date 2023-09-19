@@ -14,6 +14,14 @@ ck1 <- ck_generate_rkeys(dat = x, nr_digits = 8, seed = NULL)
 ck2 <- ck_generate_rkeys(dat = x, nr_digits = 10, seed = 5)
 
 test_that("recordkeys are correctly computed", {
-  expect_equal(digest::sha1(ck1), "a291a306de5db64e3fbcb94478982733a17ede20")
-  expect_equal(digest::sha1(ck2), "5677f580e6ed9fa59ab670b0e7badc67a37bf14c")
+  expect_identical(length(ck1), 4580L)
+  expect_identical(ck1[1], 0.97131759)
+  expect_identical(ck1[4580], 0.88019983)
+  expect_identical(round(mean(ck1), digits = 3), 0.501)
+
+
+  expect_identical(length(ck2), 4580L)
+  expect_identical(ck2[1], 0.2002144526)
+  expect_identical(ck2[4580], 0.1878750164)
+  expect_identical(round(mean(ck2), digits = 3), 0.508)
 })

@@ -1,4 +1,5 @@
 context("Testing Frequency Tables")
+
 set.seed(120, sample.kind = "Reject")
 dat <- ck_create_testdata()
 
@@ -11,9 +12,11 @@ dim_sex <- hier_create(root = "Total", nodes = c("male", "female"))
 dim_age <- hier_create(root = "Total", paste0("age_group", 1:6))
 dims <- list(sex = dim_sex, age = dim_age)
 test_that("dims-hash is ok", {
-  expect_identical(digest::sha1(dim_sex), "fea2001f35be84e90b30f6773af75f03c11fbf7a")
-  expect_identical(digest::sha1(dim_age), "a7648dc3f484720911f0de0e6ac563b69fd20c42")
-  expect_identical(digest::sha1(dims), "62748837ca3246a33081dd35f50d06334caa3119")
+  expect_identical(class(dims), "list")
+  expect_identical(nrow(dim_sex), 3L)
+  expect_identical(max(dim_sex$level), 2)
+  expect_identical(nrow(dim_age), 7L)
+  expect_identical(max(dim_age$level), 2)
 })
 
 ## test generation of destatis rkeys
@@ -21,12 +24,17 @@ rk1 <- ck_generate_rkeys(dat = dat, nr_digits = 5)
 rk2 <- ck_generate_rkeys(dat = dat, nr_digits = 5)
 test_that("check rkey generation and seed is ok", {
   expect_identical(rk1, rk2)
-  expect_identical(digest::sha1(rk1), "4de74ed6170e2142ef552ee6722921db8d091d0c")
+  expect_identical(round(mean(rk1), digits = 3), 0.501)
 })
 dat$rec_key <- rk1
 test_that("checking dimension and structure of generated testdata is ok", {
-  expect_identical(digest::sha1(dat), "fb66a8be3e9044c8fecdb13c6fab5fe9ec456c25")
   expect_true(is.data.table(dat))
+  expect_identical(round(mean(dat$sampling_weight), digits = 3), 59.719)
+  expect_identical(round(mean(dat$household_weights), digits = 3), 21.834)
+
+  expect_identical(nrow(dat), 4580L)
+  expect_identical(ncol(dat), 16L)
+  expect_identical(sum(dat$sex == "male"), 2296L)
 })
 
 ## perturbation parameters for count variables
@@ -54,8 +62,13 @@ test_that("ck_params_cnts() is ok", {
 test_that("checking perturbation parameters for counts", {
   expect_is(params_cnts, "ck_params")
   expect_equal(params_cnts$type, "cnts")
-  expect_is(params_cnts$params$ptable, "data.table")
-  expect_identical(digest::sha1(params_cnts), "cedf56d7064f15e55da506b1922c4cac6035765f")
+  dt <- params_cnts$params$ptable
+  expect_is(dt, "data.table")
+  expect_identical(dim(dt), c(66L, 7L))
+  expect_identical(round(mean(dt$p), digits = 3), 0.136)
+  expect_identical(round(mean(dt$lb), digits = 3), 0.562)
+  expect_identical(round(mean(dt$ub), digits = 3), 0.698)
+  expect_identical(round(mean(dt$v), digits = 3), 1.045)
 })
 
 countvars <- NULL
@@ -79,9 +92,11 @@ expect_message(tab$perturb("total"), "Variable 'total' was already perturbed!")
 res_freqtab <- tab$freqtab("total")
 test_that("check ck_define_table() with already existing rec-keys", {
   expect_is(tab, "cellkey_obj")
+  expect_identical(dim(res_freqtab), c(21L, 7L))
   expect_identical(res_freqtab$uwc[3], 1143)
   expect_identical(res_freqtab$puwc[3], 1147)
-  expect_identical(digest::sha1(res_freqtab), "05e71f630a385f7e428ce1fec21b5f6026bb921a")
+  expect_identical(round(mean(res_freqtab$pwc), digits = 3), 52096.24)
+  expect_identical(round(mean(res_freqtab$puwc), digits = 3), 872.333)
 })
 
 dat$rec_key <- NULL
@@ -99,23 +114,71 @@ expect_message(tab$perturb("total"), "Variable 'total' was already perturbed!")
 
 test_that("ck_define_table() with new record keys is ok", {
   expect_is(tab, "cellkey_obj")
-  expect_identical(digest::sha1(tab$freqtab("total")), "05e71f630a385f7e428ce1fec21b5f6026bb921a")
+  dt <- tab$freqtab("total")
+  expect_identical(dt$uwc[3], 1143)
+  expect_identical(dt$puwc[3], 1147)
+  expect_identical(round(mean(dt$pwc), digits = 3), 52096.24)
+  expect_identical(round(mean(dt$puwc), digits = 3), 872.333)
 })
 
 freqtab <- tab$freqtab("total")
 test_that("weighted version of ck_perturb() is ok", {
-  expect_identical(digest::sha1(freqtab), "05e71f630a385f7e428ce1fec21b5f6026bb921a")
-  expect_identical(digest::sha1(tab$mod_cnts()), "ee05433bb69fbf66094cf14e5c50320b3060eab3")
+  expect_identical(freqtab$uwc[3], 1143)
+  expect_identical(freqtab$puwc[3], 1147)
+  expect_identical(round(mean(freqtab$pwc), digits = 3), 52096.24)
+  expect_identical(round(mean(freqtab$puwc), digits = 3), 872.333)
+
+  dt <- tab$mod_cnts()
+  expect_identical(dim(dt), c(21L, 6L))
+  expect_identical(round(mean(dt$ckey), digits = 3), 0.456)
+  expect_identical(round(mean(dt$pert), digits = 3), -0.048)
+  expect_identical(range(dt$row_nr), c(40, 65))
 })
 
 mm <- tab$measures_cnts("Total")
 test_that("ck_cnt_measures() [exclude_zeros = TRUE] is ok", {
-  expect_identical(digest::sha1(mm), "89f4aba98334930446c2fb97b0812b7ece98ef6d")
+  expect_identical(range(as.numeric(mm$overview$noise)), c(1, 7))
+  expect_identical(range(as.numeric(mm$overview$cnt)), c(1, 9))
+  expect_identical(round(mean(as.numeric(mm$overview$pct)), digits = 3), 0.143)
+
+  expect_identical(range(as.numeric(mm$measures$d1)), c(0, 4))
+  expect_identical(range(as.numeric(mm$measures$d2)), c(0, 0.429))
+  expect_identical(range(as.numeric(mm$measures$d3)), c(0, 0.517))
+
+  expect_identical(range(mm$cumdistr_d1$cnt), c(9L, 21L))
+  expect_identical(round(range(mm$cumdistr_d1$pct), digits = 3), c(0.429, 1))
+
+  expect_identical(range(mm$cumdistr_d2$cnt), c(19L, 21L))
+  expect_identical(round(range(mm$cumdistr_d2$pct), digits = 3), c(0.905, 1))
+
+  expect_identical(range(mm$cumdistr_d3$cnt), c(12L, 21L))
+  expect_identical(round(range(mm$cumdistr_d3$pct), digits = 3), c(0.571, 1))
+  expect_identical(mm$false_nonzero, 0L)
+  expect_identical(mm$false_zero, 0L)
+  expect_identical(mm$exclude_zeros, TRUE)
 })
 
 mm <- tab$measures_cnts("Total", exclude_zeros = FALSE)
 test_that("ck_cnt_measures() [exclude_zeros = FALSE] is ok", {
-  expect_identical(digest::sha1(mm), "9fb4ffe32ebc420d8ccecb6f3dab6e1431396fa0")
+  expect_identical(range(as.numeric(mm$overview$noise)), c(1, 7))
+  expect_identical(range(as.numeric(mm$overview$cnt)), c(1, 9))
+  expect_identical(round(mean(as.numeric(mm$overview$pct)), digits = 3), 0.143)
+
+  expect_identical(range(as.numeric(mm$measures$d1)), c(0, 4))
+  expect_identical(range(as.numeric(mm$measures$d2)), c(0, 0.429))
+  expect_identical(range(as.numeric(mm$measures$d3)), c(0, 0.517))
+
+  expect_identical(range(mm$cumdistr_d1$cnt), c(9L, 21L))
+  expect_identical(round(range(mm$cumdistr_d1$pct), digits = 3), c(0.429, 1))
+
+  expect_identical(range(mm$cumdistr_d2$cnt), c(19L, 21L))
+  expect_identical(round(range(mm$cumdistr_d2$pct), digits = 3), c(0.905, 1))
+
+  expect_identical(range(mm$cumdistr_d3$cnt), c(12L, 21L))
+  expect_identical(round(range(mm$cumdistr_d3$pct), digits = 3), c(0.571, 1))
+  expect_identical(mm$false_nonzero, 0L)
+  expect_identical(mm$false_zero, 0L)
+  expect_identical(mm$exclude_zeros, FALSE)
 })
 
 # no weights
@@ -133,8 +196,17 @@ tab$perturb("total")
 freqtab <- tab$freqtab("total")
 
 test_that("checking unweighted version of perturb()", {
-  expect_identical(digest::sha1(freqtab), "31831ab589f3bc7bdd20c4b6fd1ea1916e3edfef")
-  expect_identical(digest::sha1(tab$mod_cnts()), "ee05433bb69fbf66094cf14e5c50320b3060eab3")
+  expect_identical(dim(freqtab), c(21L, 7L))
+  expect_identical(freqtab$uwc[3], 1143)
+  expect_identical(freqtab$puwc[3], 1147)
+  expect_identical(freqtab$pwc, freqtab$puwc)
+  expect_identical(round(mean(freqtab$pwc), digits = 3), 872.333)
+
+  dt <- tab$mod_cnts()
+  expect_identical(dim(dt), c(21L, 6L))
+  expect_identical(round(mean(dt$ckey), digits = 3), 0.456)
+  expect_identical(round(mean(dt$pert), digits = 3), -0.048)
+  expect_identical(range(dt$row_nr), c(40, 65))
 })
 
 context("Testing multiple countvars")
@@ -153,16 +225,52 @@ tab <- ck_setup(
 tab$params_cnts_set(params_cnts, v = NULL)
 tab$perturb(c("total", "cnt_males", "cnt_highincome"))
 test_that("check tabulation of cnt_males is ok", {
-  expect_identical(digest::sha1(tab$freqtab("cnt_males")), "a7260c1f65a089d8849084a7e84c946be997e986")
-  expect_identical(digest::sha1(tab$measures_cnts("cnt_males")), "b692361c523b0d37aa38bf252a360414cd941e2b")
+  dt <- tab$freqtab("cnt_males")
+  expect_identical(dt$uwc[3], 571)
+  expect_identical(dt$puwc[3], 571)
+  expect_identical(round(mean(dt$pwc), digits = 3), 25757.65)
+  expect_identical(round(mean(dt$puwc), digits = 3), 437.048)
+
+  expect_identical(round(range(dt$puwc), digits = 3), c(0, 2297))
+  expect_identical(round(range(dt$pwc), digits = 3), c(0, 135387.941))
+
+  mm <- tab$measures_cnts("cnt_males")
+  expect_identical(round(range(mm$overview$pct), digits = 3), c(0.095, 0.810))
+  expect_identical(round(range(mm$measures$d1), digits = 3), c(0, 4))
+  expect_identical(round(range(mm$measures$d2), digits = 3), c(0, 0.048))
+  expect_identical(round(range(mm$measures$d3), digits = 3), c(0, 0.221))
 })
 
 test_that("check tabulation of cnt_highincome is ok", {
-  expect_identical(digest::sha1(tab$freqtab("cnt_highincome")), "72c684edc0cebef0343bce02d0075050d5286a5c")
-  expect_identical(digest::sha1(tab$measures_cnts("cnt_highincome")), "639f20e406ecfdd44c84e0ae04674321c2a602b1")
+  dt <- tab$freqtab("cnt_highincome")
+  expect_identical(dt$uwc[3], 123)
+  expect_identical(dt$puwc[3], 123)
+  expect_identical(round(mean(dt$pwc), digits = 3), 5063.68)
+  expect_identical(round(mean(dt$puwc), digits = 3), 84.286)
+
+  expect_identical(round(range(dt$puwc), digits = 3), c(0, 444))
+  expect_identical(round(range(dt$pwc), digits = 3), c(0, 26671.928))
+
+  mm <- tab$measures_cnts("cnt_highincome")
+  expect_identical(round(range(mm$overview$pct), digits = 3), c(0.048, 0.667))
+  expect_identical(round(range(mm$measures$d1), digits = 3), c(0, 3))
+  expect_identical(round(range(mm$measures$d2), digits = 3), c(0, 0.158))
+  expect_identical(round(range(mm$measures$d3), digits = 3), c(0, 0.359))
 })
 
 test_that("check tabulation of multiple count variables is ok", {
-  tt <- tab$freqtab(c("total", "cnt_males", "cnt_highincome"))
-  expect_identical(digest::sha1(tt), "1984413d2bb4ebff2d268b243b300cd8494b55fb")
+  dt <- tab$freqtab(c("total", "cnt_males", "cnt_highincome"))
+  expect_identical(dim(dt), c(63L, 7L))
+  expect_identical(dt$uwc[3], 1143)
+  expect_identical(dt$puwc[3], 1148)
+  expect_identical(round(mean(dt$pwc), digits = 3), 27640.21)
+  expect_identical(round(mean(dt$puwc), digits = 3), 464.587)
+  expect_identical(round(range(dt$puwc), digits = 3), c(0, 4582))
+  expect_identical(round(range(dt$pwc), digits = 3), c(0, 273633.438))
+
+  mm <- tab$measures_cnts("cnt_highincome")
+  expect_identical(round(range(mm$overview$pct), digits = 3), c(0.048, 0.667))
+  expect_identical(round(range(mm$measures$d1), digits = 3), c(0, 3))
+  expect_identical(round(range(mm$measures$d2), digits = 3), c(0, 0.158))
+  expect_identical(round(range(mm$measures$d3), digits = 3), c(0, 0.359))
 })

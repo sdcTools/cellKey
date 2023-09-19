@@ -24,8 +24,13 @@ x$rkey <- ck_generate_rkeys(dat = x, nr_digits = 8)
 
 test_that("checking dimension and structure of generated testdata is ok", {
   expect_true(is.data.table(x))
-  expect_identical(digest::sha1(x), "4c804693f7d573e9dfa24bcc312ba2b61b490ada")
-  expect_identical(digest::sha1(dims), "62748837ca3246a33081dd35f50d06334caa3119")
+  expect_identical(dim(x), c(4580L, 21L))
+  expect_identical(round(mean(x$rkey), digits = 3), 0.5)
+  expect_identical(round(mean(x$household_weights), digits = 3), 21.834)
+  expect_identical(range(x$mixed), c(-20L, 10L))
+  expect_identical(sum(x$cnt_males), 2296)
+  expect_identical(sum(x$cnt_females), 2284)
+  expect_identical(sum(x$cnt_highincome), 445)
 })
 
 ## perturbation parameters for count variables
@@ -85,7 +90,27 @@ p2 <- ck_params_nums(
 test_that("checking perturbation parameters", {
   expect_is(p1, "ck_params")
   expect_equal(p1$type, "params_m_flex")
-  expect_identical(digest::sha1(p1), "53299f7eab1d919060e12311955ed3eb02f0b38b")
+
+  pp <- p1$params
+
+  expect_identical(pp$type, "top_contr")
+  expect_identical(pp$top_k, 3)
+  expect_identical(dim(pp$ptab), c(96L, 7L))
+  expect_identical(round(mean(pp$ptab$p), digits = 3), 0.042)
+
+  expect_identical(pp$mu_c, 2.5)
+  expect_identical(pp$m_fixed_sq, NA)
+  expect_identical(pp$zs, 0)
+  expect_identical(pp$E, 1.34)
+  expect_identical(pp$mult_params$fp, 1000)
+  expect_identical(pp$mult_params$p_small, 0.2)
+  expect_identical(pp$mult_params$p_large, 0.03)
+  expect_identical(pp$mult_params$epsilon, c(1, 0.5, 0.3))
+
+  expect_identical(pp$same_key, FALSE)
+  expect_identical(pp$use_zero_rkeys, TRUE)
+  expect_identical(pp$even_odd, FALSE)
+  expect_identical(pp$separation, FALSE)
 })
 
 # set up problem
@@ -114,8 +139,23 @@ expect_message(tab$perturb("income"), "Numeric variable 'income' was perturbed."
 expect_message(tab$perturb("savings"), "Numeric variable 'savings' was perturbed.")
 
 test_that("variable was correctly perturbed", {
-  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = FALSE)), "29eec69ec43987831d951b7e6ecd4d423b27f5e2")
-  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = FALSE)), "77abfc53132ec03b5a523764eefb52e00dca897f")
-  expect_equal(digest::sha1(tab$numtab("income", mean_before_sum = TRUE)), "98f4cdbe6b4b362aa0b9ab31337fc39c4d807c1e")
-  expect_equal(digest::sha1(tab$numtab("savings", mean_before_sum = TRUE)), "39a0fa3ddfd8b45778549711d9f9f58c843b0912")
+  dt <- tab$numtab("income", mean_before_sum = FALSE)
+  expect_identical(dim(dt), c(21L, 6L))
+  expect_equal(round(mean(dt$pws), digits = 3), 13181967.1)
+  expect_equal(round(mean(dt$ws), digits = 3), 13184145.52)
+
+  dt <- tab$numtab("savings", mean_before_sum = FALSE)
+  expect_identical(dim(dt), c(21L, 6L))
+  expect_equal(round(mean(dt$pws), digits = 3), 1306306.6)
+  expect_equal(round(mean(dt$ws), digits = 3), 1306303.048)
+
+  dt <- tab$numtab("income", mean_before_sum = TRUE)
+  expect_identical(dim(dt), c(21L, 6L))
+  expect_equal(round(mean(dt$pws), digits = 3), 13179895.45)
+  expect_equal(round(mean(dt$ws), digits = 3), 13184145.52)
+
+  dt <- tab$numtab("savings", mean_before_sum = TRUE)
+  expect_identical(dim(dt), c(21L, 6L))
+  expect_equal(round(mean(dt$pws), digits = 3), 1306310.272)
+  expect_equal(round(mean(dt$ws), digits = 3), 1306303.048)
 })
