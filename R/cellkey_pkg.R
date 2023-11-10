@@ -341,74 +341,78 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
         return(res)
       }
 
-      #contr_indices <- sdcTable::contributing_indices(
-      contr_indices <- .contributing_indices_tmp(
-        prob = prob,
-        ids = NULL)
+      if (length(numvars) == 0) {
+        ck_log("no numerical variables were defined in `ck_setup()`, ",
+        "therefore no contributing indices need to be computed.")
+        max_contributions <- contr_indices <- NULL
+      } else {
+        ck_log("compute contributing indices for (sub)-totals")
+        contr_indices <- sdcTable::contributing_indices(
+         prob = prob, ids = NULL
+        )
+        ck_log("find top k contributors for each cell and numerical variable")
 
-      ck_log("find top k contributors for each cell and numerical variable")
+        # finding top_k contributors for each cell and numerical variable
+        microdat <- prob@dataObj@rawData[, c(names(dims), numvars, wvar), with = FALSE]
+        microdat$.tmpid <- seq_len(nrow(x))
 
-      # finding top_k contributors for each cell and numerical variable
-      microdat <- prob@dataObj@rawData[, c(names(dims), numvars, wvar), with = FALSE]
-      microdat$.tmpid <- seq_len(nrow(x))
+        # perhaps c++?
+        # for each numerical variable and each cell, get the top_k contributions
+        # along with its ids and its values
+        .get_max_contributions <- function(indices, microdat, wvar, nv, top_k) {
+          res <- vector("list", length = length(indices))
+          names(res) <- names(indices)
 
-      # perhaps c++?
-      # for each numerical variable and each cell, get the top_k contributions
-      # along with its ids and its values
-      .get_max_contributions <- function(indices, microdat, wvar, nv, top_k) {
-        res <- vector("list", length = length(indices))
-        names(res) <- names(indices)
-
-        # we have no numerical-variables -> return empty list
-        if (length(nv) == 0) {
-          return(res)
-        }
-
-        for (i in seq_len(length(res))) {
-          out <- vector("list", length = length(nv))
-          names(out) <- nv
-          xx <- subset(microdat, .tmpid %in% indices[[i]])
-          top_k <- min(top_k, nrow(xx))
-          for (v in nv) {
-            xx$.tmpordervar <- abs(xx[[v]])
-            xx$.tmpweightvar <- xx[[v]] * xx[[wvar]]
-            setorderv(xx, c(".tmpordervar", wvar), order = c(-1L, -1L))
-            if (nrow(xx) == 0) {
-              out[[v]]$uw_vals <- out[[v]]$w_vals <- 0
-              out[[v]]$uw_ids <- out[[v]]$w_ids <- NA
-              out[[v]]$uw_spread <- out[[v]]$w_spread <- 0
-              out[[v]]$uw_sum <- out[[v]]$w_sum <- 0
-              out[[v]]$uw_mean <- out[[v]]$w_mean <- 0
-            } else {
-              out[[v]]$uw_vals <- xx[[v]][1:top_k]
-              out[[v]]$uw_ids <- out[[v]]$w_ids <- xx$.tmpid[1:top_k]
-              out[[v]]$uw_spread <- diff(range(xx[[v]], na.rm = TRUE))
-              out[[v]]$uw_sum <- sum(xx[[v]], na.rm = TRUE)
-              out[[v]]$uw_mean <- out[[v]]$uw_sum / nrow(xx)
-              out[[v]]$w_vals <- xx$.tmpweightvar[1:top_k]
-              out[[v]]$w_spread <- diff(range(xx[[v]], na.rm = TRUE))
-              out[[v]]$w_sum <- sum(xx$.tmpweightvar, na.rm = TRUE)
-              out[[v]]$w_mean <- out[[v]]$w_sum / sum(xx[[wvar]], na.rm = TRUE)
-            }
-            # we compute if the number of contributors to the cell
-            # is even or odd. This information can later be used if
-            # we have different ptables (parity-case)
-            out[[v]]$even_contributors <- nrow(xx) %% 2 == 0
+          # we have no numerical-variables -> return empty list
+          if (length(nv) == 0) {
+            return(res)
           }
-          res[[i]] <- out
+
+          for (i in seq_len(length(res))) {
+            out <- vector("list", length = length(nv))
+            names(out) <- nv
+            xx <- subset(microdat, .tmpid %in% indices[[i]])
+            top_k <- min(top_k, nrow(xx))
+            for (v in nv) {
+              xx$.tmpordervar <- abs(xx[[v]])
+              xx$.tmpweightvar <- xx[[v]] * xx[[wvar]]
+              setorderv(xx, c(".tmpordervar", wvar), order = c(-1L, -1L))
+              if (nrow(xx) == 0) {
+                out[[v]]$uw_vals <- out[[v]]$w_vals <- 0
+                out[[v]]$uw_ids <- out[[v]]$w_ids <- NA
+                out[[v]]$uw_spread <- out[[v]]$w_spread <- 0
+                out[[v]]$uw_sum <- out[[v]]$w_sum <- 0
+                out[[v]]$uw_mean <- out[[v]]$w_mean <- 0
+              } else {
+                out[[v]]$uw_vals <- xx[[v]][1:top_k]
+                out[[v]]$uw_ids <- out[[v]]$w_ids <- xx$.tmpid[1:top_k]
+                out[[v]]$uw_spread <- diff(range(xx[[v]], na.rm = TRUE))
+                out[[v]]$uw_sum <- sum(xx[[v]], na.rm = TRUE)
+                out[[v]]$uw_mean <- out[[v]]$uw_sum / nrow(xx)
+                out[[v]]$w_vals <- xx$.tmpweightvar[1:top_k]
+                out[[v]]$w_spread <- diff(range(xx[[v]], na.rm = TRUE))
+                out[[v]]$w_sum <- sum(xx$.tmpweightvar, na.rm = TRUE)
+                out[[v]]$w_mean <- out[[v]]$w_sum / sum(xx[[wvar]], na.rm = TRUE)
+              }
+              # we compute if the number of contributors to the cell
+              # is even or odd. This information can later be used if
+              # we have different ptables (parity-case)
+              out[[v]]$even_contributors <- nrow(xx) %% 2 == 0
+            }
+            res[[i]] <- out
+          }
+          res
         }
-        res
+
+        # top_k is hardcoded to 6;
+        # this is the maximum allowed value for top_k, also in params_nums()
+        max_contributions <- .get_max_contributions(
+          indices = contr_indices,
+          microdat = microdat,
+          nv = numvars,
+          wvar = wvar,
+          top_k = 6)
       }
-
-      # top_k is hardcoded to 6;
-      # this is the maximum allowed value for top_k, also in params_nums()
-      max_contributions <- .get_max_contributions(
-        indices = contr_indices,
-        microdat = microdat,
-        nv = numvars,
-        wvar = wvar,
-        top_k = 6)
-
       res <- tab[, c("strID", "freq", dimvars, "is_bogus", nv), with = FALSE]
       cols_ck <- gen_vnames(c("total", countvars), prefix = "ck")
 
