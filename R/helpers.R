@@ -76,7 +76,7 @@ get_distr_vals <- function(dd) {
 }
 ck_log <- function(..., br = TRUE) {
   if (.ck_debug()) {
-    message(...,  appendLF = br)
+    message("[", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "] ", ...,  appendLF = br)
   }
 }
 
