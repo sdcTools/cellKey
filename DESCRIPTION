@@ -1,6 +1,6 @@
 Package: cellKey
 Type: Package
-Date: 2023-11-10
+Date: 2023-11-24
 Title: Consistent Perturbation of Statistical Frequency- And Magnitude Tables
 Version: 1.0.2
 Authors@R: c(
