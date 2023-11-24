@@ -1,7 +1,7 @@
 ---
 title: "Introduction to the cellKey-Package"
 author: "Bernhard Meindl"
-date: "2023-11-24"
+date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
   toc: true
@@ -13,10 +13,12 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-
+```{r, echo=FALSE}
+library(rmarkdown)
+```
 
 ## About the cellKey package
-This package implements methods to provide perturbation for statistical tables. The implementation if greatly inspired by the the paper *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar). This approach however was generalized and a new specification on how record keys are specified and the lookup-tables are defined is used. This package makes usage of perturbation tables that can be defined in the [**ptable**](https://github.com/sdcTools/ptable) package. This document describes the usage of version `1.0.2` of the package.
+This package implements methods to provide perturbation for statistical tables. The implementation if greatly inspired by the the paper *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar). This approach however was generalized and a new specification on how record keys are specified and the lookup-tables are defined is used. This package makes usage of perturbation tables that can be defined in the [**ptable**](https://github.com/sdcTools/ptable) package. This document describes the usage of version ``r packageVersion("cellKey")`` of the package.
 
 ## Main Features
 In the **cellKey** package it is possible to pertub multidimensional count and magnitude tables. Functionality to generate suitable record keys is provided in function `ck_generate_rkeys()`. Using sha1-checksums on the input datasets, we can make sure that the same record keys are generated whenever the same input data set is used for which record keys should be generated. However, it is also possible of course to use already pre-generated record keys available as variable in the microdata set.
@@ -29,16 +31,14 @@ What is left is of course identifying bugs and issues and also to optimize perfo
 We now show the capabilities of the **cellKey** package by running an example that 
 
 ### Load the Package
-
-
-
-```r
+```{r, include = FALSE, echo = TRUE}
 library(cellKey)
 packageVersion("cellKey")
 ```
 
-```
-## [1] '1.0.2'
+```{r, echo = TRUE}
+library(cellKey)
+packageVersion("cellKey")
 ```
 
 The first step in this approach is to generate a statistical table, which can be achieved using `ck_setup`. This function generates an object that contains all the information required to perturb count- (and optionally continuously scaled) variables. There are however a few inputs that `ck_setup()` requires and that need to be generated beforehand. These inputs are:
@@ -54,8 +54,7 @@ We continue to show how to generate the required inputs. The first step is to pr
 
 ### Specifying inputdata
 The testdata set we are using in this example contains information on person-level along with sampling weights as well as some categorical and continuously scaled variables. We also compute some binary variables for which we also want to create perturbed tables. 
-
-```r
+```{r}
 dat <- ck_create_testdata()
 dat <- dat[, c("sex", "age", "savings", "income", "sampling_weight")]
 dat[, cnt_highincome := ifelse(income >= 9000, 1, 0)]
@@ -63,20 +62,9 @@ dat[, cnt_highincome := ifelse(income >= 9000, 1, 0)]
 
 We are now adding record keys (which will be referenced later) with 7 digits to the data set using function `ck_generate_rkeys` as shown below:
 
-
-```r
+```{r}
 dat$rkeys <- ck_generate_rkeys(dat = dat, nr_digits = 7)
 print(head(dat))
-```
-
-```
-##       sex        age savings income sampling_weight cnt_highincome     rkeys
-## 1:   male age_group3      12   5780              57              0 0.6705526
-## 2: female age_group3      28   2530              63              0 0.0357946
-## 3:   male age_group1     550   6920              35              0 0.1339016
-## 4:   male age_group1     870   7960              81              0 0.9849310
-## 5:   male age_group4      20   9030              93              1 0.2941448
-## 6: female age_group3     102   3290              75              0 0.7070011
 ```
 
 To ensure that the same record keys are computed each and every time for the same data set, a seed based on the sha1-hash of the input dataset is computed by default in `ck_generate_rkeys`. This seed is used before sampling the record keys and may be overwritten using the `seed` argument.
@@ -86,49 +74,29 @@ The goal of this introduction is to create a perturbed table of counts of variab
 ### Specifying dimensions
 It is required to define hierarchies for each of the classifying variables of the desired table. There are two ways how the hierarchical structure of these variables (including sub-totals) can be specified. One way is to use `"@; value` format as (also) used in [**sdcTable**](https://cran.r-project.org/package=sdcTable). We would suggest however, to use the second alternative which is using functionality from package [**sdcHierarchies**](https://cran.r-project.org/package=sdcHierarchies). In this vignette, we only show the preferred way to generate hierarchies for categorical variables `age` and `sex` below:
 
-
-```r
+```{r}
 dim_sex <- hier_create(root = "Total", nodes = c("male", "female"))
 hier_display(dim_sex)
 ```
 
-```
-## Total
-## ├─male
-## └─female
-```
-
 For variable `age` the process is very much the same:
-
-```r
+```{r}
 dim_age <- hier_create(root = "Total", nodes = paste0("age_group", 1:6))
 hier_display(dim_age)
-```
-
-```
-## Total
-## ├─age_group1
-## ├─age_group2
-## ├─age_group3
-## ├─age_group4
-## ├─age_group5
-## └─age_group6
 ```
 
 The idea of [**sdcHierarchies**](https://github.com/bernhard-da/sdcHierarchies) is to create a tree object using `hier_create()` and then add (using `hier_add()`), delete (with `hier_delete()`) or rename (using `hier_rename()`) elements from this hierarchical structure. For more examples have a look at the package vignette of the package which can be accessed with `sdcHierarchies::hier_vignette()`. [**sdcHierarchies**](https://github.com/bernhard-da/sdcHierarchies) also contains a shiny-based app that can be called with `hier_app()` which allows to interactively change and modify a hierarchy and allows to convert tree- and data.frame based inputs into various formats. For more information, have a look at `?hier_app` and the other help-files of the package.
 
 After all dimensions have been specified, these inputs must then be combined into a named list. In this object, the list-names refer to variable names of the input data set and the elements the data objects that hold the hierarchy specification itself. This is why the list elements of `dims` in this example have to be named `sex` and `age` as the specification refers to variables `age` and `sex` in input set `dat`.
 
-
-```r
+```{r}
 dims <- list(sex = dim_sex, age = dim_age)
 ```
 
 ### Setup a table instance
 We now have prepared the inputs and can define a generic statistical table using `ck_setup()` as shown below:
 
-
-```r
+```{r}
 tab <- ck_setup(
   x = dat,
   rkey = "rkeys",
@@ -138,29 +106,12 @@ tab <- ck_setup(
   numvars = c("income", "savings"))
 ```
 
-```
-## computing contributing indices | rawdata <--> table; this might take a while
-```
-
 `ck_setup()` returns a `R6` class object that contains not only the relevant data but also all available methods. Thus, it is not required to assign the results of such methods to new objects, instead, the object itself is automatically updated.
 
 These objects also have a custom print method, showing some general information about the object:
 
-
-```r
+```{r}
 print(tab)
-```
-
-```
-## ── Table Information ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-## ✔ 21 cells in 2 dimensions ('sex', 'age')
-## ✔ weights: yes
-## ── Tabulated / Perturbed countvars ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-## ☐ 'total'
-## ☐ 'cnt_highincome'
-## ── Tabulated / Perturbed numvars ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-## ☐ 'income'
-## ☐ 'savings'
 ```
 
 
@@ -168,8 +119,7 @@ print(tab)
 #### Perturbation parameters for count variables
 The next task is to define parameters that are used to perturb count variables which can be achieved with `ck_params_cnts`. This function requires as input the result of either `pt_create_pParams`, `pt_create_pTable` or `create_cnt_ptable` from the [**ptable**](https://github.com/sdcTools/ptable) package. Please refer also to the documentation of this package for information on the required parameters. In this example we are going to use - amongst others - exemplary ptables that can are provided by the `ptable`-pkg for demonstration purposes:
 
-
-```r
+```{r, message=FALSE, message=FALSE}
 # two different perturbation parameter sets from the ptable-pkg
 # an example ptable provided directly
 ptab1 <- ptable::pt_ex_cnts()
@@ -182,31 +132,19 @@ para2 <- ptable::create_cnt_ptable(
 
 We then need to create the required inputs for the cellKey package.
 
-
-```r
+```{r}
 p_cnts1 <- ck_params_cnts(ptab = ptab1)
 p_cnts2 <- ck_params_cnts(ptab = para2)
 ```
 
 `ck_params_cnts()` returns objects that can be used as inputs in method `params_cnts_set()`. In argument `v` one may specify count variables for which the supplied perturbation parameters should be used. If `v` is not specified, the perturbation parameters are used for all count variables. 
 
-
-```r
+```{r}
 # use `p_cnts1` for variable "total" (which always exists)
 tab$params_cnts_set(val = p_cnts1, v = "total")
-```
 
-```
-## --> setting perturbation parameters for variable 'total'
-```
-
-```r
 # use `p_cnts2` for "cnt_highincome"
 tab$params_cnts_set(val = p_cnts2, v = "cnt_highincome")
-```
-
-```
-## --> setting perturbation parameters for variable 'cnt_highincome'
 ```
 
 It is therefore entirely possible to use different parameter sets for different variables. Modifying perturbation parameters for some variables is easy, too. It is only required to apply the `params_cnts_set()`-method again which will replace any previously defined parameters.
@@ -220,8 +158,7 @@ The underlying framework on how to perturb continuous tables differs from the pr
 - `p`: numeric vector of length `2` with `p[1] > p[2]` where both elements specify a percentage. The first value refers to the desired maximum perturbation percentage for small cells (depending on fp) while the second element refers to the desired maximum perturbation percentage for large cells.
 - `epsilon`: a numeric vector in descending order with all values in `[0; 1]` and with the first element forced to equal `1`. The length of this parameter must correspond with the number of `top_k` specified in `ck_params_nums()` (which will be discussed later). 
 
-
-```r
+```{r}
 # parameters for the flex-function
 p_flex <- ck_flexparams(
   fp = 1000,
@@ -239,8 +176,7 @@ In the [**cellKey**](https://github.com/sdcTools/cellKey) package it is possible
 
 Another, more basic approach, is to use a constant perturbation magnitude for all cells, independent on their (weighted) values. The required parameters can be defined with `ck_simpleparams()` as shown below:
 
-
-```r
+```{r}
 # parameters for the simple approach
 p_simple <- ck_simpleparams(
   p = 0.05,
@@ -264,15 +200,13 @@ A very important parameter is `ptab` which actually holds the perturbation table
 
 Please note, that if the goal is to have different perturbation tables for cells with an even/odd number of contributors, both `"even"` or `"odd"` must be available in the input list. In the chunk below we create four different perturbation tables. For details on the parameters, please look at the documentation of the [`ptable`](https://github.com/sdcTools/ptable) package, especially in `ptable::create_num_ptable()`.
 
-
-```r
+```{r}
 # same ptable for all cells except for very small ones
 ex_ptab1 <- ptable::pt_ex_nums(parity = TRUE, separation = TRUE)
 ```
 
 We can now use these tables to finally create objects containing all the required information to create perturbed magnitude tables using `ck_params_nums`. In the first case we want the same perturbation table (`ptab_all`) for cells with an even/odd number of contributors but want to use `ptab_sc` for very small cells. 
-
-```r
+```{r}
 p_nums1 <- ck_params_nums(
   type = "top_contr",
   top_k = 3,
@@ -285,15 +219,13 @@ p_nums1 <- ck_params_nums(
 
 The second input we generate should use different ptables for cells with an even/odd number of contributing units (`ptab_even` and `ptab_odd`) but should not use a specific perturbation table for very small cells.
 
-
-```r
+```{r}
 ex_ptab2 <- ptable::pt_ex_nums(parity = FALSE, separation = FALSE)
 ```
 
 As above, we need to use `ck_params_nums()` to compute suitable inputs.
 
-
-```r
+```{r}
 p_nums2 <- ck_params_nums(
   type = "mean",
   ptab = ex_ptab2,
@@ -307,21 +239,9 @@ The package internally computes the separation point that is used for very small
 
 Now we can attach the results from `ck_params_nums()` to numeric variables using the `params_nums_set()`-method as shown below:
 
-
-```r
+```{r}
 tab$params_nums_set(v = "income", val = p_nums1)
-```
-
-```
-## --> setting perturbation parameters for variable 'income'
-```
-
-```r
 tab$params_nums_set(v = "savings", val = p_nums1)
-```
-
-```
-## --> setting perturbation parameters for variable 'savings'
 ```
 
 In order to make use of parameter `mu_c` that allows ab add extra amount of protection to sensitive cells, one may identify sensitive cells according to some rules. The following methods to identify sensitive cells are implemented:
@@ -335,13 +255,8 @@ In order to make use of parameter `mu_c` that allows ab add extra amount of prot
 
 We now want to set all cells for variable `income` as sensitive to which less than `15` units contribute.
 
-
-```r
+```{r, eval = TRUE}
 tab$supp_freq(v = "income", n = 15, weighted = FALSE)
-```
-
-```
-## freq-rule: 3 new sensitive cells (incl. duplicates) found (total: 3)
 ```
 
 
@@ -352,8 +267,7 @@ To set specific cells independent on values but their names, one may use the `$s
 - `male` x any age group available in the data
 
 
-
-```r
+```{r, eval = FALSE}
 inp <- data.frame(
   "sex" = c("female", "male", "male"),
   "age" = c("age_group1", "age_group3", NA)
@@ -366,32 +280,14 @@ It is now possible to finally perturbed variables using the `perturb()`-method. 
 
 - `v`: a character vector specifying one or more variables that should be perturbed.
 
-
-```r
+```{r}
 tab$perturb(v = "total")
-```
-
-```
-## Count variable 'total' was perturbed.
 ```
 
 After this call, object `tab` is updated and contains now also perturbed values for variable `total`. We note that no explicit assignment is required. The following code shows that we also can perturb cnt- and numerical variables in one single call.
 
-
-```r
+```{r}
 tab$perturb(v = c("cnt_highincome", "savings", "income"))
-```
-
-```
-## Count variable 'cnt_highincome' was perturbed.
-```
-
-```
-## Numeric variable 'savings' was perturbed.
-```
-
-```
-## Numeric variable 'income' was perturbed.
 ```
 
 A `data.table` containing original and perturbed values can now be extracted using the `freqtab()`- and `numtab()` methods as discussed next.
@@ -411,56 +307,8 @@ The method returns a `data.table` with all combinations of the dimensional varia
 - `puwc`: perturbed unweighted counts
 - `pwc`: perturbed weighted counts
 
-
-```r
+```{r}
 tab$freqtab(v = c("total", "cnt_highincome"))
-```
-
-```
-##        sex        age          vname  uwc     wc puwc         pwc
-##  1:  Total      Total          total 4580 275982 4578 275861.4838
-##  2:  Total age_group1          total 1969 119446 1968 119385.3367
-##  3:  Total age_group2          total 1143  68235 1144  68294.6982
-##  4:  Total age_group3          total  864  52074  863  52013.7292
-##  5:  Total age_group4          total  423  25034  422  24974.8180
-##  6:  Total age_group5          total  168  10226  168  10226.0000
-##  7:  Total age_group6          total   13    967   12    892.6154
-##  8:   male      Total          total 2296 138348 2296 138348.0000
-##  9:   male age_group1          total 1015  61597 1017  61718.3734
-## 10:   male age_group2          total  571  33355  572  33413.4151
-## 11:   male age_group3          total  424  25776  424  25776.0000
-## 12:   male age_group4          total  195  11749  194  11688.7487
-## 13:   male age_group5          total   84   5349   84   5349.0000
-## 14:   male age_group6          total    7    522    7    522.0000
-## 15: female      Total          total 2284 137634 2284 137634.0000
-## 16: female age_group1          total  954  57849  953  57788.3616
-## 17: female age_group2          total  572  34880  570  34758.0420
-## 18: female age_group3          total  440  26298  440  26298.0000
-## 19: female age_group4          total  228  13285  226  13168.4649
-## 20: female age_group5          total   84   4877   86   4993.1190
-## 21: female age_group6          total    6    445    6    445.0000
-## 22:  Total      Total cnt_highincome  445  27091  443  26969.2427
-## 23:  Total age_group1 cnt_highincome  192  11811  192  11811.0000
-## 24:  Total age_group2 cnt_highincome  123   7279  120   7101.4634
-## 25:  Total age_group3 cnt_highincome   82   5136   82   5136.0000
-## 26:  Total age_group4 cnt_highincome   34   2133   36   2258.4706
-## 27:  Total age_group5 cnt_highincome   14    732   13    679.7143
-## 28:  Total age_group6 cnt_highincome    0      0    0      0.0000
-## 29:   male      Total cnt_highincome  219  13013  219  13013.0000
-## 30:   male age_group1 cnt_highincome   90   5414   94   5654.6222
-## 31:   male age_group2 cnt_highincome   66   3743   66   3743.0000
-## 32:   male age_group3 cnt_highincome   41   2486   41   2486.0000
-## 33:   male age_group4 cnt_highincome   15    961   17   1089.1333
-## 34:   male age_group5 cnt_highincome    7    409    7    409.0000
-## 35:   male age_group6 cnt_highincome    0      0    0      0.0000
-## 36: female      Total cnt_highincome  226  14078  227  14140.2920
-## 37: female age_group1 cnt_highincome  102   6397  102   6397.0000
-## 38: female age_group2 cnt_highincome   57   3536   58   3598.0351
-## 39: female age_group3 cnt_highincome   41   2650   42   2714.6341
-## 40: female age_group4 cnt_highincome   19   1172   15    925.2632
-## 41: female age_group5 cnt_highincome    7    323    7    323.0000
-## 42: female age_group6 cnt_highincome    0      0    0      0.0000
-##        sex        age          vname  uwc     wc puwc         pwc
 ```
 
 #### Obtain perturbed tables for magnitude tables
@@ -473,129 +321,16 @@ Using the `numtab()`-method allows to extract results for continuous variables. 
 
 We now have a look at the results of the variables `savings` and `income` that we already have perturbed.
 
-
-```r
+```{r}
 tab$numtab(v = c("savings", "income"))
-```
-
-```
-##        sex        age   vname      uws         ws          pws
-##  1:  Total      Total savings  2273532  138166346  138166924.9
-##  2:  Total age_group1 savings   982386   60171300   60172051.2
-##  3:  Total age_group2 savings   552336   33312736   33311653.4
-##  4:  Total age_group3 savings   437101   26261183   26264415.9
-##  5:  Total age_group4 savings   214661   12937274   12935793.6
-##  6:  Total age_group5 savings    80451    4988523    4984467.5
-##  7:  Total age_group6 savings     6597     495330     496738.1
-##  8:   male      Total savings  1159816   70528606   70525105.2
-##  9:   male age_group1 savings   517660   31738679   31741936.3
-## 10:   male age_group2 savings   280923   16655873   16668562.8
-## 11:   male age_group3 savings   214970   13142789   13148709.2
-## 12:   male age_group4 savings    99420    6029194    6040481.6
-## 13:   male age_group5 savings    43233    2703643    2699243.4
-## 14:   male age_group6 savings     3610     258428     256360.6
-## 15: female      Total savings  1113716   67637740   67633186.4
-## 16: female age_group1 savings   464726   28432621   28431887.0
-## 17: female age_group2 savings   271413   16656863   16656779.8
-## 18: female age_group3 savings   222131   13118394   13117084.5
-## 19: female age_group4 savings   115241    6908080    6908527.0
-## 20: female age_group5 savings    37218    2284880    2285759.5
-## 21: female age_group6 savings     2987     236902     231994.3
-## 22:  Total      Total  income 22952978 1383445632 1383452773.6
-## 23:  Total age_group1  income  9810547  595005901  595007699.0
-## 24:  Total age_group2  income  5692119  340608263  340599838.0
-## 25:  Total age_group3  income  4406946  266041766  266036662.8
-## 26:  Total age_group4  income  2133543  125501283  125497838.2
-## 27:  Total age_group5  income   848151   51585356   51565854.5
-## 28:  Total age_group6  income    61672    4703063    4765960.5
-## 29:   male      Total  income 11262049  673726952  673689706.5
-## 30:   male age_group1  income  4877164  293752206  293784579.0
-## 31:   male age_group2  income  2811379  163198627  163261260.8
-## 32:   male age_group3  income  2168169  130620890  130663591.6
-## 33:   male age_group4  income   978510   58254840   58295283.6
-## 34:   male age_group5  income   393134   25456993   25425184.6
-## 35:   male age_group6  income    33693    2443396    2440015.0
-## 36: female      Total  income 11690929  709718680  709672641.3
-## 37: female age_group1  income  4933383  301253695  301249538.7
-## 38: female age_group2  income  2880740  177409636  177407183.1
-## 39: female age_group3  income  2238777  135420876  135380210.5
-## 40: female age_group4  income  1155033   67246443   67254774.8
-## 41: female age_group5  income   455017   26128363   26142013.3
-## 42: female age_group6  income    27979    2259667    2189399.8
-##        sex        age   vname      uws         ws          pws
 ```
 
 ### Utility-measures
 #### Utility measures for count variables
 Method `measures_cnts()` allows to compute information loss measures for perturbed count variables. Its application is as simple as:
 
-
-```r
+```{r}
 tab$measures_cnts(v = "total", exclude_zeros = TRUE)
-```
-
-```
-## $overview
-##    noise cnt       pct
-## 1:    -2   2 0.0952381
-## 2:    -1   2 0.0952381
-## 3:     0   8 0.3809524
-## 4:     1   6 0.2857143
-## 5:     2   3 0.1428571
-## 
-## $measures
-##       what    d1    d2    d3
-##  1:    Min 0.000 0.000 0.000
-##  2:    Q10 0.000 0.000 0.000
-##  3:    Q20 0.000 0.000 0.000
-##  4:    Q30 0.000 0.000 0.000
-##  5:    Q40 1.000 0.000 0.011
-##  6:   Mean 0.857 0.006 0.026
-##  7: Median 1.000 0.001 0.015
-##  8:    Q60 1.000 0.001 0.017
-##  9:    Q70 1.000 0.002 0.024
-## 10:    Q80 2.000 0.003 0.036
-## 11:    Q90 2.000 0.009 0.066
-## 12:    Q95 2.000 0.024 0.108
-## 13:    Q99 2.000 0.066 0.135
-## 14:    Max 2.000 0.077 0.141
-## 
-## $cumdistr_d1
-##    cat cnt       pct
-## 1:   0   8 0.3809524
-## 2:   1  16 0.7619048
-## 3:   2  21 1.0000000
-## 
-## $cumdistr_d2
-##            cat cnt       pct
-## 1:    [0,0.02]  19 0.9047619
-## 2: (0.02,0.05]  20 0.9523810
-## 3:  (0.05,0.1]  21 1.0000000
-## 4:   (0.1,0.2]  21 1.0000000
-## 5:   (0.2,0.3]  21 1.0000000
-## 6:   (0.3,0.4]  21 1.0000000
-## 7:   (0.4,0.5]  21 1.0000000
-## 8:   (0.5,Inf]  21 1.0000000
-## 
-## $cumdistr_d3
-##            cat cnt       pct
-## 1:    [0,0.02]  13 0.6190476
-## 2: (0.02,0.05]  18 0.8571429
-## 3:  (0.05,0.1]  19 0.9047619
-## 4:   (0.1,0.2]  21 1.0000000
-## 5:   (0.2,0.3]  21 1.0000000
-## 6:   (0.3,0.4]  21 1.0000000
-## 7:   (0.4,0.5]  21 1.0000000
-## 8:   (0.5,Inf]  21 1.0000000
-## 
-## $false_zero
-## [1] 0
-## 
-## $false_nonzero
-## [1] 0
-## 
-## $exclude_zeros
-## [1] TRUE
 ```
 
 This function returns a list with several utility measures that are now discussed. For further information have a look at `?ck_cnt_measures` as the same set of measures can also be computed for two vectors containing original and perturbed values.
@@ -628,82 +363,13 @@ Finally we note that there are `print` and `summary` methods implemented for obj
 
 The `print()`-method shows the dimension of the table as well as the variables that are (or possibly can be) perturbed. It is also displayed if the table was constructed using weights. 
 
-
-```r
+```{r}
 tab$print() # same as (print(tab))
 ```
 
-```
-## ── Table Information ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-## ✔ 21 cells in 2 dimensions ('sex', 'age')
-## ✔ weights: yes
-## ── Tabulated / Perturbed countvars ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-## ☒ 'total' (perturbed)
-## ☒ 'cnt_highincome' (perturbed)
-## ── Tabulated / Perturbed numvars ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-## ☒ 'income' (perturbed)
-## ☒ 'savings' (perturbed)
-```
-
 The `summary`-method shows some utility statistics for already perturbed variables as shown below:
-
-```r
+```{r}
 tab$summary()
-```
-
-```
-## ┌──────────────────────────────────────────────┐
-## │Utility measures for perturbed count variables│
-## └──────────────────────────────────────────────┘
-## ── Distribution statistics of perturbations ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-##          countvar Min Q10 Q20 Q30 Q40   Mean Median Q60 Q70 Q80 Q90 Q95 Q99 Max
-## 1:          total  -2  -2  -1  -1  -1 -0.286      0   0   0   0   1   2 2.0   2
-## 2: cnt_highincome  -4  -2   0   0   0  0.048      0   0   0   1   2   2 3.6   4
-## 
-## ── Distance-based measures ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-## ✔ Variable: 'total'
-## 
-##       what    d1    d2    d3
-##  1:    Min 0.000 0.000 0.000
-##  2:    Q10 0.000 0.000 0.000
-##  3:    Q20 0.000 0.000 0.000
-##  4:    Q30 0.000 0.000 0.000
-##  5:    Q40 1.000 0.000 0.011
-##  6:   Mean 0.857 0.006 0.026
-##  7: Median 1.000 0.001 0.015
-##  8:    Q60 1.000 0.001 0.017
-##  9:    Q70 1.000 0.002 0.024
-## 10:    Q80 2.000 0.003 0.036
-## 11:    Q90 2.000 0.009 0.066
-## 12:    Q95 2.000 0.024 0.108
-## 13:    Q99 2.000 0.066 0.135
-## 14:    Max 2.000 0.077 0.141
-## 
-## ✔ Variable: 'cnt_highincome'
-## 
-##       what    d1    d2    d3
-##  1:    Min 0.000 0.000 0.000
-##  2:    Q10 0.000 0.000 0.000
-##  3:    Q20 0.000 0.000 0.000
-##  4:    Q30 0.000 0.000 0.000
-##  5:    Q40 0.000 0.000 0.000
-##  6:   Mean 1.167 0.033 0.089
-##  7: Median 1.000 0.004 0.040
-##  8:    Q60 1.000 0.019 0.068
-##  9:    Q70 1.900 0.024 0.130
-## 10:    Q80 2.000 0.053 0.156
-## 11:    Q90 3.300 0.090 0.221
-## 12:    Q95 4.000 0.145 0.285
-## 13:    Q99 4.000 0.197 0.446
-## 14:    Max 4.000 0.211 0.486
-## 
-## ┌──────────────────────────────────────────────────┐
-## │Utility measures for perturbed numerical variables│
-## └──────────────────────────────────────────────────┘
-## ── Distribution statistics of perturbations ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-##      vname        Min        Q10        Q20       Q30       Q40    Mean   Median      Q60      Q70       Q80       Q90      Q95      Q99      Max
-## 1:  income -70267.150 -40665.472 -31808.440 -8425.046 -4156.270 -24.711 -3381.04 1798.040 8331.760 32372.963 42701.575 62633.80 62844.78 62897.53
-## 2: savings  -4907.719  -4399.562  -3500.797 -1480.407 -1082.593 584.672   -83.23  578.866  879.508  3232.861  5920.215 11287.64 12409.40 12689.84
 ```
 
 ## Summary
