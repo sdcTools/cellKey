@@ -1,3 +1,4 @@
+skip_on_cran()
 set.seed(120, sample.kind = "Reject")
 context("Testing ck_setup()")
 x <- ck_create_testdata()

@@ -1,3 +1,4 @@
+testthat::skip_on_cran()
 set.seed(120, sample.kind = "Reject")
 f_yaml <- tempfile(fileext = ".yaml")
 

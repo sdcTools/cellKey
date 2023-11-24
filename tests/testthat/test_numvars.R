@@ -1,3 +1,4 @@
+testthat::skip_on_cran()
 context("Testing Magnitude Tables")
 
 set.seed(120, sample.kind = "Reject")

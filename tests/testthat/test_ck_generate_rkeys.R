@@ -1,3 +1,4 @@
+testthat::skip_on_cran()
 set.seed(120, sample.kind = "Reject")
 x <- ck_create_testdata()
 
@@ -18,7 +19,6 @@ test_that("recordkeys are correctly computed", {
   expect_identical(ck1[1], 0.97131759)
   expect_identical(ck1[4580], 0.88019983)
   expect_identical(round(mean(ck1), digits = 3), 0.501)
-
 
   expect_identical(length(ck2), 4580L)
   expect_identical(ck2[1], 0.2002144526)
