@@ -1,60 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/articles/introduction.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/cellkey_pkg.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ck_cnt_measures.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ck_create_testdata.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ck_dat_hc92.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ck_flexparams.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ck_generate_rkeys.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ck_params_cnts.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ck_params_nums.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ck_read_yaml.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ck_simpleparams.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ck_vignette.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/testdata.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/articles/introduction.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/cellkey_pkg.html</loc></url>
+<url><loc>/reference/ck_cnt_measures.html</loc></url>
+<url><loc>/reference/ck_create_testdata.html</loc></url>
+<url><loc>/reference/ck_dat_hc92.html</loc></url>
+<url><loc>/reference/ck_flexparams.html</loc></url>
+<url><loc>/reference/ck_generate_rkeys.html</loc></url>
+<url><loc>/reference/ck_params_cnts.html</loc></url>
+<url><loc>/reference/ck_params_nums.html</loc></url>
+<url><loc>/reference/ck_read_yaml.html</loc></url>
+<url><loc>/reference/ck_simpleparams.html</loc></url>
+<url><loc>/reference/ck_vignette.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/testdata.html</loc></url>
 </urlset>
+
