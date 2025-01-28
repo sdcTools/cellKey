@@ -154,9 +154,6 @@ ck_class <- R6::R6Class("cellkey_obj", cloneable = FALSE,
           stop("Some elements provided in `numvars` are not numeric.", call. = FALSE)
         }
 
-        setnames(x, numvars, tolower(numvars))
-        numvars <- tolower(numvars)
-
         # compute weighted variables and index to compute record keys for only
         # units actually contributing
         numvars_w <- paste0("ws_", numvars)
