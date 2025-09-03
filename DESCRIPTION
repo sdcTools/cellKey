@@ -1,8 +1,8 @@
 Package: cellKey
 Type: Package
-Date: 2023-11-24
+Date: 2025-09-03
 Title: Consistent Perturbation of Statistical Frequency- And Magnitude Tables
-Version: 1.0.2
+Version: 1.0.3
 Authors@R: c(
   person(
     given="Bernhard", family="Meindl", 
@@ -21,7 +21,7 @@ Description: Data from statistical agencies and other institutions often
     (2013) <https://unece.org/fileadmin/DAM/stats/documents/ece/ces/ge.46/2013/Topic_1_ABS.pdf>
     which was extended and enhanced by Giessing and Tent 
     (2019) <https://unece.org/fileadmin/DAM/stats/documents/ece/ces/ge.46/2019/mtg1/SDC2019_S2_Germany_Giessing_Tent_AD.pdf>.
-Depends: R(>= 4.1), sdcHierarchies (>= 0.19.3), data.table
+Depends: R(>= 4.1), sdcHierarchies (>= 0.19.3)
 Imports: 
     rlang,
     methods,
@@ -31,7 +31,8 @@ Imports:
     cli,
     utils,
     yaml,
-    parallel
+    parallel,
+    data.table
 License: GPL-2
 Encoding: UTF-8
 Suggests: 
@@ -46,3 +47,4 @@ LazyData: true
 LazyDataCompression: xz
 BugReports: https://github.com/sdcTools/userSupport/issues
 URL: https://github.com/sdcTools/cellKey
+RoxygenNote: 7.2.3
