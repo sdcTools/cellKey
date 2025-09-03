@@ -1,5 +1,6 @@
-# cellKey 1.0.3 (next)
+# cellKey 1.0.3
 - Do not modify variable names in `ck_setup()` [https://github.com/sdcTools/cellKey/issues/17]
+- Use Imports for `data.table` [https://github.com/sdcTools/cellKey/issues/18]
 
 # cellKey 1.0.2
 - Performance Fix: Do not compute contributing indices (relevant only for the perturbation of numerical variables) if no such variables were specified in `ck_setup()`
