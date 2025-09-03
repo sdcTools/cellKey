@@ -1,7 +1,7 @@
 ---
 title: "Introduction to the cellKey-Package"
 author: "Bernhard Meindl"
-date: "2023-11-24"
+date: "2025-09-03"
 output:
   rmarkdown::html_vignette:
   toc: true
@@ -16,7 +16,7 @@ vignette: >
 
 
 ## About the cellKey package
-This package implements methods to provide perturbation for statistical tables. The implementation if greatly inspired by the the paper *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar). This approach however was generalized and a new specification on how record keys are specified and the lookup-tables are defined is used. This package makes usage of perturbation tables that can be defined in the [**ptable**](https://github.com/sdcTools/ptable) package. This document describes the usage of version `1.0.2` of the package.
+This package implements methods to provide perturbation for statistical tables. The implementation if greatly inspired by the the paper *Methodology for the Automatic Confidentialisation of Statistical Outputs from Remote Servers at the Australian Bureau of Statistics* (Thompson, Broadfoot, Elazar). This approach however was generalized and a new specification on how record keys are specified and the lookup-tables are defined is used. This package makes usage of perturbation tables that can be defined in the [**ptable**](https://github.com/sdcTools/ptable) package. This document describes the usage of version `1.0.3` of the package.
 
 ## Main Features
 In the **cellKey** package it is possible to pertub multidimensional count and magnitude tables. Functionality to generate suitable record keys is provided in function `ck_generate_rkeys()`. Using sha1-checksums on the input datasets, we can make sure that the same record keys are generated whenever the same input data set is used for which record keys should be generated. However, it is also possible of course to use already pre-generated record keys available as variable in the microdata set.
@@ -26,7 +26,7 @@ The package allows to make use of sampling weights. Thus, both weighted and unwe
 What is left is of course identifying bugs and issues and also to optimize performance of the package as well as to include some real world examples, eg. census tables.
 
 ## An Example
-We now show the capabilities of the **cellKey** package by running an example that 
+We now show the capabilities of the **cellKey** package by running an example that
 
 ### Load the Package
 
@@ -38,7 +38,7 @@ packageVersion("cellKey")
 ```
 
 ```
-## [1] '1.0.2'
+## [1] '1.0.3'
 ```
 
 The first step in this approach is to generate a statistical table, which can be achieved using `ck_setup`. This function generates an object that contains all the information required to perturb count- (and optionally continuously scaled) variables. There are however a few inputs that `ck_setup()` requires and that need to be generated beforehand. These inputs are:
@@ -53,7 +53,7 @@ The first step in this approach is to generate a statistical table, which can be
 We continue to show how to generate the required inputs. The first step is to prepare the inputdata.
 
 ### Specifying inputdata
-The testdata set we are using in this example contains information on person-level along with sampling weights as well as some categorical and continuously scaled variables. We also compute some binary variables for which we also want to create perturbed tables. 
+The testdata set we are using in this example contains information on person-level along with sampling weights as well as some categorical and continuously scaled variables. We also compute some binary variables for which we also want to create perturbed tables.
 
 ```r
 dat <- ck_create_testdata()
@@ -71,12 +71,12 @@ print(head(dat))
 
 ```
 ##       sex        age savings income sampling_weight cnt_highincome     rkeys
-## 1:   male age_group3      12   5780              57              0 0.6705526
-## 2: female age_group3      28   2530              63              0 0.0357946
-## 3:   male age_group1     550   6920              35              0 0.1339016
-## 4:   male age_group1     870   7960              81              0 0.9849310
-## 5:   male age_group4      20   9030              93              1 0.2941448
-## 6: female age_group3     102   3290              75              0 0.7070011
+## 1:   male age_group3      12   5780              57              0 0.7552293
+## 2: female age_group3      28   2530              48              0 0.3716140
+## 3:   male age_group1     550   6920              67              0 0.9195144
+## 4:   male age_group1     870   7960              48              0 0.4260026
+## 5:   male age_group4      20   9030              55              1 0.5450293
+## 6: female age_group3     102   3290              79              0 0.1694579
 ```
 
 To ensure that the same record keys are computed each and every time for the same data set, a seed based on the sha1-hash of the input dataset is computed by default in `ck_generate_rkeys`. This seed is used before sampling the record keys and may be overwritten using the `seed` argument.
@@ -152,13 +152,13 @@ print(tab)
 ```
 
 ```
-## ── Table Information ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Table Information ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ## ✔ 21 cells in 2 dimensions ('sex', 'age')
 ## ✔ weights: yes
-## ── Tabulated / Perturbed countvars ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Tabulated / Perturbed countvars ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ## ☐ 'total'
 ## ☐ 'cnt_highincome'
-## ── Tabulated / Perturbed numvars ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Tabulated / Perturbed numvars ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ## ☐ 'income'
 ## ☐ 'savings'
 ```
@@ -176,7 +176,7 @@ ptab1 <- ptable::pt_ex_cnts()
 
 # creating a ptable by specifying parameters
 para2 <- ptable::create_cnt_ptable(
-  D = 8, V = 3, js = 2, pstay = 0.5, 
+  D = 8, V = 3, js = 2, pstay = 0.5,
   optim = 1, mono = TRUE)
 ```
 
@@ -188,7 +188,7 @@ p_cnts1 <- ck_params_cnts(ptab = ptab1)
 p_cnts2 <- ck_params_cnts(ptab = para2)
 ```
 
-`ck_params_cnts()` returns objects that can be used as inputs in method `params_cnts_set()`. In argument `v` one may specify count variables for which the supplied perturbation parameters should be used. If `v` is not specified, the perturbation parameters are used for all count variables. 
+`ck_params_cnts()` returns objects that can be used as inputs in method `params_cnts_set()`. In argument `v` one may specify count variables for which the supplied perturbation parameters should be used. If `v` is not specified, the perturbation parameters are used for all count variables.
 
 
 ```r
@@ -214,11 +214,11 @@ It is therefore entirely possible to use different parameter sets for different 
 #### Perturbation parameters for continuous variables
 Setting and defining perturbation parameters for continuous variables works similarily. The required functions are `ck_params_num()` to create input objects that can be set with the `params_nums_set` method.  Please note that it is possibly by specifying the `path` argument in both `ck_params_nums()` and `ck_params_cnts()` to save the parameters additionally as yaml-file. Using `ck_read_yaml()`, these files can later be imported again. This feature is useful for re-using parameter settings.
 
-The underlying framework on how to perturb continuous tables differs from the proposed method from `ABS`. One possible approach is based on a *"flex function"*. This approach (which is described in deliverable `D4.2` in the project [perturbative confidentiality methods](https://cros-legacy.ec.europa.eu/content/perturbative-confidentiality-methods_en) allows to apply different magnitude of noise to larger and smaller cells. Users can define the required parameters for the flex-approach with function `ck_flexparams()`. The required inputs are:
+The underlying framework on how to perturb continuous tables differs from the proposed method from `ABS`. One possible approach is based on a *"flex function"*. This approach (which is described in deliverable `D4.2` in the project "perturbative confidentiality methods") allows to apply different magnitude of noise to larger and smaller cells. Users can define the required parameters for the flex-approach with function `ck_flexparams()`. The required inputs are:
 
 - `fp`: the flexpoint defining at which point should the underlying noise coefficient function reach its desired maximum (which is defined by the first element of `p`)
 - `p`: numeric vector of length `2` with `p[1] > p[2]` where both elements specify a percentage. The first value refers to the desired maximum perturbation percentage for small cells (depending on fp) while the second element refers to the desired maximum perturbation percentage for large cells.
-- `epsilon`: a numeric vector in descending order with all values in `[0; 1]` and with the first element forced to equal `1`. The length of this parameter must correspond with the number of `top_k` specified in `ck_params_nums()` (which will be discussed later). 
+- `epsilon`: a numeric vector in descending order with all values in `[0; 1]` and with the first element forced to equal `1`. The length of this parameter must correspond with the number of `top_k` specified in `ck_params_nums()` (which will be discussed later).
 
 
 ```r
@@ -247,7 +247,7 @@ p_simple <- ck_simpleparams(
   epsilon = 1)
 ```
 
-In this appraoch it is only required to specify a single percentage value `p` and - as in the case for the flex function - a vector of epsilons that are used in the case when `top_k > 1`. 
+In this appraoch it is only required to specify a single percentage value `p` and - as in the case for the flex function - a vector of epsilons that are used in the case when `top_k > 1`.
 
 Further important parameters for `ck_params_nums()` are:
 
@@ -270,7 +270,7 @@ Please note, that if the goal is to have different perturbation tables for cells
 ex_ptab1 <- ptable::pt_ex_nums(parity = TRUE, separation = TRUE)
 ```
 
-We can now use these tables to finally create objects containing all the required information to create perturbed magnitude tables using `ck_params_nums`. In the first case we want the same perturbation table (`ptab_all`) for cells with an even/odd number of contributors but want to use `ptab_sc` for very small cells. 
+We can now use these tables to finally create objects containing all the required information to create perturbed magnitude tables using `ck_params_nums`. In the first case we want the same perturbation table (`ptab_all`) for cells with an even/odd number of contributors but want to use `ptab_sc` for very small cells.
 
 ```r
 p_nums1 <- ck_params_nums(
@@ -303,7 +303,7 @@ p_nums2 <- ck_params_nums(
   use_zero_rkeys = TRUE)
 ```
 
-The package internally computes the separation point that is used for very small cells in case this is required. Details on this can also be found in deliverable [`D4.2`](https://cros-legacy.ec.europa.eu/content/perturbative-confidentiality-methods_en).
+The package internally computes the separation point that is used for very small cells in case this is required. Details on this can also be found in deliverable `D4.2` from the "perturbative confidentiality methods" project.
 
 Now we can attach the results from `ck_params_nums()` to numeric variables using the `params_nums_set()`-method as shown below:
 
@@ -418,47 +418,47 @@ tab$freqtab(v = c("total", "cnt_highincome"))
 
 ```
 ##        sex        age          vname  uwc     wc puwc         pwc
-##  1:  Total      Total          total 4580 275982 4578 275861.4838
-##  2:  Total age_group1          total 1969 119446 1968 119385.3367
-##  3:  Total age_group2          total 1143  68235 1144  68294.6982
-##  4:  Total age_group3          total  864  52074  863  52013.7292
-##  5:  Total age_group4          total  423  25034  422  24974.8180
-##  6:  Total age_group5          total  168  10226  168  10226.0000
-##  7:  Total age_group6          total   13    967   12    892.6154
-##  8:   male      Total          total 2296 138348 2296 138348.0000
-##  9:   male age_group1          total 1015  61597 1017  61718.3734
-## 10:   male age_group2          total  571  33355  572  33413.4151
-## 11:   male age_group3          total  424  25776  424  25776.0000
-## 12:   male age_group4          total  195  11749  194  11688.7487
-## 13:   male age_group5          total   84   5349   84   5349.0000
-## 14:   male age_group6          total    7    522    7    522.0000
-## 15: female      Total          total 2284 137634 2284 137634.0000
-## 16: female age_group1          total  954  57849  953  57788.3616
-## 17: female age_group2          total  572  34880  570  34758.0420
-## 18: female age_group3          total  440  26298  440  26298.0000
-## 19: female age_group4          total  228  13285  226  13168.4649
-## 20: female age_group5          total   84   4877   86   4993.1190
-## 21: female age_group6          total    6    445    6    445.0000
-## 22:  Total      Total cnt_highincome  445  27091  443  26969.2427
-## 23:  Total age_group1 cnt_highincome  192  11811  192  11811.0000
-## 24:  Total age_group2 cnt_highincome  123   7279  120   7101.4634
-## 25:  Total age_group3 cnt_highincome   82   5136   82   5136.0000
-## 26:  Total age_group4 cnt_highincome   34   2133   36   2258.4706
-## 27:  Total age_group5 cnt_highincome   14    732   13    679.7143
+##  1:  Total      Total          total 4580 274539 4580 274539.0000
+##  2:  Total age_group1          total 1969 118266 1971 118386.1280
+##  3:  Total age_group2          total 1143  68240 1141  68120.5949
+##  4:  Total age_group3          total  864  52423  865  52483.6748
+##  5:  Total age_group4          total  423  25024  424  25083.1584
+##  6:  Total age_group5          total  168   9783  167   9724.7679
+##  7:  Total age_group6          total   13    803   14    864.7692
+##  8:   male      Total          total 2296 138169 2298 138289.3563
+##  9:   male age_group1          total 1015  61280 1014  61219.6256
+## 10:   male age_group2          total  571  33840  572  33899.2644
+## 11:   male age_group3          total  424  25818  424  25818.0000
+## 12:   male age_group4          total  195  11762  193  11641.3641
+## 13:   male age_group5          total   84   4969   83   4909.8452
+## 14:   male age_group6          total    7    500    6    428.5714
+## 15: female      Total          total 2284 136370 2285 136429.7067
+## 16: female age_group1          total  954  56986  955  57045.7338
+## 17: female age_group2          total  572  34400  571  34339.8601
+## 18: female age_group3          total  440  26605  440  26605.0000
+## 19: female age_group4          total  228  13262  229  13320.1667
+## 20: female age_group5          total   84   4814   86   4928.6190
+## 21: female age_group6          total    6    303    7    353.5000
+## 22:  Total      Total cnt_highincome  445  27952  445  27952.0000
+## 23:  Total age_group1 cnt_highincome  192  11711  192  11711.0000
+## 24:  Total age_group2 cnt_highincome  123   7970  121   7840.4065
+## 25:  Total age_group3 cnt_highincome   82   5241   84   5368.8293
+## 26:  Total age_group4 cnt_highincome   34   2068   33   2007.1765
+## 27:  Total age_group5 cnt_highincome   14    962   15   1030.7143
 ## 28:  Total age_group6 cnt_highincome    0      0    0      0.0000
-## 29:   male      Total cnt_highincome  219  13013  219  13013.0000
-## 30:   male age_group1 cnt_highincome   90   5414   94   5654.6222
-## 31:   male age_group2 cnt_highincome   66   3743   66   3743.0000
-## 32:   male age_group3 cnt_highincome   41   2486   41   2486.0000
-## 33:   male age_group4 cnt_highincome   15    961   17   1089.1333
-## 34:   male age_group5 cnt_highincome    7    409    7    409.0000
+## 29:   male      Total cnt_highincome  219  13740  219  13740.0000
+## 30:   male age_group1 cnt_highincome   90   5554   89   5492.2889
+## 31:   male age_group2 cnt_highincome   66   4249   67   4313.3788
+## 32:   male age_group3 cnt_highincome   41   2596   38   2406.0488
+## 33:   male age_group4 cnt_highincome   15    826   13    715.8667
+## 34:   male age_group5 cnt_highincome    7    515    5    367.8571
 ## 35:   male age_group6 cnt_highincome    0      0    0      0.0000
-## 36: female      Total cnt_highincome  226  14078  227  14140.2920
-## 37: female age_group1 cnt_highincome  102   6397  102   6397.0000
-## 38: female age_group2 cnt_highincome   57   3536   58   3598.0351
-## 39: female age_group3 cnt_highincome   41   2650   42   2714.6341
-## 40: female age_group4 cnt_highincome   19   1172   15    925.2632
-## 41: female age_group5 cnt_highincome    7    323    7    323.0000
+## 36: female      Total cnt_highincome  226  14212  226  14212.0000
+## 37: female age_group1 cnt_highincome  102   6157  102   6157.0000
+## 38: female age_group2 cnt_highincome   57   3721   57   3721.0000
+## 39: female age_group3 cnt_highincome   41   2645   43   2774.0244
+## 40: female age_group4 cnt_highincome   19   1242   16   1045.8947
+## 41: female age_group5 cnt_highincome    7    447    7    447.0000
 ## 42: female age_group6 cnt_highincome    0      0    0      0.0000
 ##        sex        age          vname  uwc     wc puwc         pwc
 ```
@@ -480,48 +480,48 @@ tab$numtab(v = c("savings", "income"))
 
 ```
 ##        sex        age   vname      uws         ws          pws
-##  1:  Total      Total savings  2273532  138166346  138166924.9
-##  2:  Total age_group1 savings   982386   60171300   60172051.2
-##  3:  Total age_group2 savings   552336   33312736   33311653.4
-##  4:  Total age_group3 savings   437101   26261183   26264415.9
-##  5:  Total age_group4 savings   214661   12937274   12935793.6
-##  6:  Total age_group5 savings    80451    4988523    4984467.5
-##  7:  Total age_group6 savings     6597     495330     496738.1
-##  8:   male      Total savings  1159816   70528606   70525105.2
-##  9:   male age_group1 savings   517660   31738679   31741936.3
-## 10:   male age_group2 savings   280923   16655873   16668562.8
-## 11:   male age_group3 savings   214970   13142789   13148709.2
-## 12:   male age_group4 savings    99420    6029194    6040481.6
-## 13:   male age_group5 savings    43233    2703643    2699243.4
-## 14:   male age_group6 savings     3610     258428     256360.6
-## 15: female      Total savings  1113716   67637740   67633186.4
-## 16: female age_group1 savings   464726   28432621   28431887.0
-## 17: female age_group2 savings   271413   16656863   16656779.8
-## 18: female age_group3 savings   222131   13118394   13117084.5
-## 19: female age_group4 savings   115241    6908080    6908527.0
-## 20: female age_group5 savings    37218    2284880    2285759.5
-## 21: female age_group6 savings     2987     236902     231994.3
-## 22:  Total      Total  income 22952978 1383445632 1383452773.6
-## 23:  Total age_group1  income  9810547  595005901  595007699.0
-## 24:  Total age_group2  income  5692119  340608263  340599838.0
-## 25:  Total age_group3  income  4406946  266041766  266036662.8
-## 26:  Total age_group4  income  2133543  125501283  125497838.2
-## 27:  Total age_group5  income   848151   51585356   51565854.5
-## 28:  Total age_group6  income    61672    4703063    4765960.5
-## 29:   male      Total  income 11262049  673726952  673689706.5
-## 30:   male age_group1  income  4877164  293752206  293784579.0
-## 31:   male age_group2  income  2811379  163198627  163261260.8
-## 32:   male age_group3  income  2168169  130620890  130663591.6
-## 33:   male age_group4  income   978510   58254840   58295283.6
-## 34:   male age_group5  income   393134   25456993   25425184.6
-## 35:   male age_group6  income    33693    2443396    2440015.0
-## 36: female      Total  income 11690929  709718680  709672641.3
-## 37: female age_group1  income  4933383  301253695  301249538.7
-## 38: female age_group2  income  2880740  177409636  177407183.1
-## 39: female age_group3  income  2238777  135420876  135380210.5
-## 40: female age_group4  income  1155033   67246443   67254774.8
-## 41: female age_group5  income   455017   26128363   26142013.3
-## 42: female age_group6  income    27979    2259667    2189399.8
+##  1:  Total      Total savings  2273532  136080418  136083334.6
+##  2:  Total age_group1 savings   982386   59144910   59145634.6
+##  3:  Total age_group2 savings   552336   33029243   33020004.3
+##  4:  Total age_group3 savings   437101   26414476   26414183.8
+##  5:  Total age_group4 savings   214661   12446392   12450800.0
+##  6:  Total age_group5 savings    80451    4652696    4649450.9
+##  7:  Total age_group6 savings     6597     392701     387830.2
+##  8:   male      Total savings  1159816   69597198   69597973.2
+##  9:   male age_group1 savings   517660   31321038   31319611.9
+## 10:   male age_group2 savings   280923   16698089   16701276.7
+## 11:   male age_group3 savings   214970   13022302   13020960.2
+## 12:   male age_group4 savings    99420    5898725    5897903.7
+## 13:   male age_group5 savings    43233    2424795    2422438.3
+## 14:   male age_group6 savings     3610     232249     235965.8
+## 15: female      Total savings  1113716   66483220   66480940.2
+## 16: female age_group1 savings   464726   27823872   27824463.1
+## 17: female age_group2 savings   271413   16331154   16329804.8
+## 18: female age_group3 savings   222131   13392174   13384080.8
+## 19: female age_group4 savings   115241    6547667    6543530.2
+## 20: female age_group5 savings    37218    2227901    2228793.7
+## 21: female age_group6 savings     2987     160452     159026.2
+## 22:  Total      Total  income 22952978 1383502675 1383529374.5
+## 23:  Total age_group1  income  9810547  592603578  592606204.7
+## 24:  Total age_group2  income  5692119  342438723  342358132.6
+## 25:  Total age_group3  income  4406946  266030114  266027152.7
+## 26:  Total age_group4  income  2133543  128527130  128580753.7
+## 27:  Total age_group5  income   848151   50260125   50213557.5
+## 28:  Total age_group6  income    61672    3643005    3523883.0
+## 29:   male      Total  income 11262049  678098383  678119173.7
+## 30:   male age_group1  income  4877164  294298901  294309048.5
+## 31:   male age_group2  income  2811379  167003473  167018345.8
+## 32:   male age_group3  income  2168169  130191360  130158511.4
+## 33:   male age_group4  income   978510   60622639   60618171.8
+## 34:   male age_group5  income   393134   23699275   23669073.3
+## 35:   male age_group6  income    33693    2282735    2389104.5
+## 36: female      Total  income 11690929  705404292  705401451.7
+## 37: female age_group1  income  4933383  298304677  298301046.4
+## 38: female age_group2  income  2880740  175435250  175426717.7
+## 39: female age_group3  income  2238777  135838754  135753178.2
+## 40: female age_group4  income  1155033   67904491   67849918.6
+## 41: female age_group5  income   455017   26560850   26560686.8
+## 42: female age_group6  income    27979    1360270    1308671.0
 ##        sex        age   vname      uws         ws          pws
 ```
 
@@ -537,40 +537,40 @@ tab$measures_cnts(v = "total", exclude_zeros = TRUE)
 ```
 ## $overview
 ##    noise cnt       pct
-## 1:    -2   2 0.0952381
-## 2:    -1   2 0.0952381
-## 3:     0   8 0.3809524
-## 4:     1   6 0.2857143
-## 5:     2   3 0.1428571
+## 1:    -2   3 0.1428571
+## 2:    -1   8 0.3809524
+## 3:     0   3 0.1428571
+## 4:     1   5 0.2380952
+## 5:     2   2 0.0952381
 ## 
 ## $measures
 ##       what    d1    d2    d3
 ##  1:    Min 0.000 0.000 0.000
 ##  2:    Q10 0.000 0.000 0.000
-##  3:    Q20 0.000 0.000 0.000
-##  4:    Q30 0.000 0.000 0.000
-##  5:    Q40 1.000 0.000 0.011
-##  6:   Mean 0.857 0.006 0.026
-##  7: Median 1.000 0.001 0.015
-##  8:    Q60 1.000 0.001 0.017
-##  9:    Q70 1.000 0.002 0.024
-## 10:    Q80 2.000 0.003 0.036
-## 11:    Q90 2.000 0.009 0.066
-## 12:    Q95 2.000 0.024 0.108
-## 13:    Q99 2.000 0.066 0.135
-## 14:    Max 2.000 0.077 0.141
+##  3:    Q20 1.000 0.001 0.016
+##  4:    Q30 1.000 0.001 0.017
+##  5:    Q40 1.000 0.001 0.021
+##  6:   Mean 1.095 0.022 0.049
+##  7: Median 1.000 0.002 0.023
+##  8:    Q60 1.000 0.002 0.030
+##  9:    Q70 1.000 0.006 0.039
+## 10:    Q80 2.000 0.012 0.072
+## 11:    Q90 2.000 0.077 0.136
+## 12:    Q95 2.000 0.143 0.196
+## 13:    Q99 2.000 0.162 0.196
+## 14:    Max 2.000 0.167 0.196
 ## 
 ## $cumdistr_d1
 ##    cat cnt       pct
-## 1:   0   8 0.3809524
+## 1:   0   3 0.1428571
 ## 2:   1  16 0.7619048
 ## 3:   2  21 1.0000000
 ## 
 ## $cumdistr_d2
 ##            cat cnt       pct
-## 1:    [0,0.02]  19 0.9047619
-## 2: (0.02,0.05]  20 0.9523810
-## 3:  (0.05,0.1]  21 1.0000000
+## 1:    [0,0.02]  17 0.8095238
+## 2: (0.02,0.05]  18 0.8571429
+## 3:  (0.05,0.1]  19 0.9047619
 ## 4:   (0.1,0.2]  21 1.0000000
 ## 5:   (0.2,0.3]  21 1.0000000
 ## 6:   (0.3,0.4]  21 1.0000000
@@ -579,9 +579,9 @@ tab$measures_cnts(v = "total", exclude_zeros = TRUE)
 ## 
 ## $cumdistr_d3
 ##            cat cnt       pct
-## 1:    [0,0.02]  13 0.6190476
-## 2: (0.02,0.05]  18 0.8571429
-## 3:  (0.05,0.1]  19 0.9047619
+## 1:    [0,0.02]   7 0.3333333
+## 2: (0.02,0.05]  15 0.7142857
+## 3:  (0.05,0.1]  17 0.8095238
 ## 4:   (0.1,0.2]  21 1.0000000
 ## 5:   (0.2,0.3]  21 1.0000000
 ## 6:   (0.3,0.4]  21 1.0000000
@@ -626,7 +626,7 @@ For now, no utility measures for continuous variables are available. This will c
 ### Additional Features
 Finally we note that there are `print` and `summary` methods implemented for objects created with from `ck_setup()` which can be used as shown below:
 
-The `print()`-method shows the dimension of the table as well as the variables that are (or possibly can be) perturbed. It is also displayed if the table was constructed using weights. 
+The `print()`-method shows the dimension of the table as well as the variables that are (or possibly can be) perturbed. It is also displayed if the table was constructed using weights.
 
 
 ```r
@@ -634,13 +634,13 @@ tab$print() # same as (print(tab))
 ```
 
 ```
-## ── Table Information ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Table Information ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ## ✔ 21 cells in 2 dimensions ('sex', 'age')
 ## ✔ weights: yes
-## ── Tabulated / Perturbed countvars ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Tabulated / Perturbed countvars ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ## ☒ 'total' (perturbed)
 ## ☒ 'cnt_highincome' (perturbed)
-## ── Tabulated / Perturbed numvars ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Tabulated / Perturbed numvars ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ## ☒ 'income' (perturbed)
 ## ☒ 'savings' (perturbed)
 ```
@@ -655,29 +655,29 @@ tab$summary()
 ## ┌──────────────────────────────────────────────┐
 ## │Utility measures for perturbed count variables│
 ## └──────────────────────────────────────────────┘
-## ── Distribution statistics of perturbations ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Distribution statistics of perturbations ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##          countvar Min Q10 Q20 Q30 Q40   Mean Median Q60 Q70 Q80 Q90 Q95 Q99 Max
-## 1:          total  -2  -2  -1  -1  -1 -0.286      0   0   0   0   1   2 2.0   2
-## 2: cnt_highincome  -4  -2   0   0   0  0.048      0   0   0   1   2   2 3.6   4
+## 1:          total  -2  -1  -1  -1   0  0.238      1   1   1   1   2   2   2   2
+## 2: cnt_highincome  -3  -2  -2  -1   0 -0.381      0   0   0   0   1   2   2   2
 ## 
-## ── Distance-based measures ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Distance-based measures ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ## ✔ Variable: 'total'
 ## 
 ##       what    d1    d2    d3
 ##  1:    Min 0.000 0.000 0.000
 ##  2:    Q10 0.000 0.000 0.000
-##  3:    Q20 0.000 0.000 0.000
-##  4:    Q30 0.000 0.000 0.000
-##  5:    Q40 1.000 0.000 0.011
-##  6:   Mean 0.857 0.006 0.026
-##  7: Median 1.000 0.001 0.015
-##  8:    Q60 1.000 0.001 0.017
-##  9:    Q70 1.000 0.002 0.024
-## 10:    Q80 2.000 0.003 0.036
-## 11:    Q90 2.000 0.009 0.066
-## 12:    Q95 2.000 0.024 0.108
-## 13:    Q99 2.000 0.066 0.135
-## 14:    Max 2.000 0.077 0.141
+##  3:    Q20 1.000 0.001 0.016
+##  4:    Q30 1.000 0.001 0.017
+##  5:    Q40 1.000 0.001 0.021
+##  6:   Mean 1.095 0.022 0.049
+##  7: Median 1.000 0.002 0.023
+##  8:    Q60 1.000 0.002 0.030
+##  9:    Q70 1.000 0.006 0.039
+## 10:    Q80 2.000 0.012 0.072
+## 11:    Q90 2.000 0.077 0.136
+## 12:    Q95 2.000 0.143 0.196
+## 13:    Q99 2.000 0.162 0.196
+## 14:    Max 2.000 0.167 0.196
 ## 
 ## ✔ Variable: 'cnt_highincome'
 ## 
@@ -686,24 +686,24 @@ tab$summary()
 ##  2:    Q10 0.000 0.000 0.000
 ##  3:    Q20 0.000 0.000 0.000
 ##  4:    Q30 0.000 0.000 0.000
-##  5:    Q40 0.000 0.000 0.000
-##  6:   Mean 1.167 0.033 0.089
-##  7: Median 1.000 0.004 0.040
-##  8:    Q60 1.000 0.019 0.068
-##  9:    Q70 1.900 0.024 0.130
-## 10:    Q80 2.000 0.053 0.156
-## 11:    Q90 3.300 0.090 0.221
-## 12:    Q95 4.000 0.145 0.285
-## 13:    Q99 4.000 0.197 0.446
-## 14:    Max 4.000 0.211 0.486
+##  5:    Q40 0.800 0.009 0.042
+##  6:   Mean 1.111 0.048 0.109
+##  7: Median 1.000 0.016 0.074
+##  8:    Q60 1.200 0.025 0.094
+##  9:    Q70 2.000 0.047 0.129
+## 10:    Q80 2.000 0.072 0.205
+## 11:    Q90 2.300 0.141 0.295
+## 12:    Q95 3.000 0.177 0.367
+## 13:    Q99 3.000 0.264 0.401
+## 14:    Max 3.000 0.286 0.410
 ## 
 ## ┌──────────────────────────────────────────────────┐
 ## │Utility measures for perturbed numerical variables│
 ## └──────────────────────────────────────────────────┘
-## ── Distribution statistics of perturbations ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-##      vname        Min        Q10        Q20       Q30       Q40    Mean   Median      Q60      Q70       Q80       Q90      Q95      Q99      Max
-## 1:  income -70267.150 -40665.472 -31808.440 -8425.046 -4156.270 -24.711 -3381.04 1798.040 8331.760 32372.963 42701.575 62633.80 62844.78 62897.53
-## 2: savings  -4907.719  -4399.562  -3500.797 -1480.407 -1082.593 584.672   -83.23  578.866  879.508  3232.861  5920.215 11287.64 12409.40 12689.84
+## ── Distribution statistics of perturbations ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##      vname         Min        Q10        Q20        Q30       Q40       Mean    Median       Q60      Q70      Q80       Q90       Q95       Q99        Max
+## 1:  income -119121.989 -80590.410 -51599.027 -32848.599 -8532.253 -13740.085 -3630.625 -2840.283 2626.699 14872.81 26699.529 53623.684 95820.303 106369.457
+## 2: savings   -9238.676  -4870.839  -3245.138  -2279.765 -1425.807  -1126.899 -1341.809  -292.242  724.624   892.72  3187.721  3716.843  4269.743   4407.969
 ```
 
 ## Summary

@@ -28,7 +28,7 @@ The package allows to make use of sampling weights. Thus, both weighted and unwe
 What is left is of course identifying bugs and issues and also to optimize performance of the package as well as to include some real world examples, eg. census tables.
 
 ## An Example
-We now show the capabilities of the **cellKey** package by running an example that 
+We now show the capabilities of the **cellKey** package by running an example that
 
 ### Load the Package
 ```{r, include = FALSE, echo = TRUE}
@@ -53,7 +53,7 @@ The first step in this approach is to generate a statistical table, which can be
 We continue to show how to generate the required inputs. The first step is to prepare the inputdata.
 
 ### Specifying inputdata
-The testdata set we are using in this example contains information on person-level along with sampling weights as well as some categorical and continuously scaled variables. We also compute some binary variables for which we also want to create perturbed tables. 
+The testdata set we are using in this example contains information on person-level along with sampling weights as well as some categorical and continuously scaled variables. We also compute some binary variables for which we also want to create perturbed tables.
 ```{r}
 dat <- ck_create_testdata()
 dat <- dat[, c("sex", "age", "savings", "income", "sampling_weight")]
@@ -126,7 +126,7 @@ ptab1 <- ptable::pt_ex_cnts()
 
 # creating a ptable by specifying parameters
 para2 <- ptable::create_cnt_ptable(
-  D = 8, V = 3, js = 2, pstay = 0.5, 
+  D = 8, V = 3, js = 2, pstay = 0.5,
   optim = 1, mono = TRUE)
 ```
 
@@ -137,7 +137,7 @@ p_cnts1 <- ck_params_cnts(ptab = ptab1)
 p_cnts2 <- ck_params_cnts(ptab = para2)
 ```
 
-`ck_params_cnts()` returns objects that can be used as inputs in method `params_cnts_set()`. In argument `v` one may specify count variables for which the supplied perturbation parameters should be used. If `v` is not specified, the perturbation parameters are used for all count variables. 
+`ck_params_cnts()` returns objects that can be used as inputs in method `params_cnts_set()`. In argument `v` one may specify count variables for which the supplied perturbation parameters should be used. If `v` is not specified, the perturbation parameters are used for all count variables.
 
 ```{r}
 # use `p_cnts1` for variable "total" (which always exists)
@@ -152,11 +152,11 @@ It is therefore entirely possible to use different parameter sets for different 
 #### Perturbation parameters for continuous variables
 Setting and defining perturbation parameters for continuous variables works similarily. The required functions are `ck_params_num()` to create input objects that can be set with the `params_nums_set` method.  Please note that it is possibly by specifying the `path` argument in both `ck_params_nums()` and `ck_params_cnts()` to save the parameters additionally as yaml-file. Using `ck_read_yaml()`, these files can later be imported again. This feature is useful for re-using parameter settings.
 
-The underlying framework on how to perturb continuous tables differs from the proposed method from `ABS`. One possible approach is based on a *"flex function"*. This approach (which is described in deliverable `D4.2` in the project [perturbative confidentiality methods](https://cros-legacy.ec.europa.eu/content/perturbative-confidentiality-methods_en) allows to apply different magnitude of noise to larger and smaller cells. Users can define the required parameters for the flex-approach with function `ck_flexparams()`. The required inputs are:
+The underlying framework on how to perturb continuous tables differs from the proposed method from `ABS`. One possible approach is based on a *"flex function"*. This approach (which is described in deliverable `D4.2` in the project "perturbative confidentiality methods") allows to apply different magnitude of noise to larger and smaller cells. Users can define the required parameters for the flex-approach with function `ck_flexparams()`. The required inputs are:
 
 - `fp`: the flexpoint defining at which point should the underlying noise coefficient function reach its desired maximum (which is defined by the first element of `p`)
 - `p`: numeric vector of length `2` with `p[1] > p[2]` where both elements specify a percentage. The first value refers to the desired maximum perturbation percentage for small cells (depending on fp) while the second element refers to the desired maximum perturbation percentage for large cells.
-- `epsilon`: a numeric vector in descending order with all values in `[0; 1]` and with the first element forced to equal `1`. The length of this parameter must correspond with the number of `top_k` specified in `ck_params_nums()` (which will be discussed later). 
+- `epsilon`: a numeric vector in descending order with all values in `[0; 1]` and with the first element forced to equal `1`. The length of this parameter must correspond with the number of `top_k` specified in `ck_params_nums()` (which will be discussed later).
 
 ```{r}
 # parameters for the flex-function
@@ -183,7 +183,7 @@ p_simple <- ck_simpleparams(
   epsilon = 1)
 ```
 
-In this appraoch it is only required to specify a single percentage value `p` and - as in the case for the flex function - a vector of epsilons that are used in the case when `top_k > 1`. 
+In this appraoch it is only required to specify a single percentage value `p` and - as in the case for the flex function - a vector of epsilons that are used in the case when `top_k > 1`.
 
 Further important parameters for `ck_params_nums()` are:
 
@@ -205,7 +205,7 @@ Please note, that if the goal is to have different perturbation tables for cells
 ex_ptab1 <- ptable::pt_ex_nums(parity = TRUE, separation = TRUE)
 ```
 
-We can now use these tables to finally create objects containing all the required information to create perturbed magnitude tables using `ck_params_nums`. In the first case we want the same perturbation table (`ptab_all`) for cells with an even/odd number of contributors but want to use `ptab_sc` for very small cells. 
+We can now use these tables to finally create objects containing all the required information to create perturbed magnitude tables using `ck_params_nums`. In the first case we want the same perturbation table (`ptab_all`) for cells with an even/odd number of contributors but want to use `ptab_sc` for very small cells.
 ```{r}
 p_nums1 <- ck_params_nums(
   type = "top_contr",
@@ -235,7 +235,7 @@ p_nums2 <- ck_params_nums(
   use_zero_rkeys = TRUE)
 ```
 
-The package internally computes the separation point that is used for very small cells in case this is required. Details on this can also be found in deliverable [`D4.2`](https://cros-legacy.ec.europa.eu/content/perturbative-confidentiality-methods_en).
+The package internally computes the separation point that is used for very small cells in case this is required. Details on this can also be found in deliverable `D4.2` from the "perturbative confidentiality methods" project.
 
 Now we can attach the results from `ck_params_nums()` to numeric variables using the `params_nums_set()`-method as shown below:
 
@@ -361,7 +361,7 @@ For now, no utility measures for continuous variables are available. This will c
 ### Additional Features
 Finally we note that there are `print` and `summary` methods implemented for objects created with from `ck_setup()` which can be used as shown below:
 
-The `print()`-method shows the dimension of the table as well as the variables that are (or possibly can be) perturbed. It is also displayed if the table was constructed using weights. 
+The `print()`-method shows the dimension of the table as well as the variables that are (or possibly can be) perturbed. It is also displayed if the table was constructed using weights.
 
 ```{r}
 tab$print() # same as (print(tab))
